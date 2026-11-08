@@ -1,0 +1,16 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  counts_fresh: counts.json / counts.tex are up-to-date vs. sources
+══════════════════════════════════════════════════════════════════════
+  [33m⚠[0m staleness  —  stale: papers/**/paper_draft.tex newer than counts.json
+  ✓ regenerate  —  update_counts.py succeeded
+  [33m⚠[0m post_regenerate  —  update_counts.py exited 0 and declined to rewrite (content already current); artifact mtime restored. Ordering was a checkout artifact, not staleness.
+  ✓ summary  —  theorems=22851 (substantive=22825, placeholder=26) | modules=2047 | sorry=0 | papers=42 | aristotle_proved=313
+  ✓ mapping_row_agreement  —  3 PAPER_DRAFT_MAPPING.md count figure(s) agree with counts.tex
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 1/1 checks passed (2 warnings)
+  [32mALL CHECKS PASSED[0m
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 3.8s

@@ -1,0 +1,26 @@
+{
+  "BakerBellini2017": {
+    "pdf_sha256": "8db10502fed0af2ce62871daef14d28a2d3f449740156865b0d602cd903ba08c",
+    "pdf_matches_read_pin": true,
+    "abstract_sha256": "912787c2ea79edcab47766854ac60a06a2995ecee428fd0ba8fcee18ce52da91",
+    "abstract_matches_before_acquisition": true
+  },
+  "CreminelliVernizzi2017": {
+    "pdf_sha256": "75068cfe7b5039b29e43fccae6276d1f572ac6aa9eef28cb61650f54cb211650",
+    "pdf_matches_read_pin": true,
+    "abstract_sha256": "37fa3b4dc452b7761c7b4aef7338ca309d884d896decace42b1e7f7bd1ca3811",
+    "abstract_matches_before_acquisition": true
+  },
+  "SaksteinJain2017": {
+    "pdf_sha256": "1538e145aa626598e04184dfc15ef34b1b6118e796f1d5c60e9d4a135da28adf",
+    "pdf_matches_read_pin": true,
+    "abstract_sha256": "9c945c268505c652c46ec7f69b38813389c55c3b841a0686d6148e9a77ddff5b",
+    "abstract_matches_before_acquisition": true
+  },
+  "EzquiagaZumalacarregui2017": {
+    "pdf_sha256": "d60c659f707b1d5822ed5cd2b957081a77a3b9082221152163f346d5b2f5781d",
+    "pdf_matches_read_pin": true,
+    "abstract_sha256": "00908ff7f9d734ca01982f8022602bdd7f8348b760f28744118c7a47fdcafd6a",
+    "abstract_matches_before_acquisition": true
+  }
+}

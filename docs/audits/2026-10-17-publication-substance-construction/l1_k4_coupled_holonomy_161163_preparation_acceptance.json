@@ -1,0 +1,38 @@
+{
+  "status": "ACCEPTED finite source/preparation/actual degree and original-word covariance package",
+  "accepted_at_utc": "2026-11-05T16:23:44.531912+00:00",
+  "evaluator_sha256": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+  "archive_sha256": "fb8165c64e88e84414775ead2005446d12b42f9f2cbd741de21a6df8f43c6fb2",
+  "archive_members": 407,
+  "public_scientific_inputs": 22,
+  "review_sha256": {
+    "source": "fbfcdad52a3fa7977aa3266ebba255b5079dd66516c34be78316962b19ff1c3c",
+    "original_preparations": "423991e78bc064b9cc221962f8a6b3fb8626e4029e0f543b0833dd61b2387c9c",
+    "actual_degrees": "b78007a2c01a59515c153089edc714ff04be946bbc274e70fff4ee255c178129",
+    "covariance": "d9e1030df35e9ea7e23f54212c15f75ec543bc4c55b44a3ba47d91f801662eb4"
+  },
+  "original_preparation_children": 18,
+  "actual_degree_children": 16,
+  "complete_word_branch_graphs": 30,
+  "actual_rows_scanned": 1986726,
+  "actual_monomials_scanned": 2962818,
+  "actual_nonzero_masks_scanned": 1008912,
+  "covariance_final_children": 35,
+  "covariance_full_polynomial_exports": 2,
+  "portable_accepted_words": 236,
+  "new_coefficients_accepted": [],
+  "next": [
+    "Executor prepares isolated controlled fixed-label contraction package using existing eliminator",
+    "Independent control/runner review and resource/source reconciliation before actual contraction",
+    "All15branches/bothwords, original120000row/3000000pair and600cold/ONE60wholewarm/665parent limits",
+    "Independent fixed controls before unrestricted pilot and complete coefficient/replay/portable/disjoint-union acceptance"
+  ],
+  "open": [
+    "Any scalar/action contraction, intermediate support, whole cold/warm feasibility and exact161/163 coefficients",
+    "Fullk4/source-action ensemble/common partition",
+    "PhysicalB3 original normalization/window,microscopic/matter/transport/frequency/error and required Lean backing",
+    "Main integration/final human/publication acceptance"
+  ],
+  "gauge_boundary": "Gauge-fix the FULL internally summed finite origin action/source word before applying fixed-gamma diagnostic restrictions. A restricted component is not separately gauge invariant. No continuum Ward identity inferred.",
+  "reproduction": "Original absolute scratch paths and all consumed bytes remain unchanged. Rebind the module AUDIT/import/runner paths deliberately against a checkout at the recorded source or captured public inputs, preserving scientific ASTs and reviewing changed fingerprints. This is a transportable evidence handoff, not a portable evaluator/CLI acceptance."
+}

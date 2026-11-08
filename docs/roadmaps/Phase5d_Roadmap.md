@@ -1,5 +1,16 @@
 # Phase 5d: ADW Tetrad Gap Equation — Emergent Gravity Feasibility
 
+## Current numerical and physical status — 2026-10-17
+
+The original continuum tetrad-VEV derivation and numerical-comparison objectives remain owed at full strength. The dated Wave1/2 COMPLETE/DONE and summary entries below record stipulated-scalar formulas, conditional/algebraic theorems and historical implementations/tests; they are not present closure of the physical tetrad-channel derivation.
+
+**N-local NJL numerical repair: independently accepted, pending delivery/integration and canonical closure.** The installed review `publication-njl-installed-runtime-review-20261017-r1/REVIEW.md` SHA256 `c13432678d19923704eeaf7ab6b1b2076035f92904c02e765a3a7882a02bc626` and ROOT intake `publication-njl-ROOT-installed-runtime-intake-20261017-r1.json` (2026-10-17 03:09UTC) cover the widened/stable bracket/root implementation, 91+29+100 actual passing tests (overlapping, not 220 new unique) and five direct control groups. The accepted selected current N functions/wrapper/tests/notebook are real delivered local work; the repair is absent from committed PR91/remote main and current primary. Preserve exact reviewed hunks through ROOT's normal protected checkpoint, not a whole-formulas-file transplant. Existing critical `review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1` remains OPEN pending supported verification/closure; I1:6.1 is a separate disclosure consumer. Quantitative native bracket/model correspondence and global floating-point accuracy are not certified by that scoped runtime.
+
+**Physical ADW/tetrad correspondence: OPEN BUILD.** Derive the regulated Hubbard–Stratonovich tetrad-channel action/determinant, channel trace/multiplicity and saddle/GL normalization, then map the actual order parameter to the stipulated scalar branch. Equal critical coefficients and `gap_implies_full_tetrad` do not construct that map. First milestone: an explicit regulated channel calculation whose variation yields the claimed kernel/coefficient, with independently reviewed units, domain and state assumptions. The signed derivative repair and scalar IVT/monotonicity results remain genuine separate progress. The historical strict `Delta<Lambda` bound was disproved, not an admissible numerical cap.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
 ## Technical Roadmap — April 2026
 
 *Prepared 2026-04-04 | Updated 2026-04-05 | Follows Phase 5c (quantum groups, MTC, E8, verified statistics)*
@@ -60,11 +71,11 @@
 - `Lit-Search/Tasks/complete/Phase5_vestigial_correlator_simulation_scoping.txt` — MC scoping
 - `Lit-Search/Tasks/complete/Phase5_vestigial_analytical_susceptibility.txt` — Analytical susceptibility
 
-### Key physics finding across the entire corpus:
-> **The tetrad gap equation has never been explicitly written down in the published literature.** The equation is structurally determined by the NJL-ADW correspondence. The critical coupling G_c is O(1) in lattice units (Vladimirov-Diakonov found this for the chiral channel in 2D). The 4D tetrad channel is untested. No published work combines Wen's emergent QED with ADW tetrad gravity. This is genuinely unexplored territory.
+### Physical construction boundary:
+The implemented NJL equation and regulated scalar potential are adopted scalar models. Establishing their relation to a four-dimensional tetrad channel requires the actual regulated microscopic action, auxiliary-field identity, fermion determinant and channel normalization. The inspected model algebra and research summaries do not establish this derivation or an exhaustive absence claim about the published literature. The original physical construction remains OPEN BUILD.
 
-### Cross-validation (VERIFIED in Wave 1):
-Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation gives G_c = 1/(N_f·I(0)) with I(0) = c₄·Λ²/2 and c₄ = 1/(4π²). Result: G_c = 8π²/(N_f·Λ²) — **exact match** between integral and V_eff formulations. Proved in Lean as `criticalCoupling_formula` and `criticalCoupling_eq_adw`.
+### Shared critical coefficient (stipulated scalar models):
+The NJL integral convention gives G_c = 1/(N_f I(0)) = 8π²/(N_f Λ²), equal to the coefficient adopted in the regulated potential. `criticalCoupling_formula` and `criticalCoupling_eq_adw` establish that coefficient identity. The nonzero NJL fixed-point equation and regulated-potential stationarity equation differ; their nonzero roots need not coincide. This coefficient identity supplies neither microscopic ADW correspondence nor a physical tetrad saddle.
 
 ### Current state (Apr 5 2026, end of session):
 - **1233 theorems**, 0 axioms, **86 Lean modules**, **22 sorry** (all Aristotle targets)
@@ -84,7 +95,7 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 
 **Goal:** Derive and solve the explicit continuum gap equation for the tetrad VEV.
 
-### 1A. Gap Equation Formulation (Lean) — DONE
+### 1A. Stipulated NJL formulation — mathematical source delivered; physical derivation OPEN
 - [x] Define `gapOperator G Λ Δ := G * N_f * Δ * gapIntegral Δ Λ` (analytical closed-form, not Bochner integral — simpler and sufficient)
 - [x] Define `gapIntegral` with c₄ = 1/(4π²), closed-form I(Δ) = c₄/2·[Λ²−Δ²·ln(1+Λ²/Δ²)]
 - [x] Gap operator self-mapping (sorry stub for Aristotle)
@@ -94,18 +105,18 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - [x] Match to ADWMechanism.critical_coupling (PROVED: `criticalCoupling_eq_adw`)
 - [x] Integral bounds: I(Δ) ≤ I(0), lower bound c₄Λ⁴/(4(Λ²+Δ²)) (sorry stubs — need log inequality)
 
-### 1B. Phase Transition (Lean) — DONE
+### 1B. Stipulated NJL branch results — delivered mathematical results
 - [x] Trivial solution Δ = 0 always exists (PROVED: `trivial_fixed_point`)
 - [x] For G < G_c: trivial solution is unique (sorry stub: `gap_trivial_unique_subcritical`)
 - [x] For G > G_c: nontrivial solution exists via IVT (sorry stub: `gap_nontrivial_exists`)
 - [x] Monotonicity: Δ*(G) increasing (sorry stub: `gap_solution_monotone`)
 - [x] Bifurcation at G = G_c (PROVED: `bifurcation_at_Gc` via unfold+simp+field_simp+ring)
-- [x] Solution bounded by Λ (sorry stub: `gap_solution_bounded`)
+- [ ] Current universal bound by Λ: **DISPROVED**, not a solver bracket. Historical checklist: “[x] Solution bounded by Λ (sorry stub: `gap_solution_bounded`)”; the original run/result/counterexample below are preserved.
 
-### 1C. ADW Connection (Lean) — DONE
-- [x] Gap implies full tetrad phase (PROVED: `gap_implies_full_tetrad`, direct from ADWMechanism)
+### 1C. Conditional ADW algebra — delivered; physical correspondence OPEN
+- [x] A positive scalar satisfies the defined full-tetrad classification (`gap_implies_full_tetrad`); this does not derive a tetrad field or fluctuation spectrum.
 - [x] Vestigial connection: g(0) = G/G_c − 1 (PROVED: `gap_vestigial_connection` via unfold+simp+field_simp)
-- [x] NJL-ADW Fierz correspondence: g_njl = G_adw/4 (PROVED: `njl_tetrad_correspondence` via funext+ring)
+- [x] Conditional operator proportionality under the supplied coupling match g_njl = G_adw/4 (`njl_tetrad_correspondence`, funext/ring). Deriving this physical channel and its normalization remains OPEN BUILD.
 - [x] Match to ADWMechanism.critical_coupling (PROVED: see 1A above)
 
 **Template:** Used analytical closed-form rather than Bochner integral (simpler, avoids measure theory). The IVT and Banach contraction architecture follows Picard-Lindelöf as planned.
@@ -435,8 +446,8 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 ### Wave status:
 | Wave | Focus | Theorems | Sorry | Status |
 |------|-------|----------|-------|--------|
-| 1 | Tetrad gap equation (Lean) | 20 | 0 | **COMPLETE** |
-| 2 | Python solver + observables | — | — | **COMPLETE** |
+| 1 | Stipulated scalar gap mathematics (Lean) | 20 | 0 | Mathematical source delivered; physical tetrad derivation **OPEN BUILD** |
+| 2 | Python solver + observables | — | — | N-local NJL repair independently accepted, protected delivery pending; separate regulated-potential optimizer qualification **OPEN BUILD** |
 | 3 | MC production (L=4,6,8) | — | — | L=8 running |
 | 4 | Ising + Fibonacci MTC | 39 | 0 | **COMPLETE** (Aristotle 78dcc5f4 + native_decide; all MTC sorry filled, pentagon/hexagon proved) |
 | 5 | Polariton paper (Paper 12) | — | — | Claims reviewed, all FAIL fixed |

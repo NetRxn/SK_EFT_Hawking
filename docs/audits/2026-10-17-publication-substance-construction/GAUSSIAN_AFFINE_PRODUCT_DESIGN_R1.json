@@ -1,0 +1,18 @@
+{
+  "source_primary": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+  "design_verdict": "DESIGN_ACCEPTED_FOR_ADMITTED_IMPLEMENTATION",
+  "discovery": "9 actual matching wt1 MCP calls; exact existing types and 13 standard-only printed axiom sets; negative search/index misses do not establish absence",
+  "archive_sha256": "a5a4a3a315a1a01a29030da3a18c1cb38cafbfc37a5d525a0a5ab98559162d33",
+  "members": {
+    "publication-l1-variance-design-r1.md": "68ddb4b4cd089a28c5f2b8678ae142cc5589c239bea717093ea6d6582aace433",
+    "publication-l1-variance-design-r1.json": "01ae32b8ba047fc6dc5590cdfcc10e2b7b5e809ef02f2bc53e7fce742e101ff5",
+    "publication-l1-variance-design-review-r1.md": "d2b08d97132be27ce548819596ff3cb236f5c9f0cfaed9f37fea1b4c64ccffc1",
+    "publication-l1-variance-design-review-r1.json": "3699e158ba959cb1b60e384109c4432e2b0807ca232b52347fece09c21391414",
+    "publication-l1-existing-substrate-lsp-r1.md": "817b235e470b8a9bb258b8175812cd25f1d9bb34cb0e9c8154d1a767fc2e0c1a",
+    "publication-l1-existing-substrate-lsp-r1.json": "542a37ce3ce7c0497d3656b6764ddbc06274c09a84034c795e194bdc95a94a2a"
+  },
+  "implementation_task": "publication-l1-affine-product-proof-r1",
+  "owner": "ROOT with admitted wt1 implementation worker",
+  "acceptance": "fresh independent source/kernel verification then ROOT actual integration/native/extraction/full required gates",
+  "scope": "Prospective mathematical/source acceptance and actual substrate discovery only; new implementation, full Eq6-11, physical B3 and publication acceptance remain open"
+}

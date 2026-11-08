@@ -1,0 +1,15 @@
+{
+  "archive_sha256": "62d3de853644fc6b55caf79ffc08e52bfe7145f6f576db350d5f7a9e81ffb097",
+  "bytes": 528558,
+  "members": 52,
+  "manifest_entries_verified": 51,
+  "manifest_inside_equals_adjacent": true,
+  "nested_fixed_archive_members": 129,
+  "nested_crc": "PASS",
+  "fixed_exact_total": "290694778503090210715/214157582167272714411674959872",
+  "scientific_review_scope": "Existing independently accepted fixed-label diagnostic; no new scientific rerun/acceptance, unrestricted coefficient, coverage or physical B3 credit",
+  "unrestricted_word161": "FAILED row120001>120000; zero completed branches; no total",
+  "portable_selected_word_coverage": "236/272 unchanged",
+  "nested_manifest_entries_verified": 129,
+  "upstream_publication_commit": "d7a8f8a991c8ba2ec19b775239ee3f6ccc977a89"
+}

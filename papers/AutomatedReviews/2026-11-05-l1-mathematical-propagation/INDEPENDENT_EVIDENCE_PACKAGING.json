@@ -1,0 +1,29 @@
+{
+  "verdict": "ACCEPT",
+  "archive_sha256": "e0687daaca60cd421d86fe8f4daec6e7588c37f5c3a8aff16a795d613df4b46b",
+  "crc_pass": true,
+  "members_verified": 15,
+  "all_members_match_original_scratch": true,
+  "both_patch_members_match_c183_gitobjects": true,
+  "science_pdf_catalog_counts_unchanged": [
+    "papers/L1/paper_draft.tex",
+    "papers/L1/paper_draft.pdf",
+    "papers/paper25_gravitational_waves/paper_draft.tex",
+    "papers/paper25_gravitational_waves/paper_draft.pdf",
+    "src/core/formulas.py",
+    "src/core/provenance.py",
+    "tests/test_gravitational_waves.py",
+    "papers/L1/claims_review.json",
+    "docs/counts.json",
+    "docs/counts.tex"
+  ],
+  "tracked_diff_paths": [
+    "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/r1-to-r2.patch",
+    "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/paper_draft.patch"
+  ],
+  "diff_check_exit": 0,
+  "packet_initial_fresh": true,
+  "packet_final_fresh": true,
+  "required_corrections": [],
+  "report": "/tmp/l1-original-evidence-packaging-independent-20261105-r1.md"
+}

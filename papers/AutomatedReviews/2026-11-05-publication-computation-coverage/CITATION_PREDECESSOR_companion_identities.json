@@ -1,0 +1,82 @@
+[
+  {
+    "key": "CompanionCompilation",
+    "companion": "D8",
+    "title": "Kernel-Verified Universal Quantum Gate Compilation:\\\\\nAlphabet-Agnostic Solovay--Kitaev across Dimensions",
+    "author": "John Roehm",
+    "donor_title": "Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions",
+    "donor_authors": "Roehm, John",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "CompanionFaultTolerance",
+    "companion": "D6",
+    "title": "Minimal Hypotheses for the Aliferis--Gottesman--Preskill\nThreshold Recursion, Machine-Checked in Lean~4",
+    "author": "John G.\\ Roehm",
+    "donor_title": "Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4",
+    "donor_authors": "Roehm, John G.",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "CompanionStochastic",
+    "companion": "I3",
+    "title": "Verified Stochastic Calculus and Large-Deviation Foundations\nfor Lean~4 / Mathlib4: A Predicate-Substrate Library for the\nStochastic Integral, Quadratic Variation, It\\^o's Lemma, and\nLarge-Deviation Principles, with a Typeclass Bridge to\nSchwinger--Keldysh Effective Field Theory",
+    "author": "John Roehm",
+    "donor_title": "Verified Stochastic Calculus and Large-Deviation Foundations for Lean 4 / Mathlib4: A Predicate-Substrate Library for the Stochastic Integral, Quadratic Variation, It\u00f4's Lemma, and Large-Deviation Principles, with a Typeclass Bridge to Schwinger--Keldysh Effective Field Theory",
+    "donor_authors": "Roehm, John",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "Roehm2026TQC",
+    "companion": "D4",
+    "title": "Machine-checked universality of the Fibonacci braid representation,\\\\\nwith a graded verification of the surrounding modular-tensor-category apparatus",
+    "author": "John Roehm",
+    "donor_title": "Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus",
+    "donor_authors": "Roehm, John",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "RoehmD4Topological",
+    "companion": "D4",
+    "title": "Machine-checked universality of the Fibonacci braid representation,\\\\\nwith a graded verification of the surrounding modular-tensor-category apparatus",
+    "author": "John Roehm",
+    "donor_title": "Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus",
+    "donor_authors": "Roehm, John",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "RoehmD6FaultTolerant",
+    "companion": "D6",
+    "title": "Minimal Hypotheses for the Aliferis--Gottesman--Preskill\nThreshold Recursion, Machine-Checked in Lean~4",
+    "author": "John G.\\ Roehm",
+    "donor_title": "Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4",
+    "donor_authors": "Roehm, John G.",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "RoehmD8Compilation",
+    "companion": "D8",
+    "title": "Kernel-Verified Universal Quantum Gate Compilation:\\\\\nAlphabet-Agnostic Solovay--Kitaev across Dimensions",
+    "author": "John Roehm",
+    "donor_title": "Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions",
+    "donor_authors": "Roehm, John",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  },
+  {
+    "key": "RoehmD9Certification",
+    "companion": "D9",
+    "title": "Kernel-Verified Quantum-Network and Device-Characterization\nCertification Substrate",
+    "author": "John Roehm",
+    "donor_title": "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate",
+    "donor_authors": "Roehm, John",
+    "inprep": true,
+    "no_deposit_or_cache": true
+  }
+]

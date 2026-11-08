@@ -1,0 +1,30 @@
+{
+  "task": "l1-p23-anchor-render-r1",
+  "verdict": "ACCEPT",
+  "tex_sha256": "d51dcf6342ef6952006f3d82d4d2154db9b26aeb29974e6e2c83a847e6ebf15c",
+  "pdf_sha256": "314bec227785fa1890953fcffc199d925ea93504387805c6ae34ab85b5519b8e",
+  "accepted_source_byteexact": true,
+  "single_anchor_paragraph_delta": true,
+  "original_verify_independent_exit": 0,
+  "pdfinfo_pages": 5,
+  "individual_pages_viewed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "new_anchor_page": 4,
+  "new_anchor_display": 19,
+  "new_clipping_overlap_broken_math_observed": false,
+  "compile_receipt_read_not_rerun": true,
+  "required_corrections": [],
+  "report": "/tmp/l1-p23-anchor-render-independent-20261105.md",
+  "initial_continuity_fresh": true,
+  "final_continuity_fresh": true,
+  "tracked_writes": false,
+  "scientific_native_lean_execution": false,
+  "physical_build_open": true,
+  "fullfigure_or_wholepaper_acceptance": false,
+  "root_closure_owner_retained": true
+}

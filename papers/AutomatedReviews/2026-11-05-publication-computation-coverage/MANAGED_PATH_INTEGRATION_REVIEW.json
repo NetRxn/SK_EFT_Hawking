@@ -1,0 +1,88 @@
+{
+  "verdict": "ACCEPT BOUNDED CURRENT SOURCE/CONTROL COMPOSITION",
+  "packet": "publication-managed-path-integration-review-r1.json",
+  "initial_packet_fresh": true,
+  "adoption_description_correction_reconciled": true,
+  "head": "d8c442db8983782637eb5a4cf28cca349b721e5e",
+  "merge_head": "9edf7c8fa3a4495c0508615371a9240c5c5dae11",
+  "single_original_donor_history_proven": true,
+  "source_hashes": [
+    {
+      "path": "docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md",
+      "sha256": "85324638f59548e2ef8b85d8f0dbe663b53b51ccb8592a45fb5a28fe14e3a3c8",
+      "equals_donor": true
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-19-managed-worktree-paths.md",
+      "sha256": "24709e0d20eb4ca16e01735625d9780a38468b381bb50f0d56aa381ccc3c3535",
+      "equals_donor": false
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-19-managed-worktree-paths-design.md",
+      "sha256": "1f8e7e06c6020c5bfd5f9246cb565795f4b4e86923c0505aa0ff5d85724a8e10",
+      "equals_donor": false
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/SCOPED_REVIEW.md",
+      "sha256": "78af0d59b8d0a70bdfe47f1191a87a5384eef38729e6a3920774f674c4062a8f",
+      "equals_donor": true
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/infra.md",
+      "sha256": "1191f29f66a0ce21d5b9d316fb041a4652aade53dd5be5833db442b616a04c97",
+      "equals_donor": false
+    },
+    {
+      "path": "scripts/orchestrate.py",
+      "sha256": "b5f44d3ee4b75b48a107844417cef56b8b1a39abd88ea3885d3059db21a6a39f",
+      "equals_donor": true
+    },
+    {
+      "path": "tests/test_architecture_claims.py",
+      "sha256": "69343b871abfc94980bbce22dcc2469f50d3fe3f949e221cf7f93fc1444868f7",
+      "equals_donor": false
+    },
+    {
+      "path": "tests/test_orchestrate.py",
+      "sha256": "d2ef209645077b5362d124b004fb4de72ff5e99a840f372c5c8b0144ceaff324",
+      "equals_donor": true
+    },
+    {
+      "path": "tests/test_phase6i_wave1.py",
+      "sha256": "37a70787f4e1cfe2084d97805edfc45f43192f19fb123a7eec85c1cedb3fbf1d",
+      "equals_donor": false
+    },
+    {
+      "path": "tests/test_workspace_resolver.py",
+      "sha256": "c93bb654a520b66bbc31a152dac5dd79b6ef9477574d2f1afe388e9a3a75276a",
+      "equals_donor": true
+    }
+  ],
+  "extra_hashes": {
+    "docs/counts.json": "eae5b98f7182d4c447cf2199c189b4b423871f8dc5f548f8bf557bc270ee9356",
+    "docs/counts.tex": "16873ff209581021386a6df236d84cf8b4b82afe1335b3e6da18804c0df89935",
+    "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md": "6abca698aa7bc77da977cf5684a244f1049f30f8a21fd46b94c5f4d80538cacc"
+  },
+  "all_existing_architecture_functions_unchanged": true,
+  "phase_exact_e340": true,
+  "IMPORTS_ledger_workspace_unchanged": true,
+  "actual_author_test_result": {
+    "passed": 106,
+    "failed": 2,
+    "skipped": 0,
+    "errors": 0
+  },
+  "retained_failures": [
+    "13 missing registry keys",
+    "extractor first zero-stub assertion:10stubs, stdout3orphans; orphan assertion not reached"
+  ],
+  "original_target_identity_current_passed": true,
+  "count_delta": 35,
+  "all_other_typed_values_conserved": true,
+  "diff_check_passed": true,
+  "reviewer_ran_tests_or_imports": false,
+  "candidate_mutated_by_reviewer": false,
+  "canonical_1_1_requires_source_checkpoint_and_writer_verify": true,
+  "canonical_1_2_must_remain_open": true,
+  "fullcache_science_main_publication_acceptance": false
+}

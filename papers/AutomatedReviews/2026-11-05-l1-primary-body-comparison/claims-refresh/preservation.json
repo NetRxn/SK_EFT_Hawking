@@ -1,0 +1,14 @@
+{
+  "retained_assessments_identical_except_offsets_ordinals_review_unit": true,
+  "all125_excerpts_bind_exactly": true,
+  "all125_content_ids_recomputed_with_existing_helper": true,
+  "all6_absent_records_have_successors": true,
+  "all49_original_candidates_structurally_identical": true,
+  "all4_blocker_records_structurally_identical": true,
+  "automatic_closures": 0,
+  "integrated_pins": {
+    "papers/L1/paper_draft.tex": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
+    "src/core/citations.py": "8fefe95dfe535168509cf1dbc4607ff40fa82bc1eda7a70b0ac01a7db6a2a3bd",
+    "docs/primary_sources_state.json": "4d19204df2bff22661a71109b551cb027907cf66bcdd71cc018e708089c849d2"
+  }
+}

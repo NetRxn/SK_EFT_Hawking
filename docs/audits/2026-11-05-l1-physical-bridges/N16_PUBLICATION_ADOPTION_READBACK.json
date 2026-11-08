@@ -1,0 +1,23 @@
+{
+  "incoming": "942c50adb2fef3633e28fff34e54c0d793854d80",
+  "contract_sha256": "7b505fb137ba14f26dfcdad0243764397de770826bea72fa0f5f9d779752b9b2",
+  "archive_sha256": "8eaca10152cd51e5261b7d88402efb490aeb5207cc5c869e2f934458186b9f15",
+  "archive_bytes": 212956,
+  "members": {
+    "assessment/l1-next-bridge-math-review-r2.md": "763483c87189a7767309ef45b40b77504ae1031da6f7090a41708c5090986dda",
+    "assessment/l1-next-bridge-physics-review-r1.md": "359e32721b7ba9a0327c7eabe565ba0cad76ee54eaf65badc60a5165c895d073",
+    "assessment/l1-next-bridge-physics-review-r2.md": "758220b54e3ffad107d497cc4190fa17604f000391eadb3fdec0aecfb47d968c",
+    "assessment/l1-next-bridge-substrate-intake-r1.md": "6a9742629e4cb7e199348f8cc132f975e39ce7909bc6ed3c9c1dd308624de40c",
+    "assessment/l1-next-physical-bridge-assessment-r1.md": "37ed41cd13a85a42389d5325bfe1ea8108ce4b43d97c096a5ff897d853e6c05c",
+    "assessment/l1-next-physical-bridge-assessment-r2.md": "7b505fb137ba14f26dfcdad0243764397de770826bea72fa0f5f9d779752b9b2",
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "source/COMMON_SOURCE_MATTER_INTERFACE.md": "f8aa1040d6ac359dd767910303aa335c9841c7168294be9043b1db9de46d8fbf",
+    "source/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "source/L1_RETARDED_SPECTRAL_INTERFACE.md": "6066a81c480080d825d1b8403eb92c97753e0ef366c188533c0df210473213ec",
+    "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef"
+  },
+  "crc": "PASS",
+  "safe_unique_paths": true,
+  "auxiliary_identity_sha256": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+  "scope": "custody/source assessment only; not temporal construction/state/evaluation acceptance"
+}

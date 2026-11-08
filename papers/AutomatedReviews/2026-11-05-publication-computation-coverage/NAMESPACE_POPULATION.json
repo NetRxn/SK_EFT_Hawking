@@ -1,0 +1,13 @@
+{
+  "head": "ff21c0478",
+  "added_local_roots": [
+    "docs",
+    "papers"
+  ],
+  "imported_affected": {
+    "papers": [
+      "tests/test_gravitational_waves.py"
+    ]
+  },
+  "papers_namespace_origin": null
+}

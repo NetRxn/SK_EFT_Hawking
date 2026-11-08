@@ -1,0 +1,11 @@
+{
+  "proposal_sha256": "449ad954ca031c3c3bef9526d39a681f76a9c68e4ceec9db9afcbf7b9b8283a6",
+  "canonical_sha256": "449ad954ca031c3c3bef9526d39a681f76a9c68e4ceec9db9afcbf7b9b8283a6",
+  "audit_prior_prefix_preserved": true,
+  "audit_events_appended": 1,
+  "prose_state_structurally_unchanged": true,
+  "human_states_unchanged": true,
+  "all_four_blocker_ids_preserved": true,
+  "49_prior_candidates_preserved": true,
+  "automatic_closures": 0
+}

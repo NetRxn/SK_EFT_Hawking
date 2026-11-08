@@ -1,0 +1,63 @@
+{
+  "archive": "original_ehc_reflection_source_adjoint_evidence.zip",
+  "sha256": "7ec8a540849cce60188d7e98d53a425874a8cdbe855d105a86d39345f8ef24a0",
+  "bytes": 2456313,
+  "members": 28,
+  "actual_result_sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+  "approved_proposal_sha256": "3af926ac7485d1f3ec30014d6f12d7a793c374a1cee891f4ded0b0e738742068",
+  "parent_checkpoint": "6b86bd2204a7642bdb728006f7177011131ac96c",
+  "canonical_copies": {
+    "l1-ehc-reflection-result-r1.md": "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md",
+    "l1-ehc-reflection-construction-brief-r1.md": "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_PROPOSAL.md",
+    "l1-ehc-reflection-math-prospective-r1.md": "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "l1-ehc-reflection-source-prospective-r1.md": "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_PROSPECTIVE_SOURCE_REVIEW_R1.md",
+    "l1-ehc-reflection-math-result-r1.md": "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_MATH_REVIEW_R1.md",
+    "l1-ehc-reflection-source-result-r1.md": "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_SOURCE_REVIEW_R1.md"
+  },
+  "files": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_BOUNDARY_ONLY_OPERATORS.md": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "accepted/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md": "50bb6c95b3c135c0956fb8b56a14c4ee443894d0abfe7455dbd08f4a59bbe019",
+    "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+    "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md": "eaaf8f0f129f00c916f824dcd35af38b1fd7c08f5dbe025d941c35d242bbe969",
+    "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65",
+    "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ACCEPTANCE.md": "7775d7c6e671c459ade262c187a2264bc51e7cfc6b07a9d3a4a4c2ba87ddbec6",
+    "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_MATH_REVIEW_R1.md": "95f0d62f25c6e7d02622e6414cf12501d9df28ec71c845833d6a915647892f3a",
+    "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_SOURCE_REVIEW_R1.md": "ddf7353250c16bfe7d920cdd485058ea54e0b2e46057887ac3b76ff97e3aee6d",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "authority/math-result-r1-pins.json": "f52bc2b8430f8f019de5c0bb697d223f340a4c8d2e7a3847933640d75058e17a",
+    "authority/source-result-r1-pins.json": "082d69913998222d2ce3678f73a46a316597d915590fbe86c7edd2eb0a197383",
+    "charter/Phase6a_Roadmap-e856d37d8.md": "6b3b0fd13ab528319d6a488c9de2c2827114a22b42871c60199163a58a5b14bf",
+    "charter/source-origin.json": "8e6a9fee36f668faab93cede705efd3c3f50acd405ef3d9e1869cc308e35221d",
+    "parent/original_one_slice_source_kernel_evidence.zip": "a710893ae7c1a232d547b01752d7808691e742773bfecdc61e5af24b6ab3ba58",
+    "parent/original_one_slice_source_kernel_manifest.json": "3299e9049724864aa6957e24f334127c909f2f370d06c7995afcd5f2b2b7fa81",
+    "result/l1-ehc-reflection-construction-brief-r1.md": "3af926ac7485d1f3ec30014d6f12d7a793c374a1cee891f4ded0b0e738742068",
+    "result/l1-ehc-reflection-math-prospective-r1.md": "d9b2acfeb8bdeb74f3499cf8f10d2821007ac862259dad670de9a69331cac66d",
+    "result/l1-ehc-reflection-math-result-r1.md": "c563e68cd5fa9ffdf9bea60a0195a98078791a6994cc21755434d0ec1b5f7025",
+    "result/l1-ehc-reflection-result-r1.md": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+    "result/l1-ehc-reflection-source-prospective-r1.md": "173816e6d5a6027e9e13df390c2fa8da363bf3b7be8d395e0265bd31d5291c0a",
+    "result/l1-ehc-reflection-source-result-r1.md": "b028d93ffd6e93db81bdb72fc033594432c890c00b260f0a19bad5b2285c226b",
+    "source/gamma-convention-excerpt.txt": "68f684aa2b07c69c43ebe7be625f58ef7ff86c335530f8a570de1112017c1a35",
+    "source/gamma-convention-origin.json": "1d7c5ed8354099f21ba3532a8e56c7c4beee3bbeb7ef5ab73033292e3120eb69",
+    "source/original-primary-custody.json": "45925260b68e68bcf1adb2d6175775e777308305c327b57c8795ebac3df6f137"
+  },
+  "published_roadmap": {
+    "commit": "e856d37d8962e80c676d7956a1d8c903faec318f",
+    "path": "docs/roadmaps/Phase6a_Roadmap.md",
+    "sha256": "6b3b0fd13ab528319d6a488c9de2c2827114a22b42871c60199163a58a5b14bf",
+    "bytes": 103766,
+    "scope": "Published cumulative physical-roadmap ownership and accepted one-slice intake; primary source workingtree separate. Not acceptance of proposed EHC result."
+  },
+  "outcome": "Both independent ACTUAL ACCEPT: exact original EHC reflected curvature/action, complete mismatch coefficient, reverse-cut adjoint/source-C2 relation.",
+  "scope": "Existing theta retained; no physical positive product/adjoint/domain, selected source family/state/coupling, causal/controlled limit, B3/N4/publication closure or global model no-go.",
+  "exact_coefficient_test": {
+    "ordered_image": "b1 b2 u v",
+    "original": "2i*g2",
+    "reflected": "-2i*g2",
+    "delta": "-4i*g2",
+    "scope": "Complete actual four-generator restriction and admissible compact anchors, zero physical sources; not an integrated restricted-domain positivity witness."
+  }
+}

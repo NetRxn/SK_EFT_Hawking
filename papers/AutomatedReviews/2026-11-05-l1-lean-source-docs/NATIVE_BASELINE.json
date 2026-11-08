@@ -1,0 +1,101 @@
+{
+  "diagnostics": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"success\": true,\n  \"timed_out\": false,\n  \"items\": [],\n  \"failed_dependencies\": []\n}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "success": true,
+        "timed_out": false,
+        "items": [],
+        "failed_dependencies": []
+      }
+    },
+    "isError": false
+  },
+  "verification": [
+    {
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    }
+  ]
+}

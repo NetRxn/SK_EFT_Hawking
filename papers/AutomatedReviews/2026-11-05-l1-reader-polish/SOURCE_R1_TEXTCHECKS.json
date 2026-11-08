@@ -1,0 +1,130 @@
+{
+  "labels": {
+    "base": [
+      "sec:intro",
+      "eq:cGW",
+      "sec:result",
+      "thm:bicond",
+      "thm:falsifier-lower",
+      "thm:falsifier-upper",
+      "fig:cGW",
+      "sec:discussion",
+      "sec:l1-_phase6o_W1b_lean_only"
+    ],
+    "proposal": [
+      "sec:intro",
+      "eq:cGW",
+      "sec:result",
+      "thm:bicond",
+      "thm:falsifier-lower",
+      "thm:falsifier-upper",
+      "fig:cGW",
+      "sec:discussion",
+      "sec:l1-_phase6o_W1b_lean_only"
+    ],
+    "same_multiset": true
+  },
+  "bibkeys": {
+    "base": [
+      "Volovik2024Vestigial",
+      "Volovik2022Counting",
+      "Volovik2026SecondSound",
+      "Volovik2024VacuumDecay",
+      "Akama1978",
+      "Diakonov2011",
+      "VladimirovDiakonov2012",
+      "HebeckerWetterich2003",
+      "Wetterich2022",
+      "Vergeles2025",
+      "Abbott2017GW170817",
+      "BakerBellini2017",
+      "CreminelliVernizzi2017",
+      "SaksteinJain2017",
+      "EzquiagaZumalacarregui2017",
+      "Roehm2026LinearizedEFE"
+    ],
+    "proposal": [
+      "Volovik2024Vestigial",
+      "Volovik2022Counting",
+      "Volovik2026SecondSound",
+      "Volovik2024VacuumDecay",
+      "Akama1978",
+      "Diakonov2011",
+      "VladimirovDiakonov2012",
+      "HebeckerWetterich2003",
+      "Wetterich2022",
+      "Vergeles2025",
+      "Abbott2017GW170817",
+      "BakerBellini2017",
+      "CreminelliVernizzi2017",
+      "SaksteinJain2017",
+      "EzquiagaZumalacarregui2017",
+      "Roehm2026LinearizedEFE"
+    ],
+    "same_multiset": true
+  },
+  "cite_occurrences": {
+    "base": [
+      "Diakonov2011,HebeckerWetterich2003",
+      "Volovik2024Vestigial",
+      "Volovik2022Counting",
+      "Volovik2026SecondSound",
+      "Volovik2024VacuumDecay",
+      "Vergeles2025",
+      "Abbott2017GW170817",
+      "BakerBellini2017",
+      "CreminelliVernizzi2017",
+      "SaksteinJain2017",
+      "EzquiagaZumalacarregui2017",
+      "Vergeles2025",
+      "Roehm2026LinearizedEFE",
+      "Abbott2017GW170817",
+      "Roehm2026LinearizedEFE"
+    ],
+    "proposal": [
+      "Diakonov2011,HebeckerWetterich2003",
+      "Volovik2024Vestigial",
+      "Volovik2022Counting",
+      "Volovik2026SecondSound",
+      "Volovik2024VacuumDecay",
+      "Vergeles2025",
+      "Abbott2017GW170817",
+      "BakerBellini2017",
+      "CreminelliVernizzi2017",
+      "SaksteinJain2017",
+      "EzquiagaZumalacarregui2017",
+      "Vergeles2025",
+      "Roehm2026LinearizedEFE",
+      "Abbott2017GW170817",
+      "Roehm2026LinearizedEFE"
+    ],
+    "same_multiset": true
+  },
+  "refs": {
+    "base": [
+      "eq:cGW",
+      "eq:cGW",
+      "eq:cGW",
+      "eq:cGW",
+      "thm:bicond",
+      "fig:cGW",
+      "thm:bicond",
+      "eq:cGW"
+    ],
+    "proposal": [
+      "eq:cGW",
+      "eq:cGW",
+      "eq:cGW",
+      "thm:bicond",
+      "fig:cGW",
+      "eq:cGW",
+      "thm:bicond"
+    ],
+    "same_multiset": false
+  },
+  "figure_block_byte_identical": true,
+  "four_primary_attribution_block_byte_identical": true,
+  "conjunction_and_counterexamples_body_byte_identical": true,
+  "endpoint_statement_body_byte_identical": true,
+  "auxiliary_dispersion_body_byte_identical": true
+}

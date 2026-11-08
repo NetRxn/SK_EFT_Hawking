@@ -1,0 +1,451 @@
+{
+  "source_commit": "71f93c7f",
+  "graph_meta": {
+    "built_at": "2026-11-05T07:35:03.500376+00:00",
+    "source_hash": "4e53e7560ae180e1",
+    "node_count": 51023,
+    "edge_count": 18676
+  },
+  "scope": "Unmodified canonical graph producer, default sync_pg=False and unchanged cached Lean dependencies; static gate measurement, no native refresh or publication acceptance.",
+  "L1_gates": [
+    {
+      "id": "gate:L1:CitationIntegrity",
+      "type": "ReadinessGate",
+      "label": "CitationIntegrity [passed]",
+      "name": "CitationIntegrity",
+      "verification": "verified",
+      "detail": "all bibkeys registered",
+      "meta": {
+        "paper": "L1",
+        "gate": "CitationIntegrity",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "16 bibitems, 16 registered"
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "all bibkeys registered",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:CrossPaperConsistency",
+      "type": "ReadinessGate",
+      "label": "CrossPaperConsistency [passed]",
+      "name": "CrossPaperConsistency",
+      "verification": "verified",
+      "detail": "no contradictions detected",
+      "meta": {
+        "paper": "L1",
+        "gate": "CrossPaperConsistency",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 0,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "no contradictions detected",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:ParameterProvenance",
+      "type": "ReadinessGate",
+      "label": "ParameterProvenance [blocked]",
+      "name": "ParameterProvenance",
+      "verification": "unverified",
+      "detail": "20 parameters lack human_verified_date",
+      "meta": {
+        "paper": "L1",
+        "gate": "ParameterProvenance",
+        "priority": 1,
+        "state": "blocked",
+        "measured": true,
+        "evidence": [
+          "20 parameters depended on; 0 human-verified"
+        ],
+        "blockers": [
+          "GW.C_LIGHT_M_S",
+          "GW.C_GW_DEVIATION_UPPER_BOUND",
+          "GW.C_GW_DEVIATION_LOWER_BOUND",
+          "GW.C_GW_TWO_SIDED_CAP",
+          "GW.CHI_VEST_NATURAL_LOWER",
+          "GW.CHI_VEST_NATURAL_UPPER",
+          "GW.CHI_VEST_DEFAULT",
+          "GW.GW170817_PEAK_FREQ_HZ",
+          "GW.GAMMA_H_VESTIGIAL_DEFAULT",
+          "GW.GW_FREQ_HZ_LOWER",
+          "GW.GW_FREQ_HZ_UPPER",
+          "GRAV.G_N_OBS_GEV_M2",
+          "GRAV.M_PLANCK_GEV",
+          "GRAV.N_F_PER_GEN_NO_NU_R",
+          "GRAV.N_F_PER_GEN_WITH_NU_R",
+          "GRAV.N_F_THREE_GEN_NO_NU_R",
+          "GRAV.N_F_THREE_GEN_WITH_NU_R",
+          "GRAV.ALPHA_ADW_LOWER",
+          "GRAV.ALPHA_ADW_UPPER",
+          "GRAV.SAKHAROV_COEFFICIENT"
+        ],
+        "blockers_total": 20,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "20 parameters lack human_verified_date",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "diamond",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:ComputationCorrectness",
+      "type": "ReadinessGate",
+      "label": "ComputationCorrectness [passed]",
+      "name": "ComputationCorrectness",
+      "verification": "verified",
+      "detail": "all 7 declared formulas have typed supported static test coverage; execution and scientific validation are separate",
+      "meta": {
+        "paper": "L1",
+        "gate": "ComputationCorrectness",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "7 declared formulas: 7 supported, 0 valid but insufficient, 0 no valid test, 0 absent, 0 wrong type",
+          "supported: formula:G_N_emergent",
+          "supported: formula:G_N_sakharov",
+          "supported: formula:c_GW_deviation_from_c",
+          "supported: formula:c_GW_from_chi_vest",
+          "supported: formula:c_GW_natural_range",
+          "supported: formula:dispersion_correction_from_GammaH",
+          "supported: formula:ligo_constraint_check"
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 8,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "all 7 declared formulas have typed supported static test coverage; execution and scientific validation are separate",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:LeanProofSubstance",
+      "type": "ReadinessGate",
+      "label": "LeanProofSubstance [passed]",
+      "name": "LeanProofSubstance",
+      "verification": "verified",
+      "detail": "no placeholder theorems cited",
+      "meta": {
+        "paper": "L1",
+        "gate": "LeanProofSubstance",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "8 theorems cited via formulas; 31 via \\texttt; 0 overlap with PlaceholderMarkers"
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "no placeholder theorems cited",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:AssumptionDisclosure",
+      "type": "ReadinessGate",
+      "label": "AssumptionDisclosure [passed]",
+      "name": "AssumptionDisclosure",
+      "verification": "verified",
+      "detail": "VACUOUS: no cited theorem assumes any hypothesis, so nothing was checked \u2014 this pass is not evidence of disclosure",
+      "meta": {
+        "paper": "L1",
+        "gate": "AssumptionDisclosure",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "0 hypotheses assumed by cited theorems; 0 referenced in paper, 0 undisclosed",
+          "vacuous pass: the CLAIMS->GROUNDED_IN->VERIFIED_BY->ASSUMES walk reached no hyp: node for this paper. Corpus-wide this holds for every paper (measured 2026-08-10), because the theorems that carry ASSUMES edges are disjoint from those any paper cites."
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 2,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "VACUOUS: no cited theorem assumes any hypothesis, so nothing was checked \u2014 this pass is not evidence of disclosure",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:NarrativeGrounding",
+      "type": "ReadinessGate",
+      "label": "NarrativeGrounding [passed]",
+      "name": "NarrativeGrounding",
+      "verification": "verified",
+      "detail": "no interesting prose claims flagged",
+      "meta": {
+        "paper": "L1",
+        "gate": "NarrativeGrounding",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "4 abstract sentences; 0 flagged interesting; 0 have SUPPORTS edges"
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "no interesting prose claims flagged",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:ProductionRunHealth",
+      "type": "ReadinessGate",
+      "label": "ProductionRunHealth [passed]",
+      "name": "ProductionRunHealth",
+      "verification": "verified",
+      "detail": "no MC claim and no failed runs",
+      "meta": {
+        "paper": "L1",
+        "gate": "ProductionRunHealth",
+        "priority": 1,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "0 production runs linked, 0 successful, 0 failed"
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "no MC claim and no failed runs",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:NumericalFreshness",
+      "type": "ReadinessGate",
+      "label": "NumericalFreshness [needs-recheck]",
+      "name": "NumericalFreshness",
+      "verification": "unverified",
+      "detail": "7 inline numerical literal(s)",
+      "meta": {
+        "paper": "L1",
+        "gate": "NumericalFreshness",
+        "priority": 2,
+        "state": "needs-recheck",
+        "measured": true,
+        "evidence": [
+          "0 REPORTS edges (0 stale); 7 inline numerical literals in body; 0 stale tables/*.tex files"
+        ],
+        "blockers": [
+          "7 inline unit-bearing literals in body \u2014 move to \\input{tables/*.tex}"
+        ],
+        "blockers_total": 1,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "7 inline numerical literal(s)",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "triangle",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:FirstClaimVerification",
+      "type": "ReadinessGate",
+      "label": "FirstClaimVerification [passed]",
+      "name": "FirstClaimVerification",
+      "verification": "verified",
+      "detail": "no first-in-proof-assistant claims in abstract",
+      "meta": {
+        "paper": "L1",
+        "gate": "FirstClaimVerification",
+        "priority": 2,
+        "state": "passed",
+        "measured": true,
+        "evidence": [
+          "0 \"first-in-proof-assistant\" claims"
+        ],
+        "blockers": [],
+        "blockers_total": 0,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [],
+        "blocker_refs_total": 0,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [],
+        "accepted_blockers_total": 0,
+        "accepted_blockers_truncated": false,
+        "notes": "no first-in-proof-assistant claims in abstract",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "square",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "gate:L1:FixPropagation",
+      "type": "ReadinessGate",
+      "label": "FixPropagation [blocked]",
+      "name": "FixPropagation",
+      "verification": "unverified",
+      "detail": "4 open review findings at severity blocker/critical/major (10 open in total); 1 accepted at blocking severity",
+      "meta": {
+        "paper": "L1",
+        "gate": "FixPropagation",
+        "priority": 1,
+        "state": "blocked",
+        "measured": true,
+        "evidence": [
+          "39 findings flag this paper (28 fixed, 1 accepted, 10 open, 4 of them submission-blocking)"
+        ],
+        "blockers": [
+          "2.1 \ud83d\udfe1 REQUIRED \u2014 `GW.CHI_VEST_NATURAL_LOWER` / `_UPPER",
+          "1.1 MAJOR \u2014 L1 computational claims have no registered",
+          "1.2 MAJOR \u2014 Formula and import extraction omit mixed-c",
+          "1.4 REQUIRED \u2014 Dependency scanner classifies the local"
+        ],
+        "blockers_total": 4,
+        "blockers_truncated": false,
+        "evidence_total": 1,
+        "evidence_truncated": false,
+        "blocker_refs": [
+          {
+            "id": "review:2026-08-14-l1-stage13:L1:2.1",
+            "label": "2.1 \ud83d\udfe1 REQUIRED \u2014 `GW.CHI_VEST_NATURAL_LOWER` / `_UPPER",
+            "severity": "major",
+            "lane": "research",
+            "status": "open",
+            "target": "`src/core/provenance.py:2785` and `:2835`"
+          },
+          {
+            "id": "review:2026-11-05-publication-computation-coverage:infra:1.1",
+            "label": "1.1 MAJOR \u2014 L1 computational claims have no registered",
+            "severity": "major",
+            "lane": "infra",
+            "status": "open",
+            "target": "`src/core/provenance.py::PAPER_DEPENDENCIES`, `scripts/build_graph.py::extract_paper_nodes`, `scripts/readiness_gates.py::_eval_computation_correctness`"
+          },
+          {
+            "id": "review:2026-11-05-publication-computation-coverage:infra:1.2",
+            "label": "1.2 MAJOR \u2014 Formula and import extraction omit mixed-c",
+            "severity": "major",
+            "lane": "infra",
+            "status": "open",
+            "target": "`scripts/build_graph.py::extract_formula_nodes`, `scripts/build_graph.py::extract_imports_edges`"
+          },
+          {
+            "id": "review:2026-11-05-publication-computation-coverage:infra:1.4",
+            "label": "1.4 REQUIRED \u2014 Dependency scanner classifies the local",
+            "severity": "major",
+            "lane": "infra",
+            "status": "open",
+            "target": "`tests/test_dependency_declaration.py::_local_module_names`, `tests/test_gravitational_waves.py::TestWindowNumericalPrecision.test_d3_width_ratio_uses_the_exact_algebraic_width`"
+          }
+        ],
+        "blocker_refs_total": 4,
+        "blocker_refs_truncated": false,
+        "accepted_blockers": [
+          {
+            "id": "review:2026-05-01-bundle-stage13:L1:7.1",
+            "label": "7.1 \ud83d\udfe1 REQUIRED \u2014 Inline count literals not macro-bound",
+            "severity": "major",
+            "lane": "unclassified",
+            "status": "accepted",
+            "target": "`papers/L1/paper_draft.tex:47` (\"21 theorems\"), `papers/L1/paper_draft.tex:288` (\"17 theorems\"), `papers/L1/paper_draft.tex:292` (\"49 pytest cases\")"
+          }
+        ],
+        "accepted_blockers_total": 1,
+        "accepted_blockers_truncated": false,
+        "notes": "4 open review findings at severity blocker/critical/major (10 open in total); 1 accepted at blocking severity",
+        "last_evaluated": "2026-11-05T07:35:01+00:00",
+        "shape": "diamond",
+        "last_modified": "1970-01-01T00:00:00Z"
+      }
+    }
+  ]
+}

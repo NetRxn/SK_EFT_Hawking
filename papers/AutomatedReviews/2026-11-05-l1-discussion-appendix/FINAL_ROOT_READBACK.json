@@ -1,0 +1,45 @@
+{
+  "current_tex": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+  "current_pdf": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a",
+  "current_catalog": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951",
+  "current_units": 151,
+  "summary": {
+    "total_sentences": 151,
+    "by_type": {
+      "formal-claim": 48,
+      "parameter": 9,
+      "numeric": 18,
+      "qualitative": 34,
+      "citation": 18,
+      "methodology": 10,
+      "theorem-ref": 6,
+      "transition": 6,
+      "metaclaim": 2
+    },
+    "by_verdict": {
+      "PASS": 99,
+      "INFO": 36,
+      "TRANSITION": 6,
+      "WARN": 9,
+      "UNGROUNDED": 1
+    },
+    "by_finding_class": {
+      "SD": 1
+    },
+    "non_reproducing_count": 54,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 54,
+    "agent_text": "151current units across main and samefilebeforebibliographyappendix; 79unchanged-IDassessments and 32samequote sectionmoves preserved; 23rewrittenpredecessors and 40new/reassessedunits. All134fulloldrecords and lineage,4blockers54candidates/followups/human/evidence/datehistory retained. Zeroautomaticclosures. Recordedvalidation/conditionalalgebra only; fullphysicalBUILD/native/stage/main/humanpublication acceptance remain open. Boundedr2 updates exactly3quote/IDs for2sourcefixes; originalr1records andlineage retained, currentpins in discussion_appendix_r2."
+  },
+  "checks": {
+    "blocking_issues_unchanged": true,
+    "non_blocking_followups_unchanged": true,
+    "non_reproducing_prior_findings_unchanged": true,
+    "reproducing_prior_findings_unchanged": true,
+    "cross_bundle_findings_unchanged": true,
+    "human_bytes_unchanged": true,
+    "one_audit_append_and_prior_prefix_exact": true,
+    "closure_ledger_unchanged": true,
+    "metadata_only_compiled_pages": true
+  }
+}

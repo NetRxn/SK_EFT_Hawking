@@ -103,10 +103,10 @@ matrices, **not** from `SteenrodA1.a1_mul`: the latter is in the admissible/Adem
 
 | wave | state |
 |---|---|
-| T1 — cohomology of the dual complex | **complete**. `A1.ext_dims_substantive` gives honest `finrank` cohomology dimensions; `A1.all_dual_coboundaries_vanish` proves the coboundaries vanish. ⚠️ The `ext_dim_n` `cols/8` proxies were **retired in T3**, not T1 — both populations were live in between. |
+| T1 — cohomology of the dual complex | **finite dual-complex results complete**: genuine kernels/images and fourth cohomology subquotient; the fifth cokernel dimension alone is not Ext⁵ without the next differential. `all_dual_coboundaries_vanish` and the retired-proxy history are retained. |
 | T2 — A(1) as `Ring` / `Algebra (ZMod 2)` | **complete**. Genuine instance; A(1)-linearity and full associativity over all 512 basis triples by kernel `decide`; `native_decide` in `A1Resolution` 17 → 3. `hom_tensor_adjunction_dim` and `change_of_rings_ext_dim` are real theorems, retired from `VACUOUS_STATEMENT_BASELINE`. |
-| T3 — real `Ext` via `ProjectiveResolution.isoExt` | **partial**. Sub-tasks (a)+(b) shipped, plus `A1Exactness.lean`: the resolution is proved exact from an explicit contracting homotopy, kernel-pure. **Blocked at (c)** — see below. |
-| T4 — change of rings | **route re-planned**; see the settled routes below. |
+| T3 — real `Ext` via `ProjectiveResolution.isoExt` | **native partial**: projective right-module terms, chain identities and exactness through P₄ are present. The infinite splice and its mathematical comparison now have accepted manual proofs; native splice/isoExt remains to implement. |
+| T4 — change of rings | **Full actual manual algebraic milestone accepted**: generic balanced induction plus full A/source-compatible inclusion/all-degree LEFT and RIGHT B-bases/compatible involutive antipodes and BOTH-sided derived/internally graded Ext comparison. Native actual objects/categorical splice/isoExt/consumers and H1/H3/H4/topology remain OPEN. |
 
 **Live notebook:** `docs/dev-loops/Phase5qT/LAB_NOTEBOOK_INDEX.md` (main checkout only — gitignored,
 absent from worktrees). It is the tracker; this roadmap is the plan.
@@ -127,15 +127,9 @@ absent from worktrees). It is the tracker; this roadmap is the plan.
 
 ### Scope note — the missing balanced tensor product is not on the critical path
 
-Mathlib has no balanced tensor product over a noncommutative base (`TensorProduct` requires
-`CommSemiring`, and `A1.a1_noncommutative` is proved), so the abstract object `A ⊗_{A(1)} P` cannot
-be stated. **The resolution is a minimal FREE resolution** (ranks 1, 2, 2, 2, 3, 4), and base change
-of a free module is a finite direct sum — statable today. Building the balanced tensor product is a
-legitimate Mathlib-grade target to scope on its own merits, not a precondition for T3.
+The current ChangeOfRings native source does not implement a general balanced noncommutative induction object or natural cochain/Ext comparison. [Accepted B4 manual construction](../audits/2026-10-17-publication-substance-construction/B4_BALANCED_INDUCTION_CHANGE_OF_RINGS.md) supplies the actual quotient, adjunction, free identification and comparison proof. The current resolution is RIGHT A(1), equivalently LEFT A1op, with free ranks1,2,2,2,3,4. Direct finite-free induced terms remain a legitimate native route; a general tensor implementation is not a prerequisite for the independent B-only T3 splice. Historical library observations here are not a fresh native API availability audit.
 
-⚠️ **Settle before building the re-planned T4:** base change is only right-exact, so the
-base-changed free complex resolves `A ⊗_{A(1)} F₂` only given flatness or a direct exactness
-argument. That decides whether the free-module route discharges H2 or restates it.
+The accepted generic proof shows that induction is right exact and preserves projectives; induced-resolution exactness requires correctly sided flat/free data or a direct exactness proof. Its genuine nonflat Ext² counterexample remains essential. The [accepted actual global Milnor successor](../audits/2026-10-17-publication-substance-construction/B4_GLOBAL_MILNOR_BASIS.md) now supplies full A/source-compatible inclusion/all-degree LEFT and RIGHT B-bases/compatible involutive antipodes and BOTH-sided derived/internally graded Ext comparison. The source RIGHT resolution uses the constructed LEFT-B basis; original LEFT H2 uses the RIGHT basis or compatible twist. These are actual discharged MANUAL witnesses. The native actual algebra/module objects, typed categorical infinite splice/isoExt/graded consumers and original H2 source bindings remain owed; H1/H3/H4/topology are separate.
 
 ---
 
@@ -218,16 +212,7 @@ already in hand.
 
 ### Wave T4 — Genuine change-of-rings (discharge H2 for real)
 
-**Goal.** Replace `h2_discharged : True` with a proof of `Ext^n_A(A ⊗_{A(1)} F₂, F₂) ≅ Ext^n_{A(1)}(F₂, F₂)`
-(Shapiro / Hom-tensor adjunction). **Wrinkle.** Mathlib's `extendRestrictScalarsAdj` is `CommRing`-only;
-A(1) and the full Steenrod algebra A are **noncommutative**, so use the general-ring adjunction
-`restrictCoextendScalarsAdj` (`restrictScalars ⊣ coextendScalars`, `[Ring R] [Ring S]`, in Mathlib's
-`ModuleCat/ChangeOfRings.lean`) — **not** the `CommRing`-only `extendRestrictScalarsAdj` — and lift to `Ext`
-via dimension-shifting / derived-functor naturality. For the chain only the **dimension equality** at each `n`
-is needed, which is lighter than the full natural iso. **Risk.** Medium-high (Mathlib lacks Shapiro; may need
-upstreamable lemmas). **Decision gate:** if full generality balloons, ship the dimension-equality form and
-leave the natural-iso as tracked follow-up — but **not** as a `True` placeholder; as an explicit
-`Ext`-dimension theorem about the concrete A//A(1) module.
+**Goal.** Replace `h2_discharged_TODO : True` by actual native Ext^n_A(A tensor_{A(1)} F₂,F₂) ≅ Ext^n_{A(1)}(F₂,F₂) for original LEFT H2. Generic balanced induction and the [accepted actual global Milnor successor](../audits/2026-10-17-publication-substance-construction/B4_GLOBAL_MILNOR_BASIS.md) independently complete the MANUAL full A/source-compatible inclusion/all-degree LEFT and RIGHT B-bases/compatible involutive antipodes and BOTH-sided derived/internally graded Ext comparison. Next build native actual algebra/module objects, typed categorical infinite splice/isoExt/graded consumers and original H2 source bindings. Coinduction and equal Hom dimensions remain insufficient. Both direct-free and general balanced-quotient routes remain valid. Original H1/H3/H4/topological obligations are retained.
 
 ### Wave T5 — Guard rail + pipeline integration
 
@@ -253,8 +238,7 @@ H1/H3/H4 as *topological* facts — that requires the ko spectrum / Adams SS / A
 deferred bottom-row frontier per [ADR-003](../adrs/ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md)
 and `Phase5qD`. T6 must not imply the topological realization is proven.
 
-**Trigger.** Pursue **only if** the Ext-as-E₂ corroboration narrative is judged worth the cost (it is *not* on
-any critical path; `16 ∣ σ` is already unconditional via Phase 5q.B). Otherwise leave planned.
+**Trigger for the broader standalone T6/H1 algebraic narrative.** Its ADR-003 trigger remains separate. The actual A/inclusion/all-degree sided-basis and Ext witness for assigned H2 is now independently accepted manually; native object/interface construction continues independently. The genuine Phase5q.B divisibility result and original H1/H3/H4 topological boundaries are retained.
 
 **Risk.** Low–medium (Adem-relation bookkeeping by `decide`; same newtype/diamond pattern as T2, larger basis).
 
@@ -267,14 +251,13 @@ any critical path; `16 ∣ σ` is already unconditional via Phase 5q.B). Otherwi
 | T1 | Dual-complex cohomology substantiation | **COMPLETE 2026-06-03** | — |
 | T2 | A(1) genuine Ring/Algebra instance | **COMPLETE 2026-08-15** (`0188a9b1`) | — |
 | T3 | Real `Ext` via `isoExt` | **(a),(b),exactness SHIPPED 2026-08-17**; (c) splice + (d),(e) remain | Medium |
-| T4 | Genuine change-of-rings (H2) | Planned | Medium-high |
+| T4 | Genuine change-of-rings (H2) | Full actual manual algebra accepted; native objects/splice/isoExt/consumers OPEN | Medium-high |
 | T5 | Proxy detector + integration | Planned | Low |
-| T6 | (OPTIONAL) full Steenrod A + `A//A(1)` structure | Planned — narrative-gated (ADR-003) | Low-medium |
+| T6 | Optional broader standalone A//A(1)/H1 algebraic narrative | ADR-003 trigger retained; actual A/inclusion/sided basis manually completed, native H2 interfaces owed | Low-medium |
 
 **Recommended sequence:** the T5 proxy detector can land immediately (independent, low-risk, and it guards the
 whole class of issue T1 addressed). T2 is the prerequisite for T3 (real `Ext` needs the genuine ring). T4
-(change-of-rings) depends on T3's `Ext` being real. T6 (optional) extends T2's ring and is narrative-gated —
-pursue only if the Ext-as-E₂ corroboration story is wanted. T1–T6 are all **top-row** (finite F₂ algebra +
+(change-of-rings) depends on T3's `Ext` being real. The broader standalone T6/H1 narrative retains its ADR-003 trigger; actual A/inclusion/all-degree sided exactness is manually completed, while its assigned native H2 instantiation remains required independently. T1–T6 are all **top-row** (finite F₂ algebra +
 standard homological algebra Mathlib supports abstractly) and **not** gated on the Mathlib community — unlike
 the *topological* discharge of H1/H3/H4 (Leg D), which is deferred and trigger-gated in `Phase5qD` per ADR-003.
 

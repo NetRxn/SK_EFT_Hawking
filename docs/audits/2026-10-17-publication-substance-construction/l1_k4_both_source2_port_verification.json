@@ -1,0 +1,14 @@
+{
+  "ast_equal": [
+    "geometry",
+    "data",
+    "prepare",
+    "contraction",
+    "solve"
+  ],
+  "controls_exit": 0,
+  "default_exit": 0,
+  "evaluator_sha256": "830c65bd9746feae2ba1aea1b3bc491d7666fced4d38782ce073c23f394b1526",
+  "exclusive_exit": 2,
+  "refusal_exit": 2
+}

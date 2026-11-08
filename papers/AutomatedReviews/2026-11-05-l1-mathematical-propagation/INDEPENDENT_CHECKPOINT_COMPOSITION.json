@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-math-numeric-checkpoint-composition-r1-20261105.json",
+  "owned_hashes_match": true,
+  "accepted_source_pdf_pins_match": true,
+  "catalog_sha": "449ad954ca031c3c3bef9526d39a681f76a9c68e4ceec9db9afcbf7b9b8283a6",
+  "audit_old_prefix_preserved": true,
+  "audit_appends": 1,
+  "appended_event": {
+    "id": "audit:2026-11-05T18:40:28.714891Z:paper:L1:re_audit",
+    "label": "re_audit {'sentences_count': 124}",
+    "meta": {
+      "action": "re_audit",
+      "actor": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
+      "chain_state_snapshot": null,
+      "new_state": {
+        "sentences_count": 124
+      },
+      "notes": "claims-reviewer-v2 ingest: 124 sentences, 0 tombstoned, 0 auto-closed, 49 candidates",
+      "prior_state": {
+        "sentences_count": 0
+      },
+      "propagated_from": null,
+      "related_finding_id": null,
+      "target_id": "paper:L1",
+      "target_type": "Paper",
+      "timestamp": "2026-11-05T18:40:28.714891Z"
+    },
+    "type": "AuditEvent",
+    "verification": "verified"
+  },
+  "prose_state_bytes_preserved": true,
+  "archive_crc_pass": true,
+  "archive_members": [
+    "l1-math-numeric-fast-20261105-r1.txt",
+    "l1-math-numeric-fast-20261105-r1.xml",
+    "l1-math-numeric-fast-midrun-source-pins-20261105-r1.json",
+    "l1-math-numeric-six-env-rerun-20261105-r1.txt",
+    "l1-math-numeric-six-env-rerun-20261105-r1.xml"
+  ],
+  "old_cohort": 7204,
+  "new_cohort": 7212,
+  "current_results": {
+    "skipped": 8,
+    "passed": 7169,
+    "failed": 35
+  },
+  "new_pass": [
+    "tests.test_gravitational_waves.TestL1FigureScientificInputs::test_curve_cap_band_adopted_rectangle_and_anchor",
+    "tests.test_gravitational_waves.TestL1FigureScientificInputs::test_endpoint_callouts_and_unresolved_width_at_declared_scale",
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_adopted_endpoints_have_projected_not_measured_provenance",
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_conservative_cap_encloses_source_asymmetric_interval",
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_decimal_interval_width_and_fourteen_order_confinement",
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_endpoint_deviation_rounding_and_violation_factor[0.1--0.68-2.28E+14]",
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_endpoint_deviation_rounding_and_violation_factor[10-2.16-7.21E+14]",
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_unity_is_zero_deviation_anchor_with_other_compatible_points"
+  ],
+  "old_failures_retained": 29,
+  "six_rerun_results": {
+    "tests.test_d5_freshness.TestCountsFreshness::test_the_cheap_split_agrees_with_the_full_counter": "passed",
+    "tests.test_lean_slots::test_an_idle_slot_mints_a_session_on_initialize": "passed",
+    "tests.test_lean_slots::test_each_initialize_mints_a_distinct_session": "passed",
+    "tests.test_lean_slots::test_global_backend_limit_counts_other_repository_roles": "passed",
+    "tests.test_lean_slots::test_one_physical_slot_cannot_have_two_repository_backends": "passed",
+    "tests.test_lean_slots::test_the_minted_session_does_not_weaken_the_lease_gate": "passed"
+  },
+  "midrun_snapshot_files": 5634,
+  "midrun_snapshot_vs_final_composition_delta": [
+    "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md",
+    "papers/L1/audit_log.jsonl",
+    "papers/L1/change_log.md",
+    "papers/L1/claims_review.json"
+  ],
+  "midrun_to_terminal_unchanged_is_historical_root_receipt": true,
+  "verdict": "ACCEPT",
+  "scope": "draft checkpoint composition; broad qualification remains RED",
+  "packet_initial_fresh": true,
+  "packet_final_fresh": true,
+  "required_corrections": [],
+  "main_or_publication_accepted": false,
+  "physical_builds_closed": false,
+  "native_claim": false,
+  "report": "/tmp/l1-math-numeric-checkpoint-composition-20261105-r1.md",
+  "root_observed_broad_session": 36797,
+  "root_observed_broad_exit": 1,
+  "root_observed_environment_receipt": {
+    "UV_PROJECT_ENVIRONMENT": "primary existing .venv",
+    "UV_CACHE_DIR": "/tmp/l1-window-uv-cache",
+    "UV_NO_SYNC": "1",
+    "UV_OFFLINE": "1",
+    "escalation_scope": "fixture loopback/process access only"
+  }
+}

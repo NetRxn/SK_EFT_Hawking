@@ -1,5 +1,14 @@
 # Phase 5y: Terminal Closure — Obstruction Harvest, Formalization, and Scoping Recalibration
 
+## Current L1 follow-on status — 2026-10-17
+
+The dated terminal research/harvest closure below is preserved. It does not supply a universal impossibility theorem for every later propagating-mode construction or close the original L1 physical targets. **B3 susceptibility/window, propagating mode/matter coupling and physical transport/frequency matching remain OPEN BUILD** under the original Phase6a Wave2 objectives; their current scientific milestones are recorded there. The accepted exact scalar bubble/remainder and conditional RPA-zero manual construction (`construction-L1-bubble-r1`, independent review `0f13436b`) is real progress, not a derived metric-channel normalization/window or native proof.
+
+H1's historical COMPLETE/NO-GO disposition remains scoped to its assessed identification and assumptions. A missing derived propagating degree of freedom is a construction obligation, not a generic no-go proof. Next substantive work must construct the actual metric response/propagator and coupling, then match transport/observables, with independent scientific review; it cannot simply stipulate chi=1 or cite Phase6e's closed status. This is an explicitly accepted scientific successor in the publication process, not an assertion that the old six-round harvest remained unperformed or that every unrelated phase is reopened.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
 ## Technical Roadmap — April 2026 (Terminal Revision)
 
 > **STATUS: CLOSED — 2026-04-23.** All 9 waves executed end-to-end.

@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-08-15
+**Auto-generated:** 2026-11-05
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -30,10 +30,10 @@
 | **D7** | 1 | 1 | 5 | 0 | 5 minor | 2026-06-10 | ⚪ UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
 | **D8** | 1 | 13 | 23 | 6 | 8 advisory, 6 major, 9 minor | 2026-06-10 | 🔴 RED |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | ⚪ UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
-| **D10** | 1 | 4 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: LeanProofSubstance, NarrativeGrounding) |
+| **D10** | 1 | 4 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
 | **D11** | 1 | 6 | 63 | 0 | 18 advisory, 45 minor | 2026-07-31 † | 🟡 YELLOW |
 | **D12** | 1 | 5 | 107 | 5 | 7 advisory, 5 major, 95 minor | 2026-07-31 † | 🔴 RED |
-| **L1** | 2 | 2 | 7 | 1 | 1 major, 6 minor | 2026-08-14 | 🔴 RED |
+| **L1** | 2 | 2 | 8 | 1 | 1 major, 7 minor | 2026-08-14 | 🔴 RED |
 | **L2** | 2 | 1 | 44 | 2 | 39 advisory, 1 critical, 1 major, 3 minor | 2026-06-10 | 🔴 RED |
 | **L3** | 2 | 4 | 33 | 5 | 17 advisory, 5 major, 11 minor | 2026-06-10 | 🔴 RED |
 | **I1** | 3 | 8 | 38 | 1 | 14 advisory, 1 major, 23 minor | 2026-08-12 | 🔴 RED |
@@ -46,6 +46,7 @@
 
 ### Per-bundle caveats
 
+- **D7** — non-enum `stage13_status` in `papers/D7/bundle_metadata.json` (surfaced verbatim): "pending-redo"
 - **D10** — ⚠️ **a NEWER review sits on disk and is not recorded.** The column above shows the recorded date; `papers/AutomatedReviews/2026-07-01-0240-internal-adversarial/D10.md` is dated 2026-07-01 (kind not declared). The recorded value wins here by design, so this review is invisible to every consumer of that column until it is written through `scripts/record_review.py`. Not auto-adopted: a review's verdict is a judgement the writer exists to capture, and silently promoting a date would swap one unverified record for another.
 - **D11** — ⚠️ **a NEWER review sits on disk and is not recorded.** The column above shows the recorded date; `papers/AutomatedReviews/2026-08-01-0142-internal-adversarial/D11.md` is dated 2026-08-01 (kind not declared). The recorded value wins here by design, so this review is invisible to every consumer of that column until it is written through `scripts/record_review.py`. Not auto-adopted: a review's verdict is a judgement the writer exists to capture, and silently promoting a date would swap one unverified record for another.
 - **D12** — non-enum `stage13_status` in `papers/D12/bundle_metadata.json` (surfaced verbatim): "pending-redo"
@@ -67,7 +68,7 @@
 | **D10** | 0 | 2 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
 | **D11** | 5 | 14 | 2 | 9 | 4 | 0 | 1 | 0 | 13 | 0 | 15 |
 | **D12** | 20 | 12 | 7 | 6 | 0 | 0 | 0 | 18 | 23 | 0 | 21 |
-| **L1** | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | 2 | 0 | 3 |
+| **L1** | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | 2 | 0 | 4 |
 | **L2** | 3 | 9 | 3 | 3 | 5 | 0 | 2 | 0 | 8 | 0 | 11 |
 | **L3** | 2 | 7 | 0 | 3 | 4 | 0 | 0 | 1 | 0 | 1 | 15 |
 | **I1** | 3 | 7 | 2 | 0 | 1 | 0 | 0 | 10 | 4 | 0 | 11 |

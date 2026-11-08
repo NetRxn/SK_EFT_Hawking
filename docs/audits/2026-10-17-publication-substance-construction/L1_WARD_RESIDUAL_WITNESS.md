@@ -1,0 +1,9 @@
+# L1 sourced Ward residual witness
+
+The [exact reference](l1_ward_witness.py) differentiates the literal and closed-path actions on the fixed five-site-per-direction torus along a Cayley gauge curve at the endpoint. For the selected quartic monomial, the derivative is 2g₂ in the displayed orientation for the literal action and zero for the closed-path control. A remote linear frame source contributes i/4 on its selected bilinear. In global Berezin order the resulting six-generator coefficient is −ig₂/2 for the literal action and zero for the closed-path control.
+
+Define c(U) as the coefficient of the ordered six-generator word in the product of the g₂ coefficient of the literal action variation and the remote frame insertion. Insert an observable consisting of the signed Grassmann complement times the complex conjugate of c(U). The sign matches the global top-form orientation. At formal order g₂ times the remote source, the action variation contribution is the Haar integral of |c|². The coefficient is continuous and nonzero at the fixed configuration, so full support of normalized product Haar gives a strictly positive integral.
+
+The source is outside the gauge variation support. The exact change of variables includes variation of the observable, including its link coefficient and Grassmann complement. That term cancels the action variation. Omitting the latter leaves a nonzero residual. This observable-insertion control establishes strict positivity analytically. Numerical Haar magnitude, source-only susceptibility, and physical tensor matching remain open.
+
+Independent adversarial review by `/root/l1_transport_review` reran the coefficient calculation and verified the Grassmann support, full-support positivity argument, and need to include both terms of the observable variation.

@@ -1,0 +1,25 @@
+{
+  "scientific_commit": "d421925e2552a28b4744a4eccda2262110b82b69",
+  "source_sha256": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+  "decision": "ACCEPT scoped manual exact auxiliary transfer/source construction",
+  "root_direct_read": "Entire construction, both reviews, actual archived coframe/action, primary-source premises",
+  "manual_checks": [
+    "three-slice support with64 original links and128 Grassmann generators",
+    "bounded shared-coordinate transfer via compact coefficient bound and Cauchy-Schwarz",
+    "finite-rank separated two-step kernel without physical projection",
+    "complement sign,128-generator even top, periodic supertrace and compared AP trace",
+    "two-generator identity control on all four basis elements",
+    "spatial insertion intertwining and nilpotent source operator",
+    "crossed/source vertices and all four second-derivative product terms",
+    "trace normalization conditional on fullZ; auxiliary adjoint is not physical adjoint"
+  ],
+  "archive_sha256": "0805b7ca9da0d0654ccbc052fc7a42700a21f1e5178d65f62ae4d8c3b3f632aa",
+  "archive_bytes": 317712,
+  "archive_members": 12,
+  "all_crc_member_hashes_and_four_pdf_pins": "PASS",
+  "physical_state": "NOT constructed",
+  "fullZ_c0_N4_B3_tensor_matter_transport": "OPEN; original acceptance unchanged",
+  "kernel_native_or_publication_acceptance": false,
+  "public_merge": true,
+  "publication_merge_commit": "a84af28e2b127de150f631e81199e731cfd5c5bf"
+}

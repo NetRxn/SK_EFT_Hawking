@@ -1,0 +1,19 @@
+{
+  "formula_source": "src/core/formulas.py",
+  "conditional_only": true,
+  "anchor_nf": 18.84955592153876,
+  "formal_matches": [
+    {
+      "nf": 15,
+      "x": 1.6608188066430674,
+      "alpha": 0.3978873577297384,
+      "G_times_cutoff_squared": 1.0
+    },
+    {
+      "nf": 16,
+      "x": 1.7373573681590264,
+      "alpha": 0.4244131815783876,
+      "G_times_cutoff_squared": 1.0
+    }
+  ]
+}

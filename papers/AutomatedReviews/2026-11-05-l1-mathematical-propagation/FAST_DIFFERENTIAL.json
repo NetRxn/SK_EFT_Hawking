@@ -1,0 +1,132 @@
+{
+  "old_cases": 7204,
+  "new_cases": {
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_conservative_cap_encloses_source_asymmetric_interval": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_adopted_endpoints_have_projected_not_measured_provenance": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_decimal_interval_width_and_fourteen_order_confinement": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_endpoint_deviation_rounding_and_violation_factor[0.1--0.68-2.28E+14]": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_endpoint_deviation_rounding_and_violation_factor[10-2.16-7.21E+14]": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1HeadlineNumerics::test_unity_is_zero_deviation_anchor_with_other_compatible_points": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1FigureScientificInputs::test_curve_cap_band_adopted_rectangle_and_anchor": {
+      "status": "passed",
+      "message": null
+    },
+    "tests.test_gravitational_waves.TestL1FigureScientificInputs::test_endpoint_callouts_and_unresolved_width_at_declared_scale": {
+      "status": "passed",
+      "message": null
+    }
+  },
+  "old_failures": [
+    "tests.test_d5_bundles_readiness.TestApexClaimsNotVacuous::test_both_ratchets_have_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestApexClaimsNotVacuous::test_every_flagged_row_is_NAMED_in_the_output",
+    "tests.test_d5_bundles_readiness.TestApexClaimsNotVacuous::test_the_population_floor_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_live_state_passes",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_the_numeral_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_the_population_floor_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+    "tests.test_d5_bundles_readiness.TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+    "tests.test_d5_bundles_readiness.TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+    "tests.test_d5_papers_prose.TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+    "tests.test_d5_prose_checks.TestSpelledOutCensusFigures::test_the_live_ceiling_has_ZERO_headroom",
+    "tests.test_d5_prose_lean_refs.TestProseTheoremReferenceCoverage::test_the_live_legacy_ceiling_has_ZERO_headroom",
+    "tests.test_d5_reviews.TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+    "tests.test_d5_reviews.TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+    "tests.test_d5_reviews.TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+    "tests.test_d5_reviews.TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+    "tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+    "tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]",
+    "tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+    "tests.test_validate_prose_checks.TestLiveRepoSmoke::test_prose_theorem_reference_coverage_passes",
+    "tests.test_validate_public_surface.TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population",
+    "tests.test_validate_public_surface.TestTexQuoteReferencesAreExtracted::test_d7_no_longer_cites_a_nonexistent_theorem"
+  ],
+  "current_failures": [
+    "tests.test_d5_bundles_readiness.TestApexClaimsNotVacuous::test_both_ratchets_have_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestApexClaimsNotVacuous::test_every_flagged_row_is_NAMED_in_the_output",
+    "tests.test_d5_bundles_readiness.TestApexClaimsNotVacuous::test_the_population_floor_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_live_state_passes",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_the_numeral_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_the_population_floor_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+    "tests.test_d5_bundles_readiness.TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+    "tests.test_d5_bundles_readiness.TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+    "tests.test_d5_bundles_readiness.TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+    "tests.test_d5_freshness.TestCountsFreshness::test_the_cheap_split_agrees_with_the_full_counter",
+    "tests.test_d5_papers_prose.TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+    "tests.test_d5_prose_checks.TestSpelledOutCensusFigures::test_the_live_ceiling_has_ZERO_headroom",
+    "tests.test_d5_prose_lean_refs.TestProseTheoremReferenceCoverage::test_the_live_legacy_ceiling_has_ZERO_headroom",
+    "tests.test_d5_reviews.TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+    "tests.test_d5_reviews.TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+    "tests.test_d5_reviews.TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+    "tests.test_d5_reviews.TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+    "tests.test_lean_slots::test_an_idle_slot_mints_a_session_on_initialize",
+    "tests.test_lean_slots::test_each_initialize_mints_a_distinct_session",
+    "tests.test_lean_slots::test_global_backend_limit_counts_other_repository_roles",
+    "tests.test_lean_slots::test_one_physical_slot_cannot_have_two_repository_backends",
+    "tests.test_lean_slots::test_the_minted_session_does_not_weaken_the_lease_gate",
+    "tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+    "tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]",
+    "tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+    "tests.test_validate_prose_checks.TestLiveRepoSmoke::test_prose_theorem_reference_coverage_passes",
+    "tests.test_validate_public_surface.TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population",
+    "tests.test_validate_public_surface.TestTexQuoteReferencesAreExtracted::test_d7_no_longer_cites_a_nonexistent_theorem"
+  ],
+  "new_failure_identities": [
+    "tests.test_d5_freshness.TestCountsFreshness::test_the_cheap_split_agrees_with_the_full_counter",
+    "tests.test_lean_slots::test_an_idle_slot_mints_a_session_on_initialize",
+    "tests.test_lean_slots::test_each_initialize_mints_a_distinct_session",
+    "tests.test_lean_slots::test_global_backend_limit_counts_other_repository_roles",
+    "tests.test_lean_slots::test_one_physical_slot_cannot_have_two_repository_backends",
+    "tests.test_lean_slots::test_the_minted_session_does_not_weaken_the_lease_gate"
+  ],
+  "old_failures_now_passing": [],
+  "new_failure_messages": {
+    "tests.test_lean_slots::test_each_initialize_mints_a_distinct_session": "slot_repo = (<scripts.lean_slots.controller.Controller object at 0x120d57b60>, PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017.../var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-642/test_each_initialize_mints_a_d0/wt3')])\n\n    def test_each_initialize_mints_a_distinct_session(slot_repo) -> None:\n        \"\"\"Two clients on one idle slot must not be handed the same session.\"\"\"\n        controller, _repo, _worktrees = slot_repo\n>       host, port, close = _serve_proxy(controller.inventory, 1)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_lean_slots.py:1618: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntests/test_lean_slots.py:1554: in _serve_proxy\n    server = ThreadingHTTPServer((\"127.0.0.1\", 0), make_handler(inventory, number))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/socketserver.py:457: in __init__\n    self.server_bind()\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/http/server.py:148: in server_bind\n    socketserver.TCPServer.server_bind(self)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <http.server.ThreadingHTTPServer object at 0x1369ee0d0>\n\n    def server_bind(self):\n        \"\"\"Called by constructor to bind the socket.\n    \n        May be overridden.\n    \n        \"\"\"\n        if self.allow_reuse_address and hasattr(socket, \"SO_REUSEADDR\"):\n            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)\n        # Since Linux 6.12.9, SO_REUSEPORT is not allowed\n        # on other address families than AF_INET/AF_INET6.\n        if (\n            self.allow_reuse_port and hasattr(socket, \"SO_REUSEPORT\")\n            and self.address_family in (socket.AF_INET, socket.AF_INET6)\n        ):\n            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)\n>       self.socket.bind(self.server_address)\nE       PermissionError: [Errno 1] Operation not permitted\n\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/socketserver.py:478: PermissionError",
+    "tests.test_lean_slots::test_the_minted_session_does_not_weaken_the_lease_gate": "slot_repo = (<scripts.lean_slots.controller.Controller object at 0x13db47430>, PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017.../var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-642/test_the_minted_session_does_n0/wt3')])\n\n    def test_the_minted_session_does_not_weaken_the_lease_gate(slot_repo) -> None:\n        \"\"\"S-Q must not become a way to dispatch without a lease (S-N is unaffected).\"\"\"\n        controller, _repo, _worktrees = slot_repo\n>       host, port, close = _serve_proxy(controller.inventory, 1)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_lean_slots.py:1632: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntests/test_lean_slots.py:1554: in _serve_proxy\n    server = ThreadingHTTPServer((\"127.0.0.1\", 0), make_handler(inventory, number))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/socketserver.py:457: in __init__\n    self.server_bind()\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/http/server.py:148: in server_bind\n    socketserver.TCPServer.server_bind(self)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <http.server.ThreadingHTTPServer object at 0x1369ef250>\n\n    def server_bind(self):\n        \"\"\"Called by constructor to bind the socket.\n    \n        May be overridden.\n    \n        \"\"\"\n        if self.allow_reuse_address and hasattr(socket, \"SO_REUSEADDR\"):\n            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)\n        # Since Linux 6.12.9, SO_REUSEPORT is not allowed\n        # on other address families than AF_INET/AF_INET6.\n        if (\n            self.allow_reuse_port and hasattr(socket, \"SO_REUSEPORT\")\n            and self.address_family in (socket.AF_INET, socket.AF_INET6)\n        ):\n            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)\n>       self.socket.bind(self.server_address)\nE       PermissionError: [Errno 1] Operation not permitted\n\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/socketserver.py:478: PermissionError",
+    "tests.test_lean_slots::test_global_backend_limit_counts_other_repository_roles": "slot_repo = (<scripts.lean_slots.controller.Controller object at 0x110ae42f0>, PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017.../var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-642/test_global_backend_limit_coun0/wt3')])\n\n    def test_global_backend_limit_counts_other_repository_roles(slot_repo) -> None:\n        controller, _, _ = slot_repo\n        process_root = controller.inventory.state_root / \"processes\"\n        signature = process_start_signature(os.getpid())\n>       assert signature\nE       assert None\n\ntests/test_lean_slots.py:552: AssertionError",
+    "tests.test_lean_slots::test_one_physical_slot_cannot_have_two_repository_backends": "slot_repo = (<scripts.lean_slots.controller.Controller object at 0x11ee506e0>, PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017.../var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-642/test_one_physical_slot_cannot_0/wt3')])\n\n    def test_one_physical_slot_cannot_have_two_repository_backends(slot_repo) -> None:\n        controller, _, _ = slot_repo\n        signature = process_start_signature(os.getpid())\n>       assert signature\nE       assert None\n\ntests/test_lean_slots.py:574: AssertionError",
+    "tests.test_d5_freshness.TestCountsFreshness::test_the_cheap_split_agrees_with_the_full_counter": "self = <tests.test_d5_freshness.TestCountsFreshness object at 0x11e0ddb80>\n\n    def test_the_cheap_split_agrees_with_the_full_counter(self):\n        \"\"\"`count_python` delegates to `count_python_cheap`; if the split ever grows a\n        second derivation the freshness check and the writer can disagree, and the\n        check would then demand a regeneration that changes nothing.\"\"\"\n        import update_counts as _uc\n        cheap = _uc.count_python_cheap()\n>       full = _uc.count_python()\n               ^^^^^^^^^^^^^^^^^^\n\ntests/test_d5_freshness.py:395: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def count_python() -> dict:\n        \"\"\"Count Python source modules, test files, pytest cases, figures.\"\"\"\n        cheap = count_python_cheap()\n    \n        # Pytest collection: total individual test cases (not just file count).\n        # Uses --collect-only -q which is much faster than execution.\n        pytest_cases = 0\n        try:\n            result = subprocess.run(\n                [\"uv\", \"run\", \"python\", \"-m\", \"pytest\", \"tests/\",\n                 \"--collect-only\", \"-q\", \"--no-header\"],\n                cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=120,\n            )\n            # pytest -q --collect-only ends with a line like \"N tests collected in X.YZs\"\n            import re\n            m = re.search(r\"(\\d+)\\s+tests?\\s+collected\", result.stdout or result.stderr)\n            if m:\n                pytest_cases = int(m.group(1))\n        except Exception as exc:\n            # \u26a0\ufe0f DO NOT PUBLISH 0. \"Graceful degradation\" here wrote `pytest_cases: 0` into the\n            # tracked artifact, the mtime legs were satisfied because counts.json had just been\n            # written, and the value leg does not compare this key \u2014 so `counts_fresh` reported\n            # GREEN having just published `\\totaltests{0}` into every paper. A collection that\n            # did not happen is not a count of zero. Refuse, and let the caller see it.\n            raise RuntimeError(\n                f\"pytest collection failed ({type(exc).__name__}: {exc}); refusing to publish \"\n                f\"pytest_cases=0 into docs/counts.json \u2014 every paper \\\\input's that macro\") from exc\n        if pytest_cases == 0:\n>           raise RuntimeError(\n                f\"pytest collection reported ZERO tests. The suite has >6000; a zero here means \"\n                f\"the collection errored or the regex stopped matching, not that the tests are \"\n                f\"gone. stdout tail: {(result.stdout or result.stderr)[-400:]!r}\")\nE           RuntimeError: pytest collection reported ZERO tests. The suite has >6000; a zero here means the collection errored or the regex stopped matching, not that the tests are gone. stdout tail: 'error: Failed to initialize cache at `/Users/johnroehm/Library/Caches/uv`\\n  cause: failed to open file `/Users/johnroehm/Library/Caches/uv/sdists-v9/.git`: Operation not permitted (os error 1)\\n'\n\nscripts/update_counts.py:389: RuntimeError",
+    "tests.test_lean_slots::test_an_idle_slot_mints_a_session_on_initialize": "slot_repo = (<scripts.lean_slots.controller.Controller object at 0x12bfb8fa0>, PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017.../var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-642/test_an_idle_slot_mints_a_sess0/wt3')])\n\n    def test_an_idle_slot_mints_a_session_on_initialize(slot_repo) -> None:\n        \"\"\"The defect, seeded at the seam: HTTP 200 with NO Mcp-Session-Id.\n    \n        Measured at HEAD 2026-08-15 against the live wt1 front door before the fix:\n        `initialize` returned 200 and the header was absent, so a client that attached\n        to an idle slot held no session any later backend had issued and every\n        `tools/call` came back `-32602` for the life of that session.\n        \"\"\"\n        controller, _repo, _worktrees = slot_repo\n>       host, port, close = _serve_proxy(controller.inventory, 1)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_lean_slots.py:1597: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntests/test_lean_slots.py:1554: in _serve_proxy\n    server = ThreadingHTTPServer((\"127.0.0.1\", 0), make_handler(inventory, number))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/socketserver.py:457: in __init__\n    self.server_bind()\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/http/server.py:148: in server_bind\n    socketserver.TCPServer.server_bind(self)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <http.server.ThreadingHTTPServer object at 0x121ef6ba0>\n\n    def server_bind(self):\n        \"\"\"Called by constructor to bind the socket.\n    \n        May be overridden.\n    \n        \"\"\"\n        if self.allow_reuse_address and hasattr(socket, \"SO_REUSEADDR\"):\n            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)\n        # Since Linux 6.12.9, SO_REUSEPORT is not allowed\n        # on other address families than AF_INET/AF_INET6.\n        if (\n            self.allow_reuse_port and hasattr(socket, \"SO_REUSEPORT\")\n            and self.address_family in (socket.AF_INET, socket.AF_INET6)\n        ):\n            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)\n>       self.socket.bind(self.server_address)\nE       PermissionError: [Errno 1] Operation not permitted\n\n../../../../../.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/lib/python3.14/socketserver.py:478: PermissionError"
+  },
+  "midrun_tracked_byte_changes": [],
+  "comparison_scope": "Failure identity comparison versus historical01d72; cause equivalence not inferred.",
+  "current_case_count": 7212,
+  "old_case_count": 7204,
+  "scoped_environment_rerun": {
+    "tests": 6,
+    "passed": 6,
+    "duration_seconds": 3.04,
+    "changes": "Correct existing uv environment/cache; isolated loopback and process-signature fixtures run outside sandbox. No source, live slot or harness modification."
+  }
+}

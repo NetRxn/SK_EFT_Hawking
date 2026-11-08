@@ -1,0 +1,27 @@
+{
+  "verdict": "ACCEPT",
+  "scope": "Exact corrected archive and conserved source/derived composition; source commit/canonical closure and broader gates remain pending",
+  "archive_sha256": "fd3765398bc285edaf8a8b1c3c7b7c0488bf5f36f05c267215311e339a7ba42f",
+  "members": 78,
+  "manifest_hashes_sizes_CRC_member_set": true,
+  "original_73_members_unchanged": true,
+  "original_archive_and_manifest_unchanged": true,
+  "added_original_bytes": [
+    "baseline/counts.json",
+    "baseline/counts.tex",
+    "baseline/original89-junit.xml",
+    "independent-final/r11.json",
+    "independent-final/r11.md"
+  ],
+  "six_postimages_unchanged": {
+    "scripts/validation/checks/citations.py": "8e91dc871088d86dbb4378681da3e769a003fae04e50a8ab020a42f7dfebfe3f",
+    "scripts/source_acquisition_register.py": "31ae8494ab4cc9c3e90d57f46761e608394aa6204b9a31e9ef72083a90f99a75",
+    "tests/test_d5_citations.py": "74fafb2fc6b106824642535c1d33b0d3ea13618ed71d449a2e72b289ad76aafc",
+    "docs/SOURCE_ACQUISITION_REGISTER.md": "3a3f2aa699adca4b03d22faa98f92bf37cd237458b5af64ec5e9e33979e3ad9a",
+    "docs/counts.json": "ac28c120bb964a25327f23eed3eea674af3f329f4ee5c631a52a965d7132b4bc",
+    "docs/counts.tex": "4a0e22accb688813c0229d5b81470864a7dbae483a0085b2de6c7d79dbed1f4f"
+  },
+  "finding_unchanged": true,
+  "old_89_JUnit_subset_preserved": true,
+  "new_cases": 8
+}

@@ -1,0 +1,48 @@
+{
+  "base_sha256": "ba39d45207c8c100f85a4a0712b33d9490d6c7b268e7534a82ecbf0bac958c4f",
+  "proposal_sha256": "80d48ada62d9842f803d34732937b4fa4fb058fa4a753fa600000a63f04726bd",
+  "chunks": {
+    "predicate": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "2bc79311a130c54989fad9ee807848e6e1d12877c43d6bf7c36e6e3047542249"
+    },
+    "frequency": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "3d3ce58efed1eb72e9a7f3381f4a64d2808c05c2c25cfc7c293073b0be793653"
+    },
+    "product": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "35830c6e4296a0da50714a747996170584532e9334ecf15c0129171fdea1c9d4"
+    },
+    "repro": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "55fcea592d5955e6b8f14e9a84757d30fceef0ccb456b2b739f543359fedd706"
+    },
+    "figure": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "9c05e8f058ccbaaedec458c0f6db76b57e84de1fc1303195da7afa656f5a6cb7"
+    },
+    "fourprimary": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "f8f5cf5df8350bd561b786ed884fd921cd35be35b0343126a26361ab9e58f7f1"
+    },
+    "companion": {
+      "exact_occurrences_in_proposal": 1,
+      "sha256": "c7df781657bad7c7796fcc5a3bbc45912ce359fc6f7c66e05ef2afa07c609ed4"
+    }
+  },
+  "newlabels": [
+    "sec:support"
+  ],
+  "lostlabels": [],
+  "same_bibliography": true,
+  "same_cite_multiset": true,
+  "all_refs_resolve": true,
+  "appendix_before_bibliography": true,
+  "manifest_original_author_hash_corrected": true,
+  "author_original_sha256": "a0fc6b53948dbd80166dee1dd6fa3828cb8e2c06822e42c3f98fd5ade12d5dfa",
+  "link_transformed_author_section_sha256": "0f0e534dd30bfeeb83fdcc67e22c76e4a844af753590ec1521e20e61aab56cfa",
+  "all_source_preservation_checks_pass": true,
+  "actual_link_transform_hash_verified": "0f0e534dd30bfeeb83fdcc67e22c76e4a844af753590ec1521e20e61aab56cfa",
+  "combined_discussion_equals_only_link_transformed_author_section": true
+}

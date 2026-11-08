@@ -1,5 +1,172 @@
 # Phase 6a: Gravitational Dynamics — Linearized EFE, GW, BH Entropy, FLRW, Four Laws, Positive Mass
 
+## Current L1 scientific successors — 2026-11-06
+
+**Latest accepted delivery / active implementation:** focused main draftPR118 is pushed ata56e6a644 with complete different source/canonical ACCEPT and own native10,843PASS. Actual full merge qualification is live; no main/publication pass. Original coefficient R2 has separate physics/cost ACCEPT; full Task1 source builder is being implemented under bounded TDD, followed by different scientific/code review and separate heavy computation admission. ROOT completed full intake of Executor's scoped composite/Wick/bare-cycle result (integrated3b1e1fd90), with physicalpositive-domain/kernel/source/B3 obligations still BUILD and numerical/physical cut crosswalk under review. [Exact source populations, measured gates, receipts and resume roles](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) govern; older pending statements below are historical.
+
+**Latest ordinary construction milestone:** full original C3 has different source/kernel ACCEPT at056ccb9f0 (168exports/70new closing states), normal primary absorption/native epochbb8c4eb3 and remote preservation. The focused exact-current-main nine-module candidate0c0c85c8 passes its OWN native10,843jobs; composition/canonical/full merge qualification remains required. Initial aggregate placement failure and correction are preserved. The older source420 R6 snapshot remains the last all21 measurement,160pass/25blocked/28open/18recheck. Original coefficient-plan R1 has separate physics/cost REVISE; accepted author repairs all requested conventions, source grading, complete original one-site control cost and minor/resource accounting, reusing existing accepted factorization. No scientific computation or B3/physical closure follows. [Current evidence and resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) supersede older active C2/C3 statements below.
+
+
+**Current ordinary auxiliary construction milestone:** Eq4 compensation, B1
+actual coframes, C1 actual exterior norm/evaluation and C3-S original source
+polynomials have independent source/math/kernel/composition acceptance. Main-based
+PR117 at `42037383847cc7fa5a3e3761032456fe3050f653` passes its own native
+build (10,842 jobs), complete independent acceptance of six canonical derivatives,
+and four freshness checks. All41,294 prior records remain exact;189 additions
+contain162 reviewed public exports. The125 eligible new theorem nodes include
+123 authored theorem declarations and2 proof-valued instance exports. All231
+fresh gates remain160pass/25blocked/28open/18recheck, zero newly green bundles;
+full profileb21 remains FAILED.
+[Exact evidence, original failures and current resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
+govern the next work, without marking the physical program shipped.
+
+C2 corrected source/kernel/composition has independent R2 ACCEPT and normal
+primary absorption/build at450710b86, epoch6e14a9c16; actual native artifact
+exists and checkpoint is pushed. All75 public exports,67 original actual goals
+and controls1–6 remain qualified. The sole misleading prefix-length comment
+is corrected; R2 verifies exact delta and new full-source kernel evidence,
+preserving unchanged proof/context evidence. Full remaining C3 is now active on
+freshly prepared wt2, owner /root/eq7_c3_full_wt2, only the existing source module,
+with actual matching built API admission. No MAIN C2 or future C3 result inferred.
+
+Next original acceptance remains **full actual G-valued Eq7/C**: C3's original
+source-specialized local identities, ordered product of actual integrals,
+original independent-site product weight, global integrability and nested/uncurried
+Gaussian measure transport. Preserve common global4V and full noncommutative G;
+products use the actual commutative bilinear subalgebra or proved order independence.
+Batch C2 plus full C3 for the next MAIN native/canonical delivery, using primary
+controlled builds for proof dependencies. The original full R2 design remains
+unchanged. ROOT also owns the numerical original-action coefficient/source-jet
+BUILD, reusing accepted ADW_COMPOSITE_SOURCES; the invalid legacy MC data and
+scientifically different adopted-model Hasenbusch campaign cannot close B3.
+
+Original literal/closed action correspondence B2, Eq9–11/Berezin/Haar/nonzeroZ,
+physical source/state/adjoint/matter/B3/calibration/transport/limits and publication
+acceptance remain OPEN. These subconstruction updates supersede older future-tense
+notes without reducing the original science.
+
+**Accepted fixed metric-sewing result:** the [actual construction and dual
+independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md)
+and [ROOT full intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_RESULT_ROOT_INTAKE.json)
+show that this specified geometric sewing/domain/adjoint pairing cannot be
+positive at nonzero real g2 and nonzero normalization, already on actual metric
+words. The separate literal temporal C2 contact is also evaluated. This is a
+scoped manual construction breakdown, not a global physical no-go or kernel
+certificate. Executor owns the next prospectively reviewed original physical
+product/adjoint/constraint or controlled-limit construction, preserving these
+tests. ROOT retains ordinary L1 work; B3, physical map30-31, calibration32-33,
+tensor/matter/light and transport/frequency/error requirements remain OPEN.
+
+
+**Accepted original kinetic/current/source normalization:** [actual result
+and both independent ACTUAL reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_ACCEPTANCE.md)
+and [ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_ROOT_INTAKE.json)
+construct the explicit original phase current, cotangent/continuum kinetic
+charge, original-step generator/current intertwining, temporal metric/C2 Ward
+contacts and the whole field/source/product normalization covariance. Physical
+source-dependent map30-31 and metric/matter calibration32-33 remain OPEN.
+A Ward identity or favorable fixed-unit state cannot replace those constructions.
+ROOT's actual all-real-polynomial Gaussian IBP proof is independently reviewed,
+native-built and canonically indexed on the main-based L1 candidate. Its full
+merge profile remains red; later Hermite/sigma/multivariate/source/coframe/C2
+assembly and all original physical requirements remain owed. The current
+[delivery queue and exact evidence](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
+own the next ordinary L1 acceptance actions. This supersedes the older
+proposal-only status below, without promoting B3/physical acceptance.
+
+
+
+**Accepted original conditional-process milestone:** the [actual result and
+independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_ACCEPTANCE.md),
+with [ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_ROOT_INTAKE.json),
+now construct a positive/PPT full two-slice fermionic candidate and conditional
+CPTP dilation matching the original coefficients and complete source contacts.
+A finite integrated certificate rules out its specified positive classical
+all-history-link instrument extension. Neither ordinary PPT nor this conditional
+channel supplies original causal evolution or physical metric/CAR. The
+same-time-link and quantum-link questions remain distinct and open. Next
+bounded source-grounded physical kinetic/constraint/observable proposal must
+also address field/source normalization covariance; B3 and all original
+physical goals stay full-strength OPEN, with ordinary L1 delivery ROOT-owned.
+
+
+**Accepted coherent/composite partial bridge:** the [actual R2 construction and
+independent result reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md),
+with [ROOT full intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_ROOT_INTAKE.json),
+construct original transfer/source coherent kernels, actual coframe and quartic
+metric operators and full graded insertion/C2 contacts. Two specific bare-normal
+and rigid joint-link Jordan identifications fail; neither is a global physical
+no-go. The full two-slice carrier is retained for time-mixing frame jets. The
+physical microscopic metric/positive original process remains UNMATCHED.
+Executor's next bounded commission is an original-transfer reduction/dilation
+and physical observable/contact map with a concrete prospectively reviewed first
+construction, not the remaining L1 package. ROOT retains ordinary L1 publication,
+Lean/Python/consumer repairs, gates and qualified main integration. All original
+physical B3/state/dynamics/matter/transport goals remain full-strength OPEN.
+
+
+**Accepted original finite normalization/source milestone:** the
+[complete original-model construction and dual result reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_ACCEPTANCE.md),
+with [ROOT personal intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_ROOT_INTAKE.json),
+prove Z(2^1717,1)>1 and nonzero normalized response to the original literal
+TEMPORAL metric source against a specified genuine boundary polynomial at
+that same finite N16 point. This is a full signed-cancellation proof, not a
+selected positive word or assumed normalization. The previous static
+trace-dual candidate's normalization/nontriviality antecedents are discharged.
+This does not compute the pure-EHC c0 coefficient or a nonzero metric mean,
+identify a physical microscopic metric/ordering, give spatial signature or
+causal evolution, establish a physical phase, or derive B3/window/units. It is
+manual mathematical acceptance, not a kernel/native or publication verdict.
+The original physical goals below remain full strength.
+
+**Original remediation B3 and the Wave2 physical mode/transport objectives remain OPEN BUILD.** The historical 6a.2 SHIPPED/end-to-end and O.1 RESOLVED records below describe conditional algebra/software and a scoped research disposition, not a physical metric susceptibility, propagating graviton or matched transport law. Keep the original goals and real interval/endpoint algebra. The finite-tolerance compatible interval is not empty; a witness at chi=1 and the old deleted caveat-theorem reference do not derive a physical realization.
+
+**Accepted substantive milestone:** the exact sharp-four-momentum-cutoff scalar bubble and remainder bounds, plus conditional RPA-zero analysis, were independently accepted in `publication-substance-ownership-audit-20261017-r1/construction-L1-bubble-r1/CONSTRUCTION.md` SHA256 `9ad73436a0ae121725b60c12e39b856dbad6f58cf832176f984f6654d2b69053`, independent-review/REVIEW.md SHA256 `0f13436bf9fc191647a15bf2d39510308b84d5fbae161699056a85331bc4afb7`. This is a manual scalar construction, not a fresh native or numerical result and not the physical B3 window. It retains the exact finite-cutoff terms; the stable-side response diverges near its pole, so positivity alone does not imply a finite interval.
+
+Next milestones: derive the actual metric-channel operator/source/projector, regulator and normalization to chi_vest and independently justified parameter/stability conditions deriving the original stated O(Lambda²/16pi²) normalization so [0.1,10] is a RESULT; a different computed interval requires the operator’s specific evidence-backed disposition, not automatic substitution; derive a stable constrained quadratic propagator, physical spin/polarization and matter coupling rather than label second sound a graviton; derive actual transport/Kubo coefficients, units, Hz/angular-frequency matching and a controlled observational band. Independent physics/response and mathematical review must check these bridges without choosing chi=1 or a tiny gamma to satisfy the desired cap. Link Phase5y H1 and Phase6e as historical dependencies, not executor/acceptance receipts. This L1 transport problem is distinct from the ONE shared D1/E1/E2 dispersive-law construction.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
+**Accepted finite-state route assessment:** the [complete original-action obstruction and ROOT intake](../audits/2026-11-05-l1-physical-bridges/PUBLICATION_SATURATION_INTAKE.md) prove manually that the fixed periodic N16 geometric reflection on its full adopted even gauge-invariant half algebra cannot be made Hermitian PSD by any nonzero scalar normalization when real g2≠0. This is an actual zero-norm/nonzero-overlap construction, not a fullZ/nonempty normalized-point certificate or kernel proof. It neither proves the original physical objectives impossible nor approves another model. Physical susceptibility normalization, N4 tensor, physical state/metric, B3, matter/tensor and transport BUILD remain OPEN; the separate finite nonzero-Z certificate above is now accepted.
+
+**Accepted bounded successor owner:** Executor derives the intended original reflection/algebra/boundary/state correspondence or returns a complete source-linked construction breakdown, beginning with Diakonov/Volovik/Vergeles/CGL and the original W1 charter. ROOT retains the complete L1 publication-readiness chain and operator disposition. No quotient or premise is chosen to remove the witness; any actual premise/scope fork requires the operator's explicit disposition.
+
+**Accepted bounded manual prerequisite:** ROOT personally read the complete
+[original graded boundary result and dual independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_ACCEPTANCE.md)
+and recorded its [exact evidence intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_ROOT_INTAKE.json).
+The commissioned L1–L4 package now supplies original-action forces, the typed
+boundary graph/pre-post kernels, the finite inverse obstruction, exact off-shell
+derivative/ordered-contact identities and C2 relation-lifting conditions.
+It was normally merged into the cumulative publication draft; main remains pending.
+ROOT has now accepted the [commissioned manual O1–O4 result and dual
+independent result reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_ONLY_OPERATORS_ACCEPTANCE.md),
+with [exact ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_ONLY_OPERATORS_ROOT_INTAKE.json).
+It supplies nonzero original-action boundary test operators, full source/kernel
+identities, ordered contacts, individual C2 lifts and distinct auxiliary-adjoint
+versus bilinear-sewing-transpose reverse kernels. These high-degree test
+operators do not construct physical constraints, a low-degree metric observable,
+a physical adjoint/domain or positive state. The coherent-state/transfer/metric-polynomial/contact construction is now accepted
+at the partial manual scope recorded above. Executor explicitly accepts the next
+bounded original-transfer-to-positive-process/observable reduction or dilation
+construction, starting with its concrete prospective map/test and both independent
+prospective approvals. Reuse the accepted kernels, metric dictionary and source
+contacts; justify every physical-domain/factorization condition from original
+kinetic/reflection/constraint/source structure. This is not transfer of the rest
+of L1 or its roadmap. Full physical Q1–Q4 state/metric/source identification remains open; finite
+normalization and source nontriviality have the separate accepted result above.
+No runtime/slot grant follows.
+ROOT retains ordinary L1 Lean/Python repair, manuscript/consumer updates,
+independent review, canonical gates/closure and qualified main delivery.
+The original physical B3, state/metric, tensor/matter/light, complete physical
+partition/covariance, N4 and transport criteria remain OPEN. Pure-EHC c0 is
+uncomputed and is not used or assumed by the accepted finite nonvanishing proof. The alternative controlled scaling route is retained.
+
+The [research intake](../audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_RESEARCH.md)
+is generated work held in this repository. Lit-Search is reserved for full
+external sources; the [custody correction](../audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md)
+preserves the exact intake and removes only its temporary generated corpus copy.
+
 ## Technical Roadmap — April 2026
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22) §4. The "consolidation half" of the post-SK-EFT program — everything about gravity that does not require a full nonlinear effective action derivation (those land in Phase 6e).*
@@ -176,7 +343,7 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ## Track B: Gravitational Waves (6a.2) — **SHIPPED 2026-04-25**
 
-**Status:** Track B Wave 2 closed end-to-end. Pipeline through Stage 12.
+**Historical delivery status:** Track B Wave 2 closed end-to-end. Pipeline through Stage 12. **Current B3/mode/transport constructions remain OPEN**, as specified above.
 - `GravitationalWaves.lean`: 17 theorems, 0 sorry, 0 new axioms.
 - `src/gravitational_waves/`: 4 Python modules + 43 pytest cases.
 - `papers/paper25_gravitational_waves/`: PRD draft, 4 pages, 421 KB, compiles clean.
@@ -942,6 +1109,48 @@ previously called "low-utility/high-effort":
 
 ---
 
+### Publication research assignment: original Lorentzian boundary continuation
+
+Task `l1-lorentzian-boundary-continuation-source-research-r1`, owner Executor
+01a1ac65, parent publication remediation ROOT 01a13f67. ROOT accepted the
+[research intake](../audits/2026-11-05-l1-physical-bridges/NEXT_PHYSICAL_CORRESPONDENCE_RESEARCH_INTAKE.md)
+and commissioned the [next objective](../audits/2026-11-05-l1-physical-bridges/LORENTZIAN_BOUNDARY_CONTINUATION_RESEARCH_OBJECTIVE.md):
+derive a concrete original-grounded Lorentzian composite boundary cycle, real
+structure, polarization and continuation candidate, or a precise construction
+breakdown with exact primary hypotheses. Retain BOTH accepted kernel orientations
+and the complete original C2/seam/source/denominator/domain/matter/scale obligations.
+This authorizes research, not adoption of a physical premise or an unspecified
+positive representation. No operator question is needed merely to investigate.
+The controlled original Euclidean reconstruction remains an open alternative.
+Fresh independent prospective math/source review precedes any implementation;
+the designer cannot independently review its own prescription. Physical B3 and
+all original publication requirements remain open. ROOT retains ordinary Eq4–11
+proving/publication integration and runtime/reset ownership; no slot is granted.
+
+### Original composite continuation and bare Lorentz cycle: scoped manual result
+
+The [corrected composite-cycle result](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md) has separate independent actual mathematical and original-source ACCEPT at its [recorded boundary](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_ACCEPTANCE.md). It derives the actual composite Wick/action/source phases and full reflected profiles, then establishes a residual-loop absolute-integrability obstruction for the specified bare Lorentz Haar cycle after complete generic continuous-gauge reduction. The inherited nonzero compact witness supplies a nonempty algebraic scope, not a physical state/coupling choice. R1 and both REVISE reports are preserved alongside the corrected R2.
+
+This advances the source-specific continuation/convergence investigation. No positive physical domain, contour equality, four physical kernel intertwiners, Lorentz normalized source functional, B3/N4 or model no-go is established. Both original kernels and full C2/source/normalization obligations remain; distributional/other-cycle/boundary-weighted and controlled Euclidean routes remain open. ROOT personal intake/canonical publication integration is pending this exact checkpoint. Ordinary L1/numerical/runtime ownership stays with publication ROOT; Executor retains the commissioned deeper physical research, with no slot reservation.
+
+### Recovered reconstruction substrate and numerical convention consumption
+
+[Background Terra/Luna scouts and Sol synthesis](../audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_RESEARCH.md) recover conditional finite-positive-kernel/GNS tools and the actual one-slice spatial-link marginal as a concrete next research question. The marginal's positivity is not implied by integrated PPT, and the prior all-history obstruction does not settle it. These are source-verified research leads, not accepted positive physical reconstruction or Lean-kernel claims; a concrete construction still requires prospective review.
+
+The independently accepted [numerical/physical crosswalk](../audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md) verifies the unsquared Euclidean permutation/source signs and C3↔N0 opposite-cut maps, while explicitly withholding the additional P0↔C3/N0 physical/metric cut identification. A coincident time-gamma matrix or g2^4 cannot replace that map. ROOT commissioned Executor to BUILD the additional map or demonstrated breakdown in the [accepted full-cut transport assignment](../audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md), with both pair-kernel orientations/full C2 and an unsquared sign discriminator before Task3 consumption. Positive-domain construction remains independently owed. ROOT retains numerical/publication/runtime ownership; Executor retains the original physical research. No slot or gate transition follows.
+
+### Actual full P0–N0/C3 cut/source construction
+
+The [explicit full-cut transport](../audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT.md) has separate independent actual mathematical/source ACCEPT at its [manual interoperability boundary](../audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_ACCEPTANCE.md). It constructs the map formerly withheld by the convention note: both full defect-inclusive pair-kernel orientations, four typed cuts, source C2/acceleration/overlap/denominator transport, exact coupling inputs and genuine noncommuting unsquared EHC control. Direct N inputs flip g1 only; composed C inputs flip g1 and g2. Root intake and numerical implementation/run qualification remain separate.
+
+This completes the specified manual coordinate/control BUILD, without repairing the transported metric positivity obstruction or supplying positive physical domain/adjoint/CAR/causal dynamics. The spatial-record reconstruction candidate remains research, and all original physical/publication requirements stay open. No slot, numerical result or gate transition follows.
+
+### Original one-slice spatial-record construction and finite obstruction
+
+The [exact spatial marginal/source construction](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION.md) has independent ACTUAL math/source ACCEPT at its [recorded restricted scope](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_ACCEPTANCE.md). A complete zero-source bidegree audit, new uniform original-functional bound and explicit finite spatial-only positive test establish failure of the specified classical24-spatial-link/doubled-Weyl hybrid and CP-instrument extension, with all other40anchors integrated. This is stronger than the earlier all-history-only result; it is not a global reconstruction/model no-go.
+
+The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link and controlled Euclidean routes remain open. Integrated positive/PPT/CPTP results and all full source/kernel/contact requirements survive. ROOT intake is pending; positive physical domain/adjoint/product/causal calibration, B3/N4 and publication remain owed. No numerical run, slot or gate transition follows.
+
 ## Decision Gates
 
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
@@ -1001,7 +1210,7 @@ previously called "low-utility/high-effort":
 
 ## Open Questions
 
-**O.1 — RESOLVED 2026-04-25.** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in "use-as-identified" mode with explicit caveat theorem `second_sound_graviton_not_derived_DOF`. The natural-range falsification result is the load-bearing finding: Wave 2 *negatively* resolves the identification at leading order, opening Phase 6e (full nonlinear emergent action) or a Phase 5y H1 follow-up wave to provide a derived-DOF χ_vest = 1 mechanism.
+**O.1 — Historical disposition: RESOLVED 2026-04-25; current physical successors OPEN (2026-10-17).** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in "use-as-identified" mode with explicit caveat theorem `second_sound_graviton_not_derived_DOF`. The natural-range falsification result is the load-bearing finding: Wave 2 *negatively* resolves the identification at leading order, opening Phase 6e (full nonlinear emergent action) or a Phase 5y H1 follow-up wave to provide a derived-DOF χ_vest = 1 mechanism.
 
 **O.2 — RESOLVED 2026-04-26.** MTC horizon BC for 6a.3 ships in Outcome-3 tracked-hypothesis mode (`H_HorizonBoundaryCondition` Lean Prop bundle with five falsifier theorems) + Outcome-2 SU(2)_k sub-corollary (Kaul-Majumdar -3/2 closed form under `gaussianSaddleAsymptotic` axiom + Immirzi γ tuning). Per the deep-research return verdict: no published derivation pins a specific MTC at a 4D BH horizon in an ADW substrate, so the choice is a research-level conjecture flagged in the module + paper. The Walker-Wang anomaly-inflow conjecture (Z₂ time-reversal bulk → boundary chiral c_- mod 8) is the natural derivation path for future work.
 
@@ -1060,3 +1269,101 @@ previously called "low-utility/high-effort":
 ---
 
 *Phase 6a roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. Six waves, six papers, five correctness-push highlights. Tractable gravitational dynamics: linearized, cosmological, BH structure, four laws, positive mass. All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). Total PM: 27–45. Consolidation-half anchor of the post-SK-EFT program.*
+
+
+### Publication continuation: polynomial Gaussian identity
+
+ROOT retains ordinary L1 Lean/Python construction and publication delivery.
+The all-degree Hermite and affine/product foundations remain independently
+accepted and integrated. The full complex auxiliary Eq5–6 proof is now accepted
+at author e0c51ec2, with exact selected-source integration on draftPR117 source
+0e2894344. Genuine integrability, arbitrary complex finite polynomial, every
+multiindex, positive scale and finite coordinates including empty are retained.
+Independent actual kernel verification covers all forty exports/closing goals
+with only standard logical axioms. The formal exp(Q) coefficient result is
+independently derived, not defined by the target moments.
+[Source, independent reviews and full raw evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/0e2894344b35e1fe45bc6d9602b4e388f7c56a65/papers/AutomatedReviews/2026-11-06-l1-main-delivery/COMPLEX_SOURCE_R1.md).
+
+Normal primary absorption at7fc0d2c0b publishes its epoch and releaseswt1.
+Separate actual main-source library/ExtractDeps build passes10,838jobs,
+terminal zero18:31UTC. Canonical derivatives and independent artifact review
+now pass at pushedb21c206a8; all prior complete records and scientific tables
+are conserved, with forty new authored theorems. Actual freshness4/4passes
+with one canonical cluster-regeneration warning. A fresh complete existing
+merge-gate profile is RUNNING atb21c206a8; no full-project pass is claimed.
+
+Next ordinary mathematical acceptance: original Eq4 compensation and finite
+truncation, then actual Grassmann/coframe commutation/global nilpotence and
+Eq7evaluation, Berezin orientation/determinant, compact link integrability and
+weighted derivative-of-W/source Eq11. Search actual statement/type and consumer
+imports through admitted Lean LSP before opening purportedly missing proofs;
+failed text search/stale pending comments are not absence evidence. ROOT owns
+dispatch, independent review, actual builds, integration and publication.
+Original physical B3 and all calibration/state/domain/mode/transport obligations
+remain OPEN. See the [canonical current queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints).
+
+### Publication continuation: original one-slice source kernel
+
+**Original physical bridge and B3 acceptance: OPEN BUILD.** Historical shipped
+algebra does not discharge physical product/adjoint/domain, constraints, source/
+response, matter, calibration or transport. Executor owns specifically commissioned
+deeper constructions; ROOT retains the whole ordinary L1 bundle and integration.
+
+Accepted task `l1-original-one-slice-source-kernel`, peer6b86bd220, supplies the
+actual temporal polynomial decomposition, diagnostic finite-rank slice kernel,
+explicit bare-local mixed-factorization defect and full-source pair/C2 law.
+Both independent actual math/source reviews ACCEPT; ROOT personally read all
+results/reviews and verified full custody before normal cumulative integration.
+[Exact ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ROOT_INTAKE_R1.md).
+It does not supply a positive physical product or prove all reductions impossible.
+Prior spatial-source-kick REVISE verdicts remain preserved, not overwritten.
+
+### Publication continuation: original EHC reflection and source adjoint
+
+Accepted task `l1-original-ehc-reflection-source-adjoint`, owner Executor, parent
+publication remediation, peer7fc890876d66611044d9d0d49b1090074f9de97e. Two independent
+prospective approvals precede construction; two independent ACTUAL math/source
+ACCEPT reports and ROOT full personal intake establish bounded manual acceptance.
+[Actual result and ROOT custody](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_ROOT_INTAKE_R1.md)
+retain original fields, independent anchors, quarter, complete action, source
+multiplicities, arbitrary C2 frame jets and both prior exact controls.
+
+The existing reflection maps EHC to an explicit backward/parallel-transported
+curvature with coframes at the proper base. A complete actual coefficient gives
+2i*g2 versus -2i*g2 and Delta=-4i*g2. The exact reverse-cut/transposed/coefficient-
+adjoint comparison and full raw/normalized source jets retain expDelta0 and proper
+reverse constraint sides. This is a lattice action mismatch, not a restricted
+integrated-form sign conclusion or global original-model no-go.
+
+Next deeper construction must address the original-grounded positive physical
+domain and source/operator correspondence for both computed kernel orientations,
+or an actual controlled original-state/regulator/source limit with defect/jet
+bounds. Executor prepares a precise prospective construction attempt and missing
+physical data for independent review and ROOT intake. No norm, state, coupling,
+CAR prescription, source-family enlargement, symmetrized action or continuum
+limit is silently selected; any needed operator disposition is asked specifically
+with construction evidence. Existing B3, maps30–31/calibration, secondary
+constraints, causal dynamics, matter/absolute scale, limits, N4/tensor/light/
+transport and human/publication gates remain OPEN. a14 and K/K_R remain uncomputed.
+No new Lean slot or runtime capacity is granted by these manual research entries.
+
+### Publication continuation: next physical prescription research
+
+ROOT read the complete Executor next-physical mathematical-design and primary
+source intake plus handback, verified hashes/complete archive custody, and
+commissioned source-specific Lorentzian composite boundary real-structure/
+polarization/cycle/continuation investigation. This is authorized research, not
+adoption of a new physical premise, a positive-state candidate or a deferral.
+Both original kernel orientations, full C2/source/frame/denominator/seam/domain
+requirements remain binding. The controlled original Euclidean reconstruction
+alternative remains open. A derived concrete construction requires fresh
+independent prospective source/mathematical review before implementation.
+Executor owns that deeper task; ROOT keeps ordinary L1 and runtime/reset.
+
+The next ordinary [Eq4/Eq7design](../audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_R1.md)
+has [independent prospective approval](../audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_REVIEW_R1.md)
+for admitted discovery/implementation. Deterministic finite complex compensation,
+actual8Vexterior/coframe/global4Vnilpotence and G-valued integrability/equality
+are all required; a conditional carrier or scalar surrogate is insufficient.
+Actual source conventions precede specialization. No Eq7kernel/physical/B3
+acceptance follows from design approval.

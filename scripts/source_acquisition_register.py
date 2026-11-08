@@ -8,10 +8,9 @@ into an invisible one. The repair is to ACQUIRE the source, which costs money we
 have a limited budget for. So the gap has to be measured and ranked, not narrated.
 
 WHAT IS MEASURED (all at HEAD, never quoted from a prior run):
-  * holding   -- CITATION_REGISTRY[k]['primary_source_path'], resolved on disk.
-                 `abstract` when the cached filename says so; a cached abstract is
-                 NOT the source, and the Mather1982 convention question is the
-                 measured proof that treating it as one produces a false claim.
+  * holding   -- strongest content-classified tier from a nonempty declared
+                 artifact or canonical-phase discovery, using the citation
+                 check's existing classifier and strongest-cache selection.
   * usage     -- \\cite keys in the 21 bundle drafts, LaTeX comments stripped.
                  Legacy paperNN drafts are excluded: they are not the submission
                  surface, so a gap there is not a budget item.
@@ -43,8 +42,13 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-WORKSPACE = PROJECT_ROOT.parent
+sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.core.workspace import find_workspace
+from validation.checks.citations import _best_cache_for, _cache_fidelity, _CACHE_TIER_RANK
+
+WORKSPACE = find_workspace()
 
 OVERLAY = PROJECT_ROOT / "docs" / "source_acquisition_overlay.json"
 REGISTER = PROJECT_ROOT / "docs" / "SOURCE_ACQUISITION_REGISTER.md"
@@ -58,13 +62,17 @@ _FREE_ROUTES = {"open", "arxiv", "repository", "internal"}
 
 
 def _holding(key: str, registry: dict) -> str:
-    path = (registry.get(key) or {}).get("primary_source_path")
-    if not path:
-        return "none"
-    fp = WORKSPACE / path
-    if not fp.exists():
-        return "missing"
-    return "abstract" if "abstract" in fp.name.lower() else "full"
+    entry = registry.get(key) or {}
+    path = entry.get("primary_source_path")
+    _, best = _best_cache_for(key, entry)
+    if path:
+        fp = WORKSPACE / path
+        if fp.is_file() and fp.stat().st_size > 0:
+            ext = "abstract.txt" if fp.name.lower().endswith(".abstract.txt") else fp.suffix.lower().lstrip(".")
+            tier = _cache_fidelity(fp, ext)
+            if best is None or _CACHE_TIER_RANK[tier] > _CACHE_TIER_RANK[best]:
+                best = tier
+    return best or ("missing" if path else "none")
 
 
 def _bundle_usage() -> dict[str, set[str]]:
@@ -108,7 +116,15 @@ def _rows():
     overlay = {k: v for k, v in json.loads(OVERLAY.read_text()).items()
                if not k.startswith("_")}
     usage = _bundle_usage()
-    gaps = {k: v for k, v in usage.items() if _holding(k, REG) != "full"}
+    holdings = {k: _holding(k, REG) for k in usage}
+    # Reject contradictory curated identity before filtering full holdings: an
+    # overlay cannot turn an external source into a companion or vice versa.
+    for key in usage:
+        ov_route = overlay.get(key, {}).get("route")
+        internal = (REG.get(key) or {}).get("inprep") is True
+        if ov_route and ((ov_route == "internal") != internal):
+            raise ValueError(f"{key}: overlay route {ov_route!r} conflicts with registry inprep={internal}")
+    gaps = {k: v for k, v in usage.items() if holdings[k] != "full"}
     bearing = _bearing(gaps, REG, PROV)
 
     rows = []
@@ -122,7 +138,7 @@ def _rows():
             bears, why = bool(ov["load_bearing"]), "curated"
         else:
             bears, why = bool(signals), ("signal" if signals else "-")
-        route = ov.get("route") or ("internal" if key.startswith("Roehm2026") else "unassessed")
+        route = ov.get("route") or ("internal" if (REG.get(key) or {}).get("inprep") is True else "unassessed")
         if route == "internal":
             priority = "—"           # our own companion papers: never a budget item
         elif bears:
@@ -132,7 +148,7 @@ def _rows():
         else:
             priority = "P2"
         rows.append({
-            "key": key, "holding": _holding(key, REG), "bundles": sorted(bundles),
+            "key": key, "holding": holdings[key], "bundles": sorted(bundles),
             "bears": bears, "why": why, "signals": signals, "route": route,
             "priority": priority, "reason": ov.get("reason", ""),
             "route_note": ov.get("route_note", ""),

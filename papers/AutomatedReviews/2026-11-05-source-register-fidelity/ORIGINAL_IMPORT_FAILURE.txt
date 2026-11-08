@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import runpy; from pathlib import Path; from src.core.citations import CITATION_REGISTRY as R; from scripts.validation.checks.citations import _cache_fidelity; m=runpy.run_path("scripts/source_acquisition_register.py"); p=m["WORKSPACE"]/R["Verlinde1988"]["primary_source_path"]; expected=_cache_fidelity(p,"json"); actual=m["_holding"]("Verlinde1988",R); rows=m["_rows"](); bad=[r["key"] for r in rows if R.get(r["key"],{}).get("inprep") is True and (r["route"]!="internal" or r["priority"]!="—")]; print({"Verlinde1988_canonical":expected,"register":actual,"inprep_misrouted":bad}); assert actual==expected=="metadata" and not bad, "existing register disagrees with canonical cache fidelity or actual inprep identity"
+                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/validation/checks/citations.py", line 51, in <module>
+    import validate_helpers as _H
+ModuleNotFoundError: No module named 'validate_helpers'

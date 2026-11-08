@@ -1,0 +1,55 @@
+{
+  "task": "l1-publication-failure-roots-r1",
+  "source_commit": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "canonical_commit": "db5cb5fb7912a65d11a075d41dd668291c37afb7",
+  "method": "Read-only immutable source/report/history inspection; no tests, validators, extractors, Lean, repository or runtime mutation",
+  "report": "/tmp/l1-publication-failure-roots-r1.md",
+  "next_repair": {
+    "commit": "be0b4fa476a571fa415625a88243f60ec8f0dad3",
+    "scope": "Compose accepted five-document53-command format transformations, preserving current scientific source and assertion bodies",
+    "acceptance": "docs/audits/2026-10-25-njl-qualification-dependencies/VERIFY_FORMAT_REPAIR.md",
+    "independent_review": "docs/audits/2026-10-25-njl-qualification-dependencies/VERIFY_FORMAT_READBACK.md",
+    "excluded": [
+      "review:2026-08-15-d8-stage10-redraft:D8:1.4",
+      "review:2026-08-15-d8-stage10-redraft:D8:1.8"
+    ],
+    "exclusion_reason": "grep -c succeeds on defect; fixed-state semantic review required"
+  },
+  "known_source_debt": [
+    "Multiline D1 Verify54-66 violates unchanged entire-line predicate",
+    "Accepted current numerical139>117, L1/Paper25 zero",
+    "D8 controls62/118 retain unsafe fixed-state exit semantics",
+    "D1 hierarchy production reader requires inline tabular and numeric coefficients; migration HOLD"
+  ],
+  "not_proven_by_cache": [
+    "which chain/blocked-by assertion failed",
+    "current unresolved109 population or native cause",
+    "count-literal growth vs reduction",
+    "exact table population",
+    "legacy compilation population/direction",
+    "all earlier graph failures resolved after build"
+  ],
+  "accepted_reuse": [
+    "be0b4fa476a571fa415625a88243f60ec8f0dad3 Verify formatting",
+    "415ec1ce2 D2 generated tables",
+    "L1_CANONICAL_SOURCE_REUSE_R1_READBACK11FIXED",
+    "GW_SCALARS_R1_READBACK139>117",
+    "D1 narrower scaling canonical closure"
+  ],
+  "run_receipt": "/tmp/l1-full-merge-profile-r5.result.json",
+  "full_profile_returncode": 1,
+  "candidate_head_after": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "generated_diffs_preserved": [
+    "docs/counts.json",
+    "papers/paper15_methodology/tables/table2_checks.tex"
+  ],
+  "ownership": "L1 lead; ROOT ordinary whole publication chain; Executor commissioned deep constructions only",
+  "continuity_initial": {
+    "fresh": true,
+    "changed": []
+  },
+  "continuity_final": {
+    "fresh": true,
+    "changed": []
+  }
+}

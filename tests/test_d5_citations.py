@@ -904,7 +904,7 @@ class TestExemptionIsClaimedNotInferred:
 
     def test_the_undeclared_ceiling_has_ZERO_headroom(self):
         """Guide §2.3 — a ceiling above the live population cannot fire. The ratchet's job
-        is to red the check the moment a 79th undeclared entry appears, which it cannot do
+        is to red the check the moment one new undeclared entry appears, which it cannot do
         with slack."""
         from src.core.constants import CITATION_UNDECLARED_CLASS_CEILING as CEIL
         res = ck.check_citation_primary_sources_present()
@@ -1015,3 +1015,239 @@ class TestExemptionIsClaimedNotInferred:
             encoding="utf-8"), "the registry looks mutated without its declarations"
         assert "10.9999/seeded-by-test" not in self.REG.read_text(encoding="utf-8"), (
             "a seeded DOI survived in the tracked registry — the restore did not run")
+
+
+class TestSourceAcquisitionRegister:
+    """Catch filename-only fidelity, first-hit discovery and prefix-only identity."""
+
+    @staticmethod
+    def _workspace(tmp_path, monkeypatch):
+        import source_acquisition_register as producer
+        ws = tmp_path / "workspace"
+        ws.mkdir()
+        monkeypatch.setattr(producer, "WORKSPACE", ws)
+        monkeypatch.setattr(_ws, "find_workspace", lambda: ws)
+        monkeypatch.setattr(_cit, "bibkey_phase", lambda entry: "Phase-1-and-Background")
+        return producer, ws
+
+    def test_declared_cache_content_and_missing_bytes(self, tmp_path, monkeypatch):
+        producer, ws = self._workspace(tmp_path, monkeypatch)
+        # Literal tiers distinguish same-extension metadata and genuine full bodies.
+        cases = [
+            ("record.json", json.dumps({"status": "ok", "message-type": "work",
+                                       "message": {}}), "metadata"),
+            ("abstract.json", json.dumps({"status": "ok", "message-type": "work",
+                                         "message": {"abstract": "a result"}}), "abstract"),
+            ("body.json", json.dumps({"body": "x" * 2500}), "full"),
+            ("unknown-kind.json", json.dumps({"cache_kind": "new-format",
+                                             "body": "x" * 2500}), "full"),
+            ("unknown-shape.json", json.dumps({"unrelated": True}), "metadata"),
+            ("corrupt.json", "{broken", "metadata"),
+            ("body.pdf", "%PDF-1.4 body", "full"),
+            ("body.tex", r"\documentclass{article}", "full"),
+            ("only.abstract.txt", "Title: Only the abstract", "abstract"),
+            ("empty.pdf", "", "missing"),
+        ]
+        for name, content, want in cases:
+            (ws / name).write_text(content)
+            assert producer._holding("Probe", {"Probe": {"primary_source_path": name}}) == want, name
+        (ws / "directory.pdf").mkdir()
+        for name in ("absent.pdf", "directory.pdf"):
+            assert producer._holding("Probe", {"Probe": {"primary_source_path": name}}) == "missing"
+        assert producer._holding("Probe", {"Probe": {"primary_source_path": None}}) == "none"
+        assert producer._holding("Probe", {}) == "none"
+
+    def test_strongest_canonical_discovery_and_declared_alias(self, tmp_path, monkeypatch):
+        producer, ws = self._workspace(tmp_path, monkeypatch)
+        canonical = ws / "Lit-Search/Phase-1-and-Background/primary-sources"
+        canonical.mkdir(parents=True)
+        wrong = ws / "Lit-Search/Phase-Wrong/primary-sources"
+        wrong.mkdir(parents=True)
+        (wrong / "Probe.pdf").write_bytes(b"%PDF-1.4 wrong phase")
+        assert producer._holding("Probe", {"Probe": {}}) == "none"
+        assert producer._holding("Probe", {"Probe": {"primary_source_path": "absent.pdf"}}) == "missing"
+        # A declared alias remains usable, even outside the canonical phase.
+        alias = wrong / "edition-alias.json"
+        alias.write_text(json.dumps({"body": "b" * 2500}))
+        assert producer._holding("Probe", {"Probe": {"primary_source_path": str(alias.relative_to(ws))}}) == "full"
+        alias.write_text(json.dumps({"status": "ok", "message-type": "work", "message": {}}))
+        (canonical / "Probe.abstract.txt").write_text("Title: Header remains visible")
+        (canonical / "Probe.json").write_text(json.dumps({"body": "x" * 2500}))
+        assert producer._holding("Probe", {"Probe": {}}) == "full"
+        assert producer._holding("Probe", {"Probe": {"primary_source_path": "absent.pdf"}}) == "full"
+        assert producer._holding("Probe", {"Probe": {"primary_source_path": str(alias.relative_to(ws))}}) == "full"
+        assert ck._discover_cache_for("Probe").name == "Probe.abstract.txt"
+        (canonical / "Probe.json").write_text(json.dumps({"message": {}, "status": "ok", "message-type": "work"}))
+        (canonical / "Probe.pdf").write_bytes(b"%PDF-1.4 body")
+        assert producer._holding("Probe", {"Probe": {}}) == "full"
+        selected, tier = ck._best_cache_for("Probe", {})
+        assert (selected.name, tier) == ("Probe.pdf", "full")
+        (canonical / "Probe.tex").write_text("body")
+        assert ck._best_cache_for("Probe", {})[0].name == "Probe.pdf"  # stable equal-tier tie
+
+    @staticmethod
+    def _rows_fixture(tmp_path, monkeypatch, registry, overlay, signals=()):
+        import source_acquisition_register as producer
+        root = tmp_path / "checkout"
+        (root / "papers/D1").mkdir(parents=True)
+        (root / "papers/D1/bundle_metadata.json").write_text("{}")
+        (root / "papers/D1/paper_draft.tex").write_text(r"See \cite{" + ",".join(registry) + "}.")
+        (root / "src/core").mkdir(parents=True)
+        (root / "src/core/formulas.py").write_text(" ".join(signals))
+        (root / "overlay.json").write_text(json.dumps(overlay))
+        monkeypatch.setattr(producer, "PROJECT_ROOT", root)
+        monkeypatch.setattr(producer, "OVERLAY", root / "overlay.json")
+        monkeypatch.setattr(producer, "REGISTER", root / "register.md")
+        monkeypatch.setattr(producer, "WORKSPACE", root)
+        monkeypatch.setattr(_ws, "find_workspace", lambda: root)
+        monkeypatch.setattr(_cit, "CITATION_REGISTRY", registry)
+        monkeypatch.setattr(_prov, "PARAMETER_PROVENANCE", {})
+        return producer
+
+    def test_actual_inprep_identity_and_curated_bearing_both_directions(self, tmp_path, monkeypatch):
+        reg = {"NonprefixCompanion": {"inprep": True},
+               "Roehm2026ExternalProbe": {"inprep": False},
+               "Promote": {}, "Demote": {}, "EmptyExternal": {"doi": None, "arxiv": None}}
+        overlay = {"Promote": {"load_bearing": True, "route": "repository", "reason": "closed form",
+                               "route_note": "held by repository", "cost": 0},
+                   "Demote": {"load_bearing": False, "route": "paywalled", "reason": "background",
+                              "route_note": "free routes tried", "cost": 17}}
+        producer = self._rows_fixture(tmp_path, monkeypatch, reg, overlay, signals=("Demote",))
+        before = producer.OVERLAY.read_bytes()
+        rows = {r["key"]: r for r in producer._rows()}
+        assert (rows["NonprefixCompanion"]["route"], rows["NonprefixCompanion"]["priority"]) == ("internal", "—")
+        for key in ("Roehm2026ExternalProbe", "EmptyExternal"):
+            assert (rows[key]["route"], rows[key]["priority"]) == ("unassessed", "P2")
+        assert (rows["Promote"]["bears"], rows["Promote"]["priority"], rows["Promote"]["route"],
+                rows["Promote"]["reason"], rows["Promote"]["route_note"]) == (True, "P0", "repository", "closed form", "held by repository")
+        assert (rows["Demote"]["bears"], rows["Demote"]["priority"], rows["Demote"]["route"],
+                rows["Demote"]["reason"], rows["Demote"]["route_note"]) == (False, "P2", "paywalled", "background", "free routes tried")
+        assert producer.OVERLAY.read_bytes() == before
+        reg["NonprefixCompanion"]["inprep"] = False
+        row = {r["key"]: r for r in producer._rows()}["NonprefixCompanion"]
+        assert (row["route"], row["priority"]) == ("unassessed", "P2")
+
+    def test_conflicting_identity_refuses_before_register_write(self, tmp_path, monkeypatch):
+        import pytest
+        producer = self._rows_fixture(tmp_path, monkeypatch, {"Companion": {"inprep": True}},
+                                      {"Companion": {"route": "paywalled"}})
+        producer.REGISTER.write_text("prepared register")
+        monkeypatch.setattr(sys, "argv", ["source_acquisition_register.py"])
+        with pytest.raises(ValueError, match="Companion.*inprep"):
+            producer.main()
+        assert producer.REGISTER.read_text() == "prepared register"
+        monkeypatch.setattr(_cit, "CITATION_REGISTRY", {"Companion": {"inprep": False}})
+        producer.OVERLAY.write_text(json.dumps({"Companion": {"route": "internal"}}))
+        with pytest.raises(ValueError, match="Companion.*inprep"):
+            producer.main()
+        assert producer.REGISTER.read_text() == "prepared register"
+
+    def test_consistent_internal_overlay_and_writer_check_idempotence(self, tmp_path, monkeypatch, capsys):
+        producer = self._rows_fixture(tmp_path, monkeypatch, {"Companion": {"inprep": True}},
+                                      {"Companion": {"route": "internal", "reason": "our paper"}})
+        monkeypatch.setattr(sys, "argv", ["source_acquisition_register.py"])
+        assert producer.main() == 0
+        prepared = producer.REGISTER.read_bytes()
+        assert producer.main() == 0
+        assert producer.REGISTER.read_bytes() == prepared
+        monkeypatch.setattr(sys, "argv", ["source_acquisition_register.py", "--check"])
+        assert producer.main() == 0
+        producer.REGISTER.write_text("stale")
+        assert producer.main() == 1
+        assert producer.REGISTER.read_text() == "stale"
+
+    def test_absolute_script_foreign_cwd_uses_active_checkout_and_workspace(self, tmp_path):
+        import os
+        import shutil
+        import subprocess
+        ws = tmp_path / "workspace"
+        root = ws / "managed/candidate"
+        (ws / ".workspace-root").parent.mkdir(parents=True)
+        (ws / ".workspace-root").write_text("")
+        (root / "scripts").mkdir(parents=True)
+        (root / "src/core").mkdir(parents=True)
+        (root / "src/__init__.py").write_text("")
+        (root / "src/core/__init__.py").write_text("")
+        shutil.copy2(SK_ROOT / "scripts/source_acquisition_register.py", root / "scripts/source_acquisition_register.py")
+        shutil.copytree(SK_ROOT / "scripts/validation", root / "scripts/validation", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copy2(SK_ROOT / "scripts/validate_helpers.py", root / "scripts/validate_helpers.py")
+        shutil.copy2(SK_ROOT / "src/core/workspace.py", root / "src/core/workspace.py")
+        (root / "src/core/citations.py").write_text('CITATION_REGISTRY = {"ForeignProbe": {}}\ndef bibkey_phase(entry): return None\n')
+        (root / "src/core/provenance.py").write_text("PARAMETER_PROVENANCE = {}\n")
+        (root / "src/core/formulas.py").write_text("")
+        (root / "papers/D1").mkdir(parents=True)
+        (root / "papers/D1/bundle_metadata.json").write_text("{}")
+        (root / "papers/D1/paper_draft.tex").write_text(r"\cite{ForeignProbe}")
+        (root / "docs").mkdir()
+        (root / "docs/source_acquisition_overlay.json").write_text('{"ForeignProbe": {"load_bearing": true}}')
+        cache = ws / "Lit-Search/Phase-1-and-Background/primary-sources/ForeignProbe.json"
+        cache.parent.mkdir(parents=True)
+        cache.write_text('{"message": {}, "status": "ok", "message-type": "work"}')
+        foreign = tmp_path / "unrelated"
+        foreign.mkdir()
+        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONPATH=str(SK_ROOT))
+        script = root / "scripts/source_acquisition_register.py"
+        for args in ([], ["--check"]):
+            result = subprocess.run([sys.executable, "-B", str(script), *args], cwd=foreign,
+                                    env=env, capture_output=True, text=True)
+            assert result.returncode == 0, result.stdout + result.stderr
+        rendered = (root / "docs/SOURCE_ACQUISITION_REGISTER.md").read_text()
+        assert "| `ForeignProbe` | metadata | D1 | unassessed |" in rendered
+        probe = """import runpy,sys,json
+m=runpy.run_path(sys.argv[1],run_name='binding_probe')
+import src.core.citations as c
+from validation.checks import citations as checks
+print(json.dumps([str(m['PROJECT_ROOT']),str(m['WORKSPACE']),c.__file__,checks.__file__]))
+"""
+        result = subprocess.run([sys.executable, "-B", "-c", probe, str(script)], cwd=foreign,
+                                env=env, capture_output=True, text=True)
+        assert result.returncode == 0, result.stderr
+        assert json.loads(result.stdout) == [str(root), str(ws), str(root / "src/core/citations.py"),
+                                             str(root / "scripts/validation/checks/citations.py")]
+
+    def test_real_source_tiers_and_companion_routes(self):
+        import source_acquisition_register as producer
+        reg = _cit.CITATION_REGISTRY
+        for key, want in (("Verlinde1988", "metadata"), ("ADW2019", "metadata"),
+                          ("Barcelo2011", "full"), ("IrwinHilton2005", "full"),
+                          ("Eddington1919", "abstract"), ("ADM1962", "full"),
+                          ("ABP1967", "none")):
+            assert producer._holding(key, reg) == want, key
+        rows = {row["key"]: row for row in producer._rows()}
+        assert rows["Verlinde1988"]["holding"] == "metadata"
+        assert "Barcelo2011" not in rows
+        companions = ("CompanionCompilation", "CompanionFaultTolerance", "CompanionStochastic",
+                      "RoehmD4Topological", "RoehmD6FaultTolerant", "RoehmD8Compilation",
+                      "RoehmD9Certification", "Roehm2026TQC")
+        for key in companions:
+            assert reg[key].get("inprep") is True, key
+            assert all(reg[key].get(field) is None for field in ("doi", "arxiv", "primary_source_path")), key
+            assert (rows[key]["route"], rows[key]["priority"]) == ("internal", "—"), key
+
+    def test_full_body_does_not_suppress_header_or_dangling_path_diagnostics(self, tmp_path, monkeypatch):
+        _, ws = self._workspace(tmp_path, monkeypatch)
+        canonical = ws / "Lit-Search/Phase-1-and-Background/primary-sources"
+        canonical.mkdir(parents=True)
+        (canonical / "Probe.pdf").write_bytes(b"%PDF-1.4 body")
+        (canonical / "Probe.abstract.txt").write_text(
+            "Title: Correct title\nVenue: Annalen der Physik, 274, p. 573 (1889)\n")
+        draft = tmp_path / "D1/paper_draft.tex"
+        draft.parent.mkdir()
+        draft.write_text(r"\cite{Probe}")
+        monkeypatch.setattr(_H, "all_paper_drafts", lambda: [draft])
+        entry = {"doi": "10.1/probe", "title": "Correct title", "journal": "Annalen der Physik",
+                 "volume": 274, "page": "573"}
+        monkeypatch.setattr(_cit, "CITATION_REGISTRY", {"Probe": entry})
+        baseline = ck.check_citation_primary_sources_present()
+        assert baseline.passed, baseline
+        assert "1 cached (1 full text" in baseline.details[0].message
+        entry["title"] = "Incorrect title"
+        entry["volume"] = 275
+        result = ck.check_citation_primary_sources_present()
+        assert result.passed is False
+        assert {"cache_title_mismatch:Probe", "cache_venue_mismatch:Probe"} <= {
+            d.name for d in result.details if not d.passed}
+        entry["primary_source_path"] = "Lit-Search/Phase-1-and-Background/primary-sources/absent.abstract.txt"
+        result = ck.check_citation_primary_sources_present()
+        assert result.passed is False
+        assert "cache_path_wrong:Probe" in {d.name for d in result.details if not d.passed}

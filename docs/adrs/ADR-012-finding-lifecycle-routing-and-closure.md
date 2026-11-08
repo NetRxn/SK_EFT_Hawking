@@ -1474,6 +1474,11 @@ population's shape:
   parallelism is the FILE**; normalising targets took the Lean lane from 21 groups to 13 and
   made each worker's block larger, which is the throughput the fan-out is for.
 
+**Target-path contract:** A logical `SK_EFT_Hawking/` target prefix denotes the active checkout,
+irrespective of its physical directory name. Canonical containment and file existence remain
+mandatory, and every named file participates in deduplication and the concurrent-file conflict
+guard.
+
 ⚠️ **And a third: `sorted(lanes)[0]` was labelled "the strongest profile".** For
 `{infra, prose}` that is right by luck and for `{lean, infra}` it drops the build gate.
 `LANE_STRENGTH` now orders the six explicitly, and a test asserts a spanning target gets `lean`

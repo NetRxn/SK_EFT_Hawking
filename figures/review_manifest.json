@@ -1,14 +1,14 @@
 {
-  "generated": "2026-06-14T16:33:33.526672+00:00",
-  "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
-  "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
+  "generated": "2026-11-05T17:22:11.110035+00:00",
+  "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+  "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures",
   "figures": [
     {
       "name": "fig1_transonic_profiles",
       "function": "fig_transonic_profiles",
       "caption": "Transonic BEC background profiles for three experimental setups.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig1_transonic_profiles.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig1_transonic_profiles.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig1_transonic_profiles.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig1_transonic_profiles.html",
       "expected_traces": 9,
       "expected_axes": {
         "xaxis3": "\u03be",
@@ -37,8 +37,8 @@
       "name": "fig2_correction_hierarchy",
       "function": "fig_correction_hierarchy",
       "caption": "Correction hierarchy: \u03b4_disp, \u03b4_diss, \u03b4_cross on log scale.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig2_correction_hierarchy.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig2_correction_hierarchy.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig2_correction_hierarchy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig2_correction_hierarchy.html",
       "expected_traces": 3,
       "expected_axes": {
         "yaxis": "Correction"
@@ -66,8 +66,8 @@
       "name": "fig3_parameter_space",
       "function": "fig_parameter_space",
       "caption": "2D parameter space: D vs \u03b3/\u03ba with experimental points.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig3_parameter_space.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig3_parameter_space.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig3_parameter_space.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig3_parameter_space.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "Adiabaticity",
@@ -95,8 +95,8 @@
       "name": "fig4_spin_sonic_enhancement",
       "function": "fig_spin_sonic_enhancement",
       "caption": "Spin-sonic enhancement: \u03b4_diss \u00d7 (c_dens/c_spin)\u00b2.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig4_spin_sonic_enhancement.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig4_spin_sonic_enhancement.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig4_spin_sonic_enhancement.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig4_spin_sonic_enhancement.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "ratio",
@@ -122,8 +122,8 @@
       "name": "fig5_temperature_decomposition",
       "function": "fig_temperature_decomposition",
       "caption": "Temperature decomposition: T_eff = T_H(1 + \u03b4_disp + \u03b4_diss + \u03b4_cross).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig5_temperature_decomposition.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig5_temperature_decomposition.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig5_temperature_decomposition.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig5_temperature_decomposition.html",
       "expected_traces": 3,
       "expected_axes": {
         "yaxis": "Temperature"
@@ -151,8 +151,8 @@
       "name": "fig6_kappa_scaling",
       "function": "fig_kappa_scaling",
       "caption": "Scaling: \u03b4_disp ~ \u03ba\u00b2 vs \u03b4_diss ~ 1/\u03ba with crossing point.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig6_kappa_scaling.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig6_kappa_scaling.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig6_kappa_scaling.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig6_kappa_scaling.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u03ba",
@@ -179,8 +179,8 @@
       "name": "fig7_cgl_fdr_pattern",
       "function": "fig_cgl_fdr_pattern",
       "caption": "CGL FDR monomial counting at each EFT order N.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig7_cgl_fdr_pattern.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig7_cgl_fdr_pattern.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig7_cgl_fdr_pattern.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig7_cgl_fdr_pattern.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "Order",
@@ -207,8 +207,8 @@
       "name": "fig8_even_vs_odd_kernel",
       "function": "fig_even_vs_odd_kernel",
       "caption": "K_R decomposition: even-\u03c9 (conservative) vs odd-\u03c9 (dissipative).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig8_even_vs_odd_kernel.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig8_even_vs_odd_kernel.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig8_even_vs_odd_kernel.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig8_even_vs_odd_kernel.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -235,8 +235,8 @@
       "name": "fig9_boundary_term_suppression",
       "function": "fig_boundary_term_suppression",
       "caption": "IBP boundary correction is O(D) for all experiments.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig9_boundary_term_suppression.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig9_boundary_term_suppression.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig9_boundary_term_suppression.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig9_boundary_term_suppression.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "Adiabaticity",
@@ -265,8 +265,8 @@
       "name": "fig10_positivity_constraint",
       "function": "fig_positivity_constraint",
       "caption": "SK positivity constraint: strict \u03b3_{2,1}+\u03b3_{2,2}=0 and relaxed bound.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig10_positivity_constraint.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig10_positivity_constraint.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig10_positivity_constraint.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig10_positivity_constraint.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u03b3",
@@ -292,8 +292,8 @@
       "name": "fig11_on_shell_vanishing",
       "function": "fig_on_shell_vanishing",
       "caption": "\u03b4^(2) vanishes at k = \u03c9/c_s (acoustic shell), nonzero off-shell.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig11_on_shell_vanishing.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig11_on_shell_vanishing.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig11_on_shell_vanishing.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig11_on_shell_vanishing.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "k",
@@ -319,8 +319,8 @@
       "name": "fig12_einstein_relation",
       "function": "fig_einstein_relation",
       "caption": "Einstein relation \u03c3 = \u03b3T: simplest FDR from CGL.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig12_einstein_relation.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig12_einstein_relation.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig12_einstein_relation.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig12_einstein_relation.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "Temperature",
@@ -347,8 +347,8 @@
       "name": "fig13_parity_alternation",
       "function": "fig_parity_alternation",
       "caption": "Parity alternation: universal (odd N) vs flow-only (even N) monomials.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig13_parity_alternation.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig13_parity_alternation.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig13_parity_alternation.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig13_parity_alternation.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "m",
@@ -373,8 +373,8 @@
       "name": "fig14_parity_alternation_stakeholder",
       "function": "fig_parity_alternation_stakeholder",
       "caption": "Parity alternation bar chart: count per order, colored by type.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig14_parity_alternation_stakeholder.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig14_parity_alternation_stakeholder.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig14_parity_alternation_stakeholder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig14_parity_alternation_stakeholder.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "Order",
@@ -399,8 +399,8 @@
       "name": "fig15_damping_rate_third_order",
       "function": "fig_damping_rate_third_order",
       "caption": "Damping rate convergence: orders 1, 2, 3 for Steinhauer.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig15_damping_rate_third_order.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig15_damping_rate_third_order.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig15_damping_rate_third_order.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig15_damping_rate_third_order.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "k",
@@ -426,8 +426,8 @@
       "name": "fig16_spectral_correction_comparison",
       "function": "fig_spectral_correction_comparison",
       "caption": "Spectral parity: delta^(2) odd in omega vs delta^(3) even in omega.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig16_spectral_correction_comparison.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig16_spectral_correction_comparison.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig16_spectral_correction_comparison.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig16_spectral_correction_comparison.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "omega"
@@ -451,8 +451,8 @@
       "name": "fig17_kappa_crossing",
       "function": "fig_kappa_crossing_phase3",
       "caption": "kappa-crossing: dispersive vs dissipative correction crossing point.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig17_kappa_crossing.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig17_kappa_crossing.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig17_kappa_crossing.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig17_kappa_crossing.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u03ba",
@@ -478,8 +478,8 @@
       "name": "fig18_spin_sonic_phase3",
       "function": "fig_spin_sonic_enhancement_phase3",
       "caption": "Spin-sonic enhancement with sensitivity thresholds.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig18_spin_sonic_phase3.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig18_spin_sonic_phase3.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig18_spin_sonic_phase3.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig18_spin_sonic_phase3.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "ratio",
@@ -503,8 +503,8 @@
       "name": "fig19_bogoliubov_connection",
       "function": "fig_bogoliubov_connection",
       "caption": "Bogoliubov connection: acoustic vs full dispersion and k^4 deviation.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig19_bogoliubov_connection.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig19_bogoliubov_connection.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig19_bogoliubov_connection.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig19_bogoliubov_connection.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "k"
@@ -528,8 +528,8 @@
       "name": "fig20_sm_scorecard",
       "function": "fig_sm_scorecard",
       "caption": "Standard Model gauge erasure scorecard: SU(3)/SU(2)/U(1).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig20_sm_scorecard.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig20_sm_scorecard.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig20_sm_scorecard.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig20_sm_scorecard.html",
       "expected_traces": 1,
       "expected_axes": {
         "yaxis": "Group"
@@ -553,8 +553,8 @@
       "name": "fig21_erasure_survey",
       "function": "fig_erasure_survey",
       "caption": "Erasure survey across gauge groups: SU(N), SO(N), U(1).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig21_erasure_survey.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig21_erasure_survey.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig21_erasure_survey.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig21_erasure_survey.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -573,8 +573,8 @@
       "name": "fig22_complex_turning_point",
       "function": "fig_complex_turning_point",
       "caption": "Complex turning point shift vs frequency for three BEC platforms.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig22_complex_turning_point.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig22_complex_turning_point.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig22_complex_turning_point.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig22_complex_turning_point.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u03c9",
@@ -600,8 +600,8 @@
       "name": "fig23_effective_surface_gravity",
       "function": "fig_effective_surface_gravity",
       "caption": "Effective surface gravity decomposition: dispersive + dissipative.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig23_effective_surface_gravity.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig23_effective_surface_gravity.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig23_effective_surface_gravity.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig23_effective_surface_gravity.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -625,8 +625,8 @@
       "name": "fig24_decoherence_and_noise",
       "function": "fig_decoherence_and_noise",
       "caption": "Decoherence parameter and FDR noise floor vs frequency.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig24_decoherence_and_noise.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig24_decoherence_and_noise.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig24_decoherence_and_noise.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig24_decoherence_and_noise.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -651,8 +651,8 @@
       "name": "fig25_hawking_spectrum_exact",
       "function": "fig_hawking_spectrum_exact",
       "caption": "Full Hawking spectrum with exact WKB corrections (3 platforms).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig25_hawking_spectrum_exact.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig25_hawking_spectrum_exact.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig25_hawking_spectrum_exact.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig25_hawking_spectrum_exact.html",
       "expected_traces": 9,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -676,8 +676,8 @@
       "name": "fig26_hawking_spectrum_stakeholder",
       "function": "fig_hawking_spectrum_exact_stakeholder",
       "caption": "Hawking spectrum overlay: all platforms on one plot.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig26_hawking_spectrum_stakeholder.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig26_hawking_spectrum_stakeholder.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig26_hawking_spectrum_stakeholder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig26_hawking_spectrum_stakeholder.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -702,8 +702,8 @@
       "name": "fig27_exact_vs_perturbative",
       "function": "fig_exact_vs_perturbative",
       "caption": "Fractional difference between exact WKB and perturbative EFT.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig27_exact_vs_perturbative.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig27_exact_vs_perturbative.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig27_exact_vs_perturbative.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig27_exact_vs_perturbative.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u03c9",
@@ -729,8 +729,8 @@
       "name": "fig28_adw_effective_potential",
       "function": "fig_adw_effective_potential",
       "caption": "Coleman-Weinberg effective potential for tetrad condensation at three coupling ratios.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig28_adw_effective_potential.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig28_adw_effective_potential.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig28_adw_effective_potential.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig28_adw_effective_potential.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "C",
@@ -752,8 +752,8 @@
       "name": "fig29_adw_phase_diagram",
       "function": "fig_adw_phase_diagram",
       "caption": "Phase diagram: tetrad VEV vs coupling ratio G/G_c.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig29_adw_phase_diagram.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig29_adw_phase_diagram.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig29_adw_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig29_adw_phase_diagram.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "G",
@@ -775,8 +775,8 @@
       "name": "fig30_adw_ng_modes",
       "function": "fig_adw_ng_mode_decomposition",
       "caption": "Vergeles mode counting: tetrad DOF decomposition in 4D.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig30_adw_ng_modes.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig30_adw_ng_modes.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig30_adw_ng_modes.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig30_adw_ng_modes.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "Mode"
@@ -797,8 +797,8 @@
       "name": "fig31_adw_he3_analogy",
       "function": "fig_adw_he3_analogy",
       "caption": "Structural analogy between ADW tetrad and superfluid He-3 order parameter.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig31_adw_he3_analogy.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig31_adw_he3_analogy.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig31_adw_he3_analogy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig31_adw_he3_analogy.html",
       "expected_traces": 10,
       "expected_axes": {},
       "physics_checks": [],
@@ -817,8 +817,8 @@
       "name": "fig32_adw_obstacles",
       "function": "fig_adw_structural_obstacles",
       "caption": "Four structural obstacles for emergent fermion bootstrap with severity.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig32_adw_obstacles.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig32_adw_obstacles.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig32_adw_obstacles.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig32_adw_obstacles.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "Severity"
@@ -839,8 +839,8 @@
       "name": "fig33_adw_coupling_scan",
       "function": "fig_adw_coupling_scan",
       "caption": "Coupling scan: V_eff depth and tetrad VEV for N_f = 2, 4, 8.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig33_adw_coupling_scan.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig33_adw_coupling_scan.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig33_adw_coupling_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig33_adw_coupling_scan.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "G"
@@ -865,8 +865,8 @@
       "name": "fig34_adw_coupling_scan_stakeholder",
       "function": "fig_adw_coupling_scan_stakeholder",
       "caption": "Coupling scan for wider audience: simplified labels.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig34_adw_coupling_scan_stakeholder.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig34_adw_coupling_scan_stakeholder.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig34_adw_coupling_scan_stakeholder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig34_adw_coupling_scan_stakeholder.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "G"
@@ -891,8 +891,8 @@
       "name": "fig35_prediction_table_comparison",
       "function": "fig_prediction_table_comparison",
       "caption": "Spectral deviation from Planckian for all three BEC platforms.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig35_prediction_table_comparison.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig35_prediction_table_comparison.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig35_prediction_table_comparison.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig35_prediction_table_comparison.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -917,8 +917,8 @@
       "name": "fig36_detector_requirements",
       "function": "fig_detector_requirements",
       "caption": "Detector requirements: shots needed for three measurement goals.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig36_detector_requirements.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig36_detector_requirements.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig36_detector_requirements.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig36_detector_requirements.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "goal"
@@ -943,8 +943,8 @@
       "name": "fig37_kappa_scaling",
       "function": "fig_kappa_scaling_phase4",
       "caption": "Kappa-scaling test: dispersive (D^2) vs dissipative corrections.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig37_kappa_scaling.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig37_kappa_scaling.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig37_kappa_scaling.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig37_kappa_scaling.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "D"
@@ -968,8 +968,8 @@
       "name": "fig38_noise_floor_crossover",
       "function": "fig_noise_floor_crossover",
       "caption": "Noise floor crossover: where FDR noise exceeds Hawking signal.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig38_noise_floor_crossover.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig38_noise_floor_crossover.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig38_noise_floor_crossover.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig38_noise_floor_crossover.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u03c9"
@@ -994,8 +994,8 @@
       "name": "fig46_kappa_scaling_physical",
       "function": "fig_kappa_scaling_physical",
       "caption": "Physical kappa-scaling: EFT corrections vs surface gravity for all platforms.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig46_kappa_scaling_physical.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig46_kappa_scaling_physical.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig46_kappa_scaling_physical.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig46_kappa_scaling_physical.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u03ba"
@@ -1020,8 +1020,8 @@
       "name": "fig39_chirality_wall_status",
       "function": "fig_chirality_wall_status",
       "caption": "Chirality wall: GS conditions vs TPF evasion.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig39_chirality_wall_status.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig39_chirality_wall_status.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig39_chirality_wall_status.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig39_chirality_wall_status.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -1043,8 +1043,8 @@
       "name": "fig40_gl_phase_diagram",
       "function": "fig_gl_phase_diagram",
       "caption": "Ginzburg-Landau phase diagram: B-phase, A-phase, polar phases.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig40_gl_phase_diagram.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig40_gl_phase_diagram.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig40_gl_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig40_gl_phase_diagram.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "G"
@@ -1069,8 +1069,8 @@
       "name": "fig41_he3_comparison_table",
       "function": "fig_he3_comparison_table",
       "caption": "He-3 vs ADW structural comparison table.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig41_he3_comparison_table.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig41_he3_comparison_table.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig41_he3_comparison_table.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig41_he3_comparison_table.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -1089,8 +1089,8 @@
       "name": "fig45_vestigial_effective_potential",
       "function": "fig_vestigial_effective_potential",
       "caption": "Paper 6 native V_eff at three coupling ratios.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig45_vestigial_effective_potential.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig45_vestigial_effective_potential.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig45_vestigial_effective_potential.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig45_vestigial_effective_potential.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "C"
@@ -1111,8 +1111,8 @@
       "name": "fig42_vestigial_phase_diagram",
       "function": "fig_vestigial_phase_diagram",
       "caption": "Vestigial gravity mean-field phase diagram.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig42_vestigial_phase_diagram.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig42_vestigial_phase_diagram.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig42_vestigial_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig42_vestigial_phase_diagram.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "G"
@@ -1136,8 +1136,8 @@
       "name": "fig43_backreaction_cooling",
       "function": "fig_backreaction_cooling",
       "caption": "Acoustic BH cooling toward extremality.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig43_backreaction_cooling.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig43_backreaction_cooling.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig43_backreaction_cooling.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig43_backreaction_cooling.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u03c4"
@@ -1162,8 +1162,8 @@
       "name": "fig44_information_retention",
       "function": "fig_information_retention",
       "caption": "Fracton vs standard hydro information retention.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig44_information_retention.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig44_information_retention.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig44_information_retention.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig44_information_retention.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "dimension"
@@ -1187,8 +1187,8 @@
       "name": "fig48_grassmann_trg_2d_phase",
       "function": "fig_grassmann_trg_2d_phase",
       "caption": "2D ADW phase diagram from Grassmann TRG: free energy and specific heat vs coupling.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig48_grassmann_trg_2d_phase.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig48_grassmann_trg_2d_phase.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig48_grassmann_trg_2d_phase.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig48_grassmann_trg_2d_phase.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "g"
@@ -1212,8 +1212,8 @@
       "name": "fig49_fermion_bag_4d_binder",
       "function": "fig_fermion_bag_4d_binder",
       "caption": "4D Binder cumulants (tetrad vs metric) from fermion-bag MC.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig49_fermion_bag_4d_binder.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig49_fermion_bag_4d_binder.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig49_fermion_bag_4d_binder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig49_fermion_bag_4d_binder.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "g"
@@ -1237,8 +1237,8 @@
       "name": "fig50_fermion_bag_4d_phase_diagram",
       "function": "fig_fermion_bag_4d_phase_diagram",
       "caption": "4D ADW phase diagnostics: metric correlator and acceptance rate.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig50_fermion_bag_4d_phase_diagram.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig50_fermion_bag_4d_phase_diagram.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig50_fermion_bag_4d_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig50_fermion_bag_4d_phase_diagram.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "g"
@@ -1262,8 +1262,8 @@
       "name": "fig51_vestigial_binder_crossing",
       "function": "fig_vestigial_binder_crossing",
       "caption": "Vestigial MC Binder cumulants at L=4,6,8.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig51_vestigial_binder_crossing.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig51_vestigial_binder_crossing.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig51_vestigial_binder_crossing.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig51_vestigial_binder_crossing.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "g"
@@ -1288,8 +1288,8 @@
       "name": "fig52_vestigial_susceptibility_split",
       "function": "fig_vestigial_susceptibility_split",
       "caption": "Split transition: susceptibility peaks at different couplings.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig52_vestigial_susceptibility_split.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig52_vestigial_susceptibility_split.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig52_vestigial_susceptibility_split.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig52_vestigial_susceptibility_split.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1311,8 +1311,8 @@
       "name": "fig53_gs_condition_formalization",
       "function": "fig_gs_condition_formalization",
       "caption": "GS no-go conditions: formalization status and TPF violation.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig53_gs_condition_formalization.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig53_gs_condition_formalization.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig53_gs_condition_formalization.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig53_gs_condition_formalization.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -1331,8 +1331,8 @@
       "name": "fig54_lean_theorem_summary",
       "function": "fig_lean_theorem_summary",
       "caption": "Phase 5 Lean verification: manual vs Aristotle proofs per module.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig54_lean_theorem_summary.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig54_lean_theorem_summary.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig54_lean_theorem_summary.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig54_lean_theorem_summary.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1354,8 +1354,8 @@
       "name": "fig55_category_hierarchy",
       "function": "fig_category_hierarchy",
       "caption": "Categorical infrastructure: Mathlib existing vs new.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig55_category_hierarchy.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig55_category_hierarchy.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig55_category_hierarchy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig55_category_hierarchy.html",
       "expected_traces": 3,
       "expected_axes": {},
       "physics_checks": [],
@@ -1378,8 +1378,8 @@
       "name": "fig56_fusion_rules_comparison",
       "function": "fig_fusion_rules_comparison",
       "caption": "Fusion rules: total multiplicity for Vec_Z2, Rep_S3, Fibonacci.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig56_fusion_rules_comparison.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig56_fusion_rules_comparison.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig56_fusion_rules_comparison.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig56_fusion_rules_comparison.html",
       "expected_traces": 3,
       "expected_axes": {},
       "physics_checks": [],
@@ -1398,8 +1398,8 @@
       "name": "fig57_fibonacci_f_matrix",
       "function": "fig_fibonacci_f_matrix",
       "caption": "Fibonacci F-matrix with golden ratio entries.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig57_fibonacci_f_matrix.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig57_fibonacci_f_matrix.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig57_fibonacci_f_matrix.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig57_fibonacci_f_matrix.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -1418,8 +1418,8 @@
       "name": "fig58_drinfeld_anyon_spectrum",
       "function": "fig_drinfeld_anyon_spectrum",
       "caption": "Drinfeld double anyon spectrum and algebra dimension.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig58_drinfeld_anyon_spectrum.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig58_drinfeld_anyon_spectrum.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig58_drinfeld_anyon_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig58_drinfeld_anyon_spectrum.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1442,8 +1442,8 @@
       "name": "fig59_layer123_bridge",
       "function": "fig_layer123_bridge",
       "caption": "Three-layer architecture with formal verification at each level.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig59_layer123_bridge.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig59_layer123_bridge.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig59_layer123_bridge.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig59_layer123_bridge.html",
       "expected_traces": 3,
       "expected_axes": {},
       "physics_checks": [],
@@ -1466,8 +1466,8 @@
       "name": "fig60_tpf_evasion_architecture",
       "function": "fig_tpf_evasion_architecture",
       "caption": "TPF evasion: 5 GS conditions violated.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig60_tpf_evasion_architecture.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig60_tpf_evasion_architecture.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig60_tpf_evasion_architecture.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig60_tpf_evasion_architecture.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -1486,8 +1486,8 @@
       "name": "fig61_fock_exterior_algebra",
       "function": "fig_fock_exterior_algebra",
       "caption": "Fermionic Fock space dimension: ExteriorAlgebra dim = 2^k.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig61_fock_exterior_algebra.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig61_fock_exterior_algebra.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig61_fock_exterior_algebra.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig61_fock_exterior_algebra.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1509,8 +1509,8 @@
       "name": "fig62_vestigial_phase_diagram_mc",
       "function": "fig_vestigial_phase_diagram_mc",
       "caption": "Mean-field phase diagram with MC susceptibility peaks overlaid.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig62_vestigial_phase_diagram_mc.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig62_vestigial_phase_diagram_mc.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig62_vestigial_phase_diagram_mc.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig62_vestigial_phase_diagram_mc.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1532,8 +1532,8 @@
       "name": "fig63_vestigial_susceptibility",
       "function": "fig_vestigial_susceptibility",
       "caption": "RPA metric susceptibility vs G/G_c for multiple u_g values.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig63_vestigial_susceptibility.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig63_vestigial_susceptibility.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig63_vestigial_susceptibility.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig63_vestigial_susceptibility.html",
       "expected_traces": 4,
       "expected_axes": {},
       "physics_checks": [],
@@ -1552,8 +1552,8 @@
       "name": "fig64_vestigial_window",
       "function": "fig_vestigial_window",
       "caption": "Vestigial window G_ves/G_c vs u_g showing exponential narrowness.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig64_vestigial_window.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig64_vestigial_window.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig64_vestigial_window.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig64_vestigial_window.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1572,8 +1572,8 @@
       "name": "fig65_vestigial_phase_diagram_analytical",
       "function": "fig_vestigial_phase_diagram_analytical",
       "caption": "ADW analytical phase diagram: pre-geometric / vestigial / Einstein-Cartan.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig65_vestigial_phase_diagram_analytical.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig65_vestigial_phase_diagram_analytical.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig65_vestigial_phase_diagram_analytical.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig65_vestigial_phase_diagram_analytical.html",
       "expected_traces": 3,
       "expected_axes": {},
       "physics_checks": [],
@@ -1592,8 +1592,8 @@
       "name": "fig66_gt_band_structure",
       "function": "fig_gt_band_structure",
       "caption": "GT BdG band structure showing single gapless Weyl node at Gamma.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig66_gt_band_structure.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig66_gt_band_structure.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig66_gt_band_structure.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig66_gt_band_structure.html",
       "expected_traces": 4,
       "expected_axes": {
         "yaxis": "Energy"
@@ -1617,8 +1617,8 @@
       "name": "fig67_wilson_mass_bz",
       "function": "fig_wilson_mass_bz",
       "caption": "Wilson mass M(kx,ky,0) heatmap: zero only at origin (Weyl node).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig67_wilson_mass_bz.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig67_wilson_mass_bz.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig67_wilson_mass_bz.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig67_wilson_mass_bz.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -1639,8 +1639,8 @@
       "name": "fig68_chiral_charge_spectrum",
       "function": "fig_chiral_charge_spectrum",
       "caption": "GT chiral charge eigenvalues \u00b1cos(p3/2): non-compact spectrum.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig68_chiral_charge_spectrum.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig68_chiral_charge_spectrum.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig68_chiral_charge_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig68_chiral_charge_spectrum.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -1662,8 +1662,8 @@
       "name": "fig69_gt_commutator_verification",
       "function": "fig_gt_commutator_verification",
       "caption": "Numerical verification [H,Q_A]=0 at L=8: machine epsilon everywhere.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig69_gt_commutator_verification.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig69_gt_commutator_verification.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig69_gt_commutator_verification.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig69_gt_commutator_verification.html",
       "expected_traces": 1,
       "expected_axes": {
         "yaxis": "commutator"
@@ -1686,8 +1686,8 @@
       "name": "fig70_chirality_wall_three_pillars",
       "function": "fig_chirality_wall_three_pillars",
       "caption": "Three-pillar chirality wall formal verification: no-go + GT + anomaly.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig70_chirality_wall_three_pillars.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig70_chirality_wall_three_pillars.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig70_chirality_wall_three_pillars.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig70_chirality_wall_three_pillars.html",
       "expected_traces": 0,
       "expected_axes": {},
       "physics_checks": [],
@@ -1706,8 +1706,8 @@
       "name": "fig71_sm_fermion_z16_anomaly",
       "function": "fig_sm_fermion_z16_anomaly",
       "caption": "SM fermion anomaly contributions in Z16: 16 Weyl with nu_R, 15 without.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig71_sm_fermion_z16_anomaly.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig71_sm_fermion_z16_anomaly.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig71_sm_fermion_z16_anomaly.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig71_sm_fermion_z16_anomaly.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "component"
@@ -1731,8 +1731,8 @@
       "name": "fig72_sm_generation_anomaly",
       "function": "fig_sm_generation_anomaly",
       "caption": "Z16 anomaly index vs generation count: with and without nu_R.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig72_sm_generation_anomaly.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig72_sm_generation_anomaly.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig72_sm_generation_anomaly.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig72_sm_generation_anomaly.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "generation",
@@ -1757,8 +1757,8 @@
       "name": "fig73_sm_generation_constraint",
       "function": "fig_sm_generation_constraint",
       "caption": "Generation constraint c_minus = 8 N_f mod 24: N_f must be multiple of 3.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig73_sm_generation_constraint.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig73_sm_generation_constraint.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig73_sm_generation_constraint.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig73_sm_generation_constraint.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "generation",
@@ -1782,8 +1782,8 @@
       "name": "fig74_drinfeld_equivalence_structure",
       "function": "fig_drinfeld_equivalence_structure",
       "caption": "Drinfeld center equivalence Z(Vec_G) = Rep(D(G)): anyon content for Z/2 (toric code) and S3 (non-abelian).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig74_drinfeld_equivalence_structure.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig74_drinfeld_equivalence_structure.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig74_drinfeld_equivalence_structure.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig74_drinfeld_equivalence_structure.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "anyon",
@@ -1809,8 +1809,8 @@
       "name": "fig_ext_chart",
       "function": "fig_ext_chart",
       "caption": "Ext chart for A(1): E2 page of the Adams spectral sequence for ko. Machine-checked dims 1,2,2,2,3,4.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ext_chart.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ext_chart.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ext_chart.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ext_chart.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "stem",
@@ -1835,8 +1835,8 @@
       "name": "fig_a1_resolution_structure",
       "function": "fig_a1_resolution_structure",
       "caption": "Minimal free resolution of F2 over A(1): bidiagonal pattern, ranks 1,2,2,2,3,4.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a1_resolution_structure.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a1_resolution_structure.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_a1_resolution_structure.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_a1_resolution_structure.html",
       "expected_traces": 7,
       "expected_axes": {},
       "physics_checks": [],
@@ -1857,8 +1857,8 @@
       "name": "fig_fk_spectrum",
       "function": "fig_fk_spectrum",
       "caption": "FK 8-Majorana spectrum (Cayley): eigenvalues -14,0,+2 with Spin(7) multiplicities 1,8,7. Gap Delta=14.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_spectrum.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_spectrum.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_fk_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_fk_spectrum.html",
       "expected_traces": 3,
       "expected_axes": {
         "yaxis": "energy"
@@ -1881,8 +1881,8 @@
       "name": "fig_fk_dimensional_ladder",
       "function": "fig_fk_dimensional_ladder",
       "caption": "Phase 5s Wave 4 bridge theorem: dimensional-ladder evidence for gapped_interface_axiom (1+1D and 2+1D PROVED, 3+1D AXIOMATIZED).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_dimensional_ladder.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_dimensional_ladder.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_fk_dimensional_ladder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_fk_dimensional_ladder.html",
       "expected_traces": 0,
       "expected_axes": {},
       "physics_checks": [],
@@ -1904,8 +1904,8 @@
       "name": "fig_sfdm_velocity_threshold_step",
       "function": "fig_sfdm_velocity_threshold_step",
       "caption": "Paper 17 money plot (left) \u2014 DM-galaxy offset vs v_infall/c_s. SFDM step function at M=1 vs SIDM smooth rise vs CDM null. 5 canonical mergers overlaid.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_velocity_threshold_step.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_velocity_threshold_step.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_sfdm_velocity_threshold_step.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_sfdm_velocity_threshold_step.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "mach",
@@ -1931,8 +1931,8 @@
       "name": "fig_sfdm_stacked_kappa_profile",
       "function": "fig_sfdm_stacked_kappa_profile",
       "caption": "Paper 17 money plot (right) \u2014 stacked S/N vs N mergers for Euclid + Roman. 3\u03c3 and 5\u03c3 thresholds marked. First 3\u03c3 ~2028.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_stacked_kappa_profile.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_stacked_kappa_profile.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_sfdm_stacked_kappa_profile.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_sfdm_stacked_kappa_profile.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "N",
@@ -1957,8 +1957,8 @@
       "name": "fig_phase5x_candidate_viability_matrix",
       "function": "fig_phase5x_candidate_viability_matrix",
       "caption": "Paper 17 \u00a74/\u00a78 \u2014 Five emergent-gravity DM candidates classified by basic viability. 4/5 viable; FG torsion obstructed at tree-level EoS. Lean: phase5x_candidates_viability_matrix.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_candidate_viability_matrix.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_candidate_viability_matrix.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_phase5x_candidate_viability_matrix.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_phase5x_candidate_viability_matrix.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "viability",
@@ -1983,8 +1983,8 @@
       "name": "fig_phase5x_empirical_hook_ranking",
       "function": "fig_phase5x_empirical_hook_ranking",
       "caption": "Paper 17 \u00a79 \u2014 Five empirical hooks ranked by Phase 5x detectability + timeline. Merger sonic boom top; direct nuclear recoil last (all candidates invisible). Lean: empirical_hook_ranking_strict.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_empirical_hook_ranking.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_empirical_hook_ranking.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_phase5x_empirical_hook_ranking.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_phase5x_empirical_hook_ranking.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "priority",
@@ -2009,8 +2009,8 @@
       "name": "fig_doublon_gate_spectrum",
       "function": "fig_doublon_gate_spectrum",
       "caption": "Phase 5t W9 \u2014 Fermi-Hubbard dimer singlet-sector spectrum vs U (\u0394=0) plus direct-vs-superexchange scaling. Left: three eigenvalues (E_plus, E_minus, U) cross-verified by numpy eigh vs Lean closed-form (W7l charpoly factorization). Right: superexchange gap J(t,U) with 4t\u00b2/U asymptote and the Lean W7i bound envelope \u00b116t\u2074/U\u00b3.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_doublon_gate_spectrum.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_doublon_gate_spectrum.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_doublon_gate_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_doublon_gate_spectrum.html",
       "expected_traces": 5,
       "expected_axes": {
         "xaxis": "U",
@@ -2036,8 +2036,8 @@
       "name": "fig_higgs_mass_parameter_scan",
       "function": "fig_higgs_mass_parameter_scan",
       "caption": "Phase 5z Wave 1 \u2014 microscopic Higgs-mass prediction over the (\u039b_UV, G_c) plane at fiducial N_f=15 and \u03bb_4=0.13. Heatmap shows log\u2081\u2080 m_H [GeV] from the schematic Wetterich scalar-channel gap equation. Gold contour: the m_H = 125.25 GeV target with the EW.M_H_MATCH_TOLERANCE = 50% band overlay. Any region within the gold band activates Gate Z.1 GO (quantitative scalar-rung EWSB); absence over a wide natural range is the structural-only Gate Z.1 NO-GO verdict. Lean: scalar_rung_quantitative_EWSB_iff_m_H_matches.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higgs_mass_parameter_scan.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higgs_mass_parameter_scan.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_higgs_mass_parameter_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_higgs_mass_parameter_scan.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u039b_UV",
@@ -2061,8 +2061,8 @@
       "name": "fig_ew_transition_phase_diagram",
       "function": "fig_ew_transition_phase_diagram",
       "caption": "Phase 5z Wave 3 \u2014 EW phase transition. Left panel: V_T(\u03c6) at three temperatures (T = 0 broken phase, T = T_c/2, T = 1.5 T_c symmetric phase) at the SM benchmark (m_H = 125 GeV, \u03bb = 0.13, c_T = 0.4, E = 0.01); T_c \u2248 139 GeV. Curves normalized to unit max-abs for clarity. Right panel: first-order vs crossover partition over the (m_H, E) plane: shaded region (E > 0) is first-order; white line at E = 0 is crossover. Star: SM benchmark (m_H = 125.20, E = 0.01). Vertical dashed line at m_H = 72 GeV (Kajantie-Laine-Rummukainen-Shaposhnikov 1996 lattice crossover threshold). Lean: thermalMassSq_neg_below_T_c, first_order_and_crossover_disjoint, crossover_excludes_baryogenesis.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ew_transition_phase_diagram.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ew_transition_phase_diagram.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ew_transition_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ew_transition_phase_diagram.html",
       "expected_traces": 5,
       "expected_axes": {
         "xaxis": "\u03c6",
@@ -2087,9 +2087,9 @@
     {
       "name": "fig_a2_vs_linearized_G_N",
       "function": "fig_a2_vs_linearized_G_N",
-      "caption": "Phase 6e Wave 1 \u2014 Heat-kernel a\u2082 calibration to Sakharov-Adler G_N (Decision Gate E.2). Left panel: relative error |G_N_HK \u2212 G_N_lin| / G_N_lin as a function of \u03b1_ADW over [0.05, 5.0] at GUT-anchor parameters (\u039b_UV, N_f) = (10\u00b9\u2076 GeV, 15). Exact zero at \u03b1_ADW = 1 (Sakharov-Adler baseline); \u00b150% pass band shaded green; the natural-parameter band \u03b1_ADW \u2208 [0.5, 1.5] sits inside. Right panel: log-log G_N(\u039b_UV) at fixed N_f = 15 over [10\u00b9\u2070, 10\u00b9\u2079] GeV with horizontal CODATA G_N^obs reference and M_Pl vertical anchor (1.22 \u00d7 10\u00b9\u2079 GeV). The heat-kernel G_N(\u039b_UV) crosses CODATA near M_Pl, confirming the Sakharov-Adler scale anchor. Lean: G_N_from_a2_eq_G_N_sakharov, a2_matches_GNemerg_iff_alpha_ADW_unity, G_N_from_a2_at_GUT_inverse, G_N_from_a2_inverse_at_GUT_below_planck_squared.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a2_vs_linearized_G_N.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a2_vs_linearized_G_N.html",
+      "caption": "Phase 6e Wave 1 \u2014 Heat-kernel a\u2082 calibration to Sakharov-Adler G_N (Decision Gate E.2). Left panel: relative error |G_N_HK \u2212 G_N_lin| / G_N_lin as a function of \u03b1_ADW over [0.05, 5.0] at GUT-anchor parameters (\u039b_UV, N_f) = (10\u00b9\u2076 GeV, 15). Exact zero at \u03b1_ADW = 1 (Sakharov-Adler baseline); \u00b150% pass band shaded green; the natural-parameter band \u03b1_ADW \u2208 [0.5, 1.5] sits inside. Right panel: log-log G_N(\u039b_UV) at fixed N_f = 15 over [10\u00b9\u2070, 10\u00b9\u2079] GeV with horizontal CODATA G_N^obs reference and M_Pl vertical anchor (1.22 \u00d7 10\u00b9\u2079 GeV). The heat-kernel G_N(\u039b_UV) crosses CODATA near M_Pl, confirming the Sakharov-Adler scale anchor. Lean: G_N_from_a2_eq_quarter_G_N_sakharov, a2_matches_GNemerg_iff_alpha_ADW_quarter, G_N_from_a2_at_GUT_inverse, G_N_from_a2_inverse_at_GUT_below_planck_squared.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_a2_vs_linearized_G_N.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_a2_vs_linearized_G_N.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u03b1_ADW",
@@ -2114,8 +2114,8 @@
       "name": "fig_higher_curvature_obs_bounds",
       "function": "fig_higher_curvature_obs_bounds",
       "caption": "Phase 6e Wave 2 \u2014 Microscopic Dirac a\u2084 predictions vs observational ceilings on dimensionless higher-curvature couplings. Left panel: |c_R\u00b2|, |c_Ricci\u00b2|, |c_Riemann\u00b2| from the Christensen-Duff Dirac a\u2084 at SM-relevant fermion counts N_f \u2208 {24, 27, 100} (with the (4\u03c0)\u207b\u00b2 heat-kernel measure). The Riemann\u00b2 coefficient dominates. Right panel: log-scale comparison to the four canonical observational ceilings (LIGO/Virgo, E\u00f6t-Wash short-range gravity, Hulse-Taylor binary pulsar, Cassini post-Newtonian). The pulsar bound is tightest at |\u03b2| \u2272 10\u2075\u2079; the predicted O(10\u207b\u00b3) coefficient sits ~62 orders of magnitude below. Lean: higher_curvature_below_pulsar_bound, higher_curvature_predictions_strictly_positive, H_HigherCurvatureWithinObservationalBounds_pulsar_witness.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higher_curvature_obs_bounds.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higher_curvature_obs_bounds.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_higher_curvature_obs_bounds.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_higher_curvature_obs_bounds.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "N_f",
@@ -2143,8 +2143,8 @@
       "name": "fig_diff_invariance_order_check",
       "function": "fig_diff_invariance_order_check",
       "caption": "Phase 6e Wave 3 \u2014 Path-(b) diff-invariance check at order a\u2084. Left panel: log-scale max-residual on a 16-point curvature grid for the Christensen-Duff Dirac bundle (\u03b4=0, at machine \u03b5) vs perturbed bundles with single coefficient shifted by \u03b4 \u2208 {10\u207b\u2079, 10\u207b\u2076, 10\u207b\u00b3}. The dashed reference line marks the path-b tolerance 10\u207b\u00b9\u00b2. Dirac sits below tolerance; every nonzero perturbation is detectable above it. Right panel: linearity demonstration \u2014 at unit R\u00b2, the perturbed-bundle residual equals exactly \u03b4 (Lean theorem `perturbed_pathB_residual_a4_at_unit_R_sq`). Lean: pathB_residual_a4_dirac_eq_zero, diff_invariance_a4_iff_dirac_basis_consistent, dirac_H_NonlinearDiffInvariance.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_diff_invariance_order_check.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_diff_invariance_order_check.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_diff_invariance_order_check.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_diff_invariance_order_check.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u03b4",
@@ -2171,8 +2171,8 @@
       "name": "fig_T_emerg_vs_matter",
       "function": "fig_T_emerg_vs_matter",
       "caption": "Phase 6e Wave 4 \u2014 Emergent vs matter stress-energy and multi-channel PPN observable deviations under the ADW \u03b1_ADW rescaling. Left panel: the linear-in-(\u03b1\u22121) deviation channel ``T_emerg \u2212 T_matter = (\u03b1 \u2212 1) \u00b7 \u03c1_ADW`` at unit \u03c1; vanishes at the Sakharov-Adler calibration \u03b1 = 1 (Lean theorem `emergentStressEnergyTrace_eq_matter_iff_alpha_unity`). The amber band marks the 5\u00d710\u207b\u00b3 detection floor. Right panel: log-log relative-deviation for three observables \u2014 deflection (|\u03b1\u22121|), perihelion precession ((2/3)|\u03b1\u22121|), ringdown (|\u03b1\u22121|) \u2014 over the natural Vergeles band \u03b1 \u2208 [0.1, 10]. Cross-channel structural claim: precession_dev = (2/3) \u00d7 deflection_dev (Lean theorem `precession_dev_eq_two_thirds_deflection_dev`). Observation floors (VLBI 3\u00d710\u207b\u2074, MESSENGER 1\u00d710\u207b\u2074, GWTC-3 5\u00d710\u207b\u00b2) drawn as dashed lines. Lean: efeResidualTrace_eq_zero_iff_alpha_unity, deflectionRatio_minus_one_eq, deflectionRatio_deviation_exceeds_VLBI_floor, precessionRatio_eq_one_iff_alpha_unity, dirac_H_NonlinearEFEHolds_at_alpha_one.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_T_emerg_vs_matter.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_T_emerg_vs_matter.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_T_emerg_vs_matter.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_T_emerg_vs_matter.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "\u03b1_ADW",
@@ -2198,8 +2198,8 @@
       "name": "fig_lambda_emerg_parameter_scan",
       "function": "fig_lambda_emerg_parameter_scan",
       "caption": "Phase 6e Wave 5 \u2014 \u039b^emerg parameter scan and Decision Gate E.4 verdict. Left panel: log-log \u039b^emerg(\u039b_UV, N_f) curves at fixed N_f \u2208 {1, 4, 16, 100}; the Planck-2018 observed CC value \u039b_obs \u2243 2.6\u00d710\u207b\u2074\u2077 GeV\u2074 is drawn as a horizontal anchor; the natural cutoff M_Pl \u2243 1.2\u00d710\u00b9\u2079 GeV is drawn as a vertical anchor. The diagnostic resolution locus \u039b_UV \u2243 4.5\u00d710\u207b\u00b9\u00b2 GeV (where the SM N_f curve crosses \u039b_obs) is marked. Right panel: 2D verdict map of log10(\u039b^emerg/\u039b_obs) over the (\u039b_UV, N_f) plane with verdict-band contour boundaries (cc_resolved at |log10 ratio|=1, cc_reproduced at log10 ratio=60). Decision Gate E.4 verdict: the entire natural high-energy theory band (\u039b_UV \u2265 EW_SCALE, N_f \u2265 1) sits in the cc_reproduced region \u2014 the classical CC problem is reproduced in the emergent-gravity formulation. Lean: lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed, lambdaEmergMicroscopic_eq_zero_iff, dirac_H_MicroscopicCoefficientMatch_at_alpha_one. Source: Sakharov 1968; Vassilevich 2003 Eq. (4.37); Weinberg RMP 61 (1989) \u2014 CC problem; Planck 2018.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_lambda_emerg_parameter_scan.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_lambda_emerg_parameter_scan.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_lambda_emerg_parameter_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_lambda_emerg_parameter_scan.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u039b_UV",
@@ -2226,8 +2226,8 @@
       "name": "fig_torsion_obs_bound",
       "function": "fig_torsion_obs_bound",
       "caption": "Phase 6e Wave 6 \u2014 Einstein-Cartan torsion at natural microscopic params is below all published bounds. Left panel: log-log |T_EC|(\u039b_UV, N_f) curves at \u03b1_EC = 1 (Sakharov-Adler calibration) for N_f \u2208 {1, 4, 16, 100}; the Kostelecky-Russell-Tasson bound 1\u00d710\u207b\u00b3\u00b9 GeV (PRL 100, 111102 (2008)) and the Hughes-Drever bound 1\u00d710\u207b\u00b2\u2079 GeV (Lammerzahl, PRD 64, 084014 (2001)) are drawn as horizontal anchors; the natural cutoff M_Pl \u2243 1.2\u00d710\u00b9\u2079 GeV is drawn as a vertical anchor where the natural-parameter prediction lands. Right panel: 2D headroom heatmap of log10(Kostelecky / |T_EC|) over the (\u039b_UV, N_f) plane at \u03b1_EC = 1; the natural point (M_Pl, N_f=16) is marked with a star \u2014 the prediction sits ~46 orders of magnitude below Kostelecky. Wave 6 correctness-push: torsion-bound matched at all natural microscopic parameter points. Lean: torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky, torsionBoundKostelecky_lt_hughesDrever, dirac_H_EinsteinCartanExtensionHolds_at_alpha_one. Source: Hehl et al RMP 48 (1976) \u2014 EC formulation; Kostelecky PRL 100 (2008) \u2014 cosmic torsion bound; Lammerzahl PRD 64 (2001) \u2014 Hughes-Drever update; Trautman APP B5 (1973).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_torsion_obs_bound.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_torsion_obs_bound.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_torsion_obs_bound.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_torsion_obs_bound.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u039b_UV",
@@ -2254,8 +2254,8 @@
       "name": "fig_cmb_spectrum_planck_comparison",
       "function": "fig_cmb_spectrum_planck_comparison",
       "caption": "Phase 6b Wave 2 \u2014 Vestigial-EOS perturbations diverge across the Planck-CMB regime. Left panel: log-log growth-amplitude-squared |G(k \u03b7\u2080)|\u00b2 versus comoving wavenumber k for \u039bCDM (cs\u00b2 = 1, oscillatory, bounded by 1) and the vestigial-EOS-at-\u03c4=0 branch (cs\u00b2 = -1/3, cosh-form, exponentially divergent). Planck cosmic-variance ceiling \u2248 100 drawn as horizontal anchor; the falsification pivot \u2113 = 1500 (k_pivot \u2248 5.4 1/Mpc, off-axis at this k-range) drawn as a vertical anchor. Right panel: 2D heatmap of log\u2081\u2080|G(k, \u03b7)|\u00b2 over the (k, \u03b7) plane for the vestigial branch \u2014 saturated to 24 orders of magnitude across nearly the entire sub-horizon plane (only the very-largest-scale, very-near-decoupling corner produces sub-saturating amplitudes). Wave 2 correctness-push: the Phase 5y H4 closed-form `cs_sq_vest_at_zero = -1/3 < 0` transmutes to a CMB-\u2113 falsification at every Planck-accessible mode. Lean: vestigial_growth_unbounded_at_zero, vestigial_growth_exceeds_planck_cv_cap_under_k\u03b7_threshold, joint_phase5y_6b_no_go_natural_branch. Source: Mukhanov \u00a77.4; Planck 2018, A&A 641, A6 (2020) Tab. 2; Phase 5y H4 closed form (Lit-Search/Phase-5y/).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_cmb_spectrum_planck_comparison.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_cmb_spectrum_planck_comparison.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_cmb_spectrum_planck_comparison.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_cmb_spectrum_planck_comparison.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "k",
@@ -2281,8 +2281,8 @@
       "name": "fig_constant_K_riemann_dimension_factor",
       "function": "fig_constant_K_riemann_dimension_factor",
       "caption": "Phase 6f Wave 1 \u2014 Constant-sectional-curvature Riemann tensor: dimension factor n(n\u22121) and load-bearing role of metric symmetry. Left panel: scalar curvature R_trace = \u03a3_\u03bc Ric_{\u03bc\u03bc} versus K for n = 2, 3, 4, with slopes 2, 6, 12 \u2014 the n = 4 slope of 12 matches the Lean-proven `constantSectional_diag_trace_eq` exactly. Reference anchors: de Sitter (K = 1, R = 12), AdS (K = -1, R = -12), Minkowski (K = 0). Right panel: log\u2081\u2080(first-Bianchi residual) heatmap on the (K, metric-asymmetry) plane. Symmetric-metric axis (asymmetry = 0) gives identically zero residual \u2014 confirms the load-bearing role of `MetricSymmetric` in `constantSectional_FirstBianchi`. Off-axis residuals grow with both K and asymmetry, demonstrating the predicate is non-vacuous. Lean: constantSectional_diag_trace_eq, constantSectional_FirstBianchi, constantSectional_Ricci_eq. Source: Wald, *General Relativity* (1984) \u00a73.2.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_constant_K_riemann_dimension_factor.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_constant_K_riemann_dimension_factor.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_constant_K_riemann_dimension_factor.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_constant_K_riemann_dimension_factor.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "K",
@@ -2308,8 +2308,8 @@
       "name": "fig_einstein_tensor_trace_identity",
       "function": "fig_einstein_tensor_trace_identity",
       "caption": "Phase 6f Wave 2 \u2014 Einstein-tensor trace identity G^\u03bc_\u03bc = -R in 4D and de Sitter \u039b = 3K relation. Left panel: trace of constant-K Einstein tensor on Minkowski background versus scalar curvature R = 12K. Lean `einsteinTensor_trace_eq_neg_scalar` proves the line G^\u03bc_\u03bc = -R (slope -1). Reference anchors: de Sitter (R=12, G_trace=-12), AdS (R=-12, G_trace=12), Minkowski (0,0). Right panel: log\u2081\u2080 of \u039b-vacuum sup-norm residual |G + \u039bg|_\u221e on the (K, \u039b-3K) plane. The horizontal locus \u039b - 3K = 0 (de Sitter) gives identically zero residual; off-locus deviations grow linearly with |\u039b - 3K|, confirming the load-bearing role of the cosmological-constant relation in `constantSectional_lambda_vacuum_iff`. Lean: einsteinTensor_trace_eq_neg_scalar, constantSectional_einsteinTensor_eq, constantSectional_lambda_vacuum_iff. Source: Wald, *General Relativity* (1984) \u00a73.2; MTW, *Gravitation* (1973) \u00a717.2.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_einstein_tensor_trace_identity.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_einstein_tensor_trace_identity.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_einstein_tensor_trace_identity.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_einstein_tensor_trace_identity.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "R",
@@ -2334,8 +2334,8 @@
       "name": "fig_energy_conditions_perfect_fluid_regions",
       "function": "fig_energy_conditions_perfect_fluid_regions",
       "caption": "Phase 6f Wave 3 \u2014 Perfect-fluid energy-condition regions in (\u03c1, p) plane (Minkowski rest frame, signature \u2212+++). Four-panel grid for NEC (\u03c1 + p \u2265 0), WEC (\u03c1 \u2265 0 AND \u03c1 + p \u2265 0), DEC (\u03c1 \u2265 |p|), SEC (\u03c1 + 3p \u2265 0 AND \u03c1 + p \u2265 0). Steel-blue = condition holds; amber-orange = violated; dotted black = boundary. The two named Lean counterexample witnesses are marked: \u2605 cosmologicalLambda at (\u03c1, p) = (1, -1) \u2014 satisfies NEC, WEC, DEC and violates SEC (Lean witness for `cosmologicalLambda_violates_SEC`); \u25c6 stiff fluid at (\u03c1, p) = (1, 2) \u2014 satisfies NEC, WEC, SEC and violates DEC (Lean witness for `stiff_fluid_violates_DEC`). The ghost-scalar NEC violator lives outside the perfect-fluid (\u03c1, p) plane (its T_\u03bc\u03bd = -n_\u03bc n_\u03bd is rank-1, not diagonal), so it appears as a separate rank-1 region not marked here. Lean: NEC, WEC, DEC, SEC, cosmologicalLambda_violates_SEC, stiff_fluid_violates_DEC. Source: Hawking & Ellis 1973 Table I \u00a74.3; Carroll 2004 \u00a74.6 Fig 4.7.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_energy_conditions_perfect_fluid_regions.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_energy_conditions_perfect_fluid_regions.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_energy_conditions_perfect_fluid_regions.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_energy_conditions_perfect_fluid_regions.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "\u03c1",
@@ -2360,8 +2360,8 @@
       "name": "fig_exact_solutions_catalog",
       "function": "fig_exact_solutions_catalog",
       "caption": "Phase 6f Wave 4 \u2014 Exact solutions of the Einstein field equations: three-panel catalog visualization. Left panel: Schwarzschild g_tt(r) = -(1 - 2M/r) showing the t-direction character flip at the horizon r = 2M (g_tt < 0 timelike outside, g_tt = 0 null at horizon, g_tt > 0 spacelike inside). Center panel: cosmological constant \u039b vs sectional curvature K showing the linear \u039b = 3K branch with three anchored solutions: dS\u2084 at (K=1, \u039b=3) blue star, Minkowski at (K=0, \u039b=0) black diamond (the unique \u039b=0 vacuum), AdS\u2084 at (K=-1, \u039b=-3) orange star. Right panel: Schwarzschild BH thermodynamic invariants vs mass on log-log axes: T_H = 1/(8\u03c0M) (slope -1), A_H = 16\u03c0M\u00b2 (slope +2), S_BH = 4\u03c0M\u00b2 (slope +2, dotted = A_H/4). Lean: deSitter_lambda_vacuum_iff, minkowski_lambda_zero_iff_K_zero, schwarzschild_horizon_iff, schwarzschild_g_tt_outside_horizon_neg / _at_horizon_zero / _inside_horizon_pos, schwarzschild_T_H_times_M, schwarzschild_area_eq_16pi_M_sq, schwarzschild_S_BH_eq_4pi_M_sq. Source: Wald 1984 \u00a75.2, \u00a76.1; MTW 1973 \u00a717.2, \u00a731; Hawking 1975.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_exact_solutions_catalog.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_exact_solutions_catalog.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_exact_solutions_catalog.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_exact_solutions_catalog.html",
       "expected_traces": 8,
       "expected_axes": {
         "xaxis": "M",
@@ -2387,8 +2387,8 @@
       "name": "fig_adm_constraint_surface",
       "function": "fig_adm_constraint_surface",
       "caption": "Phase 6f Wave 5 \u2014 ADM (3+1) constraint visualization. Two-panel figure. Left panel: Yamabe-form Hamiltonian constraint at moment-of-time-symmetry (K = 0): the load-bearing line \u00b3R = 16\u03c0G\u03c1 in (\u00b3R, \u03c1) plane (Lean: hamiltonianConstraint_moment_of_time_symmetry_iff). Coloring: blue/red diverging contour map of H_constraint = \u00b3R - 16\u03c0G\u03c1; black dashed line = H = 0 Yamabe locus; \u2605 Minkowski at (\u00b3R=0, \u03c1=0); \u25c6 Schwarzschild moment-of-time-symmetry sample (\u00b3R sourced by mass with matching \u03c1). Right panel: dS flat-slicing \u039b-H balance: \u039b = 3H\u00b2 parabola (Lean: deSitter_flat_slicing_hamiltonian_iff). The ADM Hamiltonian constraint at flat slicing balances iff \u039b = 3H\u00b2, recovering the 6f.4 cross-bridge deSitter_lambda_eq_three_H_squared at the ADM level. Markers \u2605 H=1/\u039b=3 + \u25c6 H=2/\u039b=12 anchor the parabola. Lean: hamiltonianConstraint_moment_of_time_symmetry_iff, deSitter_flat_slicing_hamiltonian_iff. Source: Wald 1984 \u00a710.2 + \u00a711.2; MTW 1973 \u00a721.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_adm_constraint_surface.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_adm_constraint_surface.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_adm_constraint_surface.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_adm_constraint_surface.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "\u00b3R",
@@ -2413,8 +2413,8 @@
       "name": "fig_tetrad_metric_equivalence",
       "function": "fig_tetrad_metric_equivalence",
       "caption": "Phase 6f Wave 6 \u2014 Tetrad-metric formalism equivalence. Two-panel figure (closes Phase 6f). Left panel: tetrad-induced metric heatmap for the Minkowski tetrad e^a_\u03bc = \u03b4^a_\u03bc visualizing the named identity g_\u03bc\u03bd = \u03b7_{ab} e^a_\u03bc e^b_\u03bd = \u03b7_\u03bc\u03bd componentwise (red diagonal at (0,0)=-1, blue spatial diagonals (i,i)=+1, white off-diagonals = 0). Right panel: |EC residual| vs \u03b1_EC on log-y axis showing the Levi-Civita reduction at \u03b1_EC = 1 (vertical anchor); the residual vanishes at \u03b1_EC = 1 and grows linearly with \u03b1_EC - 1 in the deviation region. Cross-bridge to Phase 6e.6 EinsteinCartanExtension: tetrad formalism reduces to metric formalism iff the Einstein-Cartan rescaling parameter \u03b1_EC equals 1 (torsion-free Levi-Civita connection). Lean: minkowskiTetrad_induces_minkowski_metric, tetrad_levi_civita_iff_alpha_unity. Source: Ort\u00edn *Gravity and Strings* (2015) \u00a71.4; Hehl et al. *Rev. Mod. Phys.* **48**, 393 (1976).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_tetrad_metric_equivalence.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_tetrad_metric_equivalence.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_tetrad_metric_equivalence.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_tetrad_metric_equivalence.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u03b1_EC",
@@ -2438,8 +2438,8 @@
       "name": "fig_ewbg_allowed_region",
       "function": "fig_ewbg_allowed_region",
       "caption": "Phase 6c Wave 2 \u2014 EW baryogenesis verdict over the (chirality wall \u00d7 transition order) decomposition. Left panel: 2\u00d72 outcome matrix. Wall \u00d7 transition combinations give one allowed quadrant (cracked wall + first-order strong, BSM target marker, gold star) and three forbidden quadrants (gray): SM-as-is sits at (intact wall + crossover), doubly forbidden (red \u2717); SM+3\u03bd_R at (cracked wall + crossover), transition-blocked under H_KLRS (steel-blue diamond). Right panel: the (m_H, cubic E) phase diagram with the KLRS lattice endpoint at m_H = 72.4 GeV (CFH 1999, refining KLRS 1996). The full SM at m_H = 125.20 GeV sits to the right of the endpoint (overshoot ratio \u2248 1.73); strict-LO E = 0.01 first-order is moot because lattice corrections drive E \u2192 0 for m_H > endpoint. Lean: ewbg_forbidden_iff_wall_intact_or_not_viable, sm_no_nu_R_ewbg_doubly_forbidden, sm_klrs_overshoot_ratio_gt_threshold.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ewbg_allowed_region.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ewbg_allowed_region.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ewbg_allowed_region.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ewbg_allowed_region.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "m_H",
@@ -2465,8 +2465,8 @@
       "name": "fig_bhl_bilocal_correction",
       "function": "fig_bhl_bilocal_correction",
       "caption": "Phase 5z Wave 1b \u2014 BHL gap problem and Hill 2025 bilocal correction. Left panel: bilocal-corrected m_H = (\u03c6(0)/\u03c6(\u221e)) \u221a2 m_t versus dilution at the BHL benchmark m_t = 220 GeV. BHL minimal (dilution = 1) overshoots PDG (125.20 GeV) by ~2.5\u00d7; Hill 2025 dilution \u2248 0.402 recovers PDG within 1 GeV. Right panel: required dilution to match PDG m_H as function of m_t. BHL benchmark m_t = 220 GeV (dashed cross) vs. PDG m_t = 172.57 GeV (dotted amber) frame the natural BHL dilution range. Lean: bhl_minimal_overshoots_pdg, bilocal_correction_can_match_pdg.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_bhl_bilocal_correction.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_bhl_bilocal_correction.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_bhl_bilocal_correction.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_bhl_bilocal_correction.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "dilution",
@@ -2492,8 +2492,8 @@
       "name": "fig_seesaw_y_m_r_band",
       "function": "fig_seesaw_y_m_r_band",
       "caption": "Phase 5z Wave 2 \u2014 Type-I seesaw (y, M_R) plane. Three diagonal contours mark fixed light-neutrino masses m_\u03bd via m_\u03bd = y\u00b2 v\u00b2 / M_R: m\u2083 \u2248 0.0501 eV (atmospheric anchor, NO), m\u2082 \u2248 8.61 meV (solar anchor), and m_\u03bd = 0.1 eV (cosmology cap). Shaded band: natural seesaw region between m\u2083 and the 0.1 eV cap. Star: top-Yukawa anchor at GUT scale (canonical seesaw point). Diamond: Wave-2 lower scan anchor (Y_NU_LOWER \u00d7 M_R_LOWER_BOUND). Lean: MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_seesaw_y_m_r_band.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_seesaw_y_m_r_band.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_seesaw_y_m_r_band.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_seesaw_y_m_r_band.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "y",
@@ -2519,8 +2519,8 @@
       "name": "fig_m_beta_beta_vs_m_lightest",
       "function": "fig_m_beta_beta_vs_m_lightest",
       "caption": "Phase 5z Wave 2 \u2014 m_\u03b2\u03b2 vs m_lightest 'lobster plot' at NuFit-6.0 best-fit angles. Both NO and IO bands shown, swept over the full Majorana-phase Monte Carlo. Horizontal bands: KamLAND-Zen 800 current bound (28-122 meV at 90% CL, NME spread) and LEGEND-1000 projected discovery reach (9-21 meV). Wave-2 conclusion (deep research \u00a74): IO is fully discoverable by LEGEND-1000; most of NO is out of reach. Embedding-agnostic across I/II/III. Lean: NeutrinoMixing.PMNSMatrix.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_m_beta_beta_vs_m_lightest.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_m_beta_beta_vs_m_lightest.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_m_beta_beta_vs_m_lightest.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_m_beta_beta_vs_m_lightest.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "m_lightest",
@@ -2546,8 +2546,8 @@
       "name": "fig_G_N_emerg_parameter_scan",
       "function": "fig_G_N_emerg_parameter_scan",
       "caption": "Phase 6a Wave 1 \u2014 emergent Newton constant from ADW microscopic theory. Heatmap shows log\u2081\u2080(G_N^emerg / G_N^obs) over the (\u039b_UV, \u03b1_ADW) plane at fiducial N_f = 15 (SM Weyl per generation, no \u03bd_R), with G_N^emerg = \u03b1_ADW \u00b7 12\u03c0 / (N_f \u00b7 \u039b\u00b2) (Sakharov-Adler form, Adler RMP 54, 729 (1982) Eq. 3.3). Gold contour: exact match G_N^emerg = G_N^obs = 6.71 \u00d7 10\u207b\u00b3\u2079 GeV\u207b\u00b2; dotted gold: \u00b150% tolerance band. Vertical dashed: GUT (10\u00b9\u2076 GeV) and Planck-mass (1.221 \u00d7 10\u00b9\u2079 GeV) cutoffs. Stars: Planck-anchor matching \u03b1* = N_f/(12\u03c0) for N_f \u2208 {15, 16, 45, 48}; \u03b1* falls between 0.40 and 1.27, all inside the natural range [0.1, 10]. Lean: LinearizedEFE.G_N_emerg_match_locus, G_N_emerg_match_at_planck_anchor.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_G_N_emerg_parameter_scan.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_G_N_emerg_parameter_scan.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_G_N_emerg_parameter_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_G_N_emerg_parameter_scan.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u039b_UV",
@@ -2570,12 +2570,12 @@
     {
       "name": "fig_c_GW_vs_ligo_constraint",
       "function": "fig_c_GW_vs_ligo_constraint",
-      "caption": "Phase 6a Wave 2 \u2014 gravitational-wave propagation speed deviation \u0394c/c = \u221a\u03c7_vest \u2212 1 across the natural vestigial-susceptibility range, vs the GW170817 multi-messenger bound (Abbott et al. ApJL 848, L13 (2017), Eq. (5)): |\u0394c/c| \u2264 3 \u00d7 10\u207b\u00b9\u2075. The Volovik vestigial-second-sound graviton identification produces \u0394c/c \u2208 [\u22120.68, +2.16] over the natural \u03c7_vest range [0.1, 10] \u2014 failing the GW170817 cap by 14+ orders of magnitude. The GW170817-compatible \u03c7_vest window is [(1 \u2212 3e-15)\u00b2, (1 + 3e-15)\u00b2] \u2014 fine-tuning to within 3 \u00d7 10\u207b\u00b9\u2075 of unity. Lean: GravitationalWaves.vestigial_natural_range_violates_ligo, c_GW_match_iff_chi_close_to_one.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_c_GW_vs_ligo_constraint.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_c_GW_vs_ligo_constraint.html",
+      "caption": "Phase 6a Wave 2 \u2014 gravitational-wave propagation speed deviation \u0394c/c = \u221a\u03c7_vest \u2212 1 across the adopted vestigial-susceptibility range, vs the GW170817 multi-messenger bound (Abbott et al. ApJL 848, L13 (2017), Eq. (1)), using the conservative symmetric envelope |\u0394c/c| \u2264 3 \u00d7 10\u207b\u00b9\u2075. Making the assumed vestigial-second-sound graviton speed law quantitative through the ADW metric-channel susceptibility gives \u0394c/c sweeping [\u22120.68, +2.16] over the adopted \u03c7_vest range [0.1, 10], vanishing at \u03c7_vest = 1 and exceeding the GW170817 cap by 14+ orders of magnitude AT THE ENDPOINTS. The GW170817-compatible \u03c7_vest window is [(1 \u2212 3e-15)\u00b2, (1 + 3e-15)\u00b2] \u2014 nested strictly INSIDE the natural range and meeting it at \u03c7_vest = 1, so the datum confines the susceptibility to a finite interval about unity rather than excluding the range. Lean: GravitationalWaves.ligo_confines_chi_vest_within_natural_range, ligo_window_subset_natural_range, vestigial_natural_range_violates_ligo, c_GW_match_iff_chi_close_to_one.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_c_GW_vs_ligo_constraint.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_c_GW_vs_ligo_constraint.html",
       "expected_traces": 3,
       "expected_axes": {
-        "xaxis": "\u03c7_vest",
+        "xaxis": "\u03c7<sub>vest</sub>",
         "yaxis": "\u0394c/c"
       },
       "physics_checks": [],
@@ -2597,8 +2597,8 @@
       "name": "fig_entropy_coefficient_vs_spectrum",
       "function": "fig_entropy_coefficient_vs_spectrum",
       "caption": "Phase 6a Wave 3 \u2014 Bekenstein-Hawking leading-coefficient \u03ba_leading(\u03b3) as a function of the Immirzi tuning \u03b3. The 1/4 prefactor in S = A/(4G_N) is structurally a TUNING (not a derivation): distinct counting prescriptions produce distinct \u03b3 values that 'tune' to 1/4 under their own normalizations. Domagala-Lewandowski \u03b3 \u2248 0.2375 (gr-qc/0407051) and Meissner \u03b3 \u2248 0.2739 (gr-qc/0407052) are both shown. The MTC zoo in the right panel records log d_max for Fibonacci, Ising, D(S\u2083), and toric code (the abelian falsifier with log d_max = 0 \u21d2 F2 fail). Lean: BHEntropyMicroscopic.HorizonMTCBC.\u03b3_immirzi field; BHEntropyMicroscopic.kaul_majumdar_log_coefficient.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_entropy_coefficient_vs_spectrum.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_entropy_coefficient_vs_spectrum.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_entropy_coefficient_vs_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_entropy_coefficient_vs_spectrum.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "\u03b3",
@@ -2623,8 +2623,8 @@
       "name": "fig_log_correction_signature",
       "function": "fig_log_correction_signature",
       "caption": "Phase 6a Wave 3 \u2014 log-correction coefficient signature across schemes. The Kaul-Majumdar SU(2)_k value c_log = \u22123/2 decomposes structurally as (\u22121/2 from the Gaussian saddle) + (\u22121 from the SU(2)-singlet projection via the I\u2080 \u2212 I\u2081 cancellation, Kaul-Majumdar Eq. (15)). The Sen 4D Schwarzschild heat-kernel result (arXiv:1205.0971) gives c_log = +(212/45 \u2212 3) \u2248 +1.71, explicitly DISAGREEING with the \u22123/2 anchor \u2014 universality fails outside the Cardy-saddle subfamily. Per the Wave 3 deep-research return, no published derivation pins c_log for Fibonacci, Ising, or D(S\u2083) (Outcome-3 conjectural). Toric code fails F2 (abelian, log d_max = 0). Lean: BHEntropyMicroscopic.sen_4d_disagrees_with_kaul_majumdar; BHEntropyMicroscopic.kaul_majumdar_log_decomposition.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_log_correction_signature.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_log_correction_signature.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_log_correction_signature.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_log_correction_signature.html",
       "expected_traces": 1,
       "expected_axes": {
         "xaxis": "scheme",
@@ -2648,9 +2648,9 @@
     {
       "name": "fig_T_H_evolution_regime_partition",
       "function": "fig_T_H_evolution_regime_partition",
-      "caption": "Phase 6a Wave 5 \u2014 BCH four-laws regime-partition profile under Hawking-radiation backreaction. Left: T_H(t) under evaporation in the Schwarzschild regime (M > M_c, dT_H/dt > 0, heats as evaporates, finite t-evap; Hawking 1975) and the BEC-acoustic regime (M < M_c, dT_H/dt < 0, cools toward asymptotic extremality at infinite time; Balbinot, Fagnocchi, Fabbri, Procopio, PRD 71, 064019 (2005), gr-qc/0405098, Eq. Tsonic). The genuine regime partition is the sign-flip of dT_H/dt during evaporation; the critical mass M_c = (N_f \u00b7 \u039b_UV) / (12\u03c0 \u00b7 \u03b1_ADW) is project-original ansatz (Wave 5 deep-research \u00a73 dimensional analysis). Right: substrate-response coefficient ansatz \u03b4_ADW = (\u03b1_ADW \u2212 1)\u00b7\u039b_UV (deep-research \u00a79), vanishing at \u03b1_ADW = 1 (bare Sakharov-Adler limit) and sign-determined by \u03b1_ADW \u22db 1. Lean: BHThermodynamicsFourLaws.regime_partition_criterion; BHThermodynamicsFourLaws.delta_ADW_nonzero_iff_alpha_ADW_ne_one.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_T_H_evolution_regime_partition.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_T_H_evolution_regime_partition.html",
+      "caption": "Phase 6a Wave 5 \u2014 BCH four-laws regime-partition profile under Hawking-radiation backreaction. Left: T_H(t) under evaporation in the Schwarzschild regime (M > M_c, dT_H/dt > 0, heats as evaporates, finite t-evap; Hawking 1975) and the acoustic regime (M < M_c, dT_H/dt < 0, cools toward asymptotic extremality at infinite time; Balbinot, Fagnocchi, Fabbri, PRD 71, 064019 (2005), gr-qc/0405098, Eq. Tsonic, a sonic hole in a Laval nozzle at constant sound speed). The genuine regime partition is the sign-flip of dT_H/dt during evaporation; the critical mass M_c = (N_f \u00b7 \u039b_UV) / (12\u03c0 \u00b7 \u03b1_ADW) is project-original ansatz (Wave 5 deep-research \u00a73 dimensional analysis). Right: substrate-response coefficient ansatz \u03b4_ADW = (\u03b1_ADW \u2212 1)\u00b7\u039b_UV (deep-research \u00a79), vanishing at \u03b1_ADW = 1 (bare Sakharov-Adler limit) and sign-determined by \u03b1_ADW \u22db 1. Lean: BHThermodynamicsFourLaws.regime_partition_criterion; BHThermodynamicsFourLaws.delta_ADW_nonzero_iff_alpha_ADW_ne_one.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_T_H_evolution_regime_partition.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_T_H_evolution_regime_partition.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "Time",
@@ -2675,8 +2675,8 @@
       "name": "fig_ep_violation_matrix",
       "function": "fig_ep_violation_matrix",
       "caption": "Phase 6c Wave 3 \u2014 Equivalence-Principle classification of six Phase 5x DM-related mechanisms. Left: 6\u00d73 mechanism \u00d7 EP-level matrix (WEP / EEP / SEP) showing two violators (both vestigial-phase phenomena: differential coupling at \u03b7 = 1 maximal, ruled out at any current EP precision; relics at \u03b7 ~ 10\u207b\u00b9\u2078 STEP-class satellite-detectable per W8 \u00a75 ranking line 3) and four non-violators (FangGu torsion DM, fracton subdiffusion, SFDM Thomas-Fermi, hidden-sector \u2124\u2081\u2086 singlet). The structural punchline: EP violation is *vestigial-only* in the project's current dark-sector landscape. Right: \u03b7-scale comparison bar chart (log\u2081\u2080 scale) showing vestigial-phase \u03b7_max = 1, the MICROSCOPE bound \u03b7 < 10\u207b\u00b9\u2075 (Touboul et al., PRL 119, 231101, 2017) as a horizontal reference, vestigial-relics \u03b7 ~ 10\u207b\u00b9\u2078, and the STEP-class satellite target \u03b7 ~ 10\u207b\u00b9\u2078. Lean: EquivalencePrinciple.violatesAt + ep_violation_is_vestigial_only + vestigial_microscope_violation_consistent.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ep_violation_matrix.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ep_violation_matrix.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ep_violation_matrix.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_ep_violation_matrix.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "level",
@@ -2701,8 +2701,8 @@
       "name": "fig_zhitnitsky_de_theta_scan",
       "function": "fig_zhitnitsky_de_theta_scan",
       "caption": "Phase 6c Wave 1 \u2014 Zhitnitsky topological dark-energy prediction (Van Waerbeke-Zhitnitsky 2025, arXiv:2506.14182) vs observed \u03c1_DE. Left: \u03c1_DE = \u039b_QCD\u2076/M_P\u00b2 scan over \u039b_QCD \u2208 [1 MeV, 1 GeV] on log-log axes; observed band (2.3 meV)\u2074 \u2248 2.8e-11 eV\u2074 from Planck 2018 + DESI DR2 shown as amber stripe; PDG \u039b_QCD \u2248 100 MeV vertical reference shows the no-free-parameter Zhitnitsky prediction sits ~240\u00d7 above observed (within 3 orders). Right: cosmological-constant-problem suppression bar chart comparing Planck-natural M_P\u2074 \u2248 10\u00b9\u00b9\u00b2 eV\u2074, Zhitnitsky QCD-topological prediction \u2248 7e-9 eV\u2074, and observed \u2248 3e-11 eV\u2074 \u2014 Zhitnitsky realizes ~120 orders of magnitude of the hierarchy suppression. Lean: StrongCPTopologicalDE.zhitnitsky_DE_at_lambda_qcd_within_3_orders + zhitnitsky_DE_far_below_planck + combined_zhitnitsky_qtheory_exceeds_observation.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_zhitnitsky_de_theta_scan.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_zhitnitsky_de_theta_scan.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_zhitnitsky_de_theta_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_zhitnitsky_de_theta_scan.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "\u039b_QCD",
@@ -2727,8 +2727,8 @@
       "name": "fig_cfl_z3_center_bridge",
       "function": "fig_cfl_z3_center_bridge",
       "caption": "Phase 6d Wave 3 \u2014 CFL emergent \u2124_3 (Hirono-Tanizaki) \u2261 QCD center \u2124_3 (W1) correctness-push identification. Left: cube roots of unity {1, \u03c9, \u03c9\u00b2} on the complex unit circle, with the CFL emergent generator (Hirono-Tanizaki JHEP 12, 2018) and the QCD center generator from CenterSymmetryConfinement.Z3 BOTH at the same point \u03c9 = exp(2\u03c0i/3). The sum rule 1 + \u03c9 + \u03c9\u00b2 = 0 is the algebraic fingerprint distinguishing \u2124_3 from \u2124_2. Right: bar chart showing the three \u2124_3 charges (0, 1, 2) plus the out-of-range 3, classified by Hirono-Tanizaki topological-order-beyond-Landau-Ginzburg sector. Charge 0 (vacuum) and charge 3 (out of \u2124_3) are falsifiers; charges 1, 2 are the topologically ordered sectors. Lean: CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3 + emergentZ3_pow_3 + emergentZ3_sum_cube_roots + H_TopologicalOrderBeyondLG_witness/falsifier_trivial.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_cfl_z3_center_bridge.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_cfl_z3_center_bridge.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_cfl_z3_center_bridge.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_cfl_z3_center_bridge.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "Re",
@@ -2753,8 +2753,8 @@
       "name": "fig_gmor_relation_verification",
       "function": "fig_gmor_relation_verification",
       "caption": "Phase 6d Wave 2 \u2014 GMOR relation `m_\u03c0\u00b2 \u00b7 f_\u03c0\u00b2 = \u22122 m_q \u00b7 \u27e8q\u0304q\u27e9` numerical verification at PDG/FLAG central values. Left: side-by-side bars at LHS \u2248 1.589e-4 GeV\u2074 and RHS \u2248 1.589e-4 GeV\u2074 \u2014 visually indistinguishable, confirming GMOR holds to ~1 part in 10\u2074 (|LHS \u2212 RHS| \u2248 4e-8 GeV\u2074). Right: relative residual |LHS \u2212 RHS|/LHS as the input quark mass m_q is swept; the residual minimum at m_q \u2248 3.5 MeV (PDG average u+d) confirms the GMOR-consistent point. Sources: Gell-Mann-Oakes-Renner PR 175 (1968); FLAG 2021 \u27e8q\u0304q\u27e9 \u2248 \u22120.0227 GeV\u00b3 (EPJC 81); PDG 2022 m_\u03c0 = 0.137 GeV, f_\u03c0 = 0.092 GeV. Lean: ChiralSSB_QCD.gmor_pdg_match + gmor_rhs_pos_of_quark_mass_pos + chiral_unbroken_violates_gmor.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_gmor_relation_verification.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_gmor_relation_verification.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_gmor_relation_verification.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_gmor_relation_verification.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "m_q",
@@ -2779,8 +2779,8 @@
       "name": "fig_rt_ch_bounds_mtc",
       "function": "fig_rt_ch_bounds_mtc",
       "caption": "Phase 6c Wave 5 \u2014 Ryu-Takayanagi vs W3 Kaul-Majumdar microscopic entropy + Casini-Huerta saturated bound across 2D CFTs. Left: classical RT entropy S = A/(4 G_N) (steel blue, solid) vs W3 Kaul-Majumdar S = A/(4 G_N) - (3/2) log(A/(4 G_N)) (amber, dashed) across reduced area; knife-edge agreement at reduced area = 1 (W5 biconditional rt_eq_kaulMajumdar_iff_trivial_reduced_area); discrepancy (3/2) log 2 \u2248 1.040 at reduced area = 2 (W5 quantitative anchor rt_kaulMajumdar_gap_at_reduced_area_two). Right: Casini-Huerta saturated bound (c/3) log(L/UV) across central charges (Ising c = 1/2, tricritical Ising c = 7/10, 3-state Potts c = 4/5, free boson c = 1) at fixed UV cutoff 1e-3; concrete witness for H_CasiniHuerta_Bound_Valid_witness_saturated. Sources: Ryu-Takayanagi PRL 96, 181602 (2006), hep-th/0603001; Casini-Huerta J. Phys. A 42, 504007 (2009), arXiv:0905.2562; Kaul-Majumdar PRL 84, 5255 (2000); Sen JHEP 1205, 0971 (2012) (non-universality witness). Lean: RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area + rt_falsified_by_kaul_majumdar + rt_eq_kaulMajumdar_iff_trivial_reduced_area + ch_log_bound_pos_at_log_pos + H_CasiniHuerta_Bound_Valid_witness_saturated + kaulMajumdar_not_H_RT.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_rt_ch_bounds_mtc.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_rt_ch_bounds_mtc.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_rt_ch_bounds_mtc.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_rt_ch_bounds_mtc.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "reduced area / region L",
@@ -2807,8 +2807,8 @@
       "name": "fig_code_distance_vs_fusion_spectrum",
       "function": "fig_code_distance_vs_fusion_spectrum",
       "caption": "Phase 6c Wave 4 \u2014 Hayden-Preskill structural QEC across MTC spectra. Left: code-distance proxy d_C := log d_max for Fibonacci (d_\u03c4 = \u03c6 \u2248 1.618; d_C \u2248 0.481), Ising (d_\u03c3 = \u221a2; d_C \u2248 0.347), SU(3)_k=2 Fibonacci sub-sector, and trivial-abelian (d_max = 1; d_C = 0 \u2014 falsifies the W4 admissibility criterion). The W4 quantitative theorem fibonacci_HPCode_codeDistance_lt_log_two locates Fibonacci below log 2 \u2248 0.693, the minimal non-abelian threshold. Right: scrambling-time bound t_scr := log D\u00b2 for the same substrates, demonstrating the W4 correctness-push (positive code distance \u21d2 positive scrambling time via D\u00b2 \u2265 d_max\u00b2 > 1). Trivial-abelian has t_scr = 0, the vacuum scrambling-time falsifier. Sources: Hayden-Preskill JHEP 2007/9/120 (arXiv:0708.4025); Almheiri-Dong-Harlow JHEP 2015/4/163 (arXiv:1411.7041); Pastawski-Yoshida-Harlow-Preskill JHEP 2015/6/149 (arXiv:1503.06237). Lean: QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class + code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class + fibonacci_HPCode_codeDistance_lt_log_two + fibonacci_HPCode_scramblingTimeBound_pos + trivialAbelian_violates_admissibility.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_code_distance_vs_fusion_spectrum.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_code_distance_vs_fusion_spectrum.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_code_distance_vs_fusion_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_code_distance_vs_fusion_spectrum.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "MTC spectrum",
@@ -2835,8 +2835,8 @@
       "name": "fig_polyakov_loop_deconfinement",
       "function": "fig_polyakov_loop_deconfinement",
       "caption": "Phase 6d Wave 1 \u2014 Polyakov-loop order parameter and Walker-Wang transport window. Left: |P| vs T/T_c showing the deconfinement transition for Z_2 (Ising) and Z_3 (3-state Potts) Svetitsky-Yaffe universality classes with \u03bd = 0.6299 and 0.5 respectively (Pelissetto-Vicari Phys. Rep. 368, 2002; Kos-Poland-Simmons-Duffin JHEP 03, 2016). Confining phase has |P| = 0; deconfining |P| > 0. Right: KSS bound \u03b7/s \u2265 1/(4\u03c0) \u2248 0.0796 (Kovtun-Son-Starinets PRL 94, 2005) with the Walker-Wang transport correctness-push window [KSS, 2\u00b7KSS]. Both numerical falsifiers (\u03b7/s = 0 and \u03b7/s = 1) lie outside the window. Lean: CenterSymmetryConfinement.confining_iff_magnitude_zero + deconfining_implies_magnitude_positive + ising_nu_gt_potts_nu + KSS_bound_below_0_08 + walker_wang_zero_eta_violator + walker_wang_unit_eta_violator.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_polyakov_loop_deconfinement.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_polyakov_loop_deconfinement.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_polyakov_loop_deconfinement.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_polyakov_loop_deconfinement.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "T/T_c",
@@ -2861,8 +2861,8 @@
       "name": "i1_fig1_three_layer_architecture",
       "function": "fig_i1_three_layer_architecture",
       "caption": "Three-layer verification architecture (paper I1 \u00a72). Layer 1 (Python numerics) feeds Layer 2 (Lean 4 formal proofs) feeds Layer 3 (Aristotle automated theorem prover); the curved feedback arrow back to Layer 1 represents counterexample-driven refinement (e.g. Aristotle run 270e77a0).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig1_three_layer_architecture.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig1_three_layer_architecture.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig1_three_layer_architecture.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig1_three_layer_architecture.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -2886,8 +2886,8 @@
       "name": "i1_fig2_pipeline_14_stages",
       "function": "fig_i1_pipeline_14_stages",
       "caption": "Wave-execution pipeline (paper I1 \u00a76). Fifteen-grid layout of 14 stages; gates listed beneath each stage; new stages (3a Lean MCP loop, 13 Adversarial review, 14 Meta-process QI) highlighted in amber.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig2_pipeline_14_stages.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig2_pipeline_14_stages.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig2_pipeline_14_stages.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig2_pipeline_14_stages.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -2909,8 +2909,8 @@
       "name": "i1_fig3_sentence_state_clusters",
       "function": "fig_i1_sentence_state_clusters",
       "caption": "Sentence-state claim clusters across paper bundles (paper I1 \u00a78). Three papers, six sentences each; curved lines connect sentences sharing a claim_cluster; the amber cluster (C2) is cross_bundle: true and survives bundle consolidation.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig3_sentence_state_clusters.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig3_sentence_state_clusters.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig3_sentence_state_clusters.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig3_sentence_state_clusters.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -2933,8 +2933,8 @@
       "name": "i1_fig4_firstorderkms_grid",
       "function": "fig_i1_firstorderkms_grid",
       "caption": "FirstOrderKMS 9-coefficient constraint grid (paper I1 \u00a73, Aristotle run 270e77a0). Left: original weak axiom constrains 4 of 9 coefficients; counterexample vector c = (0,0,0,0,0,0,0,1,0) highlighted in carmine. Right: strengthened axiom constrains all 9 (including i\u2083 = 0 explicitly).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig4_firstorderkms_grid.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig4_firstorderkms_grid.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig4_firstorderkms_grid.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig4_firstorderkms_grid.html",
       "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
@@ -2957,8 +2957,8 @@
       "name": "i1_fig5_gap_counterexample",
       "function": "fig_i1_gap_counterexample",
       "caption": "Gap-equation counterexample (paper I1 \u00a74). Gap solution \u0394(G) for N_f = 1, \u039b = 1: trivial branch \u0394 = 0 for G < G_c; non-trivial branch saturates \u039b at G* = 2/(1 \u2212 log 2) \u2248 6.518. The folklore claim \u0394 < \u039b fails for G \u2265 G* (corrected statement in Aristotle run 79e07d55).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig5_gap_counterexample.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig5_gap_counterexample.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig5_gap_counterexample.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig5_gap_counterexample.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "G",
@@ -2985,8 +2985,8 @@
       "name": "i1_fig6_chirality_wall_tree",
       "function": "fig_i1_chirality_wall_tree",
       "caption": "Chirality-wall axiom decomposition tree (paper I1 \u00a75). The original monolithic sm_no_nu_R_ewbg_doubly_forbidden (50-term goal, Aristotle-intractable) decomposes into 2 obstructions \u00d7 3 sub-lemmas = 9 leaves, each \u2264 12 terms; all 9 closed in a single Aristotle priority batch.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig6_chirality_wall_tree.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig6_chirality_wall_tree.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig6_chirality_wall_tree.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i1_fig6_chirality_wall_tree.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -3009,8 +3009,8 @@
       "name": "i2_fig1_categorical_hierarchy",
       "function": "fig_i2_categorical_hierarchy",
       "caption": "Categorical hierarchy poset (paper I2 \u00a73). Hasse-diagram of Monoidal -> Braided -> Balanced -> Pivotal -> Ribbon -> Fusion -> Modular: Mathlib substrate (steel blue) extended with the four library-original classes (amber) \u2014 BalancedCategory, PivotalCategory, RibbonCategory, FusionCategory \u2014 that culminate in ModularTensorData.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig1_categorical_hierarchy.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig1_categorical_hierarchy.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig1_categorical_hierarchy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig1_categorical_hierarchy.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -3034,8 +3034,8 @@
       "name": "i2_fig2_module_dependencies",
       "function": "fig_i2_module_dependencies",
       "caption": "lean-tensor-categories module dependency graph (paper I2 \u00a77). 28 modules organized in 4 tiers \u2014 categorical hierarchy (4), Hopf algebra (4), number fields (9), MTC instances (11) \u2014 with Sankey flows from instances down through number fields and the Hopf layer to the categorical core.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig2_module_dependencies.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig2_module_dependencies.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig2_module_dependencies.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig2_module_dependencies.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -3059,8 +3059,8 @@
       "name": "i2_fig3_mtc_instances",
       "function": "fig_i2_mtc_instances",
       "caption": "MTC instances comparison (paper I2 \u00a76). Eight concrete modular-tensor-category instances (SU(2)_1..5, SU(3)_2, Ising, Fibonacci) with shipped-component status: simple-object count, representative q-dimensions, S-matrix, T-matrix, F-symbols, Verlinde verification, and number field of definition.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig3_mtc_instances.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig3_mtc_instances.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig3_mtc_instances.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig3_mtc_instances.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -3083,8 +3083,8 @@
       "name": "i2_fig4_jackknife_dependencies",
       "function": "fig_i2_jackknife_dependencies",
       "caption": "VerifiedJackknife theorem dependency graph (paper I2 \u00a72). Four project theorems (jackknifeVariance_nonneg, autocovariance_zero_nonneg, intAutocorrTime_uncorrelated, intAutocorrTime_ge_half) and the Mathlib lemmas they invoke (mul_nonneg, Finset.sum_nonneg, sq_nonneg, mul_self_nonneg). Each project theorem is annotated with its corresponding test in tests/test_jackknife.py.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig4_jackknife_dependencies.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig4_jackknife_dependencies.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig4_jackknife_dependencies.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig4_jackknife_dependencies.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -3107,8 +3107,8 @@
       "name": "i2_fig5_mathlib_upstream_flow",
       "function": "fig_i2_mathlib_upstream_flow",
       "caption": "Mathlib upstream coordination flow (paper I2 \u00a77). The three relationship-building gates (R1 Zulip introduction, R2 AI-tool-assistance disclosure, R3 PR-strategy discussion) feed into the four-PR atomic chain (PR-1 QSqrt2/ComputableAdjoinRoot bridge, PR-2 PivotalCategory/RibbonCategory, PR-3 QuasitriangularBialgebra/RibbonHopfAlgebra, PR-4+ MTC instances). A separate cool-grey branch shows the software-only / JOSS-update fallback if Mathlib AI-content acceptance is delayed past six months.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig5_mathlib_upstream_flow.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig5_mathlib_upstream_flow.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig5_mathlib_upstream_flow.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/i2_fig5_mathlib_upstream_flow.html",
       "expected_traces": 1,
       "expected_axes": {},
       "physics_checks": [],
@@ -3131,8 +3131,8 @@
       "name": "fig_sk_length_bound_curve",
       "function": "fig_sk_length_bound_curve",
       "caption": "Phase 6t Wave 8 Stage 8 \u2014 Quantitative Solovay-Kitaev length bound L(\u03b5) \u2264 skLengthConst \u00b7 (log(1/\u03b5))^c with c = log 5 / log(3/2) \u2248 3.9694 (canonical Dawson-Nielsen exponent, in (3, 4)). Log-log curve over \u03b5 \u2208 [10\u207b\u00b9\u00b2, 10\u207b\u00b9] shown with linear (log 1/\u03b5)^1 and quartic (log 1/\u03b5)^4 reference scalings. Lean: SolovayKitaevLengthBound.skLengthExponent + SolovayKitaevLengthBound.skLengthConst + SolovayKitaevQuantitative.solovayKitaev_dawson_nielsen_quantitative_fibonacci.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sk_length_bound_curve.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sk_length_bound_curve.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_sk_length_bound_curve.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_sk_length_bound_curve.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "precision",
@@ -3157,8 +3157,8 @@
       "name": "fig_fibonacci_braid_word_t_gate_example",
       "function": "fig_fibonacci_braid_word_t_gate_example",
       "caption": "Phase 6t Wave 8 Stage 8 \u2014 Fibonacci-anyon T-gate worked example: 8-letter braid word (\u03c3\u2081 \u03c3\u2082\u207b\u00b9 \u03c3\u2081 \u03c3\u2082 \u03c3\u2081\u207b\u00b9 \u03c3\u2082\u207b\u00b9 \u03c3\u2081 \u03c3\u2082) over BraidGroup 3 drawn as a strand diagram. Illustrative member of the Wave 3 \u03b5\u2080-net (\u03b5\u2080 \u2248 1.2 \u00d7 10\u207b\u2077) representing the shape of Wave 7 reference-compiler output. Lean: FibonacciEpsilonNet.lean (\u03b5\u2080-net) + SolovayKitaevApplications.lean (worked-example library).",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fibonacci_braid_word_t_gate_example.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fibonacci_braid_word_t_gate_example.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_fibonacci_braid_word_t_gate_example.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_fibonacci_braid_word_t_gate_example.html",
       "expected_traces": 19,
       "expected_axes": {
         "xaxis": "generator position",
@@ -3184,8 +3184,8 @@
       "name": "fig_qnet_bb84_key_rate",
       "function": "fig_qnet_bb84_key_rate",
       "caption": "D6 \u00a76 (Phase 6AC) \u2014 BB84 Shor\u2013Preskill secret-key rate r(e)=1\u22122\u00b7h\u2082(e) vs end-to-end QBER, with the positive-key crossover e*\u22480.11 located as the proven root of h\u2082(e)=1/2 (not hardcoded). Lean: SecretKeyRate.lean.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_bb84_key_rate.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_bb84_key_rate.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_bb84_key_rate.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_bb84_key_rate.html",
       "expected_traces": 2,
       "expected_axes": {
         "xaxis": "QBER",
@@ -3210,8 +3210,8 @@
       "name": "fig_qnet_swap_chain_envelope",
       "function": "fig_qnet_swap_chain_envelope",
       "caption": "D6 \u00a76 (Phase 6AA/6AB) \u2014 end-to-end fidelity of a k-swap Werner chain vs chain length for several per-link fidelities, inside the kernel-proven [1/4,1] envelope (swapChain_fidelity_envelope). Lean: Envelope.lean.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_swap_chain_envelope.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_swap_chain_envelope.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_swap_chain_envelope.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_swap_chain_envelope.html",
       "expected_traces": 4,
       "expected_axes": {
         "xaxis": "swaps",
@@ -3237,8 +3237,8 @@
       "name": "fig_qnet_w_vs_ghz",
       "function": "fig_qnet_w_vs_ghz",
       "caption": "D6 \u00a76 (Phase 6AC) \u2014 Fortescue\u2013Lo W\u2083 random-pair finite-round yield D/(D+1) vs rounds, surpassing the specified-pair bound 2/3 for D\u22653 and approaching the GHZ\u2083 rate 1. Lean: WStateRate.lean, MultipartiteComparison.lean.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_w_vs_ghz.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_w_vs_ghz.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_w_vs_ghz.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_w_vs_ghz.html",
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "rounds",
@@ -3263,8 +3263,8 @@
       "name": "fig_qnet_readout_envelopes",
       "function": "fig_qnet_readout_envelopes",
       "caption": "D9 \u00a75 (Phase 6AQ) \u2014 readout-window device-characterization envelopes. Left: relaxation decay probability p_decay = 1 \u2212 e^(\u2212t/T\u2081) vs t/T\u2081 inside the Lean-proven rational enclosure (t/T\u2081)/(1+t/T\u2081) \u2264 p \u2264 t/T\u2081 (readoutDecayProb_enclosure). Right: thermal excited-state occupancy p_th = 1/(1+e^x), x = \u03b2\u210f\u03c9, inside its rational enclosure \u2014 upper 1/(2+x) for all x \u2265 0, lower (1\u2212x)/(2\u2212x) proven on 0 \u2264 x < 2 (sharp at x = 0), clamped at 0 elsewhere via p_th > 0. Lean: ReadoutRelaxationBound.lean, ThermalAssignmentFloor.lean.",
-      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_readout_envelopes.png",
-      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_readout_envelopes.html",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_readout_envelopes.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/fig_qnet_readout_envelopes.html",
       "expected_traces": 6,
       "expected_axes": {
         "xaxis": "t/T\u2081",
@@ -3276,6 +3276,216 @@
       "color_keys": [
         "steel_blue",
         "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d11_fig1_phononic_band_gap",
+      "function": "fig_d11_phononic_band_gap",
+      "caption": "D11 \u2014 certified phononic band gap of the diatomic mass-spring chain (m\u2081,m\u2082,\u03ba,a) = (1,2,1,1). Both edges of the gap \u03c9\u00b2 \u2208 (1,2) are ATTAINED at k = \u00b1\u03c0 (branchMinus_at_pi, branchPlus_at_pi), so the bound is tight. Rational inner bracket 1 < 141/100 \u2264 \u221a2 (band_gap_rational_enclosure, norm_num, no floating point).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig1_phononic_band_gap.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig1_phononic_band_gap.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "Bloch wavevector",
+        "yaxis": "squared frequency"
+      },
+      "physics_checks": [
+        "phononic_gap_edges_attained",
+        "no_state_inside_gap"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d11_fig2_pt_exceptional_point",
+      "function": "fig_d11_pt_exceptional_point",
+      "caption": "D11 \u2014 PT transition of the non-Hermitian Bloch Hamiltonian. Real spectrum iff g\u00b2 \u2264 1 (pt_symmetric_real_spectrum_iff, a sharp biconditional); g = 1 is a genuinely defective order-2 exceptional point (exceptional_point_defective), certified without a Jordan normal form. The proximity enclosure \u0394 \u2264 1/5 on g\u00b2 \u2265 99/100 is TIGHT \u2014 equality at the endpoint.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig2_pt_exceptional_point.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig2_pt_exceptional_point.html",
+      "expected_traces": 5,
+      "expected_axes": {
+        "xaxis": "non-Hermiticity",
+        "yaxis": "eigenvalue"
+      },
+      "physics_checks": [
+        "ep_splitting_vanishes_at_one",
+        "ep_enclosure_tight"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d11_fig3_haldane_chern",
+      "function": "fig_d11_haldane_chern",
+      "caption": "D11 \u2014 Haldane Chern witness. C = \u22121 at t = t\u2082 = 1, \u03c6 = \u03c0/2, m = 1 on a 4\u00d74 torus (haldaneFrame_latticeChern_eq_neg_one); C = 0 at m = 5 and m = 6. m = 5 is INSIDE the analytic window |m| < 3\u221a3, so mass inversion is NOT sufficient at fixed N (haldane_massInversion_not_sufficient_at_N4). Necessity is not certified; the flip location \u22483.3177 is numerical, not certified.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig3_haldane_chern.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig3_haldane_chern.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "Semenoff mass",
+        "yaxis": "Dirac gap"
+      },
+      "physics_checks": [
+        "chern_sign_is_negative_one",
+        "m5_inside_window_reads_zero"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d11_fig4_effective_medium",
+      "function": "fig_d11_effective_medium",
+      "caption": "D11 \u2014 algebraic effective-medium bounds. Maxwell\u2013Garnett inside its NON-STRICT constituent bounds (attained at f = 0 and f = 1), with the certified point (1, 4, 1/2) \u2192 exactly 2. Voigt\u2013Reuss gap shipped as an EXACT identity (voigt_sub_reuss_eq), not an inequality. Algebraic path only \u2014 the two-scale homogenization route is a documented substrate stall, and is formalized in no prover.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig4_effective_medium.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d11_fig4_effective_medium.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "fill fraction",
+        "yaxis": "eff"
+      },
+      "physics_checks": [
+        "mg_certified_point_equals_two",
+        "voigt_reuss_gap_exact"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d12_fig1_poisson_floor_vs_folklore",
+      "function": "fig_d12_poisson_floor_vs_folklore",
+      "caption": "D12 \u2014 the folklore photon-counting floor exp(\u2212N_diff) fails in TWO directions, both plotted. (A) false-strict as a miss bound: the realizable unit-threshold counter misses at exp(\u2212N_a), under the folklore value by exp(N_b) \u2014 certified 148\u00d7 at (5,10). (B) exponentially fail-open as an average-error screen beyond the crossover N_a = 51.3959, where the gap exponent exceeds log 4.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d12_fig1_poisson_floor_vs_folklore.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d12_fig1_poisson_floor_vs_folklore.html",
+      "expected_traces": 10,
+      "expected_axes": {
+        "xaxis": "source rate",
+        "yaxis": "miss probability"
+      },
+      "physics_checks": [
+        "folklore_fails_both_directions",
+        "shading_only_past_crossover"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d12_fig2_enbw_matched_filter",
+      "function": "fig_d12_enbw_matched_filter",
+      "caption": "D12 \u2014 ENBW\u00b7T \u2265 1/2 realizability floor, saturated by the matched boxcar (the LEAST element, enbw_mul_window_isLeast) with the DC-matched ramp at 2/3. Right: the Gaussian tail Q(z) inside its certified Chernoff/Mills upper and Birnbaum\u2013Feller lower envelopes \u2014 upper curves are BOUNDS, not probabilities (Mills exceeds 1 for z \u2272 0.37, where it is vacuous).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d12_fig2_enbw_matched_filter.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d12_fig2_enbw_matched_filter.html",
+      "expected_traces": 7,
+      "expected_axes": {
+        "xaxis": "integration window",
+        "yaxis": "ENBW"
+      },
+      "physics_checks": [
+        "enbw_floor_saturated_by_boxcar",
+        "gaussian_tail_sandwich_holds"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "d12_fig3_etf_stability",
+      "function": "fig_d12_etf_stability",
+      "caption": "D12 \u2014 electrothermal feedback. Stability is an exact dichotomy at \u2112 = \u22121 (etf_stable_iff); \u03c4_eff is NEGATIVE on the unstable branch, so reading it through |\u00b7| inverts the physics. The Johnson NEP correction is |1 \u2212 \u2112| \u2014 an EQUALITY, giving 2 at \u2112 = 3 (not 4) \u2014 and is stability-blind: \u2112 = 5 and \u2112 = \u22123 both give 4 on opposite sides of the boundary.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d12_fig3_etf_stability.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/figures/d12_fig3_etf_stability.html",
+      "expected_traces": 7,
+      "expected_axes": {
+        "xaxis": "loop gain",
+        "yaxis2": "true / naive"
+      },
+      "physics_checks": [
+        "johnson_factor_two_at_loopgain_three",
+        "stability_blind_pair"
+      ],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

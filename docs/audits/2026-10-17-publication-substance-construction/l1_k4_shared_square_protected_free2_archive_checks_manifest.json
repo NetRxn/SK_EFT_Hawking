@@ -1,0 +1,30 @@
+{
+  "scope": "Final archive reader, successful verification and preserved original checker-only field-alias failure; no scientific rerun or change to accepted94-file evidence.zip.",
+  "files": [
+    {
+      "member": "l1-110153-review-final-archive-attempt1.json",
+      "bytes": 442,
+      "sha256": "7bf5fda2afbc378dd6f239de1bdd128cf9f83a068b5e7d93b322946aade0820c"
+    },
+    {
+      "member": "l1-110153-review-final-archive-attempt1.py",
+      "bytes": 14561,
+      "sha256": "99caa819e291f956bceabab067655d3baf604039a84042c9332ac788eac78988"
+    },
+    {
+      "member": "l1-110153-review-final-archive-verification.json",
+      "bytes": 3541,
+      "sha256": "79cccd22e629bcb17225648a325a65848dc857be4fbccc17862b12acb7085ea8"
+    },
+    {
+      "member": "l1-110153-review-final-archive.md",
+      "bytes": 7035,
+      "sha256": "041b5a9371fa5f85d5e55ef6ec427ac759a7693df9fa6b450fa22fb4166e0c9d"
+    },
+    {
+      "member": "l1-110153-review-final-archive.py",
+      "bytes": 14582,
+      "sha256": "e204451fac88d5e6203dec0f5628c3eddbe2a7413c48a3e6b2ddd76b935cb7f5"
+    }
+  ]
+}

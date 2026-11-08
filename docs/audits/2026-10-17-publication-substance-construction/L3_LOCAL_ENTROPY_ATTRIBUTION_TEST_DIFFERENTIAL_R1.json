@@ -1,0 +1,22 @@
+{
+  "baseline": "263c882b2714d94a50a1e0ece1fcd402ca2f1539",
+  "candidate": "7b1cc1348278d666871e1406bee383ac57f16486",
+  "tests": [
+    "tests/test_bh_thermodynamics.py",
+    "tests/test_d5_citations.py"
+  ],
+  "candidate_pass": 110,
+  "candidate_fail": 3,
+  "baseline_pass": 110,
+  "baseline_fail": 3,
+  "baseline_measurement": "Exact relevant source archive with identical held Lit-Search. Initial 109 pass and one skipped because the sidecar was omitted; the same skipped test passed after the exact baseline sidecar was added.",
+  "candidate_measurement": "Clean exact checkout after all journaled restores. Initial sandbox run denied three journal writes; reran with normal mutation controls enabled.",
+  "failure_ids_identical": [
+    "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom",
+    "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt",
+    "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED"
+  ],
+  "ratchet": "76 live undeclared entries against ceiling 78, seeded case 77 against 78",
+  "citation_primary_cache": "13 missing registry keys and DawsonNielsen2006 declared/held cache mismatch measured on this draft",
+  "conclusion": "Scoped source/closure checkpoint. Native extraction and full main qualification remain open."
+}

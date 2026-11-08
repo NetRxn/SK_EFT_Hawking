@@ -1,0 +1,169 @@
+{
+  "source_commit": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "phase_summary": "63 failed,7053passed,46skipped,52errors",
+  "cache_sha256": "e6d8d878ec4bb3fbaeb8d167133a1e2accfa71bd6c2bdaaeaf3cd7319ca9845f",
+  "scope": "Diagnostic current pytest failure cache only; may retain uncollected historical IDs and is not full tracebacks or independently reproduced finding closure",
+  "groups": {
+    "tests/test_build_graph.py": [
+      "tests/test_build_graph.py::TestExtractLeanTheoremNodes::test_extract_lean_theorem_nodes",
+      "tests/test_build_graph.py::TestExtractLeanDeclarationNodes::test_has_multiple_types",
+      "tests/test_build_graph.py::TestExtractLeanDeclarationNodes::test_axiom_nodes_have_eliminability",
+      "tests/test_build_graph.py::TestExtractLeanDeclarationNodes::test_nodes_have_shape",
+      "tests/test_build_graph.py::TestExtractLeanDeclarationNodes::test_structure_has_field_constraints",
+      "tests/test_build_graph.py::TestExtractLeanDeclarationNodes::test_no_duplicate_ids",
+      "tests/test_build_graph.py::TestExtractLeanDeclarationNodes::test_count_greater_than_500",
+      "tests/test_build_graph.py::TestDependsOnAxiomEdges::test_edges_point_to_axioms",
+      "tests/test_build_graph.py::TestDependsOnAxiomEdges::test_edges_have_correct_type",
+      "tests/test_build_graph.py::TestDependsOnAxiomEdges::test_no_self_edges",
+      "tests/test_build_graph.py::TestVerifiesEdges::test_edges_carry_test_kind",
+      "tests/test_build_graph.py::TestFlagsEdges::test_edge_shape",
+      "tests/test_build_graph.py::TestReportsEdges::test_edges_carry_delta",
+      "tests/test_build_graph.py::TestNodeIntegrity::test_extract_all_nodes_no_duplicate_ids",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_extract_all_edges_not_empty",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_edges_reference_valid_node_ids",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_edges_have_required_fields",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_claims_edges_exist",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_every_claim_node_has_a_claims_edge",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_claims_edges_cover_bundle_claims",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_verified_by_edges_exist",
+      "tests/test_build_graph.py::TestEdgeIntegrity::test_sourced_from_edges_exist",
+      "tests/test_build_graph.py::TestFullGraph::test_full_graph_json_export",
+      "tests/test_build_graph.py::TestExtractReadinessGateNodes::test_returns_list",
+      "tests/test_build_graph.py::TestExtractReadinessGateNodes::test_node_shape"
+    ],
+    "tests/test_build_graph_memo.py": [
+      "tests/test_build_graph_memo.py::TestTheMemoCannotOutliveABuild::test_the_memo_is_drained_after_a_build",
+      "tests/test_build_graph_memo.py::TestTheMemoCannotOutliveABuild::test_an_extractor_called_outside_a_build_reads_LIVE_state",
+      "tests/test_build_graph_memo.py::TestTheMemoIsSemanticallyInvisible::test_the_memoized_build_equals_the_unmemoized_build",
+      "tests/test_build_graph_memo.py::TestASeededMutationSurvivesTheMemo::test_a_finding_seeded_into_the_REAL_corpus_is_visible_to_the_next_build",
+      "tests/test_build_graph_memo.py::TestASeededMutationSurvivesTheMemo::test_removing_the_seeded_finding_is_visible_too"
+    ],
+    "tests/test_bundle_closure.py": [
+      "tests/test_bundle_closure.py::TestD11ModuleSetIsDerived::test_derived_set_is_nonempty_and_path_shaped",
+      "tests/test_bundle_closure.py::TestD11ModuleSetIsDerived::test_empty_closure_raises_rather_than_guessing"
+    ],
+    "tests/test_bundle_json_serializer.py": [
+      "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]"
+    ],
+    "tests/test_d5_bundles_readiness.py": [
+      "tests/test_d5_bundles_readiness.py::TestProducerDemotesGreenOnBlockedP1::test_the_helper_exists_and_returns_a_mapping",
+      "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestBundleNativeDecideDebt::test_live_state_passes",
+      "tests/test_d5_bundles_readiness.py::TestBundleNativeDecideDebt::test_every_ceiling_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestBundleNativeDecideDebt::test_a_bundle_absent_from_the_map_is_asserted_zero",
+      "tests/test_d5_bundles_readiness.py::TestBundleNativeDecideDebt::test_growth_past_the_ceiling_fails",
+      "tests/test_d5_bundles_readiness.py::TestNativeDecideSeamGuard::test_an_empty_native_decide_set_is_UNVERIFIED_not_clean",
+      "tests/test_d5_bundles_readiness.py::TestNativeDecideSeamGuard::test_no_measurable_closure_is_UNVERIFIED_not_clean",
+      "tests/test_d5_bundles_readiness.py::TestNativeDecideSeamGuard::test_the_live_population_is_plausible",
+      "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+      "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+      "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_live_state_passes",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_population_floor_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_numeral_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red",
+      "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_the_population_floor_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_both_ratchets_have_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_every_flagged_row_is_NAMED_in_the_output"
+    ],
+    "tests/test_d5_freshness.py": [
+      "tests/test_d5_freshness.py::TestBundleSourceFreshness::test_an_absent_source_directory_is_UNMEASURABLE_not_fresh",
+      "tests/test_d5_freshness.py::TestBundleCountsFresh::test_live_tree_is_fresh"
+    ],
+    "tests/test_d5_papers_prose.py": [
+      "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree"
+    ],
+    "tests/test_d5_prose_checks.py": [
+      "tests/test_d5_prose_checks.py::TestSpelledOutCensusFigures::test_the_live_ceiling_has_ZERO_headroom"
+    ],
+    "tests/test_d5_reviews.py": [
+      "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+      "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+      "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+      "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red"
+    ],
+    "tests/test_dashboard_graph_cache.py": [
+      "tests/test_dashboard_graph_cache.py::TestTheKeyCoversTheReviewCorpus::test_the_review_corpus_is_in_the_watched_read_set",
+      "tests/test_dashboard_graph_cache.py::TestTheKeyCoversTheReviewCorpus::test_editing_a_review_document_moves_the_key",
+      "tests/test_dashboard_graph_cache.py::TestTheKeyCoversTheReviewCorpus::test_editing_the_ledger_moves_the_key",
+      "tests/test_dashboard_graph_cache.py::TestTheKeyCoversFilesThatDoNotExistYet::test_the_corpus_root_itself_is_watched",
+      "tests/test_dashboard_graph_cache.py::TestTheKeyCoversFilesThatDoNotExistYet::test_creating_a_new_finding_directory_moves_the_key",
+      "tests/test_dashboard_graph_cache.py::TestTheCacheStillCaches::test_an_unchanged_tree_keeps_the_key_stable",
+      "tests/test_dashboard_graph_cache.py::TestTheCacheStillCaches::test_an_unchanged_tree_serves_the_cached_object",
+      "tests/test_dashboard_graph_cache.py::TestTheFailSafeDirection::test_no_read_set_yields_a_key_that_cannot_match",
+      "tests/test_dashboard_graph_cache.py::TestTheSeam::test_a_newly_filed_finding_reaches_the_dashboard_graph"
+    ],
+    "tests/test_flags_ratchet_seam.py": [
+      "tests/test_flags_ratchet_seam.py::test_both_surfaces_are_non_empty",
+      "tests/test_flags_ratchet_seam.py::test_every_finding_in_a_bundle_ratchet_flags_that_bundle",
+      "tests/test_flags_ratchet_seam.py::test_every_bundle_flagged_by_a_finding_counts_it_in_its_ratchet",
+      "tests/test_flags_ratchet_seam.py::test_every_bundle_the_aggregation_iterates_has_a_paper_node"
+    ],
+    "tests/test_ratchets_have_zero_headroom.py": [
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]",
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[paper_latex_compiles]"
+    ],
+    "tests/test_readiness_blocker_refs.py": [
+      "tests/test_readiness_blocker_refs.py::test_fix_propagation_keeps_the_finding_id_it_already_has",
+      "tests/test_readiness_blocker_refs.py::test_the_refs_carry_the_routing_fields_the_operator_needs",
+      "tests/test_readiness_blocker_refs.py::test_an_absent_lane_reads_unclassified_and_never_a_default",
+      "tests/test_readiness_blocker_refs.py::test_the_evaluator_no_longer_truncates_before_it_counts[blocked]",
+      "tests/test_readiness_blocker_refs.py::test_the_evaluator_no_longer_truncates_before_it_counts[needs-recheck]"
+    ],
+    "tests/test_readiness_cannot_measure.py": [
+      "tests/test_readiness_cannot_measure.py::TestUncomputableGatesWithholdGreen::test_healthy_path_returns_a_mapping"
+    ],
+    "tests/test_readiness_gate_measured.py": [
+      "tests/test_readiness_gate_measured.py::TestTheReaderHasAProductionCaller::test_an_unmeasured_gate_reaches_the_log",
+      "tests/test_readiness_gate_measured.py::TestTheReaderHasAProductionCaller::test_a_measured_gate_is_SILENT",
+      "tests/test_readiness_gate_measured.py::TestG4CompleteInternalEvidence::test_partial_measurement_log_does_not_claim_nothing_was_read"
+    ],
+    "tests/test_template_contract.py": [
+      "tests/test_template_contract.py::test_each_tab_returns_200_with_its_own_panel_active",
+      "tests/test_template_contract.py::test_exactly_one_panel_is_active_per_request",
+      "tests/test_template_contract.py::test_a_partial_backed_tab_carries_its_own_partials_marker",
+      "tests/test_template_contract.py::test_the_default_tab_matches_the_servers_own_default"
+    ],
+    "tests/test_validate_public_surface.py": [
+      "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population"
+    ],
+    "tests/test_ci_mode.py": [
+      "tests/test_ci_mode.py::TestCoverageFloor::test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES"
+    ],
+    "tests/test_dashboard_flow.py": [
+      "tests/test_dashboard_flow.py::test_rows_are_exactly_the_registry_roster",
+      "tests/test_dashboard_flow.py::test_live_board_is_internally_consistent",
+      "tests/test_dashboard_flow.py::test_live_overlay_is_never_larger_than_the_aggregation_says"
+    ],
+    "tests/test_extract_lean_deps.py": [
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_returns_list",
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_has_required_fields",
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_has_theorems",
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_has_structures_with_fields",
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_has_definitions",
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_has_instances",
+      "tests/test_extract_lean_deps.py::TestLoadLeanDeps::test_axiom_deps_are_lists"
+    ],
+    "tests/test_graph_integrity.py": [
+      "tests/test_graph_integrity.py::TestIntegrityReportStructure::test_integrity_report_structure",
+      "tests/test_graph_integrity.py::TestOrphanClaimGuard::test_no_orphan_paper_claims",
+      "tests/test_graph_integrity.py::TestDetectsKnownConflict::test_detects_known_conflict",
+      "tests/test_graph_integrity.py::TestReviewFindingIntegrity::test_no_orphaned_findings",
+      "tests/test_graph_integrity.py::TestCountMetricIntegrity::test_count_metric_matches_canonical",
+      "tests/test_graph_integrity.py::TestFormulaTestCoverage::test_bounds_only_formulas_flagged"
+    ],
+    "tests/test_sentence_findings.py": [
+      "tests/test_sentence_findings.py::test_flags_edges_cannot_answer_this_question"
+    ],
+    "tests/test_verifies_alias_guard.py": [
+      "tests/test_verifies_alias_guard.py::TestLiveGraphHasNoFabricatedEdges::test_no_lean_edge_is_alias_rooted_or_tail_resolved"
+    ]
+  }
+}

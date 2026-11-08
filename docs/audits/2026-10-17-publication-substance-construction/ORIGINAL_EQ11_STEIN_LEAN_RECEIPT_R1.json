@@ -1,0 +1,29 @@
+{
+  "source_commit": "dd07bcfef48c6eb973e8ddd49121af5c77be96a3",
+  "source_sha256": "0b98ff4bb84daeed13d52281c87a20c54a3c8478eb43ae8e4db490366a0cdbe5",
+  "slot": 1,
+  "exact_file_diagnostics": {
+    "success": true,
+    "timed_out": false,
+    "items": [],
+    "failed_dependencies": []
+  },
+  "exact_source_axioms": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.integrable_gaussianPolynomialEval' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 127,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.integral_gaussianPolynomial_pderiv' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 128,
+        "column": 1
+      }
+    ]
+  }
+}

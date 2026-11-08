@@ -1,0 +1,19 @@
+{
+  "checkpoint": "f70942ea2e5aadfd979af83509a8e7b9409f4a45",
+  "original_design_checkpoint": "8fed6fb40c79e167ac784871e6ecc4a4582e1505",
+  "archive_sha256": "324b33256a368a826c0acb1b675169d87561eb69a6680fbb50f749f120c7a9d4",
+  "members": 19,
+  "all_member_hashes_exact": true,
+  "canonical_copies_exact": 4,
+  "accepted_source_copies_exact": 7,
+  "nested_parent_artifacts_exact": 2,
+  "root_read_entire_brief_and_both_reviews_and_intake": true,
+  "original_generated_corpus_copy_removed_after_preservation": true,
+  "scope": "APPROVE limited future manual L1\u2013L4 prerequisite commissioning only; no Q1\u2013Q4/positive-state/runtime/slot approval",
+  "original_build_open": true,
+  "actual_held_pdf_pins_verified": 4,
+  "normal_merge_commit": "13bb1e6b711f59049bc1a94fc4971ce7a75576e6",
+  "manual_L1_L4_commissioned": true,
+  "Q1_Q4_uncommissioned": true,
+  "runtime_slot_admission": false
+}

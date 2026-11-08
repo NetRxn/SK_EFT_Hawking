@@ -1,0 +1,73 @@
+{
+  "verdict": "ACCEPT",
+  "base": "97018780963e5d9c328cae29e6187b5f9fcda088",
+  "packet_initial_fresh": true,
+  "catalog_sha256": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23",
+  "catalog_units": 125,
+  "retained_assessments": 118,
+  "old_records_fully_preserved": 6,
+  "prior49_candidates_preserved": true,
+  "candidates_now": 54,
+  "four_blockers_exact": true,
+  "audit_prefix_preserved": true,
+  "audit_appends": 1,
+  "prose_state_bytes_unchanged": true,
+  "registry_fields_only": [
+    "primary_source_path",
+    "provides",
+    "notes"
+  ],
+  "registry_and_sidecar_only_four_keys": [
+    "BakerBellini2017",
+    "CreminelliVernizzi2017",
+    "EzquiagaZumalacarregui2017",
+    "SaksteinJain2017"
+  ],
+  "current_register_projection_reproduced": 159,
+  "L1_cite_set_unchanged": true,
+  "Vladimirov2012_uncited_before_and_after": true,
+  "domain_tests": 152,
+  "domain_failures": 0,
+  "independent_integrated_review": {
+    "verdict": "ACCEPT",
+    "catalog_sha256": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23",
+    "counts": {
+      "PASS": 88,
+      "INFO": 25,
+      "TRANSITION": 4,
+      "WARN": 7,
+      "UNGROUNDED": 1
+    },
+    "retained_assessments_exact_except_rebinding": 118,
+    "new_source_units": 7,
+    "old_records_fully_preserved": 6,
+    "old_candidates_preserved": 49,
+    "candidates_current": 54,
+    "automatic_closures": 0,
+    "four_physics_blockers_exact": true,
+    "all125_ids_quotes_spans_independently_checked": true,
+    "historical_numeric_refresh_exact": true,
+    "current_register_projection_reproduced": 159,
+    "L1_cite_key_set_unchanged": true,
+    "VladimirovDiakonov2012_uncited_in_base_and_current": true,
+    "declared_verify_returncode": 0,
+    "domain_receipt_tests": 152,
+    "rendered_pdf_sha256": "d65a3a00546c90a6fe26e6600593b4e98f4162c5662ff8211c64f976eee8a32c",
+    "rendered_all_pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "current_tex_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
+    "actual_sidecar_sha256": "4d19204df2bff22661a71109b551cb027907cf66bcdd71cc018e708089c849d2",
+    "contradictions": "None. Four owned full-body acquisitions plus one independently verified already-uncited stale register row explain five fewer gap rows; no fifth acquisition. CV held v3 is June2018, not original2017 equivalence."
+  },
+  "required_corrections": [],
+  "packet_final_fresh": true,
+  "register_writer_check_exit": 0,
+  "diff_check_exit": 0,
+  "no_suite_rerun": true,
+  "scope": "Final bounded primary-body composition, no physical/fullstage/main/native/publication acceptance",
+  "report": "/tmp/l1-primary-body-final-composition-independent-20261105-r1.md"
+}

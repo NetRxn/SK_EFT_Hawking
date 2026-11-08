@@ -1,0 +1,1 @@
+paper25_gravitational_waves: OK  pages=5 overfull=0 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0

@@ -1,0 +1,101 @@
+{
+  "scope": "Existing canonical producer arithmetic at adopted parameters only; no new physical damping/graphene response derivation, no scientific source mutation.",
+  "origins": {
+    "src.core.constants": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/src/core/constants.py",
+    "src.core.formulas": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/src/core/formulas.py",
+    "src.core.transonic_background": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/src/core/transonic_background.py",
+    "scripts.gen_d1_hierarchy_table": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/scripts/gen_d1_hierarchy_table.py"
+  },
+  "source_hashes": {
+    "src/core/constants.py": "10ed8fed72f61002dbfc561b24537d8e61d6cb8abd9949d260505bbe458204f0",
+    "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+    "src/core/transonic_background.py": "cd928fec73d3474ef60fd246617abc84ab1ac291aca3d8b1e8849e815b22419c",
+    "scripts/gen_d1_hierarchy_table.py": "8a8c15b7e00c7dcb7e9f47d0e09ba79d8a16e8c1c8153852b4c8bc8966feb845"
+  },
+  "actual_bec_hierarchy": {
+    "Steinhauer": {
+      "D": 0.012765389630371493,
+      "delta_disp": -8.532312875400633e-05,
+      "delta_diss": 2.3771629552423217e-05,
+      "ratio": 0.27860710102367203,
+      "dominance": "disp",
+      "ln_arg": 10.64704149528589,
+      "omega_cross_over_TH": 10.64704149528589,
+      "omega_max_over_TH": 115.03336346284847,
+      "spectral_floor": 2.3771629552423217e-05,
+      "cross_below_cutoff": 1.0,
+      "T_H_nominal_label": "$\\sim 0.35$\\,nK"
+    },
+    "Heidelberg": {
+      "D": 0.011823184504301833,
+      "delta_disp": -7.319266428211103e-05,
+      "delta_diss": 0.0015925053479215164,
+      "ratio": 21.75771798364142,
+      "dominance": "diss",
+      "ln_arg": 6.4440380509870305,
+      "omega_cross_over_TH": 6.4440380509870305,
+      "omega_max_over_TH": 121.0663800786541,
+      "spectral_floor": 0.0015925053479215164,
+      "cross_below_cutoff": 1.0,
+      "T_H_nominal_label": "$\\sim 1$\\,nK"
+    },
+    "Trento": {
+      "D": 0.013744339393223589,
+      "delta_disp": -9.891140340257595e-05,
+      "delta_diss": 1.4130121214479423e-05,
+      "ratio": 0.14285634141666048,
+      "dominance": "disp",
+      "ln_arg": 11.167215912806597,
+      "omega_cross_over_TH": 11.167215912806597,
+      "omega_max_over_TH": 109.50416077648174,
+      "spectral_floor": 1.4130121214479423e-05,
+      "cross_below_cutoff": 1.0,
+      "T_H_nominal_label": "$\\sim 1$\\,nK"
+    }
+  },
+  "fixed_material_kappa_sweep": {
+    "inputs": {
+      "density_1D": 30000000.0,
+      "a_s": 5e-08,
+      "c_s": 0.00391939426729473,
+      "xi": 4.1586064771066243e-07
+    },
+    "rows": [
+      {
+        "kappa_factor": 1.0,
+        "kappa": 101.92582107631688,
+        "Gamma_Bel": 0.16231741515532624,
+        "delta_diss": 0.0015925053479215164,
+        "delta_disp": -6.123853671982174e-05,
+        "gamma_1": 1.2000645069577037e-10,
+        "gamma_2": 1.2000645069577037e-10
+      },
+      {
+        "kappa_factor": 2.0,
+        "kappa": 203.85164215263376,
+        "Gamma_Bel": 0.649269660621305,
+        "delta_diss": 0.0031850106958430328,
+        "delta_disp": -0.00024495414687928697,
+        "gamma_1": 1.2000645069577037e-10,
+        "gamma_2": 1.2000645069577037e-10
+      }
+    ],
+    "doubling_ratios": {
+      "Gamma_Bel": 4.0,
+      "delta_diss": 2.0,
+      "delta_disp": 4.0,
+      "gamma_1": 1.0,
+      "gamma_2": 1.0
+    },
+    "diss_to_disp_ratio_changes_by": 0.5
+  },
+  "graphene_operating_point": {
+    "adopted_gradient": 2000000000000.0,
+    "T_H_registry_rounded_K": 2.4,
+    "T_H_from_canonical_gradient_K": 2.4313249424140624,
+    "omega_from_rounded_temperature": 314208814097.29535,
+    "omega_from_unrounded_canonical_temperature": 318309886183.79065,
+    "geometry_gradient_estimate": 2200000000000.0,
+    "scope": "Registry gradient and c_s/L geometry estimate are distinct adopted/approximate inputs; do not silently select new physical parameters."
+  }
+}

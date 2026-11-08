@@ -1,0 +1,13 @@
+# Document-first composition review r5
+
+**ACCEPT** for document-first composition. This accepts the installed specification/plan and existing-owner amendments only; source implementation, controls, closure and publication remain open.
+
+First required continuity check was fresh=true, changed=[]. Compared installed spec/plan with accepted r3 scratch originals. Differences are accepted-status wording, the precise unknown-shape/canonical unknown-cache-kind clarification, and the required controlled wrong-phase/declared-alias clarification. Existing decisions, original operator intent, ownership and deferred obligations are preserved. The plan inherits these requirements through the accepted design; no broader acquisition service or alternative classifier/resolver is introduced.
+
+Compared ADR014 and QA writer map to candidate HEAD read-only. ADR014 gains exactly the accepted normative D2 paragraph, preserving separate header-first discovery. QA map gains exactly one existing acquisition-producer row, contiguous with the original table and retaining four columns throughout. No new census count, ADR, gate, roster, index or sync edge is added. New producer/artifact/review paths resolve. ROOT's supplied architecture_inventory_fresh receipt reports PASS including no-count and reference-resolution legs; this reviewer read that receipt and did not rerun its check.
+
+Archive verification passed for all 11 r3 prefix artifacts: ZIP CRC test, exact entry-set equality, each manifest byte length and SHA256, archive SHA256, and byte-for-byte equality to every original /tmp file. Both copied r4 independent-review artifacts exactly equal this reviewer's originals. Independently compared present bytes/SHA256/size/mode/nsmtime against all 330 protected r3 input snapshots: zero changes. This includes producer/classifier/resolver/registry/overlay/state and the 279 held files; intentional ADR/map/spec/plan composition is outside that protected dictionary.
+
+One nonblocking editorial cleanup: the plan's final paragraph still says the design is not settled until independent specification review, while its header correctly records completed acceptance. Rewrite that conditional to completed specification acceptance with implementation/qualification still open before handing it to an implementer. This does not change the accepted decisions.
+
+No source, tests, writers, seeds, network, builds, scientific execution or Git mutation performed. ROOT remains the sole candidate writer until explicit source assignment. Future nonauthor implementation/control review and SOURCE137/body, physical B3, scientific applicability, broad-suite/full-tree/main, human and publication obligations remain intact. Exact reviewed document hashes are in the companion JSON.

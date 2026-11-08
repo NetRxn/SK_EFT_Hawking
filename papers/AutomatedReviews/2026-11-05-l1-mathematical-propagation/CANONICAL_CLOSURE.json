@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "scripts/close_finding.py",
+    "--doc",
+    "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/L1.md",
+    "--section",
+    "1.1",
+    "1.2",
+    "--status",
+    "fixed",
+    "--commit",
+    "c183f44a9ef866051fb544aea6032c450ea409e0",
+    "--evidence",
+    "Independently accepted exact source/math, integrated89-case execution, preserved original RED controls, meaningful negative mutants, all9 rendered pages, and exact four factual Eq1 source locators. Scope and peer reviews in papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/. Physical B3/matter/transport and broad propagation remain open."
+  ],
+  "returncode": 0,
+  "stdout": "\u2713 wrote 2 record(s): review:2026-11-05-l1-mathematical-propagation:L1:1.1, review:2026-11-05-l1-mathematical-propagation:L1:1.2\n",
+  "stderr": ""
+}

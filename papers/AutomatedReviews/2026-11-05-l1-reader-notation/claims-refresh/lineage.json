@@ -1,0 +1,54 @@
+[
+  {
+    "prior_id": "sentence:L1:abstract:9a3de8fb",
+    "successor_ids": [
+      "sentence:L1:abstract:756848ee"
+    ],
+    "relation": "rewrite",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  },
+  {
+    "prior_id": "sentence:L1:formal-setup-and-result:98b2e23b",
+    "successor_ids": [
+      "sentence:L1:formal-setup-and-result:89678d2f"
+    ],
+    "relation": "rewrite",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  },
+  {
+    "prior_id": "sentence:L1:discussion:e1a97170",
+    "successor_ids": [
+      "sentence:L1:discussion:6409d539"
+    ],
+    "relation": "rewrite",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:0ef96618",
+    "successor_ids": [],
+    "relation": "deleted-process-or-taste",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:162806f2",
+    "successor_ids": [
+      "sentence:L1:introduction:82677384"
+    ],
+    "relation": "rewrite",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:2da8b694",
+    "successor_ids": [],
+    "relation": "deleted-process-or-taste",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:cd2d9076",
+    "successor_ids": [
+      "sentence:L1:introduction:9f09b12d"
+    ],
+    "relation": "rewrite",
+    "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+  }
+]

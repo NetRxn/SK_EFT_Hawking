@@ -158,6 +158,13 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "`partition_readiness` extracted so the verdict is testable against synthetic "
         "gates instead of a 15-second graph build",
     ),
+
+    # ADR-009 D6 extends this existing obligation, not its completed evidence:
+    # ROOT must execute case-exclusion in the real Formula producer, a real
+    # canonical public-definition removal with its declaration retained, and
+    # a genuinely absent PAPER_DEPENDENCIES target. Each needs hard baseline,
+    # intended targeted RED, exact restore/GREEN, source origins and empty journal.
+    # The earlier fixture/core mutation receipt above does not prove these controls.
     # ── ADR-009 §Deferred item 1 — the native_decide ratchet ──
     "native_decide_regression": (
         "test_native_decide_ratchet.py",

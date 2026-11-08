@@ -1,0 +1,13 @@
+{
+  "observer": "publication ROOT",
+  "provenance": "record of actual functions.exec / tools.exec_command and tools.write_stdin tool responses; not an independently captured raw tool trace",
+  "source_commit": "226ee77d63884c9259d3ec8ab339eaf248335cfb",
+  "session_id": 95715,
+  "initial_chunk_id": "746919",
+  "terminal_chunk_id": "80e52a",
+  "exit_code": 0,
+  "stdout_file": "stdout.txt in CURRENT_226EE_GATE_EVIDENCE.zip",
+  "stderr_file": "stderr.txt in CURRENT_226EE_GATE_EVIDENCE.zip",
+  "graph_file": "graph.json in CURRENT_226EE_GATE_EVIDENCE.zip",
+  "git_source_status_at_readback": ""
+}

@@ -1,0 +1,58 @@
+ACCEPT_CHECKPOINT_DOCUMENTATION
+
+Independent final checkpoint documentation review R3. Assigned cumulative checkout5a552a82928eb053effd1a39b15aa2bcd1d5da65, exact8owned current files, not authored by this reviewer. First operation checked the exact new packet with the existing continuity adapter: fresh=true,changed=[]. Frozen unit notebook read. Only /tmp/publication-complex-checkpoint-review-r3.md/.json written; no repository/Git/build/MCP/controller/cache/derivative/notebook edits or mutating checks. Phase6a bytes were left untouched throughout, preserving the active worker's binding.
+
+No blocking documentation correction found. Acceptance concerns faithful checkpoint records and prospective next-work scope, not new mathematical/physical/native/full-suite acceptance.
+
+Exact R4 portfolio snapshot verified:
+
+- Read full current8files/JSON and complete current queue/roadmap diffs. R4 JSON is exactly /tmp/l1-main-complex-gate-snapshot-r2.json with one explicit added preserved_at_commit=b21c206a847ea4d914c27cc7e78866de3fddce1f field. No changed gate payload. source_commit remains actual scientific0e2894344b35e1fe45bc6d9602b4e388f7c56a65; built_at=2026-11-06T18:44:32.990966+00:00. The historical 'generated-artifactreviewR2 inprogress' raw note is preserved as a measurement-time note, while the current narrative separately records final accepted R2. No earlier17:27measurement is presented as new.
+- Independently counted231unique gate IDs and full payload states:160passed,25blocked,28open,18needs-recheck. Exact ID set and EACH state equal priorR3. Zero transitions and zero newly green bundles follow; no newly-green claim is fabricated.
+- Independently opened the b21-preserved COMPLEX_NATIVE_R1_EVIDENCE.zip. Raw graph SHA2561a4d93a3c554c30421d6aee849501606ad707013e68283092dab8d40e3dd8cc7 matches the evidence JSON; dictionary comparison of all231COMPLETE gate payloads equals current R4 payloads. A preliminary comparison sorted only one side and failed on ordering; corrected ID-keyed complete-record equality passes, without altering artifacts. A preliminary root-snapshot equality comparison also correctly revealed the explicit preserved_at_commit addition; removing only that documented provenance field yields exact equality. Neither diagnostic was silently treated as a source defect or permission to rewrite snapshots.
+- Independently counted nineteen ComputationCorrectness/G4open payloads explicitly saying no declared formulas. L1's7 and D12's28formula gates explicitly say typed supported STATIC test coverage, with execution/scientific validation separate. Those caveats remain in R4 evidence and current queue. Separate focusedL3 and cumulative research branches are excluded from this measurement.
+- Raw archive bytes equal the actual b21Git object at the narrative URL's exact repository path. ArchiveSHA256364e0db42fa6409a2afb7764f12329992830c4590584013c0b6c827191edb14a. This verifies the pinned source/path/content of the URL without inferring live HTTP access or repository-wide readiness.
+
+Native/generated/API checkpoint distinctions verified:
+
+- Full existing generated-artifact independent R2 review read. It accepts GENERATED ARTIFACTS ONLY: all41064prior complete catalog records unchanged, exactly62newrecords(40authoredtheorems,12definitions,10generatedequations),41126unique current names, no project-axiom/sorry/native_decide regressions;107macros, completeatlas/heatmap,90scientific outputs across15papers and canonicalclaimclusters. Four new current design copies do not masquerade as implementations.
+- R2 source review is byte-exact to the corresponding archived independent report. Its earlier R1 actual stale final/REVISE and overstrict extraction qualification history are preserved, with finalR2freshness explicitly reconciled. No retroactive R1 green or weakened checker.
+- Read archived actual native result and full terminal output: scientificcandidate0e2894344, actuallibrary/ExtractDeps command, returncode0, finished18:31:09.997358UTC, terminal 'Build completed successfully (10838 jobs).' This supports only the stated own native milestone, separate from primary controller absorption and full merge profile.
+- Read actual freshness stdout: counts/theorem census/tables/claimclusters4/4passed with ONE WARNING. Warning explicitly says D8claims newer than clusters, existingcanonicalwriter regenerated7clusters across11papers and verified post-regeneration fresh. Current prose retains that warning, not a warning-free claim.
+- Read actual b21fullprofile invocation: candidateb21, started18:49:50.523498UTC, exact existingverify_scope.py--merge-gate, selected MAIN imports independently origin-probed, matched dependency pins and no competing build at launch. Current log contains 'MERGE GATE — the full certification' and 'full suite'; no result/progress terminal JSON exists at this review readback. This is consistent with ROOT's live handle29904 and the docs' RUNNING/pending wording. I did not poll, manipulate or claim ownership of that live run. No fresh complete-project pass is claimed anywhere in the changed text. The earlier7172pass/28fail/14skip failed profile remains explicitly historical and unresolved beyond accepted scoped repairs.
+- Read actual current closure ledger against scientific0e2894344. All old entries are identical, exactly ONE appended entry exists: review:2026-11-06-d8-source-reconciliation:D1:1,statusfixed, source0e2894344 anchor and declared JSON test exit0/enforced. Its evidence expressly disclaims original D1/D8 closures. This matches my independent production acceptance and the current queue's newAPI-only boundary. Original D1physics and D8semantic/human/figure obligations remain OPEN. The queue accurately states original1853identities/severity/gates/status/ledger were conserved BEFORE adding this explicit narrowfinding/closure.
+- I did not independently re-fetch GitHub remote state. Pushedb21 status is supported by ROOT's pinned native-checkpoint receipt/current assignment; local exact b21Git archive/source objects were independently checked. No remote-readback claim is added by this review.
+
+Prospective Eq4/Eq7 documentation verified:
+
+All FOUR copied design/review files are byte-for-byte equal to the accepted /tmp originals, including JSON fields and exact Markdown hashes:
+- designMD7bc83d3141f2533f6c9112bfa53b321b7307a62908433f6fd4952b4a1824c9e0;
+- designJSON08e7b26eedd3e6b7ccf96741518fae8991157a3ea3939c3b31d1eb630a6030c9;
+- independentreviewMD1784b4c7754f32dd17780620d88771dab746748a53a510fe15b1661aeb0e2882;
+- independentreviewJSON6a7750dd2a7117122be533570990e8313436b7b28a142f4aeb52267ae117f875.
+
+Read complete design and independent prospective review, including all actual-model and remaining-physical clauses. Current queue/Phase6a descriptions match those exact approved scopes:
+
+A: deterministic finite compensation/truncation for arbitrary complex finite source with zero constant term, all retained coefficients/raw moments, including empty/M0; B: actual8Vindependent complexgenerator exterior algebra, literal quarter-coframes/source convention, actualeven commutation and GLOBAL4Vjoint nilpotence; C: actual G-valued Bochner integrability/Eq7 after A+B. Generic conditionalnilpotentcarrier/scalarsurrogate alone cannot close actualmodelEq7. Source gamma/chirality/plaquette/boundary conventions must be checked BEFORE specialization. Independent implemented-source/kernel review and ROOT authoritative builds/absorption remain required. Design approval authorizes admitted discovery/implementation; it is not proof that Eq4,actualEq7,sourceEq11,physicalB3/state/adjoint/domain/calibration/mode/matter/transport or publication is complete.
+
+The copied original design still calls itself a proposal because that is preserved author provenance; the separate exact independent review and new queue text explicitly state prospective approval. No contradictory current implementation acceptance is created.
+
+Runtime/custody/research boundary verified:
+
+Read actualwt1reconciliation native-probe receipt: active_dispatch=true,cleanupstatus200,21tools,lean_build_exposed=false. The proxy's static 'backend idle' label is not treated as live backend conflict. Read ROOT matching actualMCPlean_file_outline response:isErrorfalse, actualGaussianAuxiliaryComplex importlist and matching declarations. This supports the queue's reconciliation of leafps/loopback permission denial/stale no-lease description without reset/backendrepair. I made no MCP/controller/process calls. This is evidence of actual admitted discovery availability, not a proof/lease transfer from the copied design; ROOT remains admission/runtime/reset/integration/acceptance owner.
+
+Read peer6a620researchcustody receipt: allarchivemembersvalid, canonicalcopiesmatch, original acceptedkernel/sourceinput hashes retained; scope is accepted researchcustody/commission only, no new premise/physicalcandidate. Independently read CUM5a552Git parents:1a5e7875695ec53c86b6c14c6f4b0e72c4fb09d8 and6a62061319737190f0f9889d187e1326486c1972; merge-base--is-ancestor returns0. This is a normal history-preserving merge, not peer reset/cherry-pick or wholesale main-delivery adoption. Current text retains controlled originalEuclidean alternative, Lorentzian boundary/cycle/real-structure research, both originalorientations/fullC2/source/frame/denominator/seam/domain obligations, no favorable norm/state/CAR/physicalpremise adoption and fresh prospective review before concretecandidate implementation.
+
+Priority and historical obligations preserved:
+
+Queue leadL1 and finalhuman/canonical-gate milestone remain first; unchanged ordered L3,D3,L2->D2,D1->E1/E2, with NJLparallelcheckpoint and physical-first sharedconstruction boundary. Full21portfolio scope/finalhumanapproval and all unchanged historical obligations remain. Complete queue/Phase6a diff makes only evidenced current native/artifact/profile and R4measurement replacements plus prospective-design next-step additions. It does not delete oldscientific requirements, change findingstrength, adopt physicaldeferral, grant extra runtimecapacity or silently close anything. Older dated all-three-free18:29availability remains explicitly historical; appended actualwt1admission supersedes it for nextAwithout rewritinghistory. Current measurement18:44 and later profile invocation are explicitly separate from earlier dated checkpoints.
+
+No necessary revision. ROOT may publish this documentation checkpoint within its existing authorization after this finalfreshreadback; no fresh physical/publication or complete-project acceptance follows from that publication.
+
+Read-only commands/evidence methods actually used:
+1. Existing codex_continuity.py check EXACT same publication-complex-checkpoint-review-r3.json first/final.
+2. gitdiff of the two existing narrativefiles; full8file reads, JSONserialization/wholepayload compares; currentqueue/Phase6a context, full design/review and frozennotebook reads.
+3. PurePython json/Counter/hashlib checks over231gate records, exactR3IDs/states,19formula-coverage opens, currentL1/D12details; zipfile rawgraph/fullpayload checks; all4copiedfiles==tmpbytes; gitshowb21:archivecontent==actualarchivebytes.
+4. Archived independentR2review/native/freshness receipts read, actualcurrentclosureledger vs gitshow0e289ledger one-entry append comparison; invocation/liveprofilefile existence/logtail read only. No test/check/build rerun.
+5. gitlog/showparents and merge-base--is-ancestor for acceptedresearchmerge; actualwt1/ROOTMCP reconciliation and peerresearchcustody receipts read only.
+
+Final same-packet fresh/changed[] is required and reported by the final tool readback. No owned repository file was changed by this reviewer.

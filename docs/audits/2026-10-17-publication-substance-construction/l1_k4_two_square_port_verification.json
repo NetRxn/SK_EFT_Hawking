@@ -1,0 +1,15 @@
+{
+  "ast_equal": [
+    "base",
+    "two_geometry",
+    "two_prepare",
+    "two_contraction",
+    "data",
+    "describe"
+  ],
+  "controls_exit": 0,
+  "default_exit": 0,
+  "evaluator_sha256": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+  "exclusive_exit": 2,
+  "refusal_exit": 2
+}

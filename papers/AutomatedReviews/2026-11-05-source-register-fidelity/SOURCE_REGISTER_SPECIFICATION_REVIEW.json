@@ -1,0 +1,49 @@
+{
+  "verdict": "ACCEPT",
+  "scope": "Specification and intent only; not implementation, closure, full-tree or publication acceptance",
+  "reviewer": "/root/source_register_spec_review",
+  "reviewed_at_utc": "2026-11-05T12:41:50.578749+00:00",
+  "head": "4a0d736866adb4cdc006d6835f2895254bc942cb",
+  "input_hashes": {
+    "/tmp/publication-source-register-postfreeze-measurement-r3.md": "7897f47c47c6a14aea638bd3062d0fe7b463d249531960227f0459cb0b09a544",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-spec.md": "bb86fc5b88c5c536e2be2d88f5b1aea7a393d8ae64c13c634a4b89806b15657c",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-plan.md": "3433c32ce8054027b5e8caee20939b601055559d2a3a63f930db150ae332eddd",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-doc-amendments.md": "f29eae7524f87bf20737f2c25fa0f8e2a8c825598319d7ad873f973470429df4",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-population.json": "3cb67b9022994132b5aa7c1638ada64aa66917a3db0f38e24edaec50bbbca07d",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-receipt.json": "c289ffded9002122b95677edbef6af16817002d8388ff1e2ca003f4d8dfb9349",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-manifest.json": "b5015e79a1e7ba1ed94e487d7f51828eba6532de87de0ae052445bcacb292f6d",
+    "/tmp/publication-source-register-postfreeze-measurement-r3-registration.txt": "3d860d605caf068385820a08691fc2cfcc37d14eb605b46fd18475f9b717ccc7"
+  },
+  "independent_checks": {
+    "r3_current_file_snapshots_checked": 330,
+    "drift": [],
+    "unique_rows": 317,
+    "holding_counts": {
+      "none": 76,
+      "full": 153,
+      "metadata": 45,
+      "abstract": 43
+    },
+    "holding_transitions": {
+      "none->full": 22,
+      "full->metadata": 22,
+      "none->metadata": 23,
+      "abstract->full": 10,
+      "none->abstract": 2
+    }
+  },
+  "interpretation_deciders": [
+    "Unknown JSON means unrecognized shape, not unrecognized cache_kind: valid canonical body evidence must still upgrade to full.",
+    "Strongest discovery remains canonical-phase-only; declared existing aliases are separately classified; header-first discovery remains unchanged."
+  ],
+  "required_changes": "No replacement architecture or changed acquisition policy. Carry the two interpretations explicitly into document-first handoff and tests.",
+  "not_authorized": [
+    "implementation",
+    "writer execution",
+    "production seeds",
+    "closure",
+    "network",
+    "builds",
+    "science"
+  ]
+}

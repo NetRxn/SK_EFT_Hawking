@@ -1,0 +1,24 @@
+{
+  "verdict": "ACCEPT SCOPED IMPLEMENTATION",
+  "packet": "publication-imports-implementation-review-r5.json",
+  "packet_fresh": true,
+  "producer_sha256": "df32bfede07cf4177d11017c7783177772fb8be5495d58a5036550cfba593ccb",
+  "tests_sha256": "522c6898ef8ce5e02400cd0b052ba970abd45b59f21575fc61e7772e4b87c35f",
+  "qa_map_sha256": "3e81f812a246519c8ce5eb57ae02322f94412b299b9ebb070cf8d28ce2d93626",
+  "resolved_findings": [
+    "I1",
+    "I2",
+    "I3",
+    "I4"
+  ],
+  "remaining_findings": [],
+  "scoped_tests_passed": 50,
+  "production_test_reviewed_via_current_whole_module_xml": true,
+  "whole_module_result": "130 passed, 1 skipped, 15 deselected",
+  "independent_probes": 24,
+  "independent_probe_matches": 24,
+  "corpus_conservation_verified": true,
+  "source_sensitive_probes_finished": true,
+  "candidate_mutated": false,
+  "science_main_native_publication_acceptance": false
+}

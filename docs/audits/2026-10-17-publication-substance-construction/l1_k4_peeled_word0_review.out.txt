@@ -1,0 +1,1 @@
+{"coefficient": [834814503361393106337, 2199023255552], "peak_rows": 3952, "seconds": 53.709, "word": {"axes": [2, 2], "changes": [[1, [0, 2]], [4, [1, 2]], [6, [0, 2]], [7, [0, 2]]], "geometry_diagnostic": "TypeError: unbound method set.union() needs an argument", "index": 0, "omitted": 0, "supported_geometry": false}}

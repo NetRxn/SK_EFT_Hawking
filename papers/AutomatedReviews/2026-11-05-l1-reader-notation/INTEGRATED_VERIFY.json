@@ -1,0 +1,6 @@
+{
+  "command": "python3 -c 'from pathlib import Path; s=Path(\"papers/L1/paper_draft.tex\").read_text(); assert chr(92)+\"mathrm{tol}\" not in s, \"dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\"'",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

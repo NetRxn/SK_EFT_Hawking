@@ -1,0 +1,333 @@
+{
+  "receipts": [
+    {
+      "command": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-c",
+        "import sys;sys.path.insert(0,'/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103');import pytest;raise SystemExit(pytest.main(['-c','/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/pyproject.toml','tests/test_gravitational_waves.py','-q']))"
+      ],
+      "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+      "exit_code": 0,
+      "log": "/tmp/l1-math-numeric-integrated-render-20261105-r2/run-0.txt"
+    },
+    {
+      "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/paper25_gravitational_waves/paper_draft.tex\").read_text()); bad=[r\"\\chivest = 1 \\pm 3\\times 10^{-15}\",\"sits exactly at unity\",\"exponentially small measure in any\",\"the fourth isolates P3'\"'\"'\",r\"\\sim 7\\times 10^{14}$ at the\",\"the natural range fails by\",r\"locating the $\\cGW = c$ window\"]; assert not any(x in s for x in bad), \"source retains false finite-tolerance, endpoint, prior or independence statements\"'",
+      "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+      "exit_code": 0,
+      "log": "/tmp/l1-math-numeric-integrated-render-20261105-r2/run-1.txt"
+    },
+    {
+      "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.provenance import PARAMETER_PROVENANCE as P; from src.core.formulas import c_GW_deviation_from_c; assert all(\"Eq. (1)\" in P[k][\"source\"] for k in [\"GW.C_GW_DEVIATION_UPPER_BOUND\",\"GW.C_GW_DEVIATION_LOWER_BOUND\"]), \"GW170817 primary bound is Eq. (1)\"; assert \"Eq. (1)\" in c_GW_deviation_from_c.__doc__, \"formula source locator is stale\"'",
+      "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+      "exit_code": 0,
+      "log": "/tmp/l1-math-numeric-integrated-render-20261105-r2/run-2.txt"
+    }
+  ],
+  "registry_tally": {
+    "def": 8,
+    "theorem": 32
+  },
+  "packet": {
+    "schema": "codex-continuity/v1",
+    "task": "l1-math-numeric-integrated-review-r2",
+    "parent": "publication-remediation",
+    "role": "reviewer",
+    "owner": "/root/l1_math_numeric_review",
+    "notebook_writer": "/root",
+    "objective": "Independently verify integrated P25 math propagation, 89-case scientific acceptance and four Eq1 source locator edits including all changed rendered pages.",
+    "acceptance_reviewer": "/root",
+    "required_evidence": "Scratch integrated source, typed registry, arithmetic, test and all-page rendered verification. No physical BUILD/full-stage discharge.",
+    "checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "primary": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+    "owned_files": [
+      "docs/counts.json",
+      "docs/counts.tex",
+      "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/L1.md",
+      "papers/L1/paper_draft.pdf",
+      "papers/L1/paper_draft.tex",
+      "papers/paper25_gravitational_waves/paper_draft.pdf",
+      "papers/paper25_gravitational_waves/paper_draft.tex",
+      "src/core/formulas.py",
+      "src/core/provenance.py",
+      "tests/test_gravitational_waves.py"
+    ],
+    "owned_state": {
+      "docs/counts.json": {
+        "kind": "file",
+        "sha256": "bea1bced45d59115a6097214a7914ee3fdcd9194f61e4afd26f987539de683b4"
+      },
+      "docs/counts.tex": {
+        "kind": "file",
+        "sha256": "de30561297c0b40b5ea7c3d79a6f0a1fc59b82d64ed2eb33b66d0f9ddd784836"
+      },
+      "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/L1.md": {
+        "kind": "file",
+        "sha256": "a01972d80856a07dca91aaed56168aec2be18c4372616430fb813865e2debe08"
+      },
+      "papers/L1/paper_draft.pdf": {
+        "kind": "file",
+        "sha256": "8280e139c420db9d12cf0408543b9eacc6c351ad843b2f8cfe92354f804c770a"
+      },
+      "papers/L1/paper_draft.tex": {
+        "kind": "file",
+        "sha256": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856"
+      },
+      "papers/paper25_gravitational_waves/paper_draft.pdf": {
+        "kind": "file",
+        "sha256": "5d76822d5ea1cfca35656e88c16692029aa6651c3a5b3a5eab9608304a920c61"
+      },
+      "papers/paper25_gravitational_waves/paper_draft.tex": {
+        "kind": "file",
+        "sha256": "2f77450953f20000856b2b801aee99c4fcba452fe7ea1a7f7e76d1620d035aac"
+      },
+      "src/core/formulas.py": {
+        "kind": "file",
+        "sha256": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9"
+      },
+      "src/core/provenance.py": {
+        "kind": "file",
+        "sha256": "eba5b4ed81cd21fba3ce78d281d3af60224a94c035dc36afadfb348087dc31ae"
+      },
+      "tests/test_gravitational_waves.py": {
+        "kind": "file",
+        "sha256": "d7ea13b44e41d36327fa99699b02e96290fa40985c4a1b6aafb9a85729d9d38d"
+      }
+    },
+    "references": {
+      "roadmap": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md",
+        "kind": "file",
+        "sha256": "a1a2f0a0417aa9dfab6c37d3ef5fa5511feb32df5cfa9f7823228f7de380144c"
+      },
+      "notebook": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md",
+        "kind": "file",
+        "sha256": "1a8e5a1e7c8fd155987dc24b2c36e9c5699b303ea791e5cfd75c53aac206302c"
+      },
+      "authorities": [
+        {
+          "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md",
+          "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md",
+          "kind": "file",
+          "sha256": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b"
+        },
+        {
+          "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md",
+          "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md",
+          "kind": "file",
+          "sha256": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48"
+        },
+        {
+          "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md",
+          "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md",
+          "kind": "file",
+          "sha256": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22"
+        },
+        {
+          "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+          "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+          "kind": "file",
+          "sha256": "8b783a2a2698dd2e9e5808f992fbb2a8115a89454d34a4926c78843d4b21a164"
+        },
+        {
+          "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md",
+          "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md",
+          "kind": "file",
+          "sha256": "bbb5c52cff5f8269b6007e6faa170ad74d0fae790a71705abc0c4925d152de29"
+        },
+        {
+          "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md",
+          "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md",
+          "kind": "file",
+          "sha256": "6276f6e4912bc46d63fa7b1e7bba102882ee68e08e4157572aa581ead6c1ba46"
+        }
+      ]
+    },
+    "source": {
+      "head": "3c56f0c6d6c0785f2b9958ec9c136d8dd293a3d8",
+      "index_sha256": "5f68da7759ae56df70534590b2727a3640cdd8eca06f66864b0c5075f2d337a2",
+      "status_sha256": "a85be52c4fd3d3e35df8639eee0eef48eef50a47f75776bfc660c65e8f58af27",
+      "changed_files": {
+        "docs/counts.json": {
+          "kind": "file",
+          "sha256": "bea1bced45d59115a6097214a7914ee3fdcd9194f61e4afd26f987539de683b4"
+        },
+        "docs/counts.tex": {
+          "kind": "file",
+          "sha256": "de30561297c0b40b5ea7c3d79a6f0a1fc59b82d64ed2eb33b66d0f9ddd784836"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/COMPILE_R1.txt": {
+          "kind": "file",
+          "sha256": "5f32bee948fa8c65e8234554bca138f7af5665888564e0fd87b2a7bcb698b3c3"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/COUNTS_CORRECT_ENV.txt": {
+          "kind": "file",
+          "sha256": "1df72be1dc3fc5b644a776f3f6bd91d5a6847cd9de4827f762c5e8ea802fc4ba"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/COUNTS_INITIAL_ENV_FAILURE.txt": {
+          "kind": "file",
+          "sha256": "eac81f8763ca2e6466bdc19d3d2957a14d69ac1abbf16385203e9a1b309f23f9"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INDEPENDENT_PROPOSAL_REVIEW.json": {
+          "kind": "file",
+          "sha256": "e12aaa5bb24df89ffc358597f69d479f93bd6470aee2c3048141e94909dfe027"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INDEPENDENT_PROPOSAL_REVIEW.md": {
+          "kind": "file",
+          "sha256": "56ec8106025b91e0fa1a7f0c9363c69cc02876877b8bae8e365e38f67d8a7b85"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INTEGRATED_DECLARED_VERIFY.json": {
+          "kind": "file",
+          "sha256": "0656c33e2d07a31291143939b4a1721a5c0e0375fcb104d8312328b18bf266a9"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INTEGRATED_TESTS.txt": {
+          "kind": "file",
+          "sha256": "b3266baca7c3b99701602fff4fb0fb7b95c05d0da211c9763fd297479e263e41"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INTEGRATED_TESTS.xml": {
+          "kind": "file",
+          "sha256": "a3a73faf3b146c0e4ec046ea964938d0bda7aa6bd57ef38165719bf73b00180f"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/L1.md": {
+          "kind": "file",
+          "sha256": "a01972d80856a07dca91aaed56168aec2be18c4372616430fb813865e2debe08"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/ORIGINAL_RED_CONTROLS.json": {
+          "kind": "file",
+          "sha256": "2d892ccea871041d1c962149373a6072fd6119fb2175ade3ab9c7b43cb86bfe2"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/SOURCE_AUTHOR_CENSUS_ERRATUM.md": {
+          "kind": "file",
+          "sha256": "3ffc82fea29b13bf1977e2294ea469488321f0a848236284c1e198a9dbfbb9e8"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/SOURCE_CENSUS_READBACK.json": {
+          "kind": "file",
+          "sha256": "4dba2af30abdc7a3aabeaa58af8d1805e32e484034382a45887fb9d82a476001"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/REPORT.md": {
+          "kind": "file",
+          "sha256": "dfa918063abc8f0b4b8b318ff941efcfeeecb0027e69a6074845248e6e832ee2"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/exact-reference-values.json": {
+          "kind": "file",
+          "sha256": "d7ea1f402321b5d11a4aa67da28e1c583719854925d01696c8a1b07f31d34fcc"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/execution-receipts.json": {
+          "kind": "file",
+          "sha256": "098a47908c4ddcd731f3a214a20f084a3bede0ad707f3295afa39711da4ab84a"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/proposed.patch": {
+          "kind": "file",
+          "sha256": "069d0eef4006c69c04d416fe288125e3d08ea02d9501b93dc8ab9f3c29d3259b"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/r1-to-r2.patch": {
+          "kind": "file",
+          "sha256": "672dc69b8ec8da631d2f3cd246ecb4d7befc643046e1a83fc9a6eeae52c4d119"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/run_controls.py": {
+          "kind": "file",
+          "sha256": "86a20fe505d89a4a08be1972d967fae7263928b505382a2715493f038e6c5e9a"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/sourcepins.json": {
+          "kind": "file",
+          "sha256": "b98255be03a05f572a123e7a7d90db3e6a1bd2cda0634797bf132895fe44e3a0"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/controls.py": {
+          "kind": "file",
+          "sha256": "ed30214d4957410bebf207dca6b506a38ca4fc3b4580ec6af2e125468e1f1d2f"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/edits.json": {
+          "kind": "file",
+          "sha256": "1eed04d09a363f1e52a7b9b7e24f72e213be2d851f1d5ce7b7dfc8672e98a642"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/math_controls.json": {
+          "kind": "file",
+          "sha256": "99a455fd66a4b75400449b557983d01a42c0594fa1e92758ff185425afededc4"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/paper_draft.patch": {
+          "kind": "file",
+          "sha256": "4bb74d864dde1860f32c9ffaaeb4a6b98a82083adaea63031a6ace2b0d9033a9"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/report.md": {
+          "kind": "file",
+          "sha256": "ac89f181e3d6dc39cd7539e581c862a93d8833c1323c8210e4248bba229802e8"
+        },
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/source/statement_provenance.json": {
+          "kind": "file",
+          "sha256": "9c6304b95149531b9ee84ba87df8f7474ee532c2b9e3ea19427450d39843ed1e"
+        },
+        "papers/L1/paper_draft.pdf": {
+          "kind": "file",
+          "sha256": "8280e139c420db9d12cf0408543b9eacc6c351ad843b2f8cfe92354f804c770a"
+        },
+        "papers/L1/paper_draft.tex": {
+          "kind": "file",
+          "sha256": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856"
+        },
+        "papers/paper25_gravitational_waves/paper_draft.pdf": {
+          "kind": "file",
+          "sha256": "5d76822d5ea1cfca35656e88c16692029aa6651c3a5b3a5eab9608304a920c61"
+        },
+        "papers/paper25_gravitational_waves/paper_draft.tex": {
+          "kind": "file",
+          "sha256": "2f77450953f20000856b2b801aee99c4fcba452fe7ea1a7f7e76d1620d035aac"
+        },
+        "src/core/formulas.py": {
+          "kind": "file",
+          "sha256": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9"
+        },
+        "src/core/provenance.py": {
+          "kind": "file",
+          "sha256": "eba5b4ed81cd21fba3ce78d281d3af60224a94c035dc36afadfb348087dc31ae"
+        },
+        "tests/test_gravitational_waves.py": {
+          "kind": "file",
+          "sha256": "d7ea13b44e41d36327fa99699b02e96290fa40985c4a1b6aafb9a85729d9d38d"
+        }
+      }
+    },
+    "authority": "Snapshot only; no lease, build, dispatch, review or completion authorization."
+  },
+  "renders": {
+    "L1-1.png": "11d07b57ee938d50ed199d52c865754940c455f30adf9f43ff80eb01a66a1db6",
+    "L1-2.png": "b110a0fe9e2a2c113c4b3d88889a63cc11c75f384e8220f7a82c68a3763c9f32",
+    "L1-3.png": "cb3e125de3d65cd1b5d34ea6d0f49db2d3de89511593577bc57ad28bee9e14a1",
+    "L1-4.png": "68843c70167576fc900ba0556b64aedeeab9d667edb35f6861cd2ca885ca4178",
+    "P25-1.png": "410150eededd97c5b0b1c6b25668df968030752795f0cdd9612c8ebe16d89c84",
+    "P25-2.png": "0f1219f8485b642283d6c0d78f07750f79a6ff4a72d03b456daec87ee61780db",
+    "P25-3.png": "9d9bb0905bb1001bb6c0b70dfde6da74a74d31dcaa755c2853c2a7cd167215f6",
+    "P25-4.png": "2442d5290a0a84522b1ab1553bab28906705756a4fabe5942c147921d02e661c",
+    "P25-5.png": "30b7146ab43cf947f229a7b18514109e7313f3df024078256ca41b6f2b68effd"
+  },
+  "verdict": "ACCEPT",
+  "scope": "integrated two findings 1.1 and 1.2 only",
+  "pages_visually_inspected": [
+    "L1-1",
+    "L1-2",
+    "L1-3",
+    "L1-4",
+    "P25-1",
+    "P25-2",
+    "P25-3",
+    "P25-4",
+    "P25-5"
+  ],
+  "native_lean_claim": false,
+  "physical_builds_closed": false,
+  "publication_accepted": false,
+  "required_corrections": [],
+  "census_erratum": "32 nonautogenerated theorem records and 8 defs; no missing census debt",
+  "report": "/tmp/l1-math-numeric-integrated-independent-20261105-r2.md",
+  "final_packet_fresh": false,
+  "final_packet_drift": [
+    "COMPILE_R2_FINAL_P25.txt",
+    "INTEGRATED_SOURCE_PINS.json",
+    "SCOPE.md"
+  ],
+  "all_owned_and_prior_changed_hashes_unchanged": true,
+  "integration_intake_requires_snapshot_reconciliation": true,
+  "root_explicit_reconciliation_received": true,
+  "final_composition_packet_still_required": true
+}

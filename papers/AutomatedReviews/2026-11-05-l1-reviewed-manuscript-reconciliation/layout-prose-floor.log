@@ -1,0 +1,55 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  bundle_manuscript_length: Every bundle's compiled manuscript is within its declared length target
+══════════════════════════════════════════════════════════════════════
+  ✓ summary  —  1 manuscript(s) sized against their declared target — 0 OVER ceiling (gating), 0 under floor (ADVISORY by operator decision 2026-08-09, not gating); 20 UNMEASURED
+  [33m?[0m unmeasured  —  F: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py F`
+  [33m?[0m unmeasured  —  D1: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D1`
+  [33m?[0m unmeasured  —  D2: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D2`
+  [33m?[0m unmeasured  —  D3: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D3`
+  [33m?[0m unmeasured  —  D4: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D4`
+  [33m?[0m unmeasured  —  D5: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D5`
+  [33m?[0m unmeasured  —  D6: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D6`
+  [33m?[0m unmeasured  —  D7: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D7`
+  [33m?[0m unmeasured  —  D8: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D8`
+  [33m?[0m unmeasured  —  D9: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D9`
+  [33m?[0m unmeasured  —  D10: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D10`
+  [33m?[0m unmeasured  —  D11: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D11`
+  [33m?[0m unmeasured  —  D12: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py D12`
+  [33m?[0m unmeasured  —  L2: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py L2`
+  [33m?[0m unmeasured  —  L3: PDF is older than the draft's input closure — the size on disk is not this draft's size; recompile before trusting it
+  [33m?[0m unmeasured  —  I1: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py I1`
+  [33m?[0m unmeasured  —  I2: PDF is older than the draft's input closure — the size on disk is not this draft's size; recompile before trusting it
+  [33m?[0m unmeasured  —  I3: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py I3`
+  [33m?[0m unmeasured  —  E1: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py E1`
+  [33m?[0m unmeasured  —  E2: no compiled PDF — run `uv run python scripts/compile_bundle_pdf.py E2`
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  bundle_prose_em_dash_free: No bundle draft contains an em-dash in prose a reader will see
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  21 bundle draft(s) scanned, 74 em-dash(es) in reader-visible prose (target 0; en-dashes are mandatory and deliberately untouched)
+  ✗ F  —  2 em-dash(es) on 1 line(s) across 1 file(s); first at papers/F/paper_draft.tex:1071 — 'deficit), or --- for the vestigial graviton --- conditionally, absent'
+  ✗ D2  —  32 em-dash(es) on 31 line(s) across 1 file(s); first at papers/D2/paper_draft.tex:88 — 'inputs --- a local--global statement for indefinite forms and level-one'
+  ✗ D3  —  2 em-dash(es) on 2 line(s) across 1 file(s); first at papers/D3/paper_draft.tex:1364 — 'first conjunct of the bridge theorem --- code distance positive if and only if'
+  ✗ D7  —  2 em-dash(es) on 1 line(s) across 1 file(s); first at papers/D7/paper_draft.tex:673 — 'on one bond --- a 4-cycle assembled entirely from arity-2 factors --- so the'
+  ✗ D10  —  35 em-dash(es) on 31 line(s) across 1 file(s); first at papers/D10/paper_draft.tex:47 — 'report it alongside two further formalized layers ---'
+  ✗ E1  —  1 em-dash(es) on 1 line(s) across 1 file(s); first at papers/E1/paper_draft.tex:170 — 'profile-dependent quantity --- it is the single value carried by this'
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  bundle_reader_facing_voice: No bundle draft narrates its own process to the reader — neither its correction history nor its unfinished diligence
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  21 bundle draft(s) scanned, 6 passage(s) narrating the paper's own process to the reader — its correction history, or a source it cites without having read (target 0; a correction belongs in change_log.md, and an unread source is repaired by acquiring it, not by dropping the disclosure — ADR-014)
+  ✗ D2  —  1 self-narrating passage(s); first at papers/D2/paper_draft.tex:139 — an account of what an earlier draft of this text said: 'earlier version of this'
+  ✗ D12  —  5 self-narrating passage(s); first at papers/D12/paper_draft.tex:405 — a disclosure that the text of a cited source was never read: 'have not inspected its text'
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 1/3 checks passed (20 warnings)
+  [31mSOME CHECKS FAILED[0m
+
+  [32m✓ SUBSTRATE: clean[0m — no Lean/Python-side failure
+  [33m● PAPER CORPUS (2):[0m bundle_prose_em_dash_free, bundle_reader_facing_voice
+    These concern the paper corpus, not the Lean/Python substrate. A Lean-only wave
+    cannot have caused them — see docs/architecture/VALIDATION_GATE_TOPOLOGY.md §2.
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.2s

@@ -1,0 +1,65 @@
+{
+  "verdict": "REVISE",
+  "initial_continuity": {
+    "exit_code": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "scope_sha256": "b2dc3d54766c8ee2461a820b6559ce3bdc50b7bd3eca50c3f184159dae9c4500",
+  "necessary_corrections": [
+    {
+      "text": "zero/identity/special links",
+      "reason": "Zero matrix is not SU(2) or Spin(4).",
+      "replacement": "Zero coframes/generator combinations; identity/special actual Spin(4) links. Zero matrices only in an explicitly generic-coefficient lemma."
+    }
+  ],
+  "other_source_math_scope_checks_pass": true,
+  "primary": {
+    "pages_read_and_visually_inspected": [
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+    "images_written": false
+  },
+  "source_correspondence": {
+    "q_reindex_0_to_3_as_source_1_to_4": true,
+    "gamma5_diag_plus_minus_consistent": true,
+    "direct_sum_SU2_blocks": true,
+    "all_four_quarter_hops": true,
+    "periodic_scope_only": true,
+    "printed_order_not_equated_closed": true
+  },
+  "mathematics": {
+    "actual_global_8V_generators": true,
+    "actual_grade2_coframes": true,
+    "commutative_subalgebra_only": true,
+    "global_4V_joint_nilpotence_required": true,
+    "controls_except_zero_group_link_sound": true
+  },
+  "remaining_ROOT_owned": [
+    "B2 source-action identification/printed-vs-closed boundary",
+    "C actual G-valued Eq7 with integrability and premise discharge",
+    "original physical/publication acceptance"
+  ],
+  "existing_positive_coverage_confirmed": [
+    "FermionicFockSpace",
+    "Module.Finite instance",
+    "creation_anticommute",
+    "pauli_exclusion",
+    "private grade-zero proof pattern only"
+  ],
+  "live_LSP_still_required": true,
+  "implementation_acceptance": false,
+  "repository_mutations": 0,
+  "final_continuity": {
+    "chunk_id": "4d33b6",
+    "wall_time_seconds": 0.173065292,
+    "exit_code": 0,
+    "original_token_count": 42,
+    "output": "{\n  \"fresh\": true,\n  \"changed\": [],\n  \"task\": \"publication-grassmann-scope-review-r1\",\n  \"meaning\": \"Input snapshot matches; no execution or completion authority.\"\n}\n"
+  }
+}

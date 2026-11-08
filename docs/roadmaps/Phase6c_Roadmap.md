@@ -40,7 +40,7 @@
 **OUT OF SCOPE for 6c:**
 - Full derivations (each bridge is a short formal statement + tension identification, not a standalone pillar)
 - Lattice QCD / Wilson-loop confinement — 6d.1 covers via center-symmetry
-- Holographic QEC beyond code-distance scaling — deferred to backlog
+- Full holographic decoder/dynamics beyond original B7 is separate; the original actual-code distance/recovery/entropy relation is not deferred by the earlier sizing.
 - Generic RT formula derivation — 6c.5 treats RT as external hypothesis
 
 **Phase 5x relationship:** 6c.3 unifies Phase 5x Waves 4/5/6/7 EP-violation mechanisms under a single abstract statement. 5x roadmap updates after 6c.3 ships.
@@ -203,15 +203,15 @@
 
 ## Track C: Holographic / MTC Bridges (6c.4, 6c.5)
 
-### Wave 4 — `QECHolographyBridge.lean` (6c.4) [Pipeline: Stages 1–11+] — **SHIPPED 2026-04-27**
+### Wave 4 — `QECHolographyBridge.lean` (6c.4): historical source shipped; physical/native B7 OPEN BUILD
 
-**Status:** Wave 4 closed end-to-end through Stage 11 (notebooks); Stage 13 adversarial review run 2026-04-29 with all BLOCKERs cleared.
+**Current B7 status — 2026-10-18:** [actual toric-code construction](../audits/2026-10-17-publication-substance-construction/B7_TORIC_CODE_DISTANCE_RECOVERY.md) and [full independent review](../audits/2026-10-17-publication-substance-construction/reviews/B7_TORIC_CODE_DISTANCE_RECOVERY.md) are accepted manual mathematics: actual [[2L²,2,L]] code/minimum logical weight, CPTP recovery and specified-reference entropy. Native representation and intended horizon/anyon geometry/error algebra/derived relation remain BUILD. Historical April27 source/notebook and April29 review-cleared reports are retained below as dated receipts, not actual-code completion.
 - `QECHolographyBridge.lean`: 10 substantive theorems / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only).
 - `src/qec_holography/`: 3 modules (`__init__.py`, `code_distance.py`, `scrambling_time.py`) + 30 pytest cases.
 - `papers/paper35_qec_holography/paper_draft.tex`: short formalization paper, compiles clean.
 - `fig_code_distance_vs_fusion_spectrum` + companion `Phase6c4_QECHolography_Technical.ipynb` / `_Stakeholder.ipynb`.
-- HPCode structure on top of W3 `HorizonMTCBC` substrate; correctness-push biconditional `code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` ($d_C > 0 \iff d_{\max} > 1$) plus forward implication ($d_C > 0 \Rightarrow t_{\rm scr} > 0$ via $D^2 \geq d_{\max}^2$).
-- Universal recovery theorem `recovery_at_scrambling_bound` (substrate-side threshold inequality; Yoshida-Kitaev decoder construction explicitly out-of-scope).
+- Historical HPCode structure on W3 `HorizonMTCBC` defines codeDistance as a logarithmic proxy, not minimum logical weight. Its genuine logarithmic/order biconditional `code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` ($d_C > 0 \iff d_{\max} > 1$) plus forward implication ($d_C > 0 \Rightarrow t_{\rm scr} > 0$ via $D^2 \geq d_{\max}^2$).
+- `recovery_at_scrambling_bound` is a scalar threshold inequality, not a recovery channel. The separate accepted finite toric construction derives an actual CPTP recovery; intended-model/native B7 remains BUILD without adding full Hayden–Preskill dynamics.
 - Cross-bridge `horizon_BC_implies_HP_admissible` consumes the W3 hypothesis bundle's `areaLeading` field.
 - Concrete substrates: Fibonacci ($d_{\max} = \varphi$, $D^2 \approx 3.618$), Ising ($d_{\max} = \sqrt{2}$, $D^2 = 4$), SU(3)$_{k=2}$ Fibonacci sub-sector, trivial-abelian (falsifier).
 - Stakeholder + Technical notebooks honestly disclose: "minimal" claim is universal-QC-sense per Nayak-Simon-Stern-Freedman-Das Sarma 2008 §3 (Ising actually has smaller $d_C$); "SU(3)$_{k=2}$" label is a 2-element Fibonacci sub-sector, not the full 6-object MTC.
@@ -335,10 +335,10 @@ Parallelism:
 | 6c.1 | `StrongCPTopologicalDE.lean` + PRL paper | 2–4 | 5x W3 + 5y closure | **SHIPPED 2026-04-27** |
 | 6c.2 | `EWBaryogenesisChiralityWall.lean` + PRL paper | 3–5 | 5z.3 | **SHIPPED 2026-04-29** |
 | 6c.3 | `EquivalencePrinciple.lean` + CPP paper | 0.5 | 5x W4–W7 | **SHIPPED 2026-04-27** |
-| 6c.4 | `QECHolographyBridge.lean` + Quantum/JHEP paper | 4–6 | MTC stack | **SHIPPED 2026-04-27** |
+| 6c.4 | `QECHolographyBridge.lean` + Quantum/JHEP paper | 4–6 | MTC stack | Historical source shipped; finite manual code accepted, intended/native B7 BUILD |
 | 6c.5 | `RTCasiniHuertaBounds.lean` + arXiv note | 2–3 | 6a.3 | **SHIPPED 2026-04-27** |
 
-**Phase 6c status (2026-04-29):** **CLOSED — all 5 waves SHIPPED + Stage 13 cleared.** Stage 11 notebooks + Stage 13 adversarial review complete for all five waves (W1+W2+W3+W4+W5). W2 Stage 13 cleared in the 2026-04-29 reflexive re-close (`docs/phase6c_wave2_stage13_close.md`).
+**Historical Phase6c receipt (2026-04-29):** five source waves and their then-current Stage11/13 reports were recorded shipped/cleared, including the W2 reflexive re-close. This is preserved historical evidence, not current physical B7 completion. The finite actual-code manual increment is accepted; intended horizon/geometry/error-algebra/native B7 remains BUILD.
 
 **Shipped totals (W1+W2+W3+W4+W5):**
 - 5 new Lean modules: `StrongCPTopologicalDE`, `EWBaryogenesisChiralityWall`, `EquivalencePrinciple`, `QECHolographyBridge`, `RTCasiniHuertaBounds`
@@ -357,7 +357,7 @@ Parallelism:
 
 **O.2** — 6c.3 is marked 0.5 PM but delivers a CPP paper — confirm with user that short formalization papers are in-scope for publication output (vs internal doc).
 
-**O.3** — 6c.4 QEC scope: "structural" vs "derivational" (how much Hayden-Preskill to formalize from scratch)? Default to structural, with derivation deferred to backlog.
+**O.3** — Original B7 requires actual minimum logical weight and a derived recovery/entropy relation. The accepted finite toric construction advances that objective; intended horizon/anyon geometry/error algebra and native bridge remain BUILD. No old structural default defers this work, and no full Hayden–Preskill dynamics charter is silently added.
 
 **O.4** — 6c.5 external-hypothesis-tracked approach: is the user comfortable with tracked-Prop RT rather than derived RT? Confirm at Stage 3b.
 
@@ -402,4 +402,4 @@ Parallelism:
 
 ---
 
-*Phase 6c roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. Five bridge theorems (6c.1–6c.5); all short, all cross-pillar, one correctness-push anchor (6c.2). All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). **Status (2026-04-29):** Phase 6c **CLOSED end-to-end** — all 5 waves SHIPPED (W1+W2+W3+W4+W5). 65 substantive theorems / 0 sorry / 0 new axioms / 5 papers + 1 note / 10 notebook pairs.*
+*Phase 6c roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. Five bridge theorems (6c.1–6c.5); all short, all cross-pillar, one correctness-push anchor (6c.2). All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). **Historical receipt (2026-04-29):** all five source waves were recorded shipped. Current physical/native B7 completion is not established; its accepted finite manual increment and intended-model BUILD are distinguished above. 65 substantive theorems / 0 sorry / 0 new axioms / 5 papers + 1 note / 10 notebook pairs.*

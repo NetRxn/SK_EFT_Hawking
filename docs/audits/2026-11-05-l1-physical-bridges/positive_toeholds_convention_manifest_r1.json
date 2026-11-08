@@ -1,0 +1,244 @@
+{
+  "schema": "l1-positive-toeholds-convention-evidence/v1",
+  "parent": "e2e393b126bedd49ca114efc6ca8c8ae005e8876",
+  "crosswalk_sha256": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e",
+  "scope": "crosswalk manual ACTUAL ACCEPT; scouting research only; ROOT intake pending",
+  "archive": {
+    "path": "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_evidence_r1.zip",
+    "bytes": 182694,
+    "sha256": "64b82488088b99f746157707fd0360db59f4b720952299109c791a39c6b9c609",
+    "members": {
+      "accepted-inputs/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": {
+        "bytes": 24144,
+        "sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab"
+      },
+      "accepted-inputs/ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md": {
+        "bytes": 28712,
+        "sha256": "aa32c7c983a2aa994a26d6336ffc2a7d925c9b1e1c495ff7c9de6a43b76612f1"
+      },
+      "accepted-inputs/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": {
+        "bytes": 30710,
+        "sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38"
+      },
+      "authority/numerical-plan-r2.md": {
+        "bytes": 81352,
+        "sha256": "7e9c1988ad9490277ccfed7034668a6f02daf2189a96d5244edea19cfb1be2e8"
+      },
+      "authority/own-branch-Phase6a-before-checkpoint.md": {
+        "bytes": 92370,
+        "sha256": "24671b4132997da18031f5f0c0dbd315262e50d92af66a36125447d43e351b0b"
+      },
+      "authority/primary-custody.json": {
+        "bytes": 888,
+        "sha256": "a3bbe6e57b39301b90a97555a8d4991dd14a53edcdec62ed27ee6d8efec3ce5a"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK.md": {
+        "bytes": 14283,
+        "sha256": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md": {
+        "bytes": 4366,
+        "sha256": "10cfa7207a3a42884a847869c05073cc94bd84f133183e46df4fde74aad6f495"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R1.md": {
+        "bytes": 12634,
+        "sha256": "8c461472a0d47c218cb68c42f98acdcd900c57f66a8f09e3da8564449dd6cd21"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R2.md": {
+        "bytes": 8161,
+        "sha256": "91896619f7d90ab8273a6e55120820c6299fd97445b006faab6a19e45b6ddf16"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_RESULT_R1.md": {
+        "bytes": 12970,
+        "sha256": "c0fb8b9bf660dbae6845fffe56f7690ebff090990609823def3a175810b790b7"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R1.md": {
+        "bytes": 8143,
+        "sha256": "39c2a6deffaf5f6b83e2ec424667693a0c58b44ee2cb88a19b1e989925c53c80"
+      },
+      "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R2.md": {
+        "bytes": 7538,
+        "sha256": "aa867444929fccf3fb3c079d8be3d46115a553d4029167757db822aab311dd15"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md": {
+        "bytes": 3517,
+        "sha256": "929f670ddc2c49c2bd6234b515dae81b9761f820803a53c8c9e7615f45cd0878"
+      },
+      "canonical/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md": {
+        "bytes": 9689,
+        "sha256": "5bb392abb9a455c7c368c5490597ba83ef13620e019681dc8dd610385549e1c1"
+      },
+      "canonical/POSITIVE_RECONSTRUCTION_FORMAL_TOEHOLDS_R1.md": {
+        "bytes": 7461,
+        "sha256": "a59f59c0fe8c470b5859c1ebfee933aa3dbcaa1807accb9c4cae8ddc63a43bdd"
+      },
+      "canonical/POSITIVE_RECONSTRUCTION_HISTORY_TOEHOLDS_R1.md": {
+        "bytes": 8030,
+        "sha256": "c994ca4a8ffc7a13947c1375903bd5de1431c61a6df9d6cc001b841db6ea5073"
+      },
+      "canonical/POSITIVE_RECONSTRUCTION_TOEHOLD_RESEARCH.md": {
+        "bytes": 7260,
+        "sha256": "664c3a6f755299f25a8c42432251a14ffa6a5d5184cc6a836ac18b7a660455bd"
+      },
+      "canonical/POSITIVE_RECONSTRUCTION_TOEHOLD_SCOPE_R1.md": {
+        "bytes": 6831,
+        "sha256": "127211d4baa8b8b98f8ec57a8bc0d161390498d8d28904d6ad1b98e08726d645"
+      },
+      "canonical/POSITIVE_RECONSTRUCTION_TOEHOLD_SYNTHESIS_R1.md": {
+        "bytes": 14663,
+        "sha256": "3afbe8fa62f0c2912e1eb62a6e38dcaf089cf4843357691833724d3d6a12a5c5"
+      },
+      "continuity/l1-convention-crosswalk-math-r1.json": {
+        "bytes": 8758,
+        "sha256": "6ad2b71fe702c8434c760a23fcc45564e72fac4c1db2b036c95f13bf89366900"
+      },
+      "continuity/l1-convention-crosswalk-math-r2.json": {
+        "bytes": 9615,
+        "sha256": "df3314640894309ea08dee8a0138daef949e08bae2e08c69c4d744d6be804bec"
+      },
+      "continuity/l1-convention-crosswalk-source-r1.json": {
+        "bytes": 8752,
+        "sha256": "09238e4a3827d3d98456848ddc50289e9e1cfd8f61120f323df209779d3f1c82"
+      },
+      "continuity/l1-convention-crosswalk-source-r2.json": {
+        "bytes": 9609,
+        "sha256": "5f2d6c520d1de5d98de2c9cbdff0985bda3463956d8e6dca800b8dda3494e6de"
+      },
+      "continuity/l1-positive-external-toeholds-r1.json": {
+        "bytes": 7934,
+        "sha256": "437189b31d66ee50172446afbd1d9f24d6048fc63a2cb4ba0448638aea9e6b9b"
+      },
+      "continuity/l1-positive-formal-toeholds-r1.json": {
+        "bytes": 7928,
+        "sha256": "a183f9c937b85bced7adf1ba3bb5657a3cfc1ae0f5f3d1b6c321a21409a970e5"
+      },
+      "continuity/l1-positive-history-toeholds-r1.json": {
+        "bytes": 7931,
+        "sha256": "a2e0911aead3c29bb1b74dbc2cdf68ba66e6bd32193e8b4511bae502e18e0c90"
+      },
+      "continuity/l1-positive-toehold-synthesis-r1.json": {
+        "bytes": 7717,
+        "sha256": "56c18c5752becdd48a80f74bc0bad0d3aebb971367f2a04aa1d9d57642643278"
+      },
+      "original-scout-report/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md": {
+        "bytes": 9690,
+        "sha256": "78ff769362687e82f48e536870f279cec54ec52e5be0bd6ca362a25563ef78c1"
+      }
+    }
+  },
+  "exact_copies": {
+    "POSITIVE_RECONSTRUCTION_TOEHOLD_SCOPE_R1.md": {
+      "source": "/private/tmp/l1-positive-reconstruction-toehold-scout-scope-r1.md",
+      "sha256": "127211d4baa8b8b98f8ec57a8bc0d161390498d8d28904d6ad1b98e08726d645"
+    },
+    "POSITIVE_RECONSTRUCTION_FORMAL_TOEHOLDS_R1.md": {
+      "source": "/private/tmp/l1-positive-formal-toeholds-r1.md",
+      "sha256": "a59f59c0fe8c470b5859c1ebfee933aa3dbcaa1807accb9c4cae8ddc63a43bdd"
+    },
+    "POSITIVE_RECONSTRUCTION_HISTORY_TOEHOLDS_R1.md": {
+      "source": "/private/tmp/l1-positive-history-toeholds-r1.md",
+      "sha256": "c994ca4a8ffc7a13947c1375903bd5de1431c61a6df9d6cc001b841db6ea5073"
+    },
+    "POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md": {
+      "source": "/private/tmp/l1-positive-external-toeholds-r1.md",
+      "sha256": "78ff769362687e82f48e536870f279cec54ec52e5be0bd6ca362a25563ef78c1",
+      "canonical_sha256": "5bb392abb9a455c7c368c5490597ba83ef13620e019681dc8dd610385549e1c1",
+      "canonical_transform": "remove redundant final blank line only; original private and original-scout-report archive copy unchanged",
+      "original_archive_member": "original-scout-report/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md"
+    },
+    "POSITIVE_RECONSTRUCTION_TOEHOLD_SYNTHESIS_R1.md": {
+      "source": "/private/tmp/l1-positive-toehold-synthesis-r1.md",
+      "sha256": "3afbe8fa62f0c2912e1eb62a6e38dcaf089cf4843357691833724d3d6a12a5c5"
+    },
+    "POSITIVE_RECONSTRUCTION_TOEHOLD_RESEARCH.md": {
+      "source": "/private/tmp/l1-positive-toehold-lead-intake-r1.md",
+      "sha256": "664c3a6f755299f25a8c42432251a14ffa6a5d5184cc6a836ac18b7a660455bd"
+    },
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_RESULT_R1.md": {
+      "source": "/private/tmp/l1-numerical-physical-convention-crosswalk-r1.md",
+      "sha256": "c0fb8b9bf660dbae6845fffe56f7690ebff090990609823def3a175810b790b7"
+    },
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-convention-crosswalk-math-review-r1.md",
+      "sha256": "8c461472a0d47c218cb68c42f98acdcd900c57f66a8f09e3da8564449dd6cd21"
+    },
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-convention-crosswalk-source-review-r1.md",
+      "sha256": "39c2a6deffaf5f6b83e2ec424667693a0c58b44ee2cb88a19b1e989925c53c80"
+    },
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK.md": {
+      "source": "/private/tmp/l1-numerical-physical-convention-crosswalk-r2.md",
+      "sha256": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e"
+    },
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R2.md": {
+      "source": "/private/tmp/l1-convention-crosswalk-math-review-r2.md",
+      "sha256": "91896619f7d90ab8273a6e55120820c6299fd97445b006faab6a19e45b6ddf16"
+    },
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R2.md": {
+      "source": "/private/tmp/l1-convention-crosswalk-source-review-r2.md",
+      "sha256": "aa867444929fccf3fb3c079d8be3d46115a553d4029167757db822aab311dd15"
+    }
+  },
+  "accepted_inputs": {
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md": "aa32c7c983a2aa994a26d6336ffc2a7d925c9b1e1c495ff7c9de6a43b76612f1",
+    "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38"
+  },
+  "numerical_plan": {
+    "path": "/tmp/publication-original-coefficient-budget-r2.md",
+    "sha256": "7e9c1988ad9490277ccfed7034668a6f02daf2189a96d5244edea19cfb1be2e8"
+  },
+  "paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_SCOPE_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_FORMAL_TOEHOLDS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_HISTORY_TOEHOLDS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_SYNTHESIS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_RESEARCH.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_RESULT_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_evidence_r1.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_manifest_r1.json",
+    "docs/roadmaps/Phase6a_Roadmap.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md"
+  ],
+  "primary_custody": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Diakonov2011.pdf",
+      "bytes": 270355,
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf",
+      "bytes": 140946,
+      "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf",
+      "bytes": 1756894,
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "full_text_copied": false
+    }
+  ],
+  "checkpoint_hygiene": {
+    "first_commit": "a128dd1c2",
+    "first_whitespace_check": "FAILED extra blank line EOF in external scout; shell continued to local commit",
+    "corrective_scope": "canonical final newline plus manifest/archive/acceptance custody",
+    "pre_correction_archive_sha256": "e69d94515df6ac6d4ba5549a72a7eb6d869bf1af48c4f720dd7e6265d56e7446",
+    "science_changed": false
+  },
+  "accepted_build_objective": {
+    "path": "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md",
+    "task": "l1-p0-n0-full-cut-transport-build-r1",
+    "owner": "Executor01a1ac65",
+    "sha256": "929f670ddc2c49c2bd6234b515dae81b9761f820803a53c8c9e7615f45cd0878",
+    "authority": "explicit ROOT commission; actual construction not yet accepted"
+  }
+}

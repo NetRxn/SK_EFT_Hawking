@@ -1,0 +1,33 @@
+{
+  "archive_sha256": "8fa8d4f601f1174c54f19aaaec665b6f8cd61993f23f92ecc55000493b57a3f6",
+  "members": [
+    {
+      "name": "publication-two-lane-disposition-r1.json",
+      "sha256": "8f8592a6afd899701857ae305b37130c252a5e8533950603a73fd1c494485bf3",
+      "bytes": 1683
+    },
+    {
+      "name": "publication-two-executor-lanes-status-r1.json",
+      "sha256": "75af93d7df99993c309c69043956948b7fff9cc16f2d939ba59dbcbd5d949c2e",
+      "bytes": 737920
+    },
+    {
+      "name": "publication-wt3-owner-release-attempt-r1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "publication-wt3-owner-release-attempt-r1.stderr",
+      "sha256": "9e373173292dc81856601388456846c36f02e5f1344f005d1fc39dfbe82c8526",
+      "bytes": 247
+    }
+  ],
+  "preserved_remote_refs": {
+    "codex/preserve-wt2-bp-20261106": "8187fc8312d3a9a070239adea5a4f04c48266822",
+    "codex/preserve-wt3-frontier-20261106": "3505b2f8afa4b47ef34b02771983dc8083a1c7fa"
+  },
+  "no_slot_freed": true,
+  "no_infrastructure_change": true,
+  "Executor_confirmation": "No wt2/wt3 use or ownership in current commission; no two approved implementation-ready packages yet",
+  "scope": "actual status/preservation plus independently reviewed existing-process assessment, not admission"
+}

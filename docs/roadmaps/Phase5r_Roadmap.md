@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-08 | Follows Phase 5q (Ext computation over A(1)). Connects A(1) computation to the full spin bordism isomorphism.*
 
-**Entry state (projected):** Phase 5q complete — Ext⁴_{A(1)}(F₂, F₂) ≅ ℤ/16 machine-checked. SpinBordism.lean rewritten with decomposed hypotheses T1-T4. The question: can we discharge any of T1-T4 algebraically?
+**Current entry state:** genuine native A(1) ring/augmentation, projective terms, chain identities, finite exactness and dual cohomology remain. Generic balanced induction/infinite splice and the [accepted actual global Milnor successor](../audits/2026-10-17-publication-substance-construction/B4_GLOBAL_MILNOR_BASIS.md), with their full reviews, establish the complete MANUAL full A/source-compatible inclusion/all-degree LEFT and RIGHT B-bases/compatible involutive antipodes and BOTH-sided derived/internally graded Ext comparison. The native actual algebra/module objects, typed categorical infinite splice/isoExt/graded consumers and original H2 source bindings remain OPEN. F₂ Ext is not ℤ/16; H1/H3/H4/Adams/topology and physical generation require their original evidence.
 
 **Goal:** Attack the change-of-rings isomorphism Ext_A ≅ Ext_{A(1)} and the ASS convergence claim, potentially discharging hypotheses T2 and T3 from the 5q decomposition.
 
@@ -26,11 +26,11 @@
 
 ### Wave 1 — Deep Research: A over A(1) Freeness
 
-**Goal:** Determine whether the freeness of A as a right A(1)-module can be verified computationally for the degrees we need.
+**Goal:** implement the independently accepted MANUAL full A/inclusion/all-degree left/right basis/antipode construction in native objects for original H2. Source RIGHT resolution uses the constructed LEFT basis; original LEFT H2 uses the RIGHT basis or compatible anti-automorphism twist.
 
-The change-of-rings theorem requires: A is free as a right A(1)-module. For the full Steenrod algebra this is a theorem of Milnor-Moore (connected graded Hopf algebras over a field are free over connected sub-Hopf algebras). But we might not need the general theorem — we only need freeness in degrees ≤ 8 (to cover Ext in total degree 4).
+For the actual RIGHT A(1) resolution, induction is P tensor_{A(1)} A and now has the constructed all-degree LEFT-B basis. Original LEFT H2 uses the constructed RIGHT basis or compatible involutive antipodes. The generic conditional theorem remains exact; the [accepted actual global Milnor successor](../audits/2026-10-17-publication-substance-construction/B4_GLOBAL_MILNOR_BASIS.md) supplies the actual MANUAL hypotheses and both-sided derived/graded comparison. Native actual objects/typed splice/isoExt/consumers and H1/H3/H4/topology remain owed.
 
-**Key question:** In degrees ≤ 8, can we exhibit an explicit basis for A as a free right A(1)-module? This would be a finite verification (A has known dimension in each degree, and A(1) has dimension 8, so the number of free generators in degrees ≤ 8 is bounded).
+**Completed mathematical answer:** full polynomial coalgebra/graded dual, actual source-compatible embedding, corrected cofree inverse and all-degree finite-support coordinates prove both module bases, with compatible antipodes and derived/graded comparison. Full independent review is linked in the global note. Next build native maps/interfaces; low-degree checks remain convention controls.
 
 **Deep research task:**
 - [ ] `Lit-Search/Tasks/Phase5r_steenrod_algebra_A1_freeness.md`
@@ -38,13 +38,13 @@ The change-of-rings theorem requires: A is free as a right A(1)-module. For the 
 **Deliverables:**
 - `Lit-Search/Phase-5r/Steenrod algebra as free A(1)-module in low degrees.md`
 
-**Status:** **DR COMPLETE** — submitted prompt `Lit-Search/Tasks/complete/Phase5r_steenrod_algebra_A1_freeness.md`; deliverable returned at `Lit-Search/Phase-5s/The Steenrod algebra as a free A(1)-module- explicit computations for Lean 4 formalization.md` (filed under Phase-5s/ rather than Phase-5r/ — content matches Phase 5r W1 spec). Verdict: **algebraic bypass recommended** (~3-4K lines via abstract change-of-rings vs 12K+ explicit). Wave 2 unblocked.
+**Status:** **DR returned**, with original Phase5s deliverable and its historical abstract-bypass/API advice retained as context, not proof authority. Generic [B4](../audits/2026-10-17-publication-substance-construction/B4_BALANCED_INDUCTION_CHANGE_OF_RINGS.md) and the [accepted actual global Milnor successor](../audits/2026-10-17-publication-substance-construction/B4_GLOBAL_MILNOR_BASIS.md) independently complete the MANUAL full A/source-compatible inclusion/all-degree LEFT and RIGHT B-bases/compatible involutive antipodes and BOTH-sided derived/internally graded Ext comparison. Native actual objects, typed splice/isoExt/consumers remain OPEN.
 
 ---
 
 ### Wave 2 — Steenrod Algebra A in Low Degrees [Pipeline: Stages 1-5]
 
-**Goal:** Extend SteenrodA1.lean to include enough of the full Steenrod algebra A to verify the change-of-rings isomorphism in degree 4.
+**Goal:** natively realize the accepted full A/inclusion/all-degree bases/antipodes and derived/graded comparison, preserving actual source convention e3=beta30+beta01. Low-degree exploration remains a convention control; infinite typed continuation/isoExt/graded consumers remain to build.
 
 **Prerequisites:** Wave 1 deep research.
 
@@ -60,7 +60,7 @@ The change-of-rings theorem requires: A is free as a right A(1)-module. For the 
   - `A_free_over_A1_low` — explicit free basis of A over A(1) in degrees ≤ 8 (native_decide)
 - [ ] Tests, formulas
 
-**Decision gate:** If the freeness verification in low degrees works, proceed to Wave 3. If the dimensions are too large for native_decide, axiomatize the freeness and move on.
+**Construction boundary:** actual all-degree sided bases/antipodes and derived comparison are independently accepted manually; construct their native objects and exact consumers. A finite degree check or freeness axiom cannot replace the construction or weaken H2.
 
 **Estimated LOE:** 2-3 weeks
 **Risk:** Medium. The Steenrod algebra in degree 8 is manageable (dim 4) but the Adem relations generate many cross-terms.
@@ -75,9 +75,9 @@ The change-of-rings theorem requires: A is free as a right A(1)-module. For the 
 
 **Two approaches:**
 
-**Approach A (algebraic):** Use the explicit freeness from Wave 2 to show that the induction functor A ⊗_{A(1)} - maps the A(1)-resolution to an A-resolution, then show the Hom_{A}(-, F₂) computation gives the same answer.
+**Approach A (algebraic):** natively instantiate the accepted generic and actual global constructions. For the source right resolution use P tensor_{A(1)} A with the constructed LEFT basis; implement typed infinite splice, exactness and categorical/graded Ext. Constructed RIGHT basis and compatible antipodes supply the original LEFT-module route.
 
-**Approach B (computational bypass):** Build an explicit resolution of F₂ over A (not just A(1)) in degrees ≤ 5 and compute Ext⁴_A directly. Then verify it matches Ext⁴_{A(1)} = ℤ/16. This sidesteps the abstract change-of-rings entirely.
+**Approach B (direct resolution):** construct a genuine augmented A-projective resolution, exact in every required degree with a valid infinite continuation, and compare actual Hom/cohomology maps. No ℤ/16 conclusion follows from an F₂-vector-space rank; the internal grading/Adams/topological steps remain separate.
 
 **Deliverables:**
 - [ ] `lean/SKEFTHawking/ChangeOfRings.lean` — verification (~10-20 theorems)
@@ -157,14 +157,13 @@ Tracks A, B, C are independent after Phase 5q completes. Track A is highest valu
 
 | Wave | Scope | LOE | Dependencies | Status |
 |------|-------|-----|-------------|--------|
-| Wave 1 | Deep research: A/A(1) freeness | 1-2 days | Phase 5q complete | **BYPASSED** — change-of-rings proved abstractly |
-| Wave 2 | Steenrod algebra in low degrees | 2-3 weeks | Wave 1 | **BYPASSED** — not needed for abstract proof |
-| Wave 3 | Change-of-rings in degree 4 | 2-4 weeks | Wave 2 + 5q W4 | **COMPLETE** (ChangeOfRings.lean, H2 discharged) |
+| Wave 1 | Deep research: A/A(1) freeness | 1-2 days | Phase 5q complete | DR returned; full all-degree MANUAL witness independently accepted; native continuation owed |
+| Wave 2 | Steenrod algebra / actual inclusion and sided basis | 2-3 weeks | Wave 1 | Full actual MANUAL construction accepted; native algebra/module/graded objects OPEN |
+| Wave 3 | Change-of-rings in degree4 | 2-4 weeks | Wave 2 + 5q W4 | Actual BOTH-sided derived/graded MANUAL comparison accepted; native H2/consumers OPEN |
 | Wave 4 | ASS collapse assessment | 1-3 weeks | Phase 5q complete | **ASSESSED** — genuinely topological, cannot be discharged algebraically. Potential d₃(h₁²) → v requires Bott periodicity to rule out. H3 stays as hypothesis. |
 | Wave 5 | K3 formalizability assessment | 1 day | None | **ASSESSED** — Mathlib lacks smooth manifolds/algebraic geometry. H4 stays as hypothesis. |
 
-**Total actual LOE for Track A:** ~1 hour (the abstract adjunction argument bypasses Waves 1-2 entirely).
-**Original estimate:** 6-12 weeks.
+**Historical abstract-bypass estimate:** the earlier approximately one-hour Track A record concerned free-Hom dimensions, not native H2. Generic balanced and full actual global constructions now have independent manual acceptance. Current continuation is native actual algebra/module objects, typed categorical infinite splice/isoExt/graded consumers and original H2 source bindings. No estimate/library gap establishes infeasibility or authorizes deferral.
 
 ---
 
@@ -172,7 +171,7 @@ Tracks A, B, C are independent after Phase 5q completes. Track A is highest valu
 
 | # | Topic | File | Status |
 |---|-------|------|--------|
-| 1 | A over A(1) freeness | Lit-Search/Tasks/Phase5r_steenrod_algebra_A1_freeness.md | Written, but **BYPASSED** — abstract argument doesn't need explicit freeness |
+| 1 | A over A(1) freeness | Lit-Search/Tasks/Phase5r_steenrod_algebra_A1_freeness.md | Returned; actual all-degree left/right basis/antipode MANUAL witness accepted; native integration OPEN |
 | 2 | ASS collapse in total degree 4 | Lit-Search/Tasks/Phase5r_ASS_collapse_degree_4.md | Not yet written (would discharge H3) |
 | 3 | K3 surface formalizability | Lit-Search/Tasks/Phase5r_K3_surface_formalizability.md | Not yet written |
 
@@ -180,13 +179,13 @@ Tracks A, B, C are independent after Phase 5q completes. Track A is highest valu
 
 ## What Success Looks Like
 
-**Minimum viable:** Hypothesis H2 (change-of-rings) DISCHARGED. **ACHIEVED** (ChangeOfRings.lean).
+**Minimum viable:** original actual H2 native change of rings with full objects/interfaces, independently verified. Generic and actual full global algebraic proofs are completed manual prerequisites; this source candidate does not install a native theorem.
 
-**Stretch:** H3 (ASS collapse) discharged via sparsity argument. This would leave only H1 (ko cohomology) and H4 (ABP splitting) as hypotheses — both are deep topological facts with no known algebraic bypass.
+**Stretch:** discharge H3 by actual Adams/sparsity mathematics. Actual H2 algebraic mathematics is manually accepted; native realization/consumers remain open. H1 ko-cohomology and H4 ABP remain separate; neither accepted algebraic note supplies those identifications.
 
-**Current status:** H2 discharged. Hypotheses remaining: 3 (H1, H3, H4). The generation constraint N_f = 0 mod 3 rests on machine-checked algebra plus 3 standard textbook topology results.
+**Current status:** full actual B4 algebraic milestone is independently accepted MANUALLY: full A/source-compatible inclusion/all-degree LEFT and RIGHT B-bases/compatible involutive antipodes and BOTH-sided derived/internally graded Ext comparison, together with generic balanced induction. The native actual algebra/module objects, typed categorical infinite splice/isoExt/graded consumers and original H2 source bindings remain OPEN. Original H1/H3/H4/topology remain owed.
 
-**Combined with Phase 5q:** The generation constraint N_f ≡ 0 mod 3 rests on machine-checked algebra (Ext⁴ = ℤ/16, change-of-rings, modular invariance) plus two concrete topological inputs (MSpin cohomology and K3 existence). This is the strongest possible formal position short of formalizing all of algebraic topology.
+**Combined with Phase 5q:** retain genuine ring, Hom, finite exactness/cohomology and independent divisibility arithmetic. These do not yet instantiate the full generation/bordism chain; no Ext⁴=ℤ/16, topological realization or physical generation result is inferred from those F₂ calculations.
 
 ---
 

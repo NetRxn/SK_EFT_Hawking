@@ -1,20 +1,15 @@
 # D10 Discharge Roadmap — discharging the disclosed tracked-Props of the comp-chem / open-system substrate
 
-**Status: ACTIVE (opened 2026-06-30).** Source-of-truth for the **discharge `/goal` loop**. Motivated by the
-D10 paper's stated "natural next steps" (`papers/D10/paper_draft.tex` §Conclusion): the kernel-verified
-foundations of NEGF transport (6BA), DFT (6BB), and Lindblad/GKSL open systems (6BC) ship with a small set of
-**disclosed, load-bearing `Prop` hypotheses** (NOT axioms). This roadmap tracks discharging them so the
-headline theorems become unconditional (or documents an honest wall). A paper should not advertise next steps
-it could discharge; this loop does the discharging.
+**Current status — 2026-10-18: hkin/hrel/hreal source discharges retained; physical DFT/B1 BUILD ACTIVE with general-N constrained-search and finite-Coulomb HK manual acceptance.** The [general finite-N construction](../audits/2026-10-17-publication-substance-construction/D10_MANY_ELECTRON_CONSTRAINED_SEARCH.md), with [full independent review](../audits/2026-10-17-publication-substance-construction/reviews/D10_MANY_ELECTRON_CONSTRAINED_SEARCH.md), now proves total-density representability by explicit Slater witnesses, repulsive-Coulomb form bounds, EVERY-admissible-fiber attained pure-state constrained search and exact molecular state/density infimum reduction for finite N>=1, finite spin q>=1, alpha>0 and g>=0. The independently reviewed N=1 note is retained. The [finite-Coulomb HK construction](../audits/2026-10-17-publication-substance-construction/D10_COULOMB_HOHENBERG_KOHN.md), with [full original independent review](../audits/2026-10-17-publication-substance-construction/reviews/D10_COULOMB_HOHENBERG_KOHN.md), has complete independent manual acceptance: for common finite N>=1, finite spin q>=1, alpha>0 and g>=0, existing normalized ground states of finite-nuclear scalar Coulomb potentials with equal total densities a.e. force potentials equal modulo constants and identical aggregated nuclear measures. It derives common-state exclusion and both strict cross inequalities, including degeneracy, without wavefunction UCP or nondegeneracy. Density-to-potential uniqueness does not make a degenerate potential have one density. Next construct the native antisymmetric Sobolev/admissible-a.e.-density/form/state carrier, source operator/unit/spin bridge and native finite-Coulomb multiplier/common-state/strictness lemmas; instantiate the scalar interfaces for admitted bound inputs and prove any appropriate unique-density specialization. Appropriate binding/existence hypotheses and full B1/native closure remain BUILD. An arbitrary-potential UCP extension is separate optional broader-domain work, not an added prerequisite for the original molecular Coulomb B1 objective. No universal molecular attainment follows; the no-nuclei control distinguishes binding from fixed-density attainment.
+
+This roadmap opened2026-06-30 to discharge the disclosed Props of6BB/6BC and connect transport/open-system layers. Dated routes/build/commit reports below are historical evidence, not a fresh compiler/kernel check. The current D10 manuscript's negative DFT case and August17 findings1.3–1.6 remain relevant: real scalar order theorems are not physical molecular carrier construction. No roadmap statement changes a gate, stage, lifecycle record, paper charter or human acceptance.
 
 ## Non-negotiables (every wave)
 - Kernel-pure `{propext, Classical.choice, Quot.sound}`; zero new `sorry`/`axiom`/`native_decide`; no
   `maxHeartbeats` in proof bodies (decompose into `have`). Verify each headline with `lean_verify`.
 - **No new project-local axiom without explicit user sign-off** (Pipeline Invariant #15). A disclosed `Prop`
   with a discharge note is the fallback, never an axiom.
-- **Per-Prop budget ≈ ≤ 500 LOC.** If a single discharge clearly exceeds that, ship the reusable infrastructure
-  it produced and **leave the Prop disclosed** (documented here) rather than grinding — that is a legitimate
-  stop, recorded, not a silent cap.
+- **Historical cost estimate, not a scientific exit:** approximately500LOC was an old sizing estimate. Preserve reusable infrastructure and honest failures, but neither disclosure nor a recorded budget wall closes the original physical BUILD. Continue the accepted coherent construction/independent-review programme without inventing a new routine cost-permission gate.
 - MCP-first proof loop (`lean-lsp`); read the relevant `Lit-Search/Phase-*` / Mathlib / PhysLib source
   **directly** (no sub-agent depth-reads for hard proofs).
 - Update this roadmap's per-wave **Status** every brick; never push (user action).
@@ -22,9 +17,9 @@ it could discharge; this loop does the discharging.
 ## Disclosed-Prop inventory (what this loop discharges)
 | Prop | Where | Theorem it gates | Wave |
 |---|---|---|---|
-| `hkin` (kinetic ess-s.a.) | `MolecularHamiltonian.lean` | `molecularHamiltonian_essSelfAdjoint` | W1✓+W2 |
-| `hrel` (Coulomb rel-bound `a<1`, Hardy) | `MolecularHamiltonian.lean` | `molecularHamiltonian_essSelfAdjoint` | W3 |
-| `hreal` (CPTP Kraus realization of `e^{tℒ}`) | `LindbladSemigroup.lean` | `traceDist_lindblad_monotone` | W4 |
+| `hkin` (kinetic ess-s.a.) | `KineticEssentialSelfAdjoint.lean` | consumed by unconditional molecular apex | **W1/W2 source DONE** |
+| `hrel` (Coulomb rel-bound a<1, actual Fourier–Kato route) | `CoulombRelativeBound.lean` | unconditional `molecularHamiltonian_essSelfAdjoint` | **W3 source DONE** |
+| `hreal` (CPTP realization of e^{tℒ}) | `LindbladCPSemigroup.lean` | unconditional `traceDist_lindblad_monotone` | **W4 source DONE** |
 | `DensityVariational.bddBelow` / `LevyLiebData.fiber_bddBelow` | `HohenbergKohnVariational.lean`, `LevyLiebFunctional.lean` | `hohenberg_kohn_variational`, `levyLieb_*` | W5 |
 | (`hpot` — potential symmetric) | — | — | **DONE** (6BB W5, `molecularPotentialOperator_isSymmetric`) |
 
@@ -40,68 +35,38 @@ it could discharge; this loop does the discharging.
   Mathlib `IsClosable.{closure_isClosed,closure_mono}`.
 - **Consumed by:** W2 (the kinetic-operator dense-range result applies this criterion).
 
-## W2 — `hkin`: kinetic operator dense range, via the Fourier multiplier
-- **Goal:** `IsSelfAdjoint (molecularSystem N m hm nuclei).kineticOperator.closure` (the disclosed `hkin`),
-  then drop `hkin` from `molecularHamiltonian_essSelfAdjoint` (new unconditional-in-`hkin` apex).
-- **Route:** (a) PhysLib's `kineticOperator = c • momentumSqOperator` ⟹ reduce via
-  `IsEssentiallySelfAdjoint.real_smul` to `momentumSqOperator`; (b) **dense range** `ran(momentumSqOperator ± i) ⊇
-  Schwartz`: for `g ∈ 𝓢`, `f := fourierMultiplier (|p|²·c ± i)⁻¹ g ∈ 𝓢` solves `(momentumSq ± i)f = g` — the
-  inverse symbol `(|p|²c±i)⁻¹` is a bounded temperate multiplier (Schwartz-preserving); (c) apply **W1** criterion.
-- **Substrate:** Mathlib `SchwartzMap.laplacian_eq_fourierMultiplierCLM` (`Δ = −(2π)²·mult ‖·‖²`, ALREADY in
-  Mathlib), `fourierTransformCLE`/`fourierMultiplierCLM`; PhysLib `momentumSqOperator`, `IsEssentiallySelfAdjoint`.
-  **The PhysLib-momentum ↔ Mathlib-Fourier bridge is the hard, from-scratch step** (no Plancherel-unitary needed —
-  the dense-range route avoids it). **Risk:** at/over budget — if the bridge balloons, ship partial infra + keep
-  `hkin` disclosed.
-- **Status:** ⏳ NEXT. W1 foundation done.
+## W2 — `hkin`: source DONE, kinetic closure
 
-## W3 — `hrel`: Coulomb relative bound, via Hardy's inequality
-- **Goal:** `IsRelBounded kineticOperator.closure potentialOperator a b` with `a < 1` (the disclosed `hrel`),
-  then drop `hrel`.
-- **Route:** Hardy's inequality `∫_{ℝ³} |u|²/|x|² ≤ 4 ∫ |∇u|²` ⟹ each Coulomb term `‖V_C u‖ ≤ ε‖Δu‖ + C_ε‖u‖`
-  with `ε → 0` ⟹ `a < 1`.
-- **Substrate:** **Hardy is absent from Mathlib AND PhysLib (verified 2026-06-30)** — fully from-scratch
-  (integration-by-parts on ℝ³; PhysLib v4.30.0 distributional-Laplacian fundamental-solution lemmas #1169–#1175
-  MAY help the Green's-function step, behind the bump). **Highest budget risk** — if Hardy alone exceeds ~500
-  LOC, ship it as its own infrastructure lemma set and keep `hrel` disclosed.
-- **Status:** ⏳ planned.
+`KineticEssentialSelfAdjoint.lean` constructs dense range for the momentum-square resolvents through the Fourier-multiplier/Schwartz bridge and applies the W1 dense-range criterion; real scaling gives `kineticOperator_isSelfAdjoint_closure`. The actual molecular apex no longer takes hkin. This preserves the successful route rather than the old NEXT label or its risk-based fallback. Historical June30 commit `f285f4bf66d1a2fa40574a9da9aac0874de21f48` already consumes this result in the unconditional apex; no new native check is claimed here.
 
-## W4 — `hreal`: CPTP semigroup, via the matrix Lie–Trotter product
-- **Goal:** `e^{tℒ}` (the vectorized propagator) is CPTP, hence realized by a Kraus channel — discharge the
-  `hreal` hypothesis of `traceDist_lindblad_monotone` (and ideally drop it).
-- **Route:** split `ℒ = ℒ_jump + ℒ_drift` (`ℒ_jump(ρ)=Σ L_k ρ L_k†` CP via W1-6BC `lindblad_generator_CP`;
-  `ℒ_drift(ρ)=e^{-tΓ}ρe^{-tΓ†}` conjugation, CP); Lie–Trotter `e^{t(ℒ_jump+ℒ_drift)} = lim_n (e^{(t/n)ℒ_drift}
-  e^{(t/n)ℒ_jump})^n`; each factor CP ⟹ product CP ⟹ limit CP (CP closed under limits).
-- **Substrate:** **matrix Lie–Trotter product formula is absent from Mathlib (verified 2026-06-30)** —
-  from-scratch (or via `Matrix.exp` series + finite-dim limit). Finite-dimensional, so more tractable than
-  W2/W3 but still real. Reuses 6BC `lindblad_generator_CP`, `MatrixMap.of_kraus_CP`, project `krausMap`/CPTP.
-- **Status:** ⏳ planned.
+## W3 — `hrel`: source DONE, Fourier–Kato and closure extension
 
-## W5 — DFT structural semiboundedness Props (`bddBelow`, `fiber_bddBelow`)
-- **Goal:** discharge the structural `BddBelow` fields of `DensityVariational` / `LevyLiebData` from the Wave-1
-  semibounded self-adjoint Hamiltonian (real spectrum bounded below).
-- **Route:** needs eigenvalue / spectral-measure theory connecting the self-adjoint `T̄ + V` (Wave-1) to a
-  ground-state energy infimum. **This is the natural trigger for the deliberate PhysLib v4.30.0 bump** (its
-  spectral-theory commits #1218/#1239) — to be done on a **clean branch, blast-radius-managed** (test
-  StatMech/QuantumInfo + the parallel public agent, as for the #1120 bump). Gate on the bump decision.
-- **Status:** ⏸ gated on the v4.30.0 bump (user sign-off).
+The actual `CoulombRelativeBound.lean` route is the single-electron momentum/Fourier estimate with dilation, translation and molecular coordinate fibers; electron–nucleus/electron–electron summation produces a core relative bound, then `IsRelBounded.extend_to_closure` transfers it to the closed kinetic operator. `coulomb_isRelBounded` PRODUCES a,b with 0<=a<1 and b>=0; `molecularHamiltonian_essSelfAdjoint` takes N,m,m>0,nuclei with no analytic-hypothesis argument. The original proposed from-scratch Hardy route was superseded, not left as the live dependency. June30 `f285f4bf66d1a2fa40574a9da9aac0874de21f48` introduced the unconditional apex; July29 `db37f9b4b6a5caa65aa749287bd92faaa2001ad0` records v4.32 API repairs preserving the theorem. The August17 review explicitly credits the actual non-wrapper chain. These are source/history observations, not rerun build results.
+
+## W4 — `hreal`: source DONE, finite-dimensional CP semigroup
+
+`LindbladCPSemigroup.lean` constructs the matrix Lie–Trotter product, CP jump/drift factors, closure of CP under limits, trace preservation and a Kraus realization. Its `traceDist_lindblad_monotone` takes Hermitian H, jump operators, t>=0 and Hermitian states, with no supplied realization field. The original conditional semigroup infrastructure remains separately useful; the August17 review1.6 and skeptical-check ledger correctly credit the discharge. Do not reopen Trotter as merely planned or identify this finite-dimensional result with a physical DFT density bridge.
+
+## W5 — physical DFT state/density/variational bridge: OPEN BUILD
+
+- **Goal:** construct actual physical state/density carriers and energy decomposition, not only BddBelow fields. Derive ground-state existence under the appropriate binding hypotheses, the native two strict HK cross comparisons with the accepted finite-Coulomb common-state argument, physical density minimization/attainment and nonempty constrained-search fibers. Preserve the general antisymmetric interacting many-electron Coulomb objective.
+- **Actual present source:** all three DFT modules were read. `GroundStateData` carries the energy decomposition; uniqueness additionally assumes both strict cross inequalities. `DensityVariational` carries attainment and unique minimization. `LevyLiebData` defines Real infima over fibers of arbitrary real-valued functions with only bounded-below fields; an empty fiber must not masquerade as physical +infinity or representability. Their real scalar/order proofs remain valid at that scope and are not a physical closure.
+- **Accepted substantive increments:** the linked N=1 Coulomb note and full review retain their ground-state/square-root-functional results. The [general finite-N construction](../audits/2026-10-17-publication-substance-construction/D10_MANY_ELECTRON_CONSTRAINED_SEARCH.md), with [full independent review](../audits/2026-10-17-publication-substance-construction/reviews/D10_MANY_ELECTRON_CONSTRAINED_SEARCH.md), now proves total-density representability by explicit Slater witnesses, repulsive-Coulomb form bounds, EVERY-admissible-fiber attained pure-state constrained search and exact molecular state/density infimum reduction for finite N>=1, finite spin q>=1, alpha>0 and g>=0. The [finite-Coulomb HK construction](../audits/2026-10-17-publication-substance-construction/D10_COULOMB_HOHENBERG_KOHN.md), with [full original independent review](../audits/2026-10-17-publication-substance-construction/reviews/D10_COULOMB_HOHENBERG_KOHN.md), has complete independent manual acceptance: for common finite N>=1, finite spin q>=1, alpha>0 and g>=0, existing normalized ground states of finite-nuclear scalar Coulomb potentials with equal total densities a.e. force potentials equal modulo constants and identical aggregated nuclear measures. It derives common-state exclusion and both strict cross inequalities, including degeneracy, without wavefunction UCP or nondegeneracy. Density-to-potential uniqueness does not make a degenerate potential have one density. None is a native inhabitant or full physical B1 closure.
+- **Next/evidence:** independent manual verification of N=1, general-N constrained search and finite-Coulomb HK is complete in their linked original reviews. The [finite-Coulomb HK construction](../audits/2026-10-17-publication-substance-construction/D10_COULOMB_HOHENBERG_KOHN.md), with [full original independent review](../audits/2026-10-17-publication-substance-construction/reviews/D10_COULOMB_HOHENBERG_KOHN.md), has complete independent manual acceptance: for common finite N>=1, finite spin q>=1, alpha>0 and g>=0, existing normalized ground states of finite-nuclear scalar Coulomb potentials with equal total densities a.e. force potentials equal modulo constants and identical aggregated nuclear measures. It derives common-state exclusion and both strict cross inequalities, including degeneracy, without wavefunction UCP or nondegeneracy. Density-to-potential uniqueness does not make a degenerate potential have one density. Next construct the native antisymmetric Sobolev/admissible-a.e.-density/form/state carrier, source operator/unit/spin bridge and native finite-Coulomb multiplier/common-state/strictness lemmas; instantiate the scalar interfaces for admitted bound inputs and prove any appropriate unique-density specialization. Appropriate binding/existence hypotheses and full B1/native closure remain BUILD. An arbitrary-potential UCP extension is separate optional broader-domain work, not an added prerequisite for the original molecular Coulomb B1 objective. No universal molecular attainment follows; the no-nuclei control distinguishes binding from fixed-density attainment. Implementation must preserve alpha=hbar²/(2m), actual measurable density equivalence classes and Coulomb conventions; no fictitious witness on every raw function or unsupported unique ground density.
+- **Original dependency gate preserved:** any actual PhysLib/toolchain bump remains a deliberate user-authorized clean-branch, blast-radius-managed change with relevant compatibility checks. The old proposed v4.30 eigenvalue trigger is historical, not evidence of the currently installed dependency state or a reason to block manual construction. No bump, new permission ceremony or native resource allocation is performed here.
+- **Historical pointer limit:** August17 finding1.6 also records a missing old lab-notebook/index pointer in a goal prompt. This three-path proposal does not create that notebook or repair an unowned prompt; current accepted ownership and continuity remain with the existing lead-written publication notebook. No historical absence observation is relabeled as current repair.
 
 ## W6 — Transport ↔ open-system synthesis (Markovian quantum transport) — *feature, not a discharge*
 - **Goal:** the D10 §Conclusion's "connect the transport and open-system layers" — a verified treatment linking
   the NEGF steady-state (6BA) to the Lindblad dynamical map (6BC) (e.g. a Lindblad-driven steady-state current).
-- **Status:** ⏳ planned (lowest priority; new synthesis, opens after W2–W4).
+- **Status:** original synthesis objective remains OPEN; source-level W2–W4 discharges are credited above. Actual transport-to-open-system physical synthesis and independent evidence remain to be constructed; no unrelated global wait or synthesis completion is inferred.
 
 ---
 
 ## Sequencing & Definition of Done
-**Order:** W2 (hkin-Fourier) → W4 (hreal-Trotter, finite-dim, likely next-tractable) → W3 (hrel-Hardy, hardest)
-→ W5 (gated on bump) → W6 (feature). Each wave independent; do the tractable ones first.
 
-**Per-wave DoD:** the disclosed `Prop` is discharged (theorem made unconditional, or a strictly-stronger
-unconditional companion shipped) OR a documented budget-wall recorded here; module builds clean + kernel-pure
-(`lean_verify`); root imports; **the D10 paper (`papers/D10/paper_draft.tex`) updated** to state the now-stronger
-result and the supersession ledger noted; `validate.py` green.
+The historical order W2→W4→W3 produced actual source discharges; these completed steps must not be silently reseeded. The active physical W5 bridge and original W6 transport/open-system synthesis retain their logical dependencies, while independent coherent increments may proceed. The lead owns the full original B1 programme, not an automatic disclosure/wall exit.
 
-**Loop DoD (`/goal` exit):** W2 + W4 discharged (or honestly walled-and-documented) AND the D10 paper reflects
-the result AND `lake build` + ExtractDeps green AND `validate.py` prints ALL CHECKS PASSED in the transcript AND
-a fresh-context `skeft-qa:adversarial-reviewer` ran with ZERO BLOCKER ZERO MAJOR. (W3 attempted; W5 gated on the
-bump decision; W6 if budget remains.)
+**Per-wave evidence:** actual source/physical construction at its declared scope, independent nonauthor review, ordinarily admitted native/build/validation when applicable, root/source integration, accurate D10 manuscript propagation and supported lifecycle reconciliation. Existing kernel-purity/no-new-axiom invariants and genuine user dependency/human gates remain. Manual authorship and a static source check are not native or gate results.
+
+**Programme completion:** the original physical state/density/strictness/representability/attainment objective must be demonstrated under scientifically valid hypotheses; a budget estimate, documented wall, renamed theorem or honestly missing carrier does not close it. The related synthesis remains its own open feature. Fresh actual checks/review, canonical closure and protected integration/human acceptance use existing processes. Coherent accepted partial results may checkpoint normally without waiting for every bundle or pretending the full objective is complete.

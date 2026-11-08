@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "paper": "L1",
+  "reviewer_version": "claims-reviewer-v2-source-qualified-r1",
+  "sentences_in_run": 114,
+  "tombstoned_sentences": [],
+  "tombstoned_count": 0,
+  "rewrite_candidates": [],
+  "non_reproducing_auto_closed": 0,
+  "non_reproducing_candidates_for_supersession": 5
+}

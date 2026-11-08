@@ -1,0 +1,15 @@
+{
+  "catalog_sha256": "ffa5730f75bb846f1ce5f9090d3e8003867678c9e2f1d34d8bc82f40099a8688",
+  "sentences_unchanged": 151,
+  "blockers_retained": 4,
+  "new_audit_events": 1,
+  "prior_audit_preserved": true,
+  "automatic_closures": 0,
+  "protected_bytes_unchanged": [
+    "papers/L1/prose_state.json",
+    "papers/L1/paper_draft.tex",
+    "papers/L1/paper_draft.pdf",
+    "docs/review_finding_supersessions.json"
+  ],
+  "scope": "Accepted source propagation progress only; original physical BUILD, canonical closure, full publication and human acceptance remain open"
+}

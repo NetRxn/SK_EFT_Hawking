@@ -1,0 +1,39 @@
+{
+  "command": [
+    "python3",
+    "scripts/sentence_state.py",
+    "ingest_agent_run",
+    "/tmp/l1-discussion-catalog-proposal-20261105.json"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"ok\": true,\n  \"paper\": \"L1\",\n  \"reviewer_version\": \"claims-reviewer-v2\",\n  \"sentences_in_run\": 151,\n  \"tombstoned_sentences\": [],\n  \"tombstoned_count\": 0,\n  \"rewrite_candidates\": [],\n  \"non_reproducing_auto_closed\": 0,\n  \"non_reproducing_candidates_for_supersession\": 54\n}\n",
+  "stderr": "",
+  "one_audit_append": {
+    "id": "audit:2026-11-05T22:45:46.033592Z:paper:L1:re_audit",
+    "label": "re_audit {'sentences_count': 151}",
+    "meta": {
+      "action": "re_audit",
+      "actor": "claims-reviewer-v2:2026-11-05:l1-discussion-appendix-catalog-r2",
+      "chain_state_snapshot": null,
+      "new_state": {
+        "sentences_count": 151
+      },
+      "notes": "claims-reviewer-v2 ingest: 151 sentences, 0 tombstoned, 0 auto-closed, 54 candidates",
+      "prior_state": {
+        "sentences_count": 0
+      },
+      "propagated_from": null,
+      "related_finding_id": null,
+      "target_id": "paper:L1",
+      "target_type": "Paper",
+      "timestamp": "2026-11-05T22:45:46.033592Z"
+    },
+    "type": "AuditEvent",
+    "verification": "verified"
+  },
+  "all_prior_audit_bytes_identical": true,
+  "human_state_bytes_identical": true,
+  "installed_catalog_sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951",
+  "current_units": 151,
+  "scope": "One actual canonical writer call, then exact accepted catalog installation; no physical or stage closure"
+}

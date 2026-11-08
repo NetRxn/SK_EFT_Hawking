@@ -1,0 +1,68 @@
+{
+  "admission": {
+    "owner": "ROOT",
+    "admitted_at_utc": "2026-11-07T02:01:01.656196+00:00",
+    "source_head": "25b5f229ce3f518ac08a9279f1680f2068cd4a4c",
+    "scope": "one unchanged COMPLETE original scientific pytest node; no restart",
+    "product_limit": 250000000,
+    "integer_bits": 1024,
+    "RSS_bytes": 2147483648,
+    "wall_seconds": 86400,
+    "thread_limit": 1,
+    "independent_runtime_review": "ACCEPT_RUNTIME_MECHANISM R3",
+    "independent_source_reviews": "R3 science and algebra/cost ACCEPT",
+    "independent_result_review_required": true,
+    "physical_main_publication_acceptance": false
+  },
+  "launch": {
+    "pid": 73196,
+    "wall_started": 1794016861.696756,
+    "child_script_sha256": "4636af5ef3051d53ed0d1e5c0633dd32890826f8b16c8fd5fe068bbb79dd7d85",
+    "rss_limit_bytes": 2147483648,
+    "wall_limit_seconds": 86400,
+    "logical_product_limit": 250000000,
+    "integer_limit_bits": 1024,
+    "thread_limit": 1,
+    "source_head": "25b5f229ce3f518ac08a9279f1680f2068cd4a4c",
+    "command": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "-B",
+      "/tmp/publication-task2-full-science-child-r1.py"
+    ]
+  },
+  "snapshot_observed_at_utc": "2026-11-07T02:06:45.961339+00:00",
+  "progress_snapshot": {
+    "status": "scientific_producer_running",
+    "source": {
+      "src/core/formulas.py": "d2eb079a84da6ab0c68aabb91640e9b29013bcf4b22104e816d68a804bd5c1b4",
+      "src/vestigial/original_coefficients.py": "fb0ac84c5623f9fd2454561d007a4f973e0db5874f259fe5f395879a9b3a7df8",
+      "tests/test_original_coefficient_jets.py": "0b8fd40a3749090d30f8793cd6aaa103e3f841e070d6686701a64ad013c0ebf8"
+    },
+    "pid": 73196,
+    "wall_started": 1794016861.9561799,
+    "wall_seconds": 340.0024492740631,
+    "native_self_peak_rss_bytes": 134643712,
+    "cost": {
+      "limit": 250000000,
+      "products": 1532161,
+      "integer_products": 4713299,
+      "integer_bit_limit": 1024,
+      "peak_integer_bits": 18,
+      "storage_limit": 2147483648,
+      "peak_scalar_records": 400384,
+      "peak_payload_bytes": 748863948
+    }
+  },
+  "local_exec_handle": 47530,
+  "full_result_review_complete": false,
+  "source_frozen_during_run": [
+    "src/core/formulas.py",
+    "src/vestigial/original_coefficients.py",
+    "tests/test_original_coefficient_jets.py"
+  ],
+  "primary_remote_checkpoint": "4672e9fecad14dc2223704548786bdf4a5ccdca8",
+  "local_corpus_commit": "25b5f229ce3f518ac08a9279f1680f2068cd4a4c",
+  "exact_recovery_bundle": "ORIGINAL_EQ10_CANONICAL_CORPUS_R1.bundle",
+  "recovery_bundle_sha256": "7b82229035bdad4dada15578d1b272652ab2c5f0861f73aa0aaaf8f2976d2c71",
+  "recovery_bundle_bytes": 106910
+}

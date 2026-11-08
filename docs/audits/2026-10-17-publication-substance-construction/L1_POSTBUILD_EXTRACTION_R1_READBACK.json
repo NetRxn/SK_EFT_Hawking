@@ -1,0 +1,29 @@
+{
+  "candidate": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "argv": [
+    "/Users/johnroehm/.local/bin/uv",
+    "run",
+    "python",
+    "scripts/extract_lean_deps.py"
+  ],
+  "started_at": "2026-11-06T10:30:31.938027+00:00",
+  "scope": "Actual post-build canonical extraction. Existing JSON content unchanged; only cache hash rebound to candidate source. Not portfolio/scientific/publication acceptance.",
+  "returncode": 0,
+  "finished_at": "2026-11-06T10:52:18.376452+00:00",
+  "head_after_documentary_checkpoints": "9d0d7fc3c6ab01ab58118cd474cabda43260c158",
+  "declarations": 41034,
+  "json_sha256": "942279d0b9a4480b6396acd0717a1709a763aeee1a74289bfefbdb41d0664e6d",
+  "json_byte_exact_to_committed_source": true,
+  "source_hash": "1d45fd4918bfe9c6",
+  "canonical_check_after": "fresh; exit0",
+  "archive_members": {
+    "l1-postbuild-extraction-r1.json": "1fa59d39473615671a351abadc8e683541ecab2aba0d639dea62e29c5f186248",
+    "l1-postbuild-extraction-r1.stdout": "9bdde54c96dfbbaf615c4b95543165cbbbd2d926e49d0890740825e3c5f3808c",
+    "l1-postbuild-extraction-r1.stderr": "3ef5dd437b94ce0cfc7c88502689801d0db7707f4c136205e83dd0fb40039479",
+    "l1-postbuild-extraction-fresh-r1.stdout": "3f505e0f90c7083f122f53aba34a05e9674ab7443ebd1cdfcc659f6bf4b22063",
+    "l1-postbuild-extraction-fresh-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cache-hash.diff": "7f4f984f790278fe86c648a7be8db6a28532819e22575b22dae244af703a2355"
+  },
+  "archive": "L1_POSTBUILD_EXTRACTION_R1_EVIDENCE.zip",
+  "archive_sha256": "82fbd09ca04da6dfa686c28e9d2b8f13b466af455463458561b424369c533a9e"
+}

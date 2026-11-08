@@ -1,0 +1,65 @@
+{
+  "source_commit": "83fcce8414db39ffcbdb1a8b87e5b8282531f5d0",
+  "archive_sha256": "58c5e86a819b3f38ed4d72c25b5d2819af130969a8024af2f17db961c5e58091",
+  "all16_hashes_crc_unique": true,
+  "six_canonical_copies_exact": true,
+  "parent20_hashes_crc_verified": true,
+  "current_accepted_inputs": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "accepted/N16_SATURATION_STATE_OBSTRUCTION.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_SATURATION_STATE_OBSTRUCTION.md",
+    "accepted/N16_SYMBOLIC_NORMALIZATION.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_SYMBOLIC_NORMALIZATION.md",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_ACCEPTANCE.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_ACCEPTANCE.md"
+  },
+  "external_custody": {
+    "held_fulltext_pins": [
+      {
+        "held_corpus_path": "Phase-5d/primary-sources/Diakonov2011.pdf",
+        "version": "1109.0091v1",
+        "url": "https://arxiv.org/pdf/1109.0091v1",
+        "bytes": 270355,
+        "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da"
+      }
+    ],
+    "source_use": "Actual original measure26-28 and VI saturation/Haar/loop motivation; regulator-specific proof is new manual result, not attributed to source",
+    "generated_analysis": "repo/private task tmp only",
+    "scientific_execution": "none; manual algebra and source reading only"
+  },
+  "root_full_reads": [
+    "complete actual resultc1c796de",
+    "complete mathematical RESULT review",
+    "complete original-source RESULT review",
+    "acceptance and manifest",
+    "actual accepted originalquarter-coframe/action identity",
+    "heldDiakonovV.F26-28andVI15-17"
+  ],
+  "root_manual_cross_checks": [
+    "complete4m+neighborcapacityclassification",
+    "bothanchorgammaordersandindependentHaar1/8",
+    "scalarGrassmannsigns/CsGsandcomplete2factorloopW",
+    "realvectorrepresentationmultiplicity4/commonrealC/realt",
+    "determinantpowersandidenticalQ3epsilon-tensorsquare",
+    "checkerboardfactorialsandc16lowerbound",
+    "unique insertedoccupation/sevendoublecenters/29pairededges",
+    "polynomialdegree30versus29andcoefficientheightbounds",
+    "sameexplicitT=2^1717,g2=1forZandnormalizedresponse",
+    "actualstaticcandidateactivationandlambda^240/lambda^-16sourcepowers"
+  ],
+  "accepted_completed_scope": [
+    "originalfiniteN16nonzeroZatnonzerog2",
+    "actualnormalizedliteraltemporalJsource response at same point",
+    "nonemptystrictlypositivestaticcandidatefamilyunderpreviouslyfixedCliffordordering"
+  ],
+  "not_established": [
+    "metricmean or spatialorder/signature",
+    "physicalCAR/ordering/adjoint or microscopicmetricoperatoridentification",
+    "positivejoint/multitimeororiginalcausalevolution",
+    "pureEHCc0evaluated",
+    "N4/B3/tensor/matter/light/transport/controlledIRorphysicalcalibration",
+    "Lean/native/fullwave/main/publication/finalhumanacceptance"
+  ],
+  "next_deeper_commission": "Derive original-source coherent-state/transfer/metric-operator correspondence with originalperiodic/sewing/sourceconditions; prospectiveandactualindependentreview; owneracceptancepending",
+  "ordinary_L1_owner": "ROOT",
+  "no_candidate_source_or_runtime_changes": true
+}

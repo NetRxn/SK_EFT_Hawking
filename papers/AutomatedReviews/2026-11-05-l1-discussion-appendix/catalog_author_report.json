@@ -1,0 +1,40 @@
+{
+  "task": "l1-discussion-catalog-author-r2",
+  "status": "AUTHOR_PROPOSAL_READY_FOR_INDEPENDENT_REVIEW",
+  "proposal": "/tmp/l1-discussion-catalog-proposal-20261105.json",
+  "proposal_sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951",
+  "source_sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+  "pdf_sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a",
+  "active_units": 151,
+  "unchanged_predecessor_IDs": 79,
+  "samequote_section_moves": 32,
+  "rewritten_predecessors": 23,
+  "new_reassessed_units": 40,
+  "full134oldrecords_lineage_preserved": true,
+  "all4blockers_54candidates_followups_prior_history_preserved": true,
+  "human_audit_unchanged": true,
+  "schema_pass": true,
+  "dryrun_only": true,
+  "uncovered_nonstructural_body_text": "",
+  "r1_proposal_sha256": "6e05f6c9b11d745db9684f02afc06f7ff07954ebf052d9e1b5fa2e8c460fd02e",
+  "r1_final_continuity_fresh": false,
+  "r1_final_changed": [
+    "owned-files",
+    "source"
+  ],
+  "r2_initial_continuity_fresh": true,
+  "r2_final_continuity_fresh": true,
+  "r2_changed_quote_records": [
+    95,
+    145,
+    146
+  ],
+  "all148other_records_preserved_exceptspans": true,
+  "receipts_directory": "/tmp/l1-discussion-catalog-work-20261105",
+  "preserved_r1_directory": "/tmp/l1-discussion-catalog-work-r1-preserved-20261105",
+  "original_physical_build_open": true,
+  "independent_acceptance": false,
+  "tracked_writes": false,
+  "scientific_native_lean_execution": false,
+  "report": "/tmp/l1-discussion-catalog-author-20261105.md"
+}
