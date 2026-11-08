@@ -1,0 +1,225 @@
+{
+  "dispatch": [
+    {
+      "target": "lean/SKEFTHawking/BHEntropyMicroscopic.lean (+2)",
+      "files": [
+        "lean/SKEFTHawking/BHEntropyMicroscopic.lean",
+        "papers/D3/bundle_metadata.json",
+        "papers/D3/paper_draft.tex"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d3-stage10-redraft:D3:1.2"
+      ],
+      "closable": [
+        "review:2026-08-15-d3-stage10-redraft:D3:1.2"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "critical"
+      ],
+      "agent": "skeft-qa:research-scout",
+      "gates": [
+        "cited report vetted by the lead before filing"
+      ],
+      "isolation": "none",
+      "registry_rule": null
+    },
+    {
+      "target": "lean/SKEFTHawking/HeatKernelExpansion.lean",
+      "files": [
+        "lean/SKEFTHawking/HeatKernelExpansion.lean"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d3-stage10-redraft:D3:0.2"
+      ],
+      "closable": [
+        "review:2026-08-15-d3-stage10-redraft:D3:0.2"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "critical"
+      ],
+      "agent": "skeft-qa:research-scout",
+      "gates": [
+        "cited report vetted by the lead before filing"
+      ],
+      "isolation": "none",
+      "registry_rule": null
+    },
+    {
+      "target": "docs/primary_sources_state.json",
+      "files": [
+        "docs/primary_sources_state.json"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d8-stage10-redraft:D8:1.5"
+      ],
+      "closable": [
+        "review:2026-08-15-d8-stage10-redraft:D8:1.5"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "major"
+      ],
+      "agent": "skeft-qa:research-scout",
+      "gates": [
+        "cited report vetted by the lead before filing"
+      ],
+      "isolation": "none",
+      "registry_rule": null
+    }
+  ],
+  "queued": 6,
+  "queued_groups": [
+    {
+      "target": "lean/SKEFTHawking/HeatKernelExpansion.lean (+1)",
+      "files": [
+        "lean/SKEFTHawking/HeatKernelExpansion.lean",
+        "src/core/formulas.py"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d3-stage10-redraft:D3:0.1"
+      ],
+      "closable": [
+        "review:2026-08-15-d3-stage10-redraft:D3:0.1"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "critical"
+      ],
+      "deferred": "file(s) held by a dispatched group: ['lean/SKEFTHawking/HeatKernelExpansion.lean']"
+    },
+    {
+      "target": "papers/D3/paper_draft.tex (+2)",
+      "files": [
+        "papers/D3/paper_draft.tex",
+        "papers/F/paper_draft.tex",
+        "src/core/citations.py"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d3-stage10-redraft:D3:1.1"
+      ],
+      "closable": [
+        "review:2026-08-15-d3-stage10-redraft:D3:1.1"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "critical"
+      ],
+      "deferred": "file(s) held by a dispatched group: ['papers/D3/paper_draft.tex']"
+    },
+    {
+      "target": "papers/D3/paper_draft.tex",
+      "files": [
+        "papers/D3/paper_draft.tex"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d3-stage10-redraft:D3:2.1",
+        "review:2026-08-15-d3-stage10-redraft:D3:2.2",
+        "review:2026-08-15-d3-stage10-redraft:D3:2.3",
+        "review:2026-08-15-d3-stage10-redraft:D3:2.4",
+        "review:2026-08-15-d3-stage10-redraft:D3:5.3"
+      ],
+      "closable": [
+        "review:2026-08-15-d3-stage10-redraft:D3:2.1",
+        "review:2026-08-15-d3-stage10-redraft:D3:2.2",
+        "review:2026-08-15-d3-stage10-redraft:D3:2.3",
+        "review:2026-08-15-d3-stage10-redraft:D3:2.4",
+        "review:2026-08-15-d3-stage10-redraft:D3:5.3"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "major",
+        "minor"
+      ],
+      "deferred": "file(s) held by a dispatched group: ['papers/D3/paper_draft.tex']"
+    },
+    {
+      "target": "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean (+1)",
+      "files": [
+        "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+        "papers/L3/paper_draft.tex"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-l3-stage10-redraft:L3:1.3"
+      ],
+      "closable": [
+        "review:2026-08-15-l3-stage10-redraft:L3:1.3"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "major"
+      ],
+      "deferred": "beyond the non-isolated fan-out cap"
+    },
+    {
+      "target": "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean (+3)",
+      "files": [
+        "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+        "papers/D3/paper_draft.tex",
+        "papers/F/paper_draft.tex",
+        "src/core/citations.py"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-d3-stage10-redraft:D3:4.1"
+      ],
+      "closable": [
+        "review:2026-08-15-d3-stage10-redraft:D3:4.1"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "major"
+      ],
+      "deferred": "file(s) held by a dispatched group: ['papers/D3/paper_draft.tex']"
+    },
+    {
+      "target": "lean/SKEFTHawking/WKBAnalysis.lean",
+      "files": [
+        "lean/SKEFTHawking/WKBAnalysis.lean"
+      ],
+      "lane": "research",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-15-dispersive-coefficient-normalization:infra:2.1"
+      ],
+      "closable": [
+        "review:2026-08-15-dispersive-coefficient-normalization:infra:2.1"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "major"
+      ],
+      "deferred": "beyond the non-isolated fan-out cap"
+    }
+  ],
+  "counts": {
+    "open": 880,
+    "dispatchable": 189,
+    "blocked": 4,
+    "unrouted": 687,
+    "target_groups": 9,
+    "untargeted": 33,
+    "lean_slots": 0
+  },
+  "caveats": [
+    "687 open finding(s) carry no lane this router understands and are NOT dispatched. They are not a backlog of easy work \u2014 they are unrouted, and a default lane would hand physics to an infra worker. Run `uv run python scripts/backfill_lanes.py --propose` and work the proposals.",
+    "33 dispatchable finding(s) name NO target and are not planned. A worker cannot be told where to work, and grouping them under one pseudo-key would render as a work unit while spanning unrelated lanes. This is a FILING defect \u2014 add a `Location:`/`Target:` line to each \u2014 not a task to dispatch.",
+    "no `wtN` worktree slots exist \u2014 Lean and substrate groups cannot be dispatched in isolation. `scripts/setup_lean_worktree_slots.sh` creates them."
+  ]
+}
