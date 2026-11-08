@@ -1,0 +1,21 @@
+2026-11-08 revision2 SOURCE review candidate. No complete selected target run.
+ScriptSHA256 9228df97a81232b22621e38d6326bb29b4f2af50c11f2f289d37d7e34f50e7a5
+DesignSHA256 716c76e71d74fde81fa9050ef72b7c3e13b18a05f321de32e3309a8c9e418e39
+Historical r0 failure and r1 successful pre-DP receipts retained separately.
+
+Command from repo root:
+PYTHONDONTWRITEBYTECODE=1 timeout 55s python docs/audits/2026-11-05-l1-physical-bridges/cloud_matter_20261108/diagonal_trace_simple.py --pilot
+Exit0. Exact stdout:
+CAPS rows 120000 combined_products 3000000 whole_seconds 180
+SOURCE_SHA256 nearest_trace.py b51f77f8f7cdd1ee27285ef59aeb0915cc736d5a88cc938500c43cce8f1b72b8
+SOURCE_SHA256 l1_diagonal_classes.py 90efaaf91e77838dc644ebfae15ec1baec2f9ebcdbf10c76a80990bed5638020
+SOURCE_SHA256 l1_equal_time_private_pairs.py 05f17572df77dd56637eda059886b48a5465b009a3c348d6cbe0867843f24f74
+SOURCE_SHA256 l1_transverse_top.py 6dc673e63a4dca26e39c41b6db6971f061d0cfe8466111d175f60bb2e99d2c23
+SOURCE_CONTROL Q [(60, -6), (85, -3), (102, -3), (153, -3), (170, -3), (195, -6)] Q_squared_top 108 tensor_slot_supports [(0, 30), (6, 6)] diagonal_factor 49/216 independence_poison_ratio 48/49 closed_order Bdag_Adag_B_A forward_order_control PASS
+SUPPORT_CONTROL full_words 310 full_ordered 117120 independent_DP_even_source 117120 independent_DP_H23_cross_source 92160 multiplicity_partitions [((1, 1, 1, 1, 1, 1), 128), ((1, 1, 1, 1, 2), 34), ((2, 2, 2), 140), ((2, 4), 8)] selected_words 128 unselected_words 182 selected_ordered 11520 orbits 20 orbit_sizes [(4, 8), (8, 12)] charges [(-4, 32), (0, 64), (4, 32)] all_selected_private_erasure 128
+SELECTED_REPRESENTATIVE 0 orbit_size 4 word [(0, 2, 3, 0, 0), (0, 2, 3, 0, 0), (1, 0, 2, 1, 1), (1, 0, 2, 1, 1), (2, 1, 2, 2, 2), (2, 1, 2, 2, 2)] square_rows [12, 12, 84] stages [('Q0_Q3', 6, 6, 36, 36), ('remote_square_pair', 12, 12, 144, 84), ('source_remote_pair', 36, 84, 3024, 72)] factory_calls 864 factory_products 40256 final_products_with_lookup 3288 combined_products 43544 peak_rows 84 raw_integer 225434243432448 denominator 35184372088832 raw_g2_6_subcontribution_per_word 11907/256
+ELAPSED_SECONDS 4.378018
+
+The separate r1 --controls CLI also exited0 before the independent DP addition.
+Revision2 pilot includes all revised local/DP/subset/group controls.
+No full310-word diagonal coefficient or full covariance/source jet is claimed.

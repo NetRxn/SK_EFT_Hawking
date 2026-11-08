@@ -1,0 +1,15 @@
+# Feasibility before expansion
+
+John reports that earlier lattice simulations froze the laptop for days. Current authorization is short bounded cloud experiments and representation/reuse work only. Do not start full harder-channel traversals or larger lattice simulations before measured runtime,memory and representative scaling support admission. Local physics stays paused. No fast four-site channel is evidence of large-lattice feasibility.
+
+The completed package is exactly one changed-representation mixed pilot plus the128-word diagonaltrace subfamily; the full780/48 mixed traversals and full310diagonaltrace sum have not been launched. All original row/product/time caps remain. The old rowcapfailure stays unchanged as evidence.
+
+Structural hard_channel_feasibility.py/json only enumerate necessary supports. It identifies27,12,12,30 unfixedlink-profile classes across G02²anchor00/01/10/11, and0,3,4,10 across G02G12. The easiest mixedpilot has maximum linkdegree4, whereas remaining profiles include degree6 and source-boundary coarseupperbounds50176 through7340032. Those are upperbounds, not measured rows,memory or impossibility proofs. They show why the easiestpilot does not admit the entiretraversal.
+
+The short successful diagonal128-word profile uses the standard-library observer in profile_bounded.py, with unchanged scientific functions/caps and assertions explicitly enabled. Its4.4617s wall,4.2920s userCPU,0.1920s systemCPU and60380KiB SELFmaximumRSS apply only to that exactsubfamily. No fitted scaling law follows.
+
+The first Diracloop receipt has allcontrols and one pilotvalue but no RSS measurement or explicitwarmduration. Attempted external/proc observation found no visible targetPID, not proof of absentprocess or lowmemory; empty samples remain identified as unavailableobservations. A separate independent replay of the SAMEsuccessfulsinglepilot completed with in-process telemetry:168.0429s wholewall,166.9621s SELFuserCPU,0.3649s systemCPU,111640KiB cumulative SELFmaximumRSS,56160KiB childmaximumRSS separately. Controlscompleted167.1666s; controls-to-result interval0.8758s includes warmassembly/contraction/output. This is verification/feasibility measurement, not a fulltraversal or unchangedfailed-pilot retry.
+
+Linux resource.ru_maxrss is cumulative SELFhighwater across coldcontrols and warmtarget. Event differences do not isolate a targetRSSpeak. ChildRSS is recorded separately; no concurrentRSSsum or wholemachinepeak is inferred. Wall intervals between producerphaseevents include assembly/contraction/output; distinguish these from purearithmetic timing.
+
+Before expansion, review the resulting measurements, then prospectively choose only a small fixed set of structurallydifferent source-anchor/link-degree/closure profiles under existingcaps. Obtain measured percase wall/CPU/RSS and actualfactory/join counts, preservefailures, and compare source-boundary growth/caches. Define a cumulative budget and stopcriteria before any harderchanneltraversal. The present record admits no such traversal and no largerlattice simulation.

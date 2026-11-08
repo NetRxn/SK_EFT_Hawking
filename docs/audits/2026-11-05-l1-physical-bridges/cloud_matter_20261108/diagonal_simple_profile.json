@@ -1,0 +1,17 @@
+{
+  "scope": "single already-admitted bounded experiment; no full harder-channel or lattice scaling inference",
+  "script": "diagonal_trace_simple.py",
+  "arguments": [
+    "--all"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "python_optimize": 0,
+  "wall_seconds": 4.461706743997638,
+  "user_cpu_seconds": 4.292014,
+  "system_cpu_seconds": 0.19197799999999998,
+  "max_rss_kib_linux": 60380,
+  "events": [],
+  "child_max_rss_kib_linux": 0,
+  "rss_definition": "Linux ru_maxrss cumulative process high-water mark, not instantaneous or sum of concurrent RSS"
+}
