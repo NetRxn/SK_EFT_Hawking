@@ -1,0 +1,1391 @@
+{
+  "cases": [
+    {
+      "case": "A",
+      "exit_code": 10,
+      "parent_observed_seconds": 2.5245428810012527,
+      "status": "incomplete",
+      "stop_cause": null
+    },
+    {
+      "case": "B",
+      "exit_code": 10,
+      "parent_observed_seconds": 2.6241906240029493,
+      "status": "incomplete",
+      "stop_cause": null
+    },
+    {
+      "case": "C",
+      "exit_code": 0,
+      "parent_observed_seconds": 1.3148920069943415,
+      "status": "complete",
+      "stop_cause": null
+    },
+    {
+      "case": "D",
+      "exit_code": 0,
+      "parent_observed_seconds": 4.498479137997492,
+      "status": "complete",
+      "stop_cause": null
+    },
+    {
+      "case": "E",
+      "exit_code": 10,
+      "parent_observed_seconds": 3.639668055002403,
+      "status": "incomplete",
+      "stop_cause": "memory-observation-unavailable"
+    },
+    {
+      "case": "F",
+      "exit_code": 10,
+      "parent_observed_seconds": 6.366757374002191,
+      "status": "incomplete",
+      "stop_cause": null
+    }
+  ],
+  "cold_seconds": 175.33382179000182,
+  "limits": {
+    "aggregate_case_join_products": 3000000,
+    "case_seconds": 30,
+    "child_as_bytes": 805306368,
+    "cold_seconds": 600,
+    "conservative_parent_plus_child_rss_bytes": 536870912,
+    "rows": 120000,
+    "rss_bytes": 402653184,
+    "source_factory_candidates": 3000000,
+    "warm_seconds": 180,
+    "whole_seconds": 700
+  },
+  "manifest": [
+    {
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "anchors": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "case": "A",
+      "channel": "U",
+      "components": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "divisor": 143441881917165473366016,
+      "haar_divisor": 4174708211712,
+      "histogram": {
+        "2": 6,
+        "4": 4,
+        "6": 1
+      },
+      "incidence": [
+        [
+          [
+            0,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            1
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            0
+          ],
+          6
+        ],
+        [
+          [
+            2,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            3
+          ],
+          2
+        ]
+      ],
+      "indices": [
+        16,
+        16,
+        28,
+        28,
+        45,
+        45
+      ],
+      "multiplicity_factorial": 8,
+      "source_edges": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "word": [
+        [
+          1,
+          0,
+          3,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          3,
+          1,
+          1
+        ],
+        [
+          2,
+          0,
+          2,
+          0,
+          2
+        ],
+        [
+          2,
+          0,
+          2,
+          0,
+          2
+        ],
+        [
+          3,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          3,
+          1,
+          2,
+          2,
+          3
+        ]
+      ]
+    },
+    {
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "anchors": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "case": "B",
+      "channel": "U",
+      "components": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "divisor": 573767527668661893464064,
+      "haar_divisor": 16698832846848,
+      "histogram": {
+        "2": 6,
+        "4": 3,
+        "6": 2
+      },
+      "incidence": [
+        [
+          [
+            0,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            0
+          ],
+          6
+        ],
+        [
+          [
+            2,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          6
+        ],
+        [
+          [
+            3,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            3
+          ],
+          2
+        ]
+      ],
+      "indices": [
+        17,
+        17,
+        28,
+        28,
+        45,
+        45
+      ],
+      "multiplicity_factorial": 8,
+      "source_edges": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "word": [
+        [
+          1,
+          0,
+          3,
+          3,
+          1
+        ],
+        [
+          1,
+          0,
+          3,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          2,
+          0,
+          2
+        ],
+        [
+          2,
+          0,
+          2,
+          0,
+          2
+        ],
+        [
+          3,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          3,
+          1,
+          2,
+          2,
+          3
+        ]
+      ]
+    },
+    {
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "anchors": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "case": "C",
+      "channel": "U",
+      "components": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "divisor": 5976745079881894723584,
+      "haar_divisor": 347892350976,
+      "histogram": {
+        "2": 8,
+        "4": 4
+      },
+      "incidence": [
+        [
+          [
+            0,
+            0
+          ],
+          4
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            2,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            3
+          ],
+          2
+        ]
+      ],
+      "indices": [
+        18,
+        19,
+        26,
+        26,
+        39,
+        39
+      ],
+      "multiplicity_factorial": 4,
+      "source_edges": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "word": [
+        [
+          1,
+          1,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          3,
+          0,
+          1,
+          3,
+          3
+        ],
+        [
+          3,
+          0,
+          1,
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "anchors": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "case": "D",
+      "channel": "U",
+      "components": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "divisor": 11953490159763789447168,
+      "haar_divisor": 347892350976,
+      "histogram": {
+        "2": 8,
+        "4": 4
+      },
+      "incidence": [
+        [
+          [
+            0,
+            0
+          ],
+          4
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            2,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            3
+          ],
+          2
+        ]
+      ],
+      "indices": [
+        19,
+        19,
+        26,
+        26,
+        39,
+        39
+      ],
+      "multiplicity_factorial": 8,
+      "source_edges": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "word": [
+        [
+          1,
+          1,
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          3,
+          0,
+          1,
+          3,
+          3
+        ],
+        [
+          3,
+          0,
+          1,
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "action_degrees": [
+        2,
+        7,
+        7,
+        8
+      ],
+      "anchors": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "case": "E",
+      "channel": "UV",
+      "components": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "divisor": 3984496719921263149056,
+      "haar_divisor": 463856467968,
+      "histogram": {
+        "2": 10,
+        "4": 2,
+        "6": 1
+      },
+      "incidence": [
+        [
+          [
+            0,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            1
+          ],
+          6
+        ],
+        [
+          [
+            2,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            3
+          ],
+          4
+        ]
+      ],
+      "indices": [
+        18,
+        21,
+        33,
+        33,
+        39,
+        48
+      ],
+      "multiplicity_factorial": 2,
+      "source_edges": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "word": [
+        [
+          1,
+          1,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          3,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          3,
+          2,
+          2
+        ],
+        [
+          3,
+          0,
+          1,
+          3,
+          3
+        ],
+        [
+          3,
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "action_degrees": [
+        2,
+        7,
+        7,
+        8
+      ],
+      "anchors": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "case": "F",
+      "channel": "UV",
+      "components": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "divisor": 3984496719921263149056,
+      "haar_divisor": 463856467968,
+      "histogram": {
+        "2": 10,
+        "4": 2,
+        "6": 1
+      },
+      "incidence": [
+        [
+          [
+            0,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            0,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            1
+          ],
+          4
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            1,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            1
+          ],
+          6
+        ],
+        [
+          [
+            2,
+            2
+          ],
+          2
+        ],
+        [
+          [
+            2,
+            3
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            0
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          2
+        ],
+        [
+          [
+            3,
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3,
+            3
+          ],
+          4
+        ]
+      ],
+      "indices": [
+        19,
+        21,
+        33,
+        33,
+        39,
+        48
+      ],
+      "multiplicity_factorial": 2,
+      "source_edges": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "word": [
+        [
+          1,
+          1,
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          3,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          3,
+          2,
+          2
+        ],
+        [
+          3,
+          0,
+          1,
+          3,
+          3
+        ],
+        [
+          3,
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    }
+  ],
+  "parent_baseline": {
+    "VmHWM": 79691776,
+    "VmRSS": 79691776,
+    "VmSize": 105467904
+  },
+  "parent_cache_baseline": {
+    "leading.MOMENT": {
+      "currsize": 70,
+      "hits": 918,
+      "maxsize": null,
+      "misses": 70
+    },
+    "leading.basis": {
+      "currsize": 1,
+      "hits": 23343,
+      "maxsize": null,
+      "misses": 1
+    },
+    "leading.curvature_table": {
+      "currsize": 16,
+      "hits": 68,
+      "maxsize": null,
+      "misses": 16
+    },
+    "leading.frame_table": {
+      "currsize": 30,
+      "hits": 3122,
+      "maxsize": null,
+      "misses": 30
+    },
+    "leading.haar_template": {
+      "currsize": 4,
+      "hits": 20534,
+      "maxsize": null,
+      "misses": 4
+    },
+    "legacy.fixed_frame": {
+      "currsize": 192,
+      "hits": 98736,
+      "maxsize": null,
+      "misses": 192
+    },
+    "remote_source_dirac_loop.gamma_rows": {
+      "currsize": 2,
+      "hits": 55,
+      "maxsize": null,
+      "misses": 2
+    },
+    "remote_source_dirac_loop.link_rows": {
+      "currsize": 4,
+      "hits": 224,
+      "maxsize": null,
+      "misses": 4
+    },
+    "remote_source_dirac_loop.local_open": {
+      "currsize": 37,
+      "hits": 43,
+      "maxsize": null,
+      "misses": 37
+    }
+  },
+  "parent_final_memory": {
+    "VmHWM": 79736832,
+    "VmRSS": 79736832,
+    "VmSize": 105467904
+  },
+  "scope": "six prospectively selected feasibility cases; no full-channel admission",
+  "source_hashes_unchanged": true,
+  "source_sha256": {
+    "leading_metric_order_source_r1.zip": "d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48",
+    "remote_source_adapter.py": "bc8677150f9019ca58e0f73a44339bb05cd4c674255f1b2ae39841ef2068ea5f",
+    "remote_source_dirac_loop.py": "235f569d1b715c7a32c807dc17aa068b6afe0f38036d4db322ecfd8c2408f07b",
+    "representative_probes.py": "249e3db814b4f9c69627d31663dcec1efd724208f6370609764e33bba49642c9"
+  },
+  "status": "sample-finished",
+  "unattempted_cases": [],
+  "whole_seconds": 196.32409370400273
+}

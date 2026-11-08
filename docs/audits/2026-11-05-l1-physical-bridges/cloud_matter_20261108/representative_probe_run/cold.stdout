@@ -1,0 +1,54 @@
+{"adapter_assemble_sha256": "1ad92400e260876e702c979e4336c2954f0f8c9d515c46f4e88e966318505cd3", "archive_sha256": "d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48", "event": "source-binding", "original_assemble_sha256": "0b7af9911b206e2035cc76b08881cd71cd170825df1fe9532c6152b3fee2f677", "pair_cap": 3000000, "row_cap": 120000}
+{"event": "tiny-controls", "exit": 0, "stderr": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.519s\n\nOK\n", "stdout": ""}
+{"event": "archived-moments", "result": {"degree8_multisets": 6435, "degree8_nonzero_multisets": 330, "degree8_zero_multisets": 6105, "sequence_comparisons": 17030}}
+{"event": "archived-frames", "result": 2048}
+{"event": "archived-curvature", "result": {"full24_checks": 8, "literal_order_poison_differences": 8}}
+{"anchors": [[0, 0], [0, 0]], "components": [[0, 2], [0, 2]], "degrees": {"0": 6, "1": 2}, "event": "source-boundary", "factory": {"calls": 576, "candidate_products": 26688, "largest_wedge_product": 400, "peak_single_polynomial_rows": 38}, "rows": 732}
+{"anchors": [[0, 0], [0, 0]], "components": [[2, 3], [2, 3]], "degrees": {"0": 8}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 306576, "largest_wedge_product": 36, "peak_single_polynomial_rows": 8}, "rows": 72}
+{"anchors": [[0, 0], [0, 0]], "components": [[2, 2], [2, 2]], "degrees": {"0": 8}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 306576, "largest_wedge_product": 36, "peak_single_polynomial_rows": 8}, "rows": 72}
+{"complement_closures": 4, "event": "source-direct-controls", "fixed_matrix_comparisons": 12}
+{"event": "normalization-control", "peak": 1536, "products": 31982, "value": "104978"}
+{"anchors": [[0, 0], [0, 0]], "components": [[2, 3], [2, 3]], "degrees": {"0": 8}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 306576, "largest_wedge_product": 36, "peak_single_polynomial_rows": 8}, "rows": 72}
+{"components": [[2, 3], [2, 3]], "event": "source-word-control", "metadata": {"curvature_quarters": 6, "factors": 66, "frames": 16, "haar_divisor": 1391569403904, "initial_rows": 6640, "link_degrees": [[[0, 0], 2, true], [[0, 1], 2, true], [[0, 2], 2, false], [[0, 3], 2, false], [[1, 0], 4, false], [[1, 1], 2, true], [[1, 2], 2, false], [[1, 3], 2, false], [[2, 0], 2, false], [[2, 1], 4, false], [[2, 2], 2, false], [[2, 3], 2, false], [[3, 0], 4, false], [[3, 1], 4, false], [[3, 2], 2, false], [[3, 3], 2, false]], "multiplicity_factorial": 8}, "peak": 1536, "products": 26554, "value": "52488"}
+{"anchors": [[0, 0], [0, 0]], "components": [[2, 2], [2, 2]], "degrees": {"0": 8}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 306576, "largest_wedge_product": 36, "peak_single_polynomial_rows": 8}, "rows": 72}
+{"components": [[2, 2], [2, 2]], "event": "source-word-control", "metadata": {"curvature_quarters": 6, "factors": 65, "frames": 16, "haar_divisor": 4174708211712, "initial_rows": 6884, "link_degrees": [[[0, 0], 2, true], [[0, 1], 2, true], [[0, 2], 4, false], [[1, 0], 4, false], [[1, 1], 2, true], [[1, 2], 2, false], [[1, 3], 2, false], [[2, 0], 2, false], [[2, 1], 4, false], [[2, 2], 2, false], [[2, 3], 2, false], [[3, 0], 4, false], [[3, 1], 4, false], [[3, 2], 2, false], [[3, 3], 2, false]], "multiplicity_factorial": 8}, "peak": 1536, "products": 27092, "value": "218700"}
+{"event": "loop-source-binding", "loop_assemble_sha256": "48905af725c9d3a5a66d44cc65bc10ee5ff945716dee03f43c4b198a0238561c", "original_assemble_sha256": "0b7af9911b206e2035cc76b08881cd71cd170825df1fe9532c6152b3fee2f677", "pair_cap": 3000000, "row_cap": 120000}
+{"compatible_products": 7488, "event": "loop-open-control", "fixed": [false, false, false, false], "peak": 1536, "rows": 1536, "sign": 1}
+{"compatible_products": 7488, "event": "loop-open-control", "fixed": [false, false, false, false], "peak": 1536, "rows": 1536, "sign": -1}
+{"compatible_products": 1872, "event": "loop-open-control", "fixed": [false, false, false, true], "peak": 384, "rows": 384, "sign": 1}
+{"compatible_products": 1872, "event": "loop-open-control", "fixed": [false, false, false, true], "peak": 384, "rows": 384, "sign": -1}
+{"compatible_products": 1872, "event": "loop-open-control", "fixed": [false, false, true, false], "peak": 384, "rows": 384, "sign": 1}
+{"compatible_products": 1872, "event": "loop-open-control", "fixed": [false, false, true, false], "peak": 384, "rows": 384, "sign": -1}
+{"compatible_products": 468, "event": "loop-open-control", "fixed": [false, false, true, true], "peak": 96, "rows": 96, "sign": 1}
+{"compatible_products": 468, "event": "loop-open-control", "fixed": [false, false, true, true], "peak": 96, "rows": 96, "sign": -1}
+{"compatible_products": 1920, "event": "loop-open-control", "fixed": [false, true, false, false], "peak": 384, "rows": 384, "sign": 1}
+{"compatible_products": 1920, "event": "loop-open-control", "fixed": [false, true, false, false], "peak": 384, "rows": 384, "sign": -1}
+{"compatible_products": 480, "event": "loop-open-control", "fixed": [false, true, false, true], "peak": 96, "rows": 96, "sign": 1}
+{"compatible_products": 480, "event": "loop-open-control", "fixed": [false, true, false, true], "peak": 96, "rows": 96, "sign": -1}
+{"compatible_products": 480, "event": "loop-open-control", "fixed": [false, true, true, false], "peak": 96, "rows": 96, "sign": 1}
+{"compatible_products": 480, "event": "loop-open-control", "fixed": [false, true, true, false], "peak": 96, "rows": 96, "sign": -1}
+{"compatible_products": 120, "event": "loop-open-control", "fixed": [false, true, true, true], "peak": 24, "rows": 24, "sign": 1}
+{"compatible_products": 120, "event": "loop-open-control", "fixed": [false, true, true, true], "peak": 24, "rows": 24, "sign": -1}
+{"compatible_products": 2112, "event": "loop-open-control", "fixed": [true, false, false, false], "peak": 384, "rows": 384, "sign": 1}
+{"compatible_products": 2112, "event": "loop-open-control", "fixed": [true, false, false, false], "peak": 384, "rows": 384, "sign": -1}
+{"compatible_products": 528, "event": "loop-open-control", "fixed": [true, false, false, true], "peak": 96, "rows": 96, "sign": 1}
+{"compatible_products": 528, "event": "loop-open-control", "fixed": [true, false, false, true], "peak": 96, "rows": 96, "sign": -1}
+{"compatible_products": 528, "event": "loop-open-control", "fixed": [true, false, true, false], "peak": 96, "rows": 96, "sign": 1}
+{"compatible_products": 528, "event": "loop-open-control", "fixed": [true, false, true, false], "peak": 96, "rows": 96, "sign": -1}
+{"compatible_products": 132, "event": "loop-open-control", "fixed": [true, false, true, true], "peak": 24, "rows": 24, "sign": 1}
+{"compatible_products": 132, "event": "loop-open-control", "fixed": [true, false, true, true], "peak": 24, "rows": 24, "sign": -1}
+{"compatible_products": 576, "event": "loop-open-control", "fixed": [true, true, false, false], "peak": 96, "rows": 96, "sign": 1}
+{"compatible_products": 576, "event": "loop-open-control", "fixed": [true, true, false, false], "peak": 96, "rows": 96, "sign": -1}
+{"compatible_products": 144, "event": "loop-open-control", "fixed": [true, true, false, true], "peak": 24, "rows": 24, "sign": 1}
+{"compatible_products": 144, "event": "loop-open-control", "fixed": [true, true, false, true], "peak": 24, "rows": 24, "sign": -1}
+{"compatible_products": 144, "event": "loop-open-control", "fixed": [true, true, true, false], "peak": 24, "rows": 24, "sign": 1}
+{"compatible_products": 144, "event": "loop-open-control", "fixed": [true, true, true, false], "peak": 24, "rows": 24, "sign": -1}
+{"compatible_products": 28, "event": "loop-open-control", "fixed": [true, true, true, true], "peak": 4, "rows": 0, "sign": 1}
+{"compatible_products": 28, "event": "loop-open-control", "fixed": [true, true, true, true], "peak": 4, "rows": 0, "sign": -1}
+{"event": "loop-full-world-control", "result": {"full24_checks": 8, "literal_order_poison_differences": 8}}
+{"components": null, "divisor": 1147535055337323786928128, "event": "loop-word-control", "metadata": {"curvature_quarters": 0, "curvature_vertices": 8, "factors": 105, "frames": 16, "haar_divisor": 16698832846848, "initial_rows": 3940, "link_degrees": [[[0, 0], 4, true], [[0, 1], 4, true], [[0, 2], 2, false], [[0, 3], 2, false], [[1, 0], 4, false], [[1, 1], 4, true], [[1, 2], 2, false], [[1, 3], 2, false], [[2, 0], 4, false], [[2, 1], 4, false], [[2, 2], 2, false], [[2, 3], 2, false], [[3, 0], 4, false], [[3, 1], 4, false], [[3, 2], 2, false], [[3, 3], 2, false]], "multiplicity_factorial": 16}, "peak": 2688, "products": 38670, "value": "104978"}
+{"anchors": [[0, 0], [0, 0]], "components": [[2, 3], [2, 3]], "degrees": {"0": 8}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 306576, "largest_wedge_product": 36, "peak_single_polynomial_rows": 8}, "rows": 72}
+{"components": [[2, 3], [2, 3]], "divisor": 47813960639055157788672, "event": "loop-word-control", "metadata": {"curvature_quarters": 0, "curvature_vertices": 6, "factors": 90, "frames": 16, "haar_divisor": 1391569403904, "initial_rows": 3208, "link_degrees": [[[0, 0], 2, true], [[0, 1], 2, true], [[0, 2], 2, false], [[0, 3], 2, false], [[1, 0], 4, false], [[1, 1], 2, true], [[1, 2], 2, false], [[1, 3], 2, false], [[2, 0], 2, false], [[2, 1], 4, false], [[2, 2], 2, false], [[2, 3], 2, false], [[3, 0], 4, false], [[3, 1], 4, false], [[3, 2], 2, false], [[3, 3], 2, false]], "multiplicity_factorial": 8}, "peak": 1536, "products": 28202, "value": "52488"}
+{"anchors": [[0, 0], [0, 0]], "components": [[2, 2], [2, 2]], "degrees": {"0": 8}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 306576, "largest_wedge_product": 36, "peak_single_polynomial_rows": 8}, "rows": 72}
+{"components": [[2, 2], [2, 2]], "divisor": 143441881917165473366016, "event": "loop-word-control", "metadata": {"curvature_quarters": 0, "curvature_vertices": 6, "factors": 89, "frames": 16, "haar_divisor": 4174708211712, "initial_rows": 3452, "link_degrees": [[[0, 0], 2, true], [[0, 1], 2, true], [[0, 2], 4, false], [[1, 0], 4, false], [[1, 1], 2, true], [[1, 2], 2, false], [[1, 3], 2, false], [[2, 0], 2, false], [[2, 1], 4, false], [[2, 2], 2, false], [[2, 3], 2, false], [[3, 0], 4, false], [[3, 1], 4, false], [[3, 2], 2, false], [[3, 3], 2, false]], "multiplicity_factorial": 8}, "peak": 1536, "products": 28740, "value": "218700"}
+{"event": "degree6-moment-controls", "extracted_ast_sha256": "49bd9f7c665294a92e62d59a2b51a37fd964ad9be85c256834214bdaddf97c07", "multisets": 1716, "nonzero": 120, "original_moments_sha256": "353912a86f2d2ca402d0a5a45b47acb94c15521f6ea0b2ae3212beb730ba117d", "reverse_checks": 1716}

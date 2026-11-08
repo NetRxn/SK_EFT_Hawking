@@ -1,0 +1,11 @@
+2026-11-08 pre-target controls, no target assembly/contraction executed.
+The initial read-only-sandbox attempt could not create a temporary archive
+directory; it exited after local source controls at3.5221s, maxRSS56932KiB.
+An authorized sandbox-escalated retry created only temporary extracted code.
+Archive SHA d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48.
+The unchanged loop normalization control reproduced104978,2688peak rows,
+38670 compatible products. Then the new signed-Q control raised
+AttributeError: module 'legacy' has no attribute 'wedge_sign'.
+Terminal usage:3.5506s,maxRSS61804KiB,105indexedjoins/38671products.
+This is an adapter control API error, not a mathematical zero or cap failure.
+The revised control uses the original independent wedge_sign reference.

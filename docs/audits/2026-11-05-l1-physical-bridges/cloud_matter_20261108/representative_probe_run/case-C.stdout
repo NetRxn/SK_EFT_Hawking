@@ -1,0 +1,8 @@
+{"anchors": [[0, 0], [1, 0]], "components": [[0, 2], [0, 2]], "degrees": {"0": 6, "1": 2}, "event": "source-boundary", "factory": {"calls": 4608, "candidate_products": 131328, "largest_wedge_product": 240, "peak_single_polynomial_rows": 32}, "rows": 6948}
+{"case": "C", "event": "new-anchor-control", "fixture": "Spin4-0-1", "rows": 58}
+{"case": "C", "event": "new-anchor-control", "fixture": "Spin4-1-2", "rows": 62}
+{"case": "C", "event": "new-anchor-control", "fixture": "Spin4-2-3", "rows": 58}
+{"case": "C", "event": "new-anchor-control", "fixture": "Spin4-3-0", "rows": 114}
+{"case": "C", "event": "new-anchor-control", "fixture": "nonzero-key-0", "rows": 32}
+{"case": "C", "event": "new-anchor-control", "fixture": "nonzero-key-1", "rows": 32}
+{"case": "C", "event": "new-anchor-control", "fixture": "nonzero-key-2", "rows": 42}

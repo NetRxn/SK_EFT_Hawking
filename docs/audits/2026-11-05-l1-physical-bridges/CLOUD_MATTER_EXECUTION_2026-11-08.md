@@ -1,5 +1,7 @@
 # L1 cloud matter execution — 8 November 2026
 
+Latest follow-on evidence: [bounded probe measurements and the additional22-word diagonal result](cloud_matter_20261108/BOUNDED_PROBES_AND_DIAGONAL_RESULT.md). The numbered plan remains authoritative; its initial boundary below is historical. Six representative cases were measured without cap increases, and an independently replayed small reduction brings diagonal trace coverage to150of310 words. The160-word residual, active/mixed covariance blocks, physical matching and full propagation remain open. Existing publication owners retain their campaigns and local physics remains paused.
+
 This numbered execution plan extends W0–W4 of the existing [physical bridges roadmap](https://github.com/NetRxn/SK_EFT_Hawking/blob/c0a775c942fc62528fec2d0b645e4dfe858ae61c/docs/roadmaps/L1_Physical_Bridges_Roadmap.md), coordinated by [issue 121](https://github.com/NetRxn/SK_EFT_Hawking/issues/121), and consumes the [publication repair map](../2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md). It is not a new routing or finding ledger. Scientific acceptance remains open.
 
 ## Pins, scope and owners

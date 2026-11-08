@@ -1,5 +1,7 @@
 # Feasibility before expansion
 
+Latest bounded increment: [representative measurements and diagonal result](BOUNDED_PROBES_AND_DIAGONAL_RESULT.md). Six prospectively fixed probes now have actual wall/CPU/RSS/factory/join records: two individual contributions completed, four were incomplete under guards. A separately reviewed reduction completed22 more diagonal words, bringing known coverage to150of310. The full mixed channels, remaining160 diagonal words and larger lattices remain unadmitted. The older one-pilot/128-word boundary below is retained as the preceding checkpoint, not current coverage.
+
 John reports that earlier lattice simulations froze the laptop for days. Current authorization is short bounded cloud experiments and representation/reuse work only. Do not start full harder-channel traversals or larger lattice simulations before measured runtime,memory and representative scaling support admission. Local physics stays paused. No fast four-site channel is evidence of large-lattice feasibility.
 
 The completed package is exactly one changed-representation mixed pilot plus the128-word diagonaltrace subfamily; the full780/48 mixed traversals and full310diagonaltrace sum have not been launched. All original row/product/time caps remain. The old rowcapfailure stays unchanged as evidence.
