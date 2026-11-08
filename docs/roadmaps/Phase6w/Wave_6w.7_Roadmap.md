@@ -1,8 +1,8 @@
-# Wave 6w.7 — Bundle absorption + Stage-13 adversarial review GREEN
+# Wave 6w.7 — Historical bundle absorption; physical B2 OPEN BUILD
 
 **Phase:** 6w
-**Wave:** 6w.7 (D1/E1/E2 absorption + Stage-13 GREEN — Phase-6w closure wave)
-**Status:** ✅ SHIPPED 2026-05-26 PM. D7 spin-out triggered + bundle created + D1/E1/E2 cross-bridges added + self-conducted adversarial audit GREEN with 2 P5 anti-patterns caught and substantively remediated (no relabeling). Phase 6w substantively closed.
+**Wave:** 6w.7 (historical absorption/self-audit; current physical B2 remains open)
+**Current status — 2026-10-18:** D7 creation, source absorption and May26 self-audit are historical deliveries, not complete B2 or fresh independent Stage13 acceptance. The [forest-rank/exact-marginal construction](../../audits/2026-10-17-publication-substance-construction/B2_FOREST_RANK_EXACT_MARGINALS.md), with [full independent review](../../audits/2026-10-17-publication-substance-construction/reviews/B2_FOREST_RANK_EXACT_MARGINALS.md), is independently accepted manual mathematics: all-pairs finite-forest ranks, horizon<=max(1,n), and exact normalized marginals for local nonnegative factors with Z>0, preserving q^(|V|-scope) constants. The five-node initial2 witness needs five sweeps at diameter four. Native/physical tensor-readout/precision-complexity and genuine Chern remain BUILD. The old zero-open self-audit is its historical report, not current absence of findings.
 **Bundle target:** D1 + E1 + E2 + Stage-13 closure of all Phase 6w content
 **LoE:** ~2 sessions per Phase6w_Roadmap.md
 
@@ -56,16 +56,15 @@ For every theorem shipped across Waves 6w.1 - 6w.6:
 5. **Bundle-target identification (Invariant #14):** all PAPER_DRAFT_MAPPING rows added.
 6. **No private-repo leaks:** pre-commit hook clean on all commits.
 
-## Acceptance criteria (Wave 6w.7 + Phase 6w closure)
+## Historical delivery receipts and current completion boundary
 
 - ✅ D1 + E1 + E2 paragraphs added; all compile LaTeX-clean.
-- ✅ Self-conducted adversarial-review audit document written; ZERO
-  substantive findings open at audit close.
+- Historical self-audit reported zero open findings at its May26 close. Current full B2/native/physical/Chern requirements remain open; no fresh independent acceptance follows.
 - ✅ MEMORY closure entry written.
-- ✅ Phase 6w roadmap shows all 7 waves SHIPPED.
+- Historical roadmap marked seven source waves shipped; current scientific B2 completion is not established.
 - ✅ Full `lake build` clean; `validate.py
   --check citation_primary_sources_present` PASS.
-- ✅ Final commit + push to main.
+- Historical commit/push was reported by that delivery; no current commit/main/publication acceptance follows from this proposal.
 
 ## Cross-references
 

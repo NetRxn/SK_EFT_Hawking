@@ -2,7 +2,7 @@
 
 **Phase:** 6w (Classical Simulability & Quantum Advantage in Analog Hawking — Tensor-Network Substrate)
 **Wave:** 6w.2 (Mathlib-PR-quality substrate for BP on factor graphs)
-**Status:** ✅ SHIPPED 2026-05-26 PM (24 substantive theorems shipped across sub-sessions 2a/2b/2c/2d; build clean 8708 jobs; zero new axioms; zero sorries; key theorems verified kernel-only `[propext, Classical.choice, Quot.sound]`. Stage 13 deferred to Wave 6w.7 consolidated sweep.)
+**Current status — 2026-10-18:** genuine BP/rank source and historical May26 build/kernel receipts retained. The [forest-rank/exact-marginal construction](../../audits/2026-10-17-publication-substance-construction/B2_FOREST_RANK_EXACT_MARGINALS.md), with [full independent review](../../audits/2026-10-17-publication-substance-construction/reviews/B2_FOREST_RANK_EXACT_MARGINALS.md), is independently accepted manual mathematics: all-pairs finite-forest ranks, horizon<=max(1,n), and exact normalized marginals for local nonnegative factors with Z>0, preserving q^(|V|-scope) constants. The five-node initial2 witness needs five sweeps at diameter four. Native/physical tensor-readout/precision-complexity and genuine Chern remain BUILD. Old normalization/diameter targets below are corrected to actual current source; no new native execution is claimed.
 **Bundle target:** I1 substrate; later D7 candidate.
 **LoE:** ~3-4 sessions per Phase6w_Roadmap.md.
 
@@ -26,37 +26,14 @@ divergence between the BP marginal and the true marginal).
 
 ## Substantive deliverables
 
-1. **New Lean module** `lean/SKEFTHawking/BeliefPropagation.lean`:
-   - `FactorGraph` structure — bipartite factor graphs with finite
-     variable + factor index types, decidable incidence, finite-
-     alphabet state spaces.
-   - `BPMessages G X` — variable-to-factor and factor-to-variable
-     real-valued messages over a finite alphabet `X`.
-   - `bpVariableUpdate` — single round of variable-to-factor update
-     (canonical Yedidia-Freeman-Weiss 2003 formula).
-   - `bpFactorUpdate` — single round of factor-to-variable update.
-   - `bpUpdate` — combined single-pass iteration.
-   - `BPFixedPoint` predicate.
-   - `BPNormalized` predicate (sum-to-one normalization).
-   - **Substantive Theorem 1** `bp_variable_update_normalized_iff`:
-     a variable-to-factor message is normalized after update iff the
-     incoming factor messages are normalized (substantive iff
-     consuming finite-alphabet sum identities).
-   - **Substantive Theorem 2** `bp_iteration_normalized_preserved`:
-     under BP iteration starting from normalized messages, all
-     subsequent messages remain normalized.
-   - **Substantive Theorem 3** `bp_fixed_point_iff_two_iter_invariant`:
-     a normalized BP message is at a fixed point iff its two-step
-     iterate equals it.
-   - `BetheFreeEnergy : FactorGraph → BPMessages → ℝ` definition
-     (sum of per-variable entropies + per-factor energies).
-   - **Substantive Theorem 4** `bethe_free_energy_nonneg_on_uniform`:
-     the Bethe free energy is non-negative on the uniform-message
-     starting point (substantive consequence of log-sum-inequality).
-   - **Substantive Theorem 5** `bp_converges_on_trees_in_diameter_rounds`:
-     on a *tree* factor graph (no cycles), BP converges to a fixed
-     point in exactly `diameter(G)` rounds (substantive structural
-     theorem requiring tree induction).
+1. **Actual source and remaining native deliverables** `lean/SKEFTHawking/BeliefPropagation.lean`:
+   - Finite factor graph, ALL-pairs messages and synchronous unnormalized updates are actual source.
+   - Factor updates sum over complete assignments; scope locality is not encoded. Normalization predicates do not prove update normalization.
+   - `IsBPFixedPoint_iff_all_iterates_invariant` concerns ALL iterates; two-step recurrence alone is not sufficient.
+   - Update/belief positivity, factorization and Bethe-functional identities are genuine at their scope, not the old normalization/Bethe-saddle assertions.
+   - `bp_converges_on_ranked_acyclic` proves stabilization at sup(rank)+1 given a BPRankCert; the real star constructor is not an all-forest construction.
+   - The accepted manual all-pairs forest construction gives horizon<=max(1,n) and a five-node singleton/unitfactor/initial2 counterexample to diameter4 stabilization.
+   - Next implement native components/cardinality/path/certificate and local-factor normalized marginals with nonnegative weights, Z>0 and q^(|V|-scope) multiplicities. Literal q^|V| loops have no polynomial-in-graph-size guarantee.
 
 2. **Citation registration**:
    - YedidiaFreemanWeiss2003 (NIPS BP-Bethe paper) — primary anchor.
@@ -67,17 +44,9 @@ divergence between the BP marginal and the true marginal).
    - Add `BeliefPropagation` to root `SKEFTHawking.lean` imports.
    - `lake build SKEFTHawking.BeliefPropagation` clean.
 
-## Acceptance criteria (Wave 6w.2)
+## Current acceptance and historical source receipts
 
-- ✅ Five substantive theorems shipped (Theorems 1-5 above); each
-  uses non-trivial Lean infrastructure (Finset sums, decidable
-  predicates, tree induction).
-- ✅ Module builds clean; zero new project-local axioms; zero sorries.
-- ✅ Kernel-only axiom closures on every headline (`propext`,
-  `Classical.choice`, `Quot.sound`).
-- ✅ Primary sources cached per Invariant #11.
-- ✅ Preemptive-strengthening 5Q checklist applied; ruthless post-wave
-  audit applied.
+The [forest-rank/exact-marginal construction](../../audits/2026-10-17-publication-substance-construction/B2_FOREST_RANK_EXACT_MARGINALS.md), with [full independent review](../../audits/2026-10-17-publication-substance-construction/reviews/B2_FOREST_RANK_EXACT_MARGINALS.md), is independently accepted manual mathematics: all-pairs finite-forest ranks, horizon<=max(1,n), and exact normalized marginals for local nonnegative factors with Z>0, preserving q^(|V|-scope) constants. The five-node initial2 witness needs five sweeps at diameter four. Native/physical tensor-readout/precision-complexity and genuine Chern remain BUILD. Historical source build/kernel receipts remain preserved, not rerun. Existing no-new-axiom and fresh independent/native acceptance requirements remain. The old five-theorem completion checkbox is not current physical scientific completion.
 
 ## Stage-by-stage execution (multi-session)
 
