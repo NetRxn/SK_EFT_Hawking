@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "-B",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/codex_continuity.py",
+    "check",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-E2-current-M-all20-consumer-controls-root-20261021-r130.json"
+  ],
+  "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018",
+  "GIT_OPTIONAL_LOCKS": "0",
+  "started": "2026-10-21T23:01:45.970363+00:00",
+  "ended": "2026-10-21T23:01:46.426401+00:00",
+  "returncode": 1,
+  "stdout": "{\n  \"fresh\": false,\n  \"changed\": [\n    \"owned-files\"\n  ],\n  \"task\": \"publication-E2-current-M-all20-consumer-controls-root-20261021-r130\",\n  \"meaning\": \"Reconciliation required; lead must inspect current inputs and explicitly issue a new revision.\"\n}\n",
+  "stderr": "",
+  "raw_directory": "/private/tmp/publication-M130-FINAL-0hip627_",
+  "scope": "ACTUAL20_STRUCTURAL_CONSUMER_CAMPAIGNS_RESTORED_PENDING_WHOLE_SCIENTIFIC_CAUSE_REVIEW",
+  "freeze": true
+}

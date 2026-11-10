@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-22T14:00:47.092180+00:00",
+  "scope": "NONRECURSIVE_AUTHOR_HANDOFF_NO_SCIENTIFIC_ACCEPTANCE",
+  "files": {
+    "FIRST.json": {
+      "bytes": 1385,
+      "sha256": "295d286823984948f08ecdb28fc788955c324284a397a7a44c9514d69f929ed3"
+    },
+    "evidence.json": {
+      "bytes": 1175,
+      "sha256": "cf04de2f7c3ece1459e0619d7ae634296527f8c72ec31a1d58ff0bfd7dbc3616"
+    },
+    "support-obligations.json": {
+      "bytes": 55832,
+      "sha256": "a74830385dc803181c2d8cfb6028e9cf5d321fad41b9ce10c01df07d751d28eb"
+    },
+    "MODEL.md": {
+      "bytes": 900,
+      "sha256": "046ecc24e2206956af9f5af139ecbbb8f800ea042f92ba2d317d8391212f49d0"
+    },
+    "source-inventory.json": {
+      "bytes": 26761,
+      "sha256": "ddf7a6994734df063898a6df74d95db400825997a8d6858a2b4a15bbfda5ea94"
+    },
+    "REPORT.md": {
+      "bytes": 3681,
+      "sha256": "adef0e23a24b530dd95b7788f62054fd5ec810fcbc4b19232acd8d5607f94275"
+    },
+    "legacy-identity.json": {
+      "bytes": 2992,
+      "sha256": "21982ad8284f0692252b5dbbf9520d7ee9dabe42c30376b9f63fab2aa948392b"
+    },
+    "population-draft.json": {
+      "bytes": 612998,
+      "sha256": "b5958e1c19cbebd705e7397ea617966325139f0468f4f3dfa90cec5b629e6308"
+    },
+    "commands.json": {
+      "bytes": 1018,
+      "sha256": "92da577052a47aa386424ad8d16eb48e49db2d89904d81dd64b06d260c8786fb"
+    },
+    "CONSTRUCTION.md": {
+      "bytes": 1922,
+      "sha256": "444015794e1bfd31f5c0765671156276e722d58d2fbc10a764381c3288f786eb"
+    }
+  }
+}

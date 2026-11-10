@@ -1,0 +1,299 @@
+{
+  "observed_at": "2026-10-22T14:03:28.680Z",
+  "main": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+  "branches": [
+    {
+      "name": "agent/adr-008-codex-lean-slots",
+      "sha": "6fe4857129186af877d8a6e8a8ef9c2c6b794063"
+    },
+    {
+      "name": "agent/adr-008-codex-lean-slots-scoped",
+      "sha": "37b75716af01dd4094c41ab3eccf58d1da434e94"
+    },
+    {
+      "name": "agent/adr-008-paired-slots",
+      "sha": "7b31de7cc02063c49800fe056233a0e69eca4d31"
+    },
+    {
+      "name": "agent/adr-008-quarantine-doctor",
+      "sha": "fc5e8609af4a030b0862692f43049c721162e52d"
+    },
+    {
+      "name": "codex/checkpoint-local-depth-obstruction-20261015",
+      "sha": "d8399a9d3737d3fa07843cfdbdfb58815758a2a4"
+    },
+    {
+      "name": "codex/checkpoint-local-depth-witness-20261015",
+      "sha": "a6ecd5d423eddc44fb02aba89ded04d5493ed8a8"
+    },
+    {
+      "name": "codex/checkpoint-qutrit-history-readout-20261015",
+      "sha": "db9580e8afd8307efe3fab9600ab48316b0fc0d8"
+    },
+    {
+      "name": "codex/checkpoint-qutrit-history-transfer-20261015",
+      "sha": "11c5a93d5bca5138f620e7038e9a6580ce8bc2c3"
+    },
+    {
+      "name": "codex/checkpoint-qutrit-positive-history-20261015",
+      "sha": "c3f02f833607c3b98cffaceb4ba2c2fa639c5425"
+    },
+    {
+      "name": "codex/checkpoint-readout-foundations-runner-20261015",
+      "sha": "9e85b93ad8bad56103db9ef55c72eee838ae124f"
+    },
+    {
+      "name": "codex/checkpoint-retained-qutrit-consumer-20261015",
+      "sha": "e4a6ef00881a31adffccfef6361a17a213e6951e"
+    },
+    {
+      "name": "codex/continuity-admission",
+      "sha": "b25938f5788fe3fd9528cf7358ad5564f3884faa"
+    },
+    {
+      "name": "codex/e1-abstract-20261015",
+      "sha": "6e2642ece56abbbbd9da43f7bb29bd20633c013d"
+    },
+    {
+      "name": "codex/e1-attenuation-recovery-20261015",
+      "sha": "c1593a554a6b7b6eacb4ba9cdb51e7c2fa5c58d5"
+    },
+    {
+      "name": "codex/frontier-coherent-readout-20261014",
+      "sha": "177117cdb6c8a52410823b7f3efd33f985ec80d9"
+    },
+    {
+      "name": "codex/frontier-diagonal-readout-20261014",
+      "sha": "481bb79adbb0b4500e4e1e359b220061c9ef8680"
+    },
+    {
+      "name": "codex/frontier-memory-controls-integration-20261014",
+      "sha": "046a3387373ba14af8247b9b1a5264293a63997a"
+    },
+    {
+      "name": "codex/frontier-memory-controls-source-20261014",
+      "sha": "9a4d9c0d1869120a81bf4385fdf7c6a45dcdeb23"
+    },
+    {
+      "name": "codex/frontier-operational-compatibility-source-20261014",
+      "sha": "19aea18bd02b1579d5527b54decbe47511229875"
+    },
+    {
+      "name": "codex/frontier-public-baseline-20260913",
+      "sha": "3505b2f8afa4b47ef34b02771983dc8083a1c7fa"
+    },
+    {
+      "name": "codex/frontier-public-checkpoint-20261014",
+      "sha": "729fe41212e8cbe1a35623ca351496f01058d248"
+    },
+    {
+      "name": "codex/frontier-publication-integration-20261015",
+      "sha": "996c84324ebf939af8854e5226771de344b452d9"
+    },
+    {
+      "name": "codex/frontier-readout-checkpoint-20261014",
+      "sha": "8191023d71156ae96a307a94e62e244f1253936c"
+    },
+    {
+      "name": "codex/frontier-readout-integration-20261014",
+      "sha": "8191023d71156ae96a307a94e62e244f1253936c"
+    },
+    {
+      "name": "codex/frontier-thermal-phase-foundation-20261014",
+      "sha": "0f69a42c8cd3ed0b6bb42dd263f14afc4865c108"
+    },
+    {
+      "name": "codex/memory-cpu-reference",
+      "sha": "3dc09b9bbe7c81c028ca0fc369f5a770eddd77b4"
+    },
+    {
+      "name": "codex/memory-diagonal-bridge",
+      "sha": "c32197352de5e371cdf94a2a70388792dc927fdd"
+    },
+    {
+      "name": "codex/memory-m1-proof",
+      "sha": "d2241d6a64fc8a5a2fa51896ada5bcd96f77c8ea"
+    },
+    {
+      "name": "codex/memory-m2-proof",
+      "sha": "dbeb59464fe486e08f288b086770112833b2624b"
+    },
+    {
+      "name": "codex/memory-process-clocks",
+      "sha": "b3b43f769b23d315fe61d749b145963b51ac457f"
+    },
+    {
+      "name": "codex/memory-process-integration",
+      "sha": "00c7cc80cbed788e0252afa58fa3543fad1552ef"
+    },
+    {
+      "name": "codex/memory-reset-bridge",
+      "sha": "2fe2707102c34f023a84fd5e0b245414d8e7f45d"
+    },
+    {
+      "name": "codex/memory-robustness-reference",
+      "sha": "978b0e3ca9d4a245fa5a426b0aaa8b96bc7b849b"
+    },
+    {
+      "name": "codex/publication-b2-main-20261019",
+      "sha": "d00ea19e311d334ee953bce25244495a66caafcb"
+    },
+    {
+      "name": "codex/publication-d1-d5-scope-20261017",
+      "sha": "d164ebf77208bdfd690cd73ded4e9f81a85409d8"
+    },
+    {
+      "name": "codex/publication-documentary-main-20261018",
+      "sha": "3fdd3f0960ba30ba95fadf959d9bef3a300fdaf0"
+    },
+    {
+      "name": "codex/publication-g4-absence-20261019",
+      "sha": "728f7c54d94491de795134885afa9c54e78400c2"
+    },
+    {
+      "name": "codex/publication-njl-integration-20261019",
+      "sha": "b92e8db5c326262a5259e7a51be6bb9f8752e75a"
+    },
+    {
+      "name": "codex/publication-worktree-portability-20261019",
+      "sha": "98c511b23d525938e6cd00f9045acb258fc308c1"
+    },
+    {
+      "name": "dependabot/cargo/rust/rand_chacha-0.10.0",
+      "sha": "fd62e86f694fd58e75ad41bfa827f7d03dd3d621"
+    },
+    {
+      "name": "dependabot/cargo/rust/rand-0.10.2",
+      "sha": "3cc6a199a78177801ddce51d1e22955e9b728660"
+    },
+    {
+      "name": "dependabot/uv/anyio-4.14.2",
+      "sha": "3217af249b3885e7d321ba18a0e8c862a3f4a043"
+    },
+    {
+      "name": "dependabot/uv/datastar-py-1.0.2",
+      "sha": "1fd533ccd9d54c12838b8eccc3d731bf9f6b0052"
+    },
+    {
+      "name": "dependabot/uv/mlx-cuda--gte-0.32.0",
+      "sha": "06ddcdf4339234fa39edc3169a7e5c6920fad1b1"
+    },
+    {
+      "name": "dependabot/uv/psycopg-binary--gte-3.3.4",
+      "sha": "5eb91da4167897c28093995f62b8d5c81fd9f749"
+    },
+    {
+      "name": "dependabot/uv/python-routine-80693fb4e3",
+      "sha": "97c0a9cb5c9710d2db9a8885a37e782b2b889391"
+    },
+    {
+      "name": "dependabot/uv/rust/maturin-gte-1.15.0-and-lt-2",
+      "sha": "c9bc1243d46855d734e0173f2b146f9645ee471e"
+    },
+    {
+      "name": "dependabot/uv/tornado-6.5.9",
+      "sha": "8874259c1aacf8ee9a99ccf9fcd308e98e27225e"
+    },
+    {
+      "name": "dependabot/uv/uv-0462f47e4d",
+      "sha": "a217275654ca29999574f355385b3388a46fe44b"
+    },
+    {
+      "name": "dependabot/uv/werkzeug-3.1.9",
+      "sha": "3c5c4cd97c0beaea51dabbbeb3e790d56942d419"
+    },
+    {
+      "name": "design/adr018-chat-slot-client",
+      "sha": "469e4e47607b7d74da0b9b3c81dc56d04c3dd24f"
+    },
+    {
+      "name": "feature/knowledge-graph-phase1",
+      "sha": "ea9774516ac59b9d4b5c549c452a9f4e206bb7f1"
+    },
+    {
+      "name": "feature/phase3-wave1-1c-1e",
+      "sha": "f849b706c99b41675f033634ff489dbdbe1c857b"
+    },
+    {
+      "name": "feature/phase3-wave2-wkb",
+      "sha": "1ee42f018a65da4aec7e8bd7accad639e3861142"
+    },
+    {
+      "name": "feature/phase4-wave1",
+      "sha": "ecc555dff8614f940b2de8d60fa7f2a2bbdd21b6"
+    },
+    {
+      "name": "feature/wave3-adw-gap-equation",
+      "sha": "4df40a96a52c3f08f009948c801023a4af43d693"
+    },
+    {
+      "name": "implementation/adr018-chat-slot-client",
+      "sha": "4ab7aa89463377dfa3f0b43a4e13f455b0dc26fd"
+    },
+    {
+      "name": "lean-4.29-upgrade",
+      "sha": "3d2489b5ef768a45180523ff8a726ce140edf7b2"
+    },
+    {
+      "name": "main",
+      "sha": "ce194cdc4bf939b108c17edc9530a7f0a14565f9"
+    }
+  ],
+  "prs": [
+    {
+      "number": 82,
+      "url": "https://github.com/NetRxn/SK_EFT_Hawking/pull/82",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "head": "codex/frontier-public-baseline-20260913",
+      "base": "main",
+      "mergeable": true,
+      "title": "Integrate finite quantum histories and frontier substrate"
+    },
+    {
+      "number": 91,
+      "url": "https://github.com/NetRxn/SK_EFT_Hawking/pull/91",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "head": "codex/publication-d1-d5-scope-20261017",
+      "base": "main",
+      "mergeable": true,
+      "title": "Correct publication claims and notebook checkout handling"
+    },
+    {
+      "number": 93,
+      "url": "https://github.com/NetRxn/SK_EFT_Hawking/pull/93",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "head": "codex/publication-documentary-main-20261018",
+      "base": "main",
+      "mergeable": true,
+      "title": "Document publication repair ownership and bounded result status"
+    },
+    {
+      "number": 94,
+      "url": "https://github.com/NetRxn/SK_EFT_Hawking/pull/94",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "head": "codex/publication-njl-integration-20261019",
+      "base": "main",
+      "mergeable": true,
+      "title": "Repair uncapped NJL roots and prove cutoff and bracket bounds"
+    },
+    {
+      "number": 97,
+      "url": "https://github.com/NetRxn/SK_EFT_Hawking/pull/97",
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "head": "codex/publication-b2-main-20261019",
+      "base": "main",
+      "mergeable": true,
+      "title": "Prove finite forest BP stabilization on the full message carrier"
+    }
+  ]
+}

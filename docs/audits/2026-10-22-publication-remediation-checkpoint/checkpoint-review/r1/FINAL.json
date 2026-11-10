@@ -1,0 +1,35 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "-B",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/codex_continuity.py",
+    "check",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-wrapup-checkpoint-whole-review-20261022-r1.json"
+  ],
+  "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-resume-checkpoint-20261022",
+  "environment_override": {
+    "GIT_OPTIONAL_LOCKS": "0"
+  },
+  "start": "2026-10-22T14:34:37.153389+00:00",
+  "end": "2026-10-22T14:34:37.424961+00:00",
+  "duration_ns": 271470458,
+  "returncode": 1,
+  "raw_directory": "/private/tmp/publication-wrapup-review-FINAL-2zr0y_t7",
+  "stdout_base64": "ewogICJmcmVzaCI6IGZhbHNlLAogICJjaGFuZ2VkIjogWwogICAgIm93bmVkLWZpbGVzIgogIF0sCiAgInRhc2siOiAicHVibGljYXRpb24td3JhcHVwLWNoZWNrcG9pbnQtd2hvbGUtcmV2aWV3LTIwMjYxMDIyLXIxIiwKICAibWVhbmluZyI6ICJSZWNvbmNpbGlhdGlvbiByZXF1aXJlZDsgbGVhZCBtdXN0IGluc3BlY3QgY3VycmVudCBpbnB1dHMgYW5kIGV4cGxpY2l0bHkgaXNzdWUgYSBuZXcgcmV2aXNpb24uIgp9Cg==",
+  "stderr_base64": "",
+  "stdout": "{\n  \"fresh\": false,\n  \"changed\": [\n    \"owned-files\"\n  ],\n  \"task\": \"publication-wrapup-checkpoint-whole-review-20261022-r1\",\n  \"meaning\": \"Reconciliation required; lead must inspect current inputs and explicitly issue a new revision.\"\n}\n",
+  "stderr": "",
+  "actual_interpretation_after_raw_capture": {
+    "fresh": false,
+    "changed": [
+      "owned-files"
+    ],
+    "task": "publication-wrapup-checkpoint-whole-review-20261022-r1",
+    "meaning": "Reconciliation required; lead must inspect current inputs and explicitly issue a new revision."
+  },
+  "preterminal_manifest_sha256": "9c7469a02186856167d04c660d08f857a9e7a69f180ae0d51fa12e4455ce6db9",
+  "verdict": "REQUEST_CHANGES_DOCUMENTARY_MINOR_ONE",
+  "finding": "CHECKPOINT-MINOR-1 remains OPEN; ROOT documentary repair and fresh whole revised-composition review required. No science/source/runtime acceptance.",
+  "freeze": true,
+  "protocol": "ONE actual canonical FINAL; original separate raw channels/exit/argv/cwd/start/end durable before interpretation. Exclusive FINAL is last owned write; no postFINAL filesystem observer/replay/amendment."
+}

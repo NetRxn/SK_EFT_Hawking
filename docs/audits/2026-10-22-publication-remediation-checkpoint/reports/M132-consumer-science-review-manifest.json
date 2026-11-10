@@ -1,0 +1,59 @@
+{
+  "task": "publication-E2-M130-whole-actual-consumer-scientific-review-20261021-r132",
+  "verdict": "ACCEPT_WHOLE_ACTUAL_M130_CONSUMER_SOURCE_AND_BOUNDED_SCIENCE_WITH_MINOR_OBSERVER_METADATA_FINDING",
+  "scope": "All20 actual intended source sensitivities and original healthy/restored/full-endpoint bounded numerical/API/marker evidence; one merited MINOR observer metadata remedy remains ROOT-owned; no physical/formal/device/calibrated-band/output/gate/closure/main/publication acceptance",
+  "mandatory_findings": [],
+  "minor_findings": [
+    {
+      "id": "M132-MINOR-1",
+      "severity": "MINOR",
+      "mandatory_scientific_source_finding": false,
+      "location": "M130 evidence.json actual51_failures_unjudged[*].actual_terminal.not_observed",
+      "count": 51,
+      "problem": "ROOT finalizer assigns terminal=expected prospective_terminal and copies it as actual_terminal, retaining not_observed:true. Labelled actual metadata contradicts actual XML terminal observation; original prospective plan itself is correctly historical and must stay unchanged.",
+      "impact": "Observer provenance clarity; all original XML/body/source terminals independently reconcile and all51 bounded causes remain valid. No scientific rerun or source restoration defect.",
+      "source_mechanism": "/private/tmp/publication-M130-actual-terminal-finalize-root-20261021.py: actual_terminal=terminal",
+      "remedy": "ROOT should produce a new immutable derivative/correction receipt from the original62XML: parse actual terminal path/line/kind and bind source SHA/line; label observed status accurately, separately retain original prospective reference. Preserve frozen M130 evidence/plan/raw/XML/manifests/FINAL. Retain the minor metadata fix in-session rather than silently treating it as fixed.",
+      "reviewer_changed_originals": false,
+      "source_line_number": 51
+    }
+  ],
+  "artifacts": {
+    "FIRST.json": {
+      "sha256": "55ee61fdb77e3520c006bee574947a8cbc490dafb4d7f404a103cc48988d6788",
+      "bytes": 1901
+    },
+    "MODEL.md": {
+      "sha256": "6798eeda3d25268f9ba573310f85a3765f8842475a93d92419de7c4b9a56b4bc",
+      "bytes": 853
+    },
+    "REPORT.md": {
+      "sha256": "38edaf76a27dfdb2ade327af050afb512021acbdcfc8f04649c1773e7fa03aae",
+      "bytes": 34024
+    },
+    "commands.json": {
+      "sha256": "fb5c85bbca002efd8e97c9694be2097f92deba1649bd67ed34c80b1af0b40ac6",
+      "bytes": 6250
+    },
+    "evidence.json": {
+      "sha256": "b556e9727f8d6d9d719d16d441fb88d4382988213ba8f77d573273a75136588a",
+      "bytes": 10859554
+    }
+  },
+  "nonrecursive": true,
+  "excluded": [
+    "manifest.json",
+    "FINAL.json"
+  ],
+  "preseal_currentness": {
+    "at": "2026-10-21T23:18:27.781906+00:00",
+    "fixed_known_state_checks": 20796,
+    "changed": [],
+    "all276pins202ROOTseals20111sourceadmin31heldrefs23owners4indexes170knownrefs_exact": true,
+    "all51original_bodies38numeric13other_causes169companion_roles_exact": true,
+    "all20source_restoration_and_known_journal_cleanup": true,
+    "original_root_FIRST_FINAL_and_reviewer_FIRST_raw_exact": true,
+    "no_root_census_fresh_native_lease_or_scientific_rerun_claim": true
+  },
+  "terminal_protocol": "All five preterminal artifacts sealed before sole actual canonicalFINAL. Original separate rawrc/stdout/stderr/invocation/times saved before interpretation; onlyFINAL afterward thenfreeze/no postobservers"
+}
