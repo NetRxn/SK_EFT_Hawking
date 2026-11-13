@@ -22,6 +22,7 @@ Lean cross-reference: ``GravitationalWaves.LigoSatisfied``,
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 
 from src.core.constants import GW_PARAMS
 from src.core.formulas import (
@@ -78,21 +79,40 @@ def chi_vest_window_compatible_with_ligo(
 ) -> tuple[float, float]:
     """Closed-form GW170817-compatible χ_vest window.
 
-    Returns ``[(1 - cap)², (1 + cap)²]``: the window of χ_vest values
-    inside which the LIGO bound is satisfied.
+    The exact nonnegative preimage is
+    ``[max(0, 1 - cap)², (1 + cap)²]``.
+    Returned endpoints are floating-point approximations. For caps below
+    one, the exact width is ``4 * cap``; subtracting rounded endpoints
+    near unity loses relative precision.
 
     Parameters
     ----------
     cap : float, optional
-        Symmetric two-sided cap. Default: GW170817 cap from constants.
+        Finite, nonnegative two-sided cap. Default: GW170817 cap from constants.
 
     Returns
     -------
     tuple
-        (chi_lo, chi_hi) — the GW170817-compatible window.
+        (chi_lo, chi_hi) — the rounded GW170817-compatible window.
+
+    Raises
+    ------
+    ValueError
+        If the cap is negative or nonfinite.
+    OverflowError
+        If the squared upper endpoint exceeds floating-point range.
     """
-    tol = cap if cap is not None else GW_PARAMS["C_GW_TWO_SIDED_CAP"]
-    return ((1.0 - tol) ** 2, (1.0 + tol) ** 2)
+    tol = float(cap if cap is not None else GW_PARAMS["C_GW_TWO_SIDED_CAP"])
+    if not math.isfinite(tol) or tol < 0:
+        raise ValueError("cap must be finite and nonnegative")
+    upper = math.fsum((1.0, 2.0 * tol, tol ** 2))
+    if tol >= 1.0:
+        lower = 0.0
+    elif tol <= 0.5:
+        lower = math.fsum((1.0, -2.0 * tol, tol ** 2))
+    else:
+        lower = (1.0 - tol) ** 2
+    return lower, upper
 
 
 def ligo_falsification_summary() -> dict:

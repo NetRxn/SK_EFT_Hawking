@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "-B",
+    "/tmp/d1-canonical-operating-point-probe-r1.py"
+  ],
+  "rc": 0,
+  "stderr": "",
+  "source_scope": "Actual existing pure producers; native/network/process calls fail closed"
+}

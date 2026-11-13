@@ -1,0 +1,58 @@
+{
+  "review": "independent source/math/primary-document review",
+  "reviewed_at_utc": "2026-11-05T23:17:23.162027+00:00",
+  "verdict": "BLOCK",
+  "proposal_path": "/tmp/l1-source-docs-proposal-20261105.lean",
+  "proposal_sha256": "695e955a1e7d90db84969dd0677bdb8da3dccc327b4f4d4e90926571aeff3fba",
+  "base_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+  "preservation": {
+    "verdict": "PASS",
+    "all_non_block_comment_segments_byte_identical": true,
+    "non_block_comment_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+    "block_comments": 48,
+    "changed_block_comments": 9,
+    "manifest_operations": 17,
+    "manifest_reconstructs_proposal": true,
+    "imports_statements_proofs_values_API_unchanged": true
+  },
+  "required_corrections": [
+    {
+      "id": "R1",
+      "severity": "minor",
+      "location": "§3 introductory block comment, proposal lines245-246",
+      "observed": "Still says chi is pinned within `~3e-15` of unity.",
+      "required": "Replace this remaining neighborhood statement with the exact squared-endpoint interval and susceptibility offsets -2tau+tau² and +2tau+tau², approximately ±2tau. Strengthen the lexical control to tolerate whitespace and Markdown backticks so this occurrence is checked.",
+      "reason": "The new1.2 documentation repair remains incomplete despite the summary fix."
+    },
+    {
+      "id": "R2",
+      "severity": "minor",
+      "location": "overview RPA code locator, proposal line19",
+      "observed": "VestigialSusceptibility.chi_RPA omits W6Ext.",
+      "required": "Use VestigialSusceptibility.W6Ext.chi_RPA for the actual declaration locator.",
+      "reason": "Actual source namespace and typed dependency record name SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA."
+    }
+  ],
+  "Abbott": {
+    "actual_pdf": "Lit-Search/Phase-6a/primary-sources/Abbott2017GW170817.pdf",
+    "scope_read": "Printed page6 complete §4intro and §4.1 including top-right continuation, visually inspected rendered actual PDF",
+    "verdict": "PASS",
+    "facts": [
+      "Equation1: -3e-15 <= Delta v/v_EM <= +7e-16, Delta v=v_GW-v_EM",
+      "D=26Mpc is lower90% luminosity-distance credible limit",
+      "Upper limit assumes simultaneous emission and attributes +1.74±0.05s lag to faster GW travel",
+      "Lower limit assumes SGRB emitted10s after GW",
+      "Alternative (-100s,1000s) emission window broadens allowed velocity range by about2 orders on either side",
+      "3e-15 symmetric envelope conservatively contains source asymmetric interval; it is adopted, not a literal symmetric source Eq1"
+    ]
+  },
+  "mathematical_scope": {
+    "H": "P2 implies P3 at fixed tau<1/2; nonnegative-carrier interval gives positivity because(1-tau)^2>0. Quarter passesP1,failsP2/P3; no independent-conjunct necessity.",
+    "interval": "[(1-tau)^2,(1+tau)^2]; signed offsets -2tau+tau²,+2tau+tau²; width4tau=1.2e-14; tau is speed tolerance.",
+    "correction": "Real product; positive-real-omega iff; real100 probe, assumed abs gamma<=1e-30 gives product<=1e-28. No physicalHz,GammaH,or total-deviation match follows.",
+    "physical_BUILD": "Preserved and not discharged; descriptions scoped to this module."
+  },
+  "native_evidence": "NOT RUN by this read-only reviewer. No MCP, build, controller, process control, Git mutation or notebook/source writes. Parent-reported earlier baseline build is not acceptance of this exact proposal.",
+  "optional_same_scope_cleanup": "Absolute-bound doc first line says bounded by |gamma|*omega though omega unrestricted; align it with actual |gamma|*|omega| statement. Existing half-decade terminology for[0.1,10] is also misleading; avoid if touching those comments.",
+  "memory_used": "MEMORY.md:380-383 for scoped evidence and preservation boundary only; all source/math/primary conclusions freshly checked."
+}

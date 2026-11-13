@@ -102,7 +102,7 @@ population must too: enumerate by finding the notebooks, not by listing a direct
 `notebook_lib.py check docs/dev-loops/Phase6BC` now reports the live shard size and a stale-FRONTIER
 warning. Before, it reported the INDEX absent and advised `notebook new` over a live loop.
 
-### Why this finding is NOT closed, and why its `Verify` cannot pass
+## Why this finding is NOT closed, and why its `Verify` cannot pass
 
 The declared `Verify` asserts that `LAB_NOTEBOOK_INDEX.md` **exists inside a fresh worktree**. Re-run
 after the fix: still exit 1, and it will stay that way. Only un-ignoring `**/LAB_NOTEBOOK*.md` could

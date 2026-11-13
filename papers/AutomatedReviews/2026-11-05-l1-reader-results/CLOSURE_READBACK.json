@@ -1,0 +1,10 @@
+{
+  "finding_id": "review:2026-11-05-l1-reader-results:L1:1.1",
+  "repair_commit": "7b963cc29",
+  "prior_records": 1261,
+  "current_records": 1262,
+  "all_prior_records_identical": true,
+  "enforced_original_verify_exit_code": 0,
+  "source_comment_1_2_open": true,
+  "scientific_blockers_unchanged": true
+}

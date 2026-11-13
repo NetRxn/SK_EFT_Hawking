@@ -1,0 +1,29 @@
+{
+  "sentences": 151,
+  "prior_records_preserved": 69,
+  "prior_followups_preserved": 5,
+  "all_quote_bindings_independently_recomputed": true,
+  "source_and_render_reviews": "scoped ACCEPT with original holds",
+  "auto_closures": 0,
+  "canonical_finding_closures": 0,
+  "prior_audit_prefix_exact": true,
+  "prose_state_preimage": "absent",
+  "new_prose_state_sentence_human_overrides": 0,
+  "remaining_blockers": [
+    "L1-H1-endpoint-attribution",
+    "L1-B3-physical-normalization",
+    "L1-physical-dynamics-transport",
+    "L1-fix-propagation"
+  ],
+  "ingestion": {
+    "ok": true,
+    "paper": "L1",
+    "reviewer_version": "claims-reviewer-v2",
+    "sentences_in_run": 151,
+    "tombstoned_sentences": [],
+    "tombstoned_count": 0,
+    "rewrite_candidates": [],
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates_for_supersession": 3
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "decision": "ACCEPT_ACTUAL_SOURCE_INTERFACE_REPAIR_AND_NARROW_CLOSURE",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-source-production-review-r1.json",
+  "head": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+  "recommended_closure_only": "review:2026-11-06-d8-source-reconciliation:D1:1",
+  "closure_written": false,
+  "original_findings_preserved": 1853,
+  "original_fields_preserved": [
+    "id",
+    "severity",
+    "status",
+    "Gate(meta.blocks)"
+  ],
+  "added_findings": [
+    "review:2026-11-06-d8-source-reconciliation:D1:1"
+  ],
+  "ledger_sha256": "8b5d2a79008b43ca17276316cb5c89ca0b7395581675a42c633fc2ae17daa58d",
+  "all10applied_postimages_match": true,
+  "only_sidecar_variation": "generated_at=2026-11-06T18:26:42+00:00",
+  "independent_actual_json_pytest": {
+    "rc": 0,
+    "passed": 1,
+    "seconds": 0.19
+  },
+  "independent_full_d1_uv_rerun": {
+    "rc": 2,
+    "scope": "UV cache sandbox permission failure before Python assertions; no production source failure inferred; no retry"
+  },
+  "root_actual_control_returncodes": {
+    "json-positive": 0,
+    "json-real-regression": 1,
+    "json-restored": 0,
+    "d1-declared-positive": 0,
+    "d1-emitted-narrative-fault": 1,
+    "d1-declared-restored": 0,
+    "d8-human-pending": 1,
+    "d8-figures-still-owed": 1,
+    "actual-json-cli": 0,
+    "actual-latex-cli": 0,
+    "canonical-source-register-current": 0
+  },
+  "all_control_raw_stdout_stderr_match": true,
+  "raw15tests": {
+    "passed": 15,
+    "seconds": 0.27,
+    "stdout_sha256": "7639c4ed0a2ed22fce7e4e1386776a89779938e35b2155d151dde3aba64c1f01"
+  },
+  "generator_restored_sha256": "81e7a07a6fdb2a9b099ea55acaa75ee9528a1c289705869a44cb5a2f910f8716",
+  "strict_claims_schema_errors": [],
+  "actual_canonical_register_current": true,
+  "archive_entries": 19,
+  "all_archive_entries_byte_exact": true,
+  "archive_contains_pdf": false,
+  "custody_invalid_abstract_sha256": "ed7651d93abfb903101da49638443e5c5f746f8f49b4d3459b00ef9ed237cbc2",
+  "custody_pdf_sha256": "4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e",
+  "old_abstract_alias_absent": true,
+  "original_d1_1_1_status": "open",
+  "original_d8_1_4_status": "open/candidate; actual human confirmation pending",
+  "d8_figures": "actual guard RED; scientific review owed",
+  "native_and_full_tree": "outside scope; no acceptance",
+  "initial_packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "report_sha256": "f8e32fb0ba048e6ea66246f5652794224fb1ba1b075b5bb6da6daef92e1bf167"
+}

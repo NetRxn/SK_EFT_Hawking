@@ -1,0 +1,49 @@
+{
+  "base": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+  "parent": "455358440ab0c16dee043de0d574eff13dec7a78",
+  "donor": "1805e33581cb81229e8568c450875e454d0afdd9",
+  "source_hashes": {
+    "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62",
+    "papers/L1/bundle_metadata.json": "889dfeff967b251b66dbf2092809bd0b1322652bb06f226bded9482f796cdb30",
+    "papers/L1/paper_draft.tex": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+    "scripts/review_figures.py": "9426060ca6c1721e8f940418e0c969dc9fd6824295c3605740712c38b03db752",
+    "src/core/formulas.py": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9",
+    "src/core/provenance.py": "b9517b3397ec691246cd45b31025462d9079909245c8753b27c6586cab919565",
+    "src/core/visualizations.py": "d723a9bacc93bac9e3b76010b201a3a718b5c55acbff320ca44f5b5496202e6d",
+    "src/gravitational_waves/ligo_constraint_check.py": "c889cee0bb5b2e4faf219d47ce93b811c66d531876e62b96ffabb4d194b3952c",
+    "tests/test_gravitational_waves.py": "d7ea13b44e41d36327fa99699b02e96290fa40985c4a1b6aafb9a85729d9d38d"
+  },
+  "metadata_changed_claims": [
+    "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+    "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+    "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+    "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+    "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+    "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+    "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+    "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+    "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14"
+  ],
+  "all_other_L1_metadata_preserved": true,
+  "test_before": {
+    "failed": 26,
+    "passed": 63
+  },
+  "test_after": {
+    "failed": 0,
+    "passed": 89
+  },
+  "dependency_declaration": {
+    "failed": 1,
+    "passed": 4,
+    "reason": "Existing scanner misclassifies local papers namespace; reuse existing reviewed fix, no dependency addition or suppression"
+  },
+  "tables": {
+    "rendered": 16,
+    "tracked_table_bytes_changed": false
+  },
+  "independently_accepted": false,
+  "figures_regenerated": false,
+  "current_manuscript_PDFs_recompiled": false,
+  "main_merge_qualified": false
+}

@@ -3,7 +3,7 @@
   "clusters": [
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:07278724",
@@ -21,7 +21,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:fd6e89cf",
@@ -39,7 +39,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:732a88c6",
@@ -57,25 +57,25 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:40e3f093",
-      "label": "The result is reproducible in two layers.",
+      "label": "The result is reproducible in two\nlayers.",
       "match_kind": "exact",
       "member_papers": [
         "L1",
         "L3"
       ],
       "members": [
-        "sentence:L1:discussion:40e3f093",
+        "sentence:L1:supporting-formal-results-and-reproducibility:40e3f093",
         "sentence:L3:discussion:40e3f093"
       ],
       "normalized_hash": "40e3f093"
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:d2c6aaa3",
@@ -95,7 +95,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:ce92f4a9",
@@ -117,7 +117,7 @@
     },
     {
       "confidence": 0.9,
-      "constructed_at": "2026-08-09T15:29:14Z",
+      "constructed_at": "2026-11-06T18:42:39Z",
       "constructed_by": "cluster_detect.py:normalized",
       "human_confirmed_at": null,
       "id": "claim_cluster:norm:fb60352a",
@@ -134,7 +134,7 @@
       "normalized_hash": "fb60352a"
     }
   ],
-  "constructed_at": "2026-08-09T15:29:14Z",
+  "constructed_at": "2026-11-06T18:42:39Z",
   "constructed_by": "cluster_detect.py:all",
   "paper_coverage": [
     "D11",

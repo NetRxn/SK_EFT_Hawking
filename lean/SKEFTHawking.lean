@@ -1,3 +1,11 @@
+import SKEFTHawking.ADW.FiniteGrassmannEvaluation
+import SKEFTHawking.ADW.FiniteGrassmannCoframe
+import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
+import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
+import SKEFTHawking.ADW.GaussianAuxiliaryComplex
+import SKEFTHawking.ADW.GaussianPolynomialAffine
+import SKEFTHawking.ADW.GaussianPolynomialHermite
+import SKEFTHawking.ADW.GaussianPolynomialIBP
 import SKEFTHawking.Basic
 -- Array helper lemmas (bang-indexed ofFn simp lemma) for cyclotomic-substrate
 -- symbolic reasoning. Upstream-contribution-quality; gating step for the

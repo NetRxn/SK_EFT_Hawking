@@ -1,0 +1,126 @@
+{
+  "task": "l1-source-docs-wt1-apply",
+  "parent": "publication-remediation",
+  "packet": "l1-source-docs-wt1-apply-r1.json",
+  "commit": "1028b047446452398836793e1afda36f7ad56a3a",
+  "branch": "worktree-wt1",
+  "source_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "nonblock_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+  "owned_files": [
+    "lean/SKEFTHawking/GravitationalWaves.lean"
+  ],
+  "diagnostics": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"success\": true,\n  \"timed_out\": false,\n  \"items\": [],\n  \"failed_dependencies\": []\n}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "success": true,
+        "timed_out": false,
+        "items": [],
+        "failed_dependencies": []
+      }
+    },
+    "isError": false
+  },
+  "verification": [
+    {
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    }
+  ],
+  "commit_receipt": {
+    "chunk_id": "1e2760",
+    "wall_time_seconds": 0.000009542,
+    "exit_code": 0,
+    "original_token_count": 63,
+    "output": "(skeft-sync: worktree commit — leak-guard ran; skipping the main-oriented sync gate (lead re-syncs on merge))\n[worktree-wt1 1028b0474] docs(lean): clarify gravitational wave assumptions and bounds\n 1 file changed, 96 insertions(+), 100 deletions(-)\n"
+  },
+  "final_packet_check": {
+    "fresh": false,
+    "changed": [
+      "owned-files",
+      "source"
+    ]
+  },
+  "limitations": "No build, integration, publication acceptance or finding closure; ROOT reconciles authored packet drift."
+}

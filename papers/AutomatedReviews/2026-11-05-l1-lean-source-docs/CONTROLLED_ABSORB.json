@@ -1,0 +1,25 @@
+{
+  "epoch": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "8927bc113b46e31d02ec6f676e10d3c70e8910edb2af4ddfa5f8ea72445b5ba5",
+    "fingerprint": {
+      "commit_sha": "1028b047446452398836793e1afda36f7ad56a3a",
+      "digest": "e491927d3ff7dcc562634cf89eb365d01b989752f31f52fc20588b7b2500d163",
+      "files": {
+        "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+        "lean/lakefile.toml": "7008b3d79ac294f4e822e8c867a326c316e94ff9047c4fd110e66b9cab84e5fe",
+        "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e"
+      },
+      "repo_role": "public",
+      "schema_version": 1
+    },
+    "published_at": "2026-11-05T23:28:12Z",
+    "repo_role": "public",
+    "schema_version": 1
+  },
+  "integrated_head": "1028b047446452398836793e1afda36f7ad56a3a"
+}
