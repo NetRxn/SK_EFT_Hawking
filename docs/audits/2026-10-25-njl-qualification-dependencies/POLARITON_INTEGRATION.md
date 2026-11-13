@@ -1,0 +1,5 @@
+# Polariton notebook and consumer integration
+
+Source commit `e3e08eff` is the independently reviewed recovery. The normal NJL merge had an identical tree. The staged-notebook hook ran both notebooks successfully. Fresh Jupyter execution on the merged NJL checkout matched every source cell, saved output and execution count in both tracked notebooks, including embedded PNGs. The existing closer executed the original declared Verify successfully, recorded the single arithmetic and stored-output finding fixed, and preserved the preceding 1,241 records. The graph reads the original finding as fixed.
+
+See the [notebook review](POLARITON_NOTEBOOK_READBACK.md), [figure review](POLARITON_FIGURE_READBACK.md), and [final consumer review](POLARITON_CONSUMER_READBACK.md). E1 remains Stage 9 and Stage 13 pending. The actual device dispersion law, calibrated readout and error-controlled band remain open. Paper 12 retains a separate overfull warning. This checkpoint has scoped execution and artifact evidence. Full integrated qualification is pending.

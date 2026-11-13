@@ -1,0 +1,7 @@
+# NJL manuscript input reach and finding population
+
+Merge `cec07f7f` matches the independently reviewed `3f1e7dce` tree. The target checkout's untracked test stub was preserved. Independent review report SHA-256 `d3195b464703d5826100997edaa6ea384293580076ba8e796041ce3017bc9029`.
+
+The module-reach check now follows uncommented TeX inputs from the compilation directory. Its prior top-level-only scan lost D9 evidence when the exact/bounded results table moved to a generated input. The independent production scan restored precisely ErrorBasisDiamond, PauliChannel and QutritWeyl. D9 fell from 19 to 16 unreached registrations and the portfolio fell from 184 to 181 against the ceiling of 147. The default dependency closure remains identical across the draft corpus. The focused regression passed and the repository test census increased by one.
+
+The open required finding check on `096aaa21` found 55 findings outside the per-bundle aggregation, against a ceiling of 44. The complement comprises 54 majors and one critical. Declared paper keys are infra (14), phase6EE_control (11), phase6EA_substrate (8), and process (1). The other 21 lack a declared paper or bundle. These groups are inputs to individual attribution and repair, and the graph includes distinct infrastructure and scientific work. Required findings in ten bundles also exceed their ceilings. Both checks remain red. These results establish neither absent Lean substrate nor any finding closure.

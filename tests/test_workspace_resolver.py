@@ -109,3 +109,14 @@ def test_main_and_worktree_layouts_agree(tmp_path: Path):
     from_main = find_workspace(start=repo / "src" / "core")
     from_worktree = find_workspace(start=worktree / "src" / "core")
     assert from_main == from_worktree == ws
+
+
+def test_external_named_managed_checkout_reaches_shared_workspace(tmp_path: Path):
+    workspace = tmp_path / "workspace"
+    (workspace / "SK_EFT_Hawking").mkdir(parents=True)
+    (workspace / ".mcp.json").write_text("{}")
+    managed = workspace / ".codex-python-worktrees" / "publication-portability"
+    (managed / "src/core").mkdir(parents=True)
+    (managed / ".git").write_text("gitdir: ../../../SK_EFT_Hawking/.git/worktrees/example\n")
+    assert find_workspace(start=managed / "src/core") == workspace
+    assert lit_search_dir(start=managed / "src/core") == workspace / "Lit-Search"

@@ -117,6 +117,32 @@ pass rather than guessed. The citation resolves correctly for E1's use either wa
 
 ## D8 — Kernel-Verified Universal Quantum Gate Compilation  {#d8}
 
+**2026-11-03 anchor readback.** This table inventories the currently cited keys and the evidence available for each. The historical verdict below is retained as a dated record. This readback carries no fresh Stage-13 verdict.
+
+| Citation key | Current use | Evidence and disposition |
+| --- | --- | --- |
+| AKN1998 | Operator-norm to channel-distance conversion | Held full text; Lemma 12.6 identified in the historical sweep. |
+| AharonovArad2011 | Compilation and approximation context | Abstract cache available; current source passage comparison remains open. |
+| Brylinski2002 | Primitive/nonprimitive gate universality criterion | Author v1, Theorem 1.3, states the imprimitive-gate criterion with all local gates. The formal grid witness supplies the separate density proof. |
+| DawsonNielsen2006 | Recursion, length exponent and separate runtime exponent | Author v2 full text, §3.3 Eqs. (8) and (9), independently reviewed in the D8 1.4 repair. |
+| GilesSelinger2013 | Column synthesis and scope comparison | Held full text; column lemma identified in the historical sweep. |
+| Hietala2020VOQC | Related verified circuit optimizer | Project summary only; current source passage comparison remains open. |
+| KMM2013 | Exact single-qubit synthesis | Author v4 full text, Theorem 1 and Algorithm 1, independently checked. |
+| KMM2013ancilla | Ancilla construction and length scaling context | Held full text; four-square and ancilla route identified in the historical sweep. |
+| KitaevShenVyalyi2002 | General compilation background | No full text in the current cache. |
+| Lewis2021VerifQC | Survey of verification approaches | Project summary only; current source passage comparison remains open. |
+| Meiburg2025PhysLib | Formal library comparison | Held full text; the specific comparison has no new verification in this readback. |
+| Mukhopadhyay2024 | Clifford channel image, dyadic entries and search conjecture | Author v1 full text, Fact 3.9, Lemma 3.10 and Conjecture 4.8, independently checked. |
+| ReadRezayi1999 | Physical family motivating the two alphabets | Project summary only. The current algebraic proof is grounded in the named Lean declarations. |
+| RoehmD4Topological | Fibonacci and categorical foundations | Companion D4 manuscript and owning charter. |
+| RoehmD6FaultTolerant | Fault-tolerant layer | Companion D6 manuscript. |
+| RoehmD9Certification | Channel certification layer | Companion D9 manuscript and independently reconciled Kronecker-bound ownership. |
+| RossSelinger2016 | Grid route, residual norms and grid existence | Author v3 full text, Lemma 4.4, Algorithm 7.6, Hypothesis 8.3, Proposition 8.8 and Appendix C compared with the Lean scope. |
+| Selinger2015 | Gate-length exponent context | Held full text; length scaling cited separately from Dawson–Nielsen runtime. |
+
+The roster derives from the current draft's citation commands and its bibliography. AaronsonGottesman2004 and BMPRV1999 are bibliography entries without current draft citations. The primary-source repair records give versioned evidence and the cache classifications.
+
+
 **Verifier:** read-only agent (full-text where cached). **Verdict: GREEN.** 10 anchors —
 3 SUPPORTED / 7 CAVEAT / 0 NOT-SUPPORTED. The highest-risk newer 6AM–6AP content verified:
 AKN1998 Lemma 12.6 diamond bound (‖V V†−W W†‖_◇ ≤ 2‖V−W‖) verbatim; KMM2013ancilla

@@ -151,14 +151,7 @@ bite on the count, and there the framing constraint gives the same
 condition rather than an independent one.}
 \label{tab:branches}
 \begin{ruledtabular}
-\begin{tabular}{lll}
-branch & condition & solutions \\
-\colrule
-$\mathbb{Z}_{16}$, with $\nu_R$ & $16 N_f \equiv 0 \;(16)$ & every $N_f$ \\
-$\mathbb{Z}_{16}$, no $\nu_R$ & $15 N_f \equiv 0 \;(16)$ & $N_f \in 16\mathbb{Z}$ \\
-framing, with $\nu_R$ & $24 \mid 8 N_f$ & $N_f \in 3\mathbb{Z}$ \\
-framing, no $\nu_R$ & $48 \mid 15 N_f$ & $N_f \in 16\mathbb{Z}$ \\
-\end{tabular}
+\input{tables/branches.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -492,16 +485,7 @@ every species, so they define the same $\mathbb{Z}_4$ grading, in which
 every Weyl component carries the same nonzero charge.}
 \label{tab:z4}
 \begin{ruledtabular}
-\begin{tabular}{lrrrrr}
-species & $Y$ & $B-L$ & $X_{\rm GEM}$ & $X_{\rm ours}$ & difference \\
-\colrule
-$Q_L$        & $ 1/6$ & $ 1/3$ & $ -7$ & $ 1$ & $ -8$ \\
-$\bar u_R$   & $-2/3$ & $-1/3$ & $ 13$ & $ 1$ & $ 12$ \\
-$\bar d_R$   & $ 1/3$ & $-1/3$ & $  1$ & $-3$ & $  4$ \\
-$L$          & $-1/2$ & $ -1 $ & $ 21$ & $-3$ & $ 24$ \\
-$\bar e_R$   & $  1 $ & $  1 $ & $-27$ & $ 1$ & $-28$ \\
-$\bar\nu_R$  & $  0 $ & $  1 $ & $-15$ & $ 5$ & $-20$ \\
-\end{tabular}
+\input{tables/z4.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -1007,10 +991,13 @@ Connecting them would require the Smith homomorphism and the computed
 identification $\Omega_4^{\mathrm{Pin}^+} \cong \mathbb{Z}_{16}$, neither
 of which is in the library.
 
-\item \textbf{The Kitaev sixteenfold way.} The chiral central charge of
-the $\nu$-th phase in Kitaev's sixteenfold classification is
-$c_{-}(\nu) = \nu/2$, and the sixteen phases are labelled by
-$\nu \bmod 16$. The library formalises the algebraic core of this in
+\item \textbf{The Kitaev sixteenfold way.} For free fermions coupled to an
+effective $\mathbb{Z}_2$ gauge field,
+Kitaev's anyon statistics depend on $\nu \bmod 16$, while the chiral
+central charge $c_{-}(\nu) = \nu/2$ remains additional robust data.
+The sixteen residue classes therefore do not classify full physical
+phases after discarding the integer lift of the central charge.
+The library formalises the algebraic core of this in
 \texttt{KitaevSixteenFold}: the period statement
 $c_{-}(\nu + 16) = c_{-}(\nu) + 8$
 (\texttt{kitaevCentralCharge\_period16}) and, more to the point,
@@ -1038,18 +1025,16 @@ in that classification. The ``free-fermion'' half of the old phrase was
 right and the ``period-16 DIII'' half was wrong.
 
 The sixteen is nonetheless real, and it is the sixteenfold way of
-Kitaev's anyon classification~\cite{Kitaev2006}, in which $\nu$ counts
-chiral Majorana edge modes of an $\mathrm{SO}(\nu)_1$ edge theory and the
-phases form a $\mathbb{Z}_{16}$ torsor --- which is exactly what
-\texttt{KitaevSixteenFold} formalises. We cite it accordingly and retain
+Kitaev's anyon classification~\cite{Kitaev2006}: $\nu$ counts chiral
+Majorana edge modes, the anyon statistics depend on its residue modulo
+sixteen, and $c_- = \nu/2$ retains information beyond that residue.
+\texttt{KitaevSixteenFold} formalises the central-charge residue
+arithmetic stated in item 4; it does not classify full physical phases.
+We cite it accordingly and retain
 \cite{Kitaev2009} only for the free-fermion periodic table itself.
-% TODO: Kitaev's "Anyons in an exactly solved model and beyond" (Ann. Phys.
-% 321, 2 (2006)) is not held in full text in the project's primary-source
-% cache. The sixteenfold-way attribution above is stated from its standard
-% formulation and from the Lean module's own reference, and is unverified
-% against the primary source. Kitaev2009 WAS read directly, and the
-% negative claim about it -- that its classification is period-8 and
-% contains no sixteen -- is verified.
+% Source checked against held arXiv:cond-mat/0506438v3 (1 January 2008),
+% especially pp.42--44; publication metadata remains Ann. Phys. 321 (2006).
+
 
 \paragraph{On the enumeration theorems.}
 The library ships \texttt{RokhlinBridge.sixteen\_convergence\_full} and

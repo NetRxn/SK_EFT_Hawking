@@ -374,9 +374,9 @@ We subjected the framework to systematic stress tests --- deliberate modificatio
 
 Round 5 closed three final sorry gaps targeting the remaining gap between "proof is valid" and "proof exercises all the physics" (Aristotle run 518636d7, March 24, 2026). The key insight: Lean~4's total division (0/0 = 0) meant that earlier theorems with $\kappa > 0$ hypotheses were satisfied vacuously when those hypotheses went unused. Round 5 adds three theorems where $\kappa > 0$ is genuinely load-bearing:
 \begin{itemize}
-\item \texttt{turning\_point\_shift\_nonzero}: Nonzero damping $\Gamma_H > 0$ implies nonzero turning point shift $\delta x_{\text{imag}} > 0$ (requires $\kappa > 0$). \textbf{✓ PROVED} — One-liner div\_ne\_zero.
-\item \texttt{firstOrder\_correction\_zero\_iff}: True biconditional: $\delta_{\text{diss}} = 0 \iff \Gamma_H = 0$ (requires $\kappa > 0$ to distinguish cases). \textbf{✓ PROVED} — Via div\_eq\_iff hk.ne'.
-\item \texttt{dampingRate\_eq\_zero\_iff}: True biconditional: $\Gamma(k, \omega) = 0$ for all $k, \omega \iff$ all $\gamma_i = 0$ (requires $c_s \neq 0$ to avoid 0/0). \textbf{✓ PROVED} — Forward direction evaluates at 4 specific (k,ω) pairs.
+\item \texttt{turning\_point\_shift\_nonzero}: Nonzero damping $\Gamma_H > 0$ implies nonzero turning point shift $\delta x_{\text{imag}} > 0$ (requires $\kappa > 0$). \textbf{PROVED} — One-liner div\_ne\_zero.
+\item \texttt{firstOrder\_correction\_zero\_iff}: True biconditional: $\delta_{\text{diss}} = 0 \iff \Gamma_H = 0$ (requires $\kappa > 0$ to distinguish cases). \textbf{PROVED} — Via div\_eq\_iff hk.ne'.
+\item \texttt{dampingRate\_eq\_zero\_iff}: True biconditional: $\Gamma(k, \omega) = 0$ for all $k, \omega \iff$ all $\gamma_i = 0$ (requires $c_s \neq 0$ to avoid 0/0). \textbf{PROVED} — Forward direction evaluates at 4 specific $(k,\omega)$ pairs.
 \end{itemize}
 All three gaps were submitted to Aristotle and proved, closing the gap between what was provable and what captures the full physics. Combined cleanup: removed unused \texttt{hN} from transport coefficient count, stripped unused simp arguments. \textbf{Status: 40/40 ALL PROVED — 14 Phase 1 + 8 Phase 2 core + 10 Round 4 + 3 Round 5 + 5 Direction D CGL. ZERO SORRY REMAINING.}
 
@@ -439,7 +439,7 @@ We thank the developers of Lean~4 and Mathlib for the formal verification infras
 
 \bibitem{Unruh:1981} W.~G.~Unruh, \textit{Phys.\ Rev.\ Lett.} \textbf{46}, 1351 (1981).
 
-\bibitem{Son:2002} D.~T.~Son, \emph{Low-Energy Quantum Effective Action for Relativistic Superfluids}, hep-ph/0204199; see also S.~Endlich, A.~Nicolis, R.~A.~Porto, and J.~Wang, \textit{Phys.\ Rev.\ D} \textbf{88}, 105001 (2013) for the non-relativistic adaptation used here.
+\bibitem{Son:2002} D.~T.~Son, \emph{Low-Energy Quantum Effective Action for Relativistic Superfluids}, arXiv:hep-ph/0204199 (2002).
 
 \bibitem{Crossley:2017} M.~Crossley, P.~Glorioso, and H.~Liu, \textit{JHEP} \textbf{1709}, 095 (2017).
 
@@ -449,7 +449,7 @@ We thank the developers of Lean~4 and Mathlib for the formal verification infras
 
 \bibitem{Steinhauer:2019} J.~R.~Mu\~noz de Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer, \textit{Nature} \textbf{569}, 688 (2019).
 
-\bibitem{Berti:2025} A.~Berti, J.~Fernandes, S.~Butera, A.~Recati, M.~Wouters, and I.~Carusotto, Comptes Rendus Physique \textbf{25}, 1--21 (2025); arXiv:2408.17292.
+\bibitem{Berti:2025} A.~Berti, L.~Fernandes, S.~Butera, A.~Recati, M.~Wouters, and I.~Carusotto, Comptes Rendus Physique \textbf{25}, S2, 181--216 (2024), first online 20 January 2025; DOI: 10.5802/crphys.226; arXiv:2408.17292.
 
 \end{thebibliography}
 

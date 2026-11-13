@@ -1,0 +1,78 @@
+{
+  "scope": "Complete configured default fast suite from both testpaths; unchanged default excludes slow/e2e. Focused authorized rerun separates six sandbox/cache/process/socket restrictions. Not a current full merge gate or full-fast passing run.",
+  "candidate_head": "ec53782f32aca63e101904d941876ebd0d06f47a plus reviewed uncommitted source",
+  "full_fast": {
+    "start": "2026-10-25T14:55:17.201473+00:00",
+    "end": "2026-10-25T15:09:44.372957+00:00",
+    "pytest_seconds": 864.01,
+    "returncode": 1,
+    "counts": {
+      "passed": 7112,
+      "failed": 23,
+      "skipped": 9,
+      "deselected": 92,
+      "warnings": 7
+    },
+    "tracked_files": 4876,
+    "tracked_bytes_changed": {},
+    "stub_bytes_unchanged": true,
+    "stub_mtime_ns_unchanged": true,
+    "journal_final": [],
+    "stdout_sha256": "0e59a10a02b3794fa57e24f9051c06cdd52c7de38c61020830a9b6e808a9a1b6",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "junit_sha256": "fe6618e6130a4aa2843c132111be07da6143f25d9f6b4c4097fed2fe1d4f89fb"
+  },
+  "focused_environment_rerun": {
+    "start": "2026-10-25T15:12:50.771533+00:00",
+    "end": "2026-10-25T15:12:56.261691+00:00",
+    "returncode": 0,
+    "passed": 6,
+    "pytest_seconds": 5.0,
+    "tracked_bytes_changed": [],
+    "nodeids": [
+      "tests/test_d5_freshness.py::TestCountsFreshness::test_the_cheap_split_agrees_with_the_full_counter",
+      "tests/test_lean_slots.py::test_an_idle_slot_mints_a_session_on_initialize",
+      "tests/test_lean_slots.py::test_each_initialize_mints_a_distinct_session",
+      "tests/test_lean_slots.py::test_global_backend_limit_counts_other_repository_roles",
+      "tests/test_lean_slots.py::test_one_physical_slot_cannot_have_two_repository_backends",
+      "tests/test_lean_slots.py::test_the_minted_session_does_not_weaken_the_lease_gate"
+    ],
+    "environment": "Authorized host process visibility, ephemeral loopback and existing uv-cache access; UV_NO_SYNC=1 and UV_OFFLINE=1. Slot fixtures are temporary fake repositories/state, not live lanes.",
+    "stdout_sha256": "8114846f18b72d082d814789c9e180a9e3e86a5a89a90b805bc60983b0968254"
+  },
+  "remaining_source_failures": {
+    "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom": "AssertionError: ceiling 147 but live count 185 \u2014 a ratchet with headroom silently permits drift\nassert 185 == 147\n +  where 147 = bru.LEAN_MODULE_ABSENT_CEILING",
+    "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary": "AssertionError: [\"D10.stage10_status='redrafted-2026-08-17'\", \"D6.stage10_status='redrafted'\", \"D8.stage10_status='redrafted-2026-08-15'\"]\nassert [\"D10.stage10...-2026-08-15'\"] == []\n  \n  Left contains 3 more items, first extra item: \"D10.stage10_status='redrafted-2026-08-17'\"\n  Use -v to get more diff",
+    "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet": "AssertionError: ['23 sentence(s) over 100 words exceeds the frozen ratchet 18. Shorten the new prose, or lower the ratchet only after shortening: longest is 160 words.', '195 sentence(s) over 60 words (advisory baseline 220; not gated, see docstring)']\nassert False\n +  where False = CheckResult(passed=False, details=[Detail(name='over_100_words', passed=False, message='23 sentence(s) over 100 words ...60 words (advisory baseline 220; not gated, see docstring)', warning=False, measured=True)], error=None, measured=True).passed",
+    "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement": "AssertionError: (23, 18)\nassert 23 == 18",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings": "assert False is True\n +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.\", warning=False, measured=True)], error=None, measured=True).passed\n +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.\", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x10f670930>()",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED": "assert False is True\n +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.\", warning=False, measured=True)], error=None, measured=True).passed\n +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.\", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x10f670930>()\n +      where <function check_bundle_stage13_claim_consistent at 0x10f670930> = <module 'validation.checks.bundles_readiness' from '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Base...-Research/.codex-python-worktrees/publication-njl-integration-20261019/scripts/validation/checks/bundles_readiness.py'>.check_bundle_stage13_claim_consistent",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom": "AssertionError: ceilings carry headroom or have drifted; if the population SHRANK, lower them in the commit that shrank it \u2014 headroom makes a ratchet unfireable\nassert {'D1': 13, 'D...'D3': 14, ...} == {'D1': 2, 'D1... 'D3': 1, ...}\n  \n  Omitting 6 identical items, use -vv to show\n  Differing items:\n  {'D3': 14} != {'D3': 1}\n  {'D2': 10} != {'D2': 3}\n  {'D1': 13} != {'D1': 2}\n  {'D4': 13} != {'D4': 4}...\n  \n  ...Full output truncated (4 lines hidden), use '-vv' to show",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom": "assert 56 == 44",
+    "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red": "AssertionError: precondition: the live check is green before seeding\nassert False\n +  where False = CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='185 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True).passed\n +    where CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='185 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True) = <function check_bundle_lean_module_coverage at 0x10f6728d0>()\n +      where <function check_bundle_lean_module_coverage at 0x10f6728d0> = bru.check_bundle_lean_module_coverage",
+    "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree": "AssertionError: 15 hand-written tabular(s) live against a ceiling of 1. If it dropped, LOWER the ceiling in the same commit; if it rose, add the tables.py spec.\nassert 15 == 1\n +  where 1 = pp.BUNDLE_HANDWRITTEN_TABLE_CEILING",
+    "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean": "AssertionError: [('summary', '276 `Verify:` line(s) checked, 56 carrying anything other than a single backticked command'), ('papers/A...g can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* \u2026`.'), ...]\nassert False is True\n +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='276 `Verify:` line(s) checked, 56 car...planation on the following line as `*What it asserts:* \u2026`.', warning=False, measured=True)], error=None, measured=True).passed",
+    "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails": "AssertionError: baseline must be green, or this mutation proves nothing\nassert False is True\n +  where False = CheckResult(passed=False, details=[Detail(name='population', passed=True, message='2313 Lean chain-of-backing link(s),...le: SKEFTHawking.VestigialGravity.VestigialPhase.vestigial', warning=False, measured=True)], error=None, measured=True).passed",
+    "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom": "AssertionError: live unresolved count 111 != ceiling 109; if the backlog shrank, LOWER the ceiling \u2014 headroom makes it unfireable\nassert 111 == 109\n +  where 109 = rv.UNRESOLVED_CHAIN_LINK_CEILING",
+    "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red": "AssertionError: assert False is True\n +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='55 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True).passed\n +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='55 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True) = <function check_review_severity_declared at 0x10f5a6da0>()\n +      where <function check_review_severity_declared at 0x10f5a6da0> = rv.check_review_severity_declared",
+    "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]": "AssertionError: numerical_literals: live population 149 against ceiling 117 \u2014 32 of headroom. The population GREW past its ceiling; fix the underlying debt rather than raising the number.\nassert 149 == 117",
+    "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]": "AssertionError: bundle_tables_use_pipeline: live population 15 against ceiling 1 \u2014 14 of headroom. The population GREW past its ceiling; fix the underlying debt rather than raising the number.\nassert 15 == 1",
+    "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population": "assert (15 + 134) <= 117"
+  },
+  "all_remaining_are_original_selected_identities": true,
+  "later_generated_images": "Canonical update_counts.py ran AFTER these tests. repo-only default-marker collected cases6970->7041; other Python values, complete Lean/Aristotle groups and lean_deps bytes unchanged; second writer byte-idempotent. Original sandbox cache refusal retained. These two generated files are not the full-fast run image.",
+  "boundaries": "All original scientific BUILDs, inherited R1, full CI/current admission, main/publication/human gates remain owed. No bound raised or condition waived.",
+  "post_counts_current_checks": {
+    "counts_fresh": {
+      "passed": true,
+      "measured": true,
+      "raw_stdout_sha256": "9139adc45404491f91accb9fde9239b9eecd2fbc808b7e25115920762f428f10"
+    },
+    "architecture_inventory_fresh": {
+      "passed": true,
+      "measured": true,
+      "raw_stdout_sha256": "de688fdf85462df994f5be6ca97c7b19377cf0af8d1e59b53593d98a375eccc7"
+    }
+  },
+  "actual_canonical_finding_status": "fixed"
+}

@@ -408,24 +408,16 @@ def count_aristotle() -> dict:
     try:
         sys.path.insert(0, str(PROJECT_ROOT))
         from src.core.constants import ARISTOTLE_THEOREMS
-        # ARISTOTLE_THEOREMS maps theorem_name -> aristotle_run_id (str)
-        # The count of entries IS the count of Aristotle-proved theorems.
-        run_ids = set(ARISTOTLE_THEOREMS.values())
+        # The manual marker records a hand proof, not an automated run.
+        values = ARISTOTLE_THEOREMS.values()
+        run_ids = [value for value in values if value != "manual"]
         return {
-            # ⚠️ ENTRIES WHOSE VALUE IS A RUN ID — not `len(registry)`. 11 drafts render
-            # this macro as "closed by the Aristotle automated prover" / "closed
-            # automatically", and the registry also holds `'manual'` entries: theorems
-            # proved by hand, several of them BECAUSE a machine run had certified a
-            # weaker statement that was later strengthened (I1 §1/§4, 2026-08-13).
-            # Counting those as machine-closed overstates machine verification in every
-            # draft that quotes it, and the 2026-08-13 wave widened the gap 4 -> 6 while
-            # repairing the statements. The decider for "Aristotle closed it" is a run id.
-            "aristotle_proved": len([v for v in ARISTOTLE_THEOREMS.values()
-                                     if v != "manual"]),
-            "aristotle_runs": len(run_ids),
+            "aristotle_proved": len(run_ids),
+            "aristotle_runs": len(set(run_ids)),
+            "aristotle_manual": len(values) - len(run_ids),
         }
     except ImportError:
-        return {"aristotle_proved": 0, "aristotle_runs": 0}
+        return {"aristotle_proved": 0, "aristotle_runs": 0, "aristotle_manual": 0}
 
 
 def count_per_section_theorems(lean_path: Path) -> dict:
@@ -553,6 +545,7 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
         f"\\newcommand{{\\papercount}}{{{python.get('papers', '?')}}}",
         f"\\newcommand{{\\aristotleproved}}{{{aristotle.get('aristotle_proved', '?')}}}",
         f"\\newcommand{{\\aristotleruns}}{{{aristotle.get('aristotle_runs', '?')}}}",
+        f"\\newcommand{{\\aristotlemanual}}{{{aristotle.get('aristotle_manual', '?')}}}",
     ]
 
     # --- Per-module macros for papers that cite per-section totals ---

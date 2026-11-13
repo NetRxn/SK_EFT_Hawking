@@ -190,6 +190,148 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:23:44Z",
       "notes": "2026-06-10 source-reconciliation pass post external-review remediation: 4 flagged sources triaged — paper12_polariton + paper4_wkb_connection carry the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture) with NO D1 counterpart claim (D1 axiom-count prose is macro-driven via counts.tex; all D1 'axiom' mentions are SK-EFT physics axioms); paper1_first_order + paper2_second_order are mtime-only (auto-regenerated tables byte-identical to committed content, zero commits since last_lift). Sweep themes (Geurs scope c574c1d0, 93% reuse 67157912, theorem renames 5207b72b) verified already applied in tandem to D1; Vergeles/Halenka not referenced. Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore)."
+    },
+    {
+      "date": "2026-11-03T16:43:22Z",
+      "source_paper": "paper2_second_order",
+      "lift_action": "Reconcile module registration",
+      "bundle_section_inserted": "sec:higher",
+      "insertion_point_hint": "sec:higher",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
+      "lean_modules_referenced": [
+        "SKEFTHawking.SKDoubling",
+        "SKEFTHawking.SecondOrderSK"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-11-03T16:43:22Z",
+      "notes": "Resolve three historical topic labels against the current cited declarations and aggregate imports."
+    },
+    {
+      "date": "2026-11-03T16:43:22Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "KMSOptimality",
+        "SecondOrderPositivity",
+        "TransportCounting"
+      ],
+      "deregistration_rationale": "The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T16:43:22Z",
+      "notes": "The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log."
+    },
+    {
+      "date": "2026-11-03T16:46:26Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "DissipativeCorrection"
+      ],
+      "deregistration_rationale": "The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T16:46:26Z",
+      "notes": "The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded."
+    },
+    {
+      "date": "2026-11-03T18:44:32Z",
+      "source_paper": "paper1_first_order",
+      "lift_action": "Reconcile module registration",
+      "bundle_section_inserted": "sec:eft-disp",
+      "insertion_point_hint": "sec:eft-disp",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
+      "lean_modules_referenced": [
+        "SKEFTHawking.KappaScaling"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-11-03T18:44:32Z",
+      "notes": "Register the exact owner cited by the D1 dispersive subsection for the adopted model, its quadratic scaling and bound."
+    },
+    {
+      "date": "2026-11-03T18:44:32Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "DispersiveCorrection"
+      ],
+      "deregistration_rationale": "The historical first-order lift used a topic label. The manuscript cites SKEFTHawking.KappaScaling for the adopted model, its quadratic scaling and bound. The physical derivation is a separate open obligation.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T18:44:32Z",
+      "notes": "The historical first-order lift used a topic label. The manuscript cites SKEFTHawking.KappaScaling for the adopted model, its quadratic scaling and bound. The physical derivation is a separate open obligation."
+    },
+    {
+      "date": "2026-11-03T18:46:39Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "FDR"
+      ],
+      "deregistration_rationale": "The first-order lift used FDR as a topic label. The exact CGL fluctuation-dissipation algebra cited by D1 is owned by registered CGLTransform; the algebraic KMS structure SKDoubling.FirstOrderKMS is owned by registered SKEFTHawking.SKDoubling. Microscopic FDR applicability and derivation remain open.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T18:46:39Z",
+      "notes": "The first-order lift used FDR as a topic label. The exact CGL fluctuation-dissipation algebra cited by D1 is owned by registered CGLTransform; the algebraic KMS structure SKDoubling.FirstOrderKMS is owned by registered SKEFTHawking.SKDoubling. Microscopic FDR applicability and derivation remain open."
+    },
+    {
+      "date": "2026-11-03T18:46:39Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "WKBSpectrum",
+        "SpectralFloor"
+      ],
+      "deregistration_rationale": "The WKB lift used two topic labels for the spectrum and floor algebra. The original Paper 4 formal verification section and current D1 cite the registered WKBConnection module for occupation reduction, noise floor and the dominance inequality. The frequency-resolved physical spectrum and figure obligations remain open.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T18:46:39Z",
+      "notes": "The WKB lift used two topic labels for the spectrum and floor algebra. The original Paper 4 formal verification section and current D1 cite the registered WKBConnection module for occupation reduction, noise floor and the dominance inequality. The frequency-resolved physical spectrum and figure obligations remain open."
+    },
+    {
+      "date": "2026-11-03T18:47:25Z",
+      "source_paper": "paper16_graphene_sk_eft",
+      "lift_action": "Reconcile module registration",
+      "bundle_section_inserted": "sec:graphene",
+      "insertion_point_hint": "sec:graphene",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
+      "lean_modules_referenced": [
+        "SKEFTHawking.DiracFluidMetric"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-11-03T18:47:25Z",
+      "notes": "Register the exact owner of the cited metric, conformal sound speed and off-diagonal identity."
+    },
+    {
+      "date": "2026-11-03T18:47:25Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "GrapheneDirac"
+      ],
+      "deregistration_rationale": "The companion lift used GrapheneDirac as a topic label. The cited metric and sound-speed definitions belong to SKEFTHawking.DiracFluidMetric. The separately registered DiracFluidWKB owns the wave-mechanical bridge. The physical assumptions and graphene readout obligations remain open.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T18:47:25Z",
+      "notes": "The companion lift used GrapheneDirac as a topic label. The cited metric and sound-speed definitions belong to SKEFTHawking.DiracFluidMetric. The separately registered DiracFluidWKB owns the wave-mechanical bridge. The physical assumptions and graphene readout obligations remain open."
     }
   ]
 }

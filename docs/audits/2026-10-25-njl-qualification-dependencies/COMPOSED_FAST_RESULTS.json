@@ -1,0 +1,50 @@
+{
+  "scope": "configured default fast, both testpaths, host-access run",
+  "suite": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "14",
+    "skipped": "9",
+    "tests": "7227",
+    "time": "1074.251",
+    "timestamp": "2026-11-03T09:39:18.837410-06:00",
+    "hostname": "NetRxn.local"
+  },
+  "remaining": [
+    "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+    "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+    "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+    "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+    "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+    "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+    "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+    "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+    "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+    "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population"
+  ],
+  "no_longer_failing": [
+    "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+    "tests/test_d5_freshness.py::TestCountsFreshness::test_the_cheap_split_agrees_with_the_full_counter",
+    "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+    "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+    "tests/test_lean_slots.py::test_an_idle_slot_mints_a_session_on_initialize",
+    "tests/test_lean_slots.py::test_each_initialize_mints_a_distinct_session",
+    "tests/test_lean_slots.py::test_global_backend_limit_counts_other_repository_roles",
+    "tests/test_lean_slots.py::test_one_physical_slot_cannot_have_two_repository_backends",
+    "tests/test_lean_slots.py::test_the_minted_session_does_not_weaken_the_lease_gate"
+  ],
+  "new": [],
+  "pre_post_sources_exact": true,
+  "evidence_sha256": {
+    "before.txt": "f5609e9eaf2cebb678872cf6a0c2d72305249616f7ea569888d13f0b30e9e0f7",
+    "after.txt": "f5609e9eaf2cebb678872cf6a0c2d72305249616f7ea569888d13f0b30e9e0f7",
+    "stdout": "e4fbfb582f6546f6e54b992735ebe5a3a60002868f3cdfd3956f67369fcdc54d",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results.xml": "7ad805b478d090338c492a5fc294d182ebc2f2f4cea33d8dc8223a8a364480b5",
+    "pytest.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  }
+}

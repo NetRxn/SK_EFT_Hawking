@@ -158,7 +158,7 @@
     },
     {
       "name": "SKEFTHawking.hidden_sector_required",
-      "claims": "ABSTRACT + §3.2 — 3 x 15 = -3 mod 16: any internally consistent SM extension omitting nu_R requires Z16-charged hidden matter or a gravitational-anomaly route",
+      "claims": "Arithmetic remark in the Z16 discussion: for every a : ZMod 16 with a != 0, there exists b != 0 with a + b = 0, witnessed by b = -a. This is an additive-inverse theorem, not a statement about fermion content, nu_R, hidden matter, or a gravitational route. The visible-sector residue is established by the separate census and residue declarations cited in the draft; the physical interpretation relies on the external bordism result and its assumptions.",
       "declared": "2026-08-07"
     },
     {

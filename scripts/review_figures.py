@@ -1867,6 +1867,27 @@ FIGURE_REGISTRY: list[FigureSpec] = [
     # review round: these figures had no registry entry, no structural check
     # and no regression guard. Registering them closes that gap.
     FigureSpec(
+        name="d8_fig1_alphabet_dimension_map",
+        function="fig_d8_alphabet_dimension_map",
+        caption="Six alphabet and target-group pairs from the D8 manuscript.",
+        needs_experiments=False,
+        expected_traces=8,
+        expected_axes={"xaxis": "Target group"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="d8_fig4_length_comparison",
+        function="fig_d8_length_comparison",
+        caption="Word-length bounds with three distinct theorem error coordinates.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "Target ε", "xaxis2": "Column precision δ",
+                       "xaxis3": "Squared state error", "yaxis2": "Bound − N₃"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
         name="d11_fig1_phononic_band_gap",
         function="fig_d11_phononic_band_gap",
         caption=(

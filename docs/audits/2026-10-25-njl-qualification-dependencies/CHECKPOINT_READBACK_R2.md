@@ -1,0 +1,25 @@
+# Independent R6 documentary readback
+
+**ACCEPT R6 as corrected and the current documentary derivative at the existing bounded checkpoint scope. No remaining mandatory defect was identified in this focused readback.** The accepted integrated code, supported canonical closure, strengthened bounds and two comment-only changes retain their preceding independent review. This permits ROOT to continue the ordinary hooks-enabled exact-source checkpoint workflow for existing draft PR94; it supplies no full-suite, main, scientific or publication acceptance.
+
+Packet: `publication-njl-d7-ratchets-readback-20261025-r1.json`. Reviewer: `njl_dependencies_whole_review`. ROOT froze source/notebook. B is the preserved baseline; my only write is this ignored report. Literal FIRST used P's prepared Python with `-B` and the assigned existing continuity adapter: actual rc0, `fresh=true`, `changed=[]`. No packet refresh occurred.
+
+## Exact focused derivative
+
+I read the complete original eleven-path review, current README and all three manifest maps, original combined REPORT.json, the current packet and notebook r112. The preceding review's mandatory R6 is now satisfied at README's combined27PASS paragraph: it explicitly says the README was updated afterward to record the result, retains the original run manifest/report, distinguishes the subsequent documentary image, and limits run-image conservation to executable inputs and the other ten checkpoint paths. It does not assert that the current README was supplied to the earlier run.
+
+Replacing that corrected paragraph and its added integrated-review link with the original single sentence reconstructs the complete preceding README SHA256 `5596a0e7a4ee01a350f9486364e8a32bbae30820f39afa691fdcaf0e31ccfd31` exactly. Thus the full README derivative consists only of the required clarification and review link. Current README SHA256 is `3133b36f5ddc8a6d3d32d8ca921f74a7872ee28865254c9e1f635533ce74bef1`.
+
+The added public `CHECKPOINT_REVIEW_R2.md` equals the complete original B review byte for byte, SHA256 `dae0e4a386bd4022a2db704f916fc1f18b072a8ed8d739cc658ea265f931f584`. This preserves the historical R6 requirement and its original acceptance/terminal qualifications. The README correctly presents it as requesting the clarification now independently read back here, rather than silently rewriting the historical review.
+
+The new `final-document-manifest.json`, SHA256 `36c84754d3bf45767d196c3ff313f6497689f05220c4c1d7f41b91240d80dc26`, has exactly twelve entries: the previous eleven plus this public review copy. All twelve entries independently match current K bytes. Its ten non-README preexisting entries equal both the original run manifest and preceding reviewed-manifest. This includes all executable/test inputs, ledger, ADR016, remaining-findings document, D7 finding and both earlier public independent reports. There is no code, ledger, test or scientific-source derivative in this increment. The README's descriptive final reviewed manifest is this newest final documentary binding; the historical `reviewed-manifest.json` remains the preceding documentary image.
+
+Original run `manifest.json` SHA256 remains `e63415d8c0b9617dbd116e7d8735dcb0cd2c83bc0dc83ccda33d6bafa62735be`; preceding `reviewed-manifest.json` remains `85df649236a9e505631c1a239aaba29470798dffa3e00a3ca23d9baf526fcc83`; original combined REPORT.json remains `12f15d914d3121f4337dcc61dab2aba384b6c4e48ea5f84ac95de403a22e9d0b`. The source/run distinction is preserved rather than rebased away. The report still records the actual selected27PASS result and its explicit classes/individual-tests scope. No rerun is required for this documentary change, and none was performed.
+
+## Preserved acceptance boundary
+
+The complete current README retains the pending remeasurement of21 earlier identities, whole-CI/resource admission, original physical BUILDs, inherited MAJOR R1, qualified integration to main and final human publication review. The separate56-line enabling proposal remains unapplied, unaccepted DATA with no proposed command executed. No new green bundle, B2 construction, theorem, physical discharge or full-project result is claimed. The current primary notebook/roadmap and authorities remain pinned inputs; no new permission, lease or bypass is inferred.
+
+This was read-only text/JSON/hash inspection of the focused derivative and preservation checks. I ran no tests, project imports/evaluators, seeds, Lean/native/controller/PG operations, writers or Git mutations. I did not edit source, notebook, ledger, manifests or prior reports. The sole official FINAL follows this substantive report; only owned-report creation is expected. Any source/notebook/authority discrepancy must return to ROOT without rebaseline.
+
+Actual FINAL returned rc1, `fresh=false`, `changed=["owned-files"]` only. This is the expected creation of this owned B report. B source, primary notebook/roadmap and all individually pinned K inputs/reports/authorities match the original packet. No discrepancy was refreshed or excused. This final paragraph changes only the owned report.
