@@ -56,7 +56,17 @@ and the discriminator is the date on the record.
 - **Expected:** either the true Δ > Λ, or a raise. Never a non-solution returned as a solution.
 - **Fix:** bracket above Λ, or solve `G·N_f·I(Δ) = 1` directly. Add a residual assertion so the
   function cannot return a point it has not verified.
-- **Verify:** `uv run python -m pytest tests/test_formulas.py -k tetrad_gap -q`
+- **Verify:** `uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q`
+
+Verification target reconciled18October2026: the original command
+`uv run python -m pytest tests/test_formulas.py -k tetrad_gap -q` actually failed with
+exit4 because that test file is absent. Its failure remains evidence, not a passing
+verification or waived requirement. The declared successor runs BOTH complete current NJL
+formula and wrapper test modules, without a name filter. Actual isolated checkpoint7dd3a4e3dcceaac4ec1b7d3a894644732b42ccb8 has separately
+reviewed scoped runtime evidence; this command itself must run on the exact integrated
+candidate before recorded closure. The Lean-side statement, cross-layer regression and
+all original substantive requirements below remain mandatory. This field correction
+neither closes this finding nor accepts the defect as an operator-approved deferral.
 
 ⚠️ **This is the canonical `substrate` case and the reason the lane exists** — the theorem and the
 implementation disagree, so the repair needs a Lean-side statement, a Python-side fix, and a

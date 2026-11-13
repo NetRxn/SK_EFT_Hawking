@@ -20,7 +20,7 @@ Nothing else belongs here.
 | `src/adw/gap_equation.py` | Gap Equation Solver for ADW Tetrad Condensation. |
 | `src/adw/ginzburg_landau.py` | Ginzburg-Landau Phase Classification for ADW Tetrad Condensation, and the G/G_c phase diagram. Key result: the isotropic B-phase is the ground state throughout — the anisotropic A-phase is never favoured — as in weak-coupling He-3. |
 | `src/adw/hubbard_stratonovich.py` | Hubbard-Stratonovich Decomposition of the ADW 8-Fermion Interaction. |
-| `src/adw/tetrad_gap_solver.py` | Tetrad Gap Equation Solver — Integral Formulation. |
+| `src/adw/tetrad_gap_solver.py` | Scalar NJL gap curves with finite-precision failure propagation. |
 | `src/adw/tetrad_observables.py` | Tetrad and Metric Order Parameter Observables. |
 | `src/adw/wen_model.py` | Wen's Emergent QED from String-Net Condensation — the microscopic UV completion the ADW emergent-gravity programme rests on. |
 | `src/bbn/__init__.py` | Phase 6b Wave 1 — BBN unified constraint framework. |

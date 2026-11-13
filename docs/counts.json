@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-09T15:02:39.247080",
-  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
+  "generated": "2026-10-19T12:56:26.519523",
+  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-njl-integration-20261019/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41034,
-    "theorems_total": 22851,
-    "theorems_substantive": 22825,
+    "total_declarations": 41065,
+    "theorems_total": 22874,
+    "theorems_substantive": 22848,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22758,
+    "theorems_kernel_substantive": 22781,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2047,
+    "modules": 2048,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -2012,6 +2012,7 @@
       "SKEFTHawking.TemperleyLieb",
       "SKEFTHawking.TetradFormalism",
       "SKEFTHawking.TetradGapEquation",
+      "SKEFTHawking.TetradGapNumericalBridge",
       "SKEFTHawking.TgateFibBraid",
       "SKEFTHawking.ThetaDefiniteDischarge",
       "SKEFTHawking.ThetaModularWeight",
@@ -2065,7 +2066,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12900,
+    "definitions": 12905,
     "structures": 480,
     "instances": 943,
     "inductives": 101,
@@ -2080,7 +2081,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 205,
-    "pytest_cases": 6891,
+    "pytest_cases": 6970,
     "notebooks": 91,
     "papers": 42,
     "figures": 170
