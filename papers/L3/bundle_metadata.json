@@ -3,7 +3,7 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion",
-      "claims": "the correctness-push theorem: the sign of dT_H/dt flips at M_c, combining the classifier with the four falsifiers",
+      "claims": "Conditional sign transport: H_RegimePartition supplies the two branch signs and the classifier selects the applicable implication",
       "declared": "2026-08-07"
     },
     {
@@ -28,7 +28,7 @@
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_schwarzschild_strict_decreasing",
-      "claims": "Schwarzschild branch: T_H strictly decreasing in M, hence dT_H/dt > 0 under dM/dt < 0",
+      "claims": "The inverse-mass temperature is strictly decreasing on positive masses; the separate schwarzschild_profile_deriv theorem derives the time derivative under local mass loss",
       "declared": "2026-08-07"
     },
     {
@@ -43,8 +43,18 @@
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_strict_decreasing",
-      "claims": "the load-bearing acoustic sign claim: T_H strictly decreasing in t (Balbinot 2005 grounded)",
+      "claims": "The illustrative exponential profile is strictly decreasing for positive initial temperature and cooling timescale",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.G_N_emerg_eval_mul_M_c_eq_inv_cutoff",
+      "claims": "The defined critical mass times the emergent coupling equals the inverse ultraviolet cutoff",
+      "declared": "2026-11-04"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_profile_criterion",
+      "claims": "Under positive nozzle parameters, a supplied local Schwarzschild mass-loss trajectory and a supplied short-time, positive-temperature nozzle domain, the separate profile slopes have opposite signs; equality is the classifier boundary. Physical ADW branch selection is not derived.",
+      "declared": "2026-11-04"
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_acoustic_decay_form",
@@ -63,7 +73,7 @@
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_alpha_ADW_dependence",
-      "claims": "falsifier: δ_ADW must depend on α_ADW via the Wave-9 ansatz, not be a free parameter",
+      "claims": "falsifier: (α_ADW − 1)Λ_UV is strictly positive when α_ADW > 1",
       "declared": "2026-08-07"
     }
   ],

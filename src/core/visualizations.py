@@ -8903,32 +8903,35 @@ def fig_log_correction_signature():
 
 
 def fig_T_H_evolution_regime_partition():
-    """Phase 6a Wave 5: T_H(t) evaporation regime partition.
+    """Illustrative temperature histories and the critical-mass boundary.
 
-    Plots the time-evolution of Hawking temperature under Hawking-radiation
-    backreaction in two regimes:
+    The top panel compares two separately normalized profiles:
 
-    - Schwarzschild branch (M > M_c): textbook Hawking 1975 result. As BH
-      evaporates (dM/dt < 0), T_H = 1/(8π M) increases ⇒ dT_H/dt > 0 (heats
-      as evaporates), finite t-evap. Plotted as a function of normalized
-      time using a representative evaporation trajectory.
-    - Acoustic branch (M < M_c): Balbinot et al. PRD 71, 064019 (2005)
-      Eq. (Tsonic) gives strict monotone decay; leading-order exponential
-      `T_H(t) = T_H,0 · exp(-t/τ_cool)` per `wkb/backreaction.py`. T → 0
-      at infinite time (`t ~ 1/T³` extrapolation per Balbinot 2005).
-      Scope: Balbinot's computation is a SONIC hole in a Laval nozzle at
-      constant sound speed, not a Bose-Einstein condensate (the authors
-      defer the condensate case explicitly).
+    - Schwarzschild: T_H / T_H,0 = (1 - t/t_evap)^(-1/3) for a
+      representative M(t)^3 linear in time. The Hawking 1975 relation
+      T_H = 1/(8π M) gives heating as this positive mass decreases.
+      The displayed trajectory stops at t/t_evap = 0.9.
+    - Illustrative exponential: T_H / T_H,0 = exp(-t/τ_cool), using
+      T_H_acoustic_evolution. Positivity, cooling and the infinite-time
+      zero-temperature limit are properties of this chosen profile.
+      Balbinot et al. PRD 71, 064019 (2005), Eq. (Tsonic), instead gives
+      a local affine cooling law with coefficient 563/(720π), for a
+      constant-sound-speed sonic hole in a Laval nozzle at short times.
+      Their t ~ 1/T³ discussion is an extrapolation, not this exponential;
+      they explicitly defer the Bose-Einstein-condensate case.
 
-    The genuine regime partition is the **sign-flip of dT_H/dt during
-    evaporation**: positive in Schwarzschild (heats), negative in
-    acoustic (cools). Right panel overlays the substrate-response
-    coefficient `δ_ADW = (α_ADW − 1) · Λ_UV` showing the bare
-    Sakharov-Adler limit at α_ADW = 1.
+    Horizontal coordinates are t/τ_cool for the illustrative exponential
+    and t/t_evap for Schwarzschild, not a shared absolute time. These
+    profiles illustrate opposite temperature trends; they do not derive
+    an acoustic trajectory or match two evolutions across the cutoff.
+    The lower panel compares the model's emergent gravitational length
+    and cutoff length at fixed positive parameters. Their equality at
+    the critical mass marks the classification boundary.
 
     Lean: BHThermodynamicsFourLaws.regime_partition_criterion +
           T_H_acoustic_evolution + T_H_schwarzschild.
-    Source: Balbinot+2005 (gr-qc/0405098); Hawking 1975 (CMP 43, 199).
+    Source: Hawking 1975 (CMP 43, 199), Schwarzschild relation;
+            Balbinot+2005 (gr-qc/0405098), local cooling sign only.
     viz-ref: Phase 6a Paper 27 §3
     """
     import plotly.graph_objects as go
@@ -8936,11 +8939,12 @@ def fig_T_H_evolution_regime_partition():
 
     from src.bh_thermodynamics import (
         ADWParams,
+        M_c_default,
         T_H_acoustic_evolution,
-        delta_ADW_ansatz,
     )
+    from src.core.formulas import G_N_emergent
 
-    # Time grid in units of τ_cool (acoustic side)
+    # Representative times for the illustrative exponential profile.
     t_grid_acoustic = np.linspace(0.0, 5.0, 121)
     T_H0 = 1.0  # natural-units initial temperature
     tau_cool = 1.0
@@ -8948,10 +8952,10 @@ def fig_T_H_evolution_regime_partition():
         T_H_acoustic_evolution(T_H0, tau_cool, t) for t in t_grid_acoustic
     ])
 
-    # Schwarzschild evaporation: M(t) ∝ (M_0³ - K·t)^(1/3) (Hawking 1975).
-    # We plot T_H(t)/T_H(0) using a normalized M_0³ - K·t with K chosen so
-    # t_evap = 5 in the same units (illustrative; relative shape is the
-    # load-bearing content).
+    # Representative Schwarzschild evaporation: M(t)^3 = M_0³ - K·t.
+    # With M_0=1 and K=1/5 the lifetime is 5 in these raw time units.
+    # Convert the plotted coordinates to t/t_evap, independently of τ_cool.
+    t_evap = 5.0
     t_grid_schw = np.linspace(0.0, 4.5, 121)  # cap before singularity at t=5
     # M(t) = (M_0³ - K t)^(1/3); choose M_0=1, K=1/5 so M(5)=0
     M_t = (1.0 - 0.2 * t_grid_schw) ** (1.0 / 3.0)
@@ -8959,107 +8963,125 @@ def fig_T_H_evolution_regime_partition():
     T_H_schw_normalized = 1.0 / M_t
 
     fig = make_subplots(
-        rows=1, cols=2,
+        rows=2, cols=1,
         subplot_titles=(
-            "T_H(t) evaporation regime partition",
-            "δ_ADW(α_ADW) substrate-response ansatz",
+            "(a) Temperature histories",
+            "(b) Critical-mass boundary",
         ),
-        column_widths=[0.6, 0.4],
-        horizontal_spacing=0.12,
+        row_heights=[0.55, 0.45],
+        vertical_spacing=0.22,
     )
 
-    # Left panel: T_H(t) profile across both regimes
+    # Top panel: the two separately normalized temperature histories
     fig.add_trace(
         go.Scatter(
-            x=t_grid_acoustic, y=T_H_acoustic,
+            x=t_grid_acoustic / tau_cool, y=T_H_acoustic,
             mode="lines",
             line=dict(color=COLORS["steel_blue"], width=3),
-            name="Acoustic / sonic (Balbinot 2005)",
+            name="Illustrative exponential cooling",
         ),
         row=1, col=1,
     )
     fig.add_trace(
         go.Scatter(
-            x=t_grid_schw, y=T_H_schw_normalized,
+            x=t_grid_schw / t_evap, y=T_H_schw_normalized,
             mode="lines",
             line=dict(color=COLORS["amber"], width=3, dash="dash"),
             name="Schwarzschild (Hawking 1975)",
         ),
         row=1, col=1,
     )
-    # Heat-capacity-sign annotations
+    # Temperature-trend annotations for the separately chosen profiles.
     fig.add_annotation(
-        x=2.0, y=0.25,
-        text="dT_H/dt < 0<br>(cools toward asymptotic<br>extremality, infinite t-evap)",
+        x=2.8, y=1.0,
+        text="dT_H/dt < 0<br>Illustrative exponential",
         showarrow=False,
-        font=dict(size=10, color=COLORS["steel_blue"]),
+        font=dict(size=16, color=COLORS["steel_blue"]),
         row=1, col=1,
     )
     fig.add_annotation(
-        x=3.5, y=2.5,
-        text="dT_H/dt > 0<br>(heats as evaporates,<br>finite t-evap)",
-        showarrow=False,
-        font=dict(size=10, color=COLORS["amber"]),
+        x=0.75, y=(1.0 - 0.75) ** (-1.0 / 3.0),
+        text="dT_H/dt > 0",
+        showarrow=True, arrowhead=2, arrowcolor=COLORS["amber"],
+        ax=85, ay=-38, xanchor="left",
+        font=dict(size=16, color=COLORS["amber"]),
         row=1, col=1,
     )
 
-    # Right panel: δ_ADW(α_ADW) over Wave-1 natural range
-    alpha_grid = np.linspace(0.1, 10.0, 100)
-    delta_grid = np.array([
-        delta_ADW_ansatz(ADWParams(
-            alpha_ADW=a, lambda_UV=1.0, N_f=16.0, chi_vest=1.0
-        ))
-        for a in alpha_grid
-    ])
+    # Evaluate both lengths using the same illustrative substrate parameters.
+    params = ADWParams(alpha_ADW=1.0, lambda_UV=1.0, N_f=16.0, chi_vest=1.0)
+    critical_mass = M_c_default(params)
+    emergent_newton = G_N_emergent(params.lambda_UV, params.N_f, params.alpha_ADW)
+    mass_ratio = np.linspace(0.0, 2.0, 101)
+    mass = critical_mass * mass_ratio
+    cutoff_length = 1.0 / params.lambda_UV
+    gravitational_length = emergent_newton * mass
     fig.add_trace(
         go.Scatter(
-            x=alpha_grid, y=delta_grid,
-            mode="lines",
-            line=dict(color=COLORS["steel_blue"], width=3),
-            name="δ_ADW = (α_ADW − 1)·Λ_UV",
-            showlegend=False,
+            x=mass_ratio, y=gravitational_length / cutoff_length,
+            mode="lines", line=dict(color="rgba(60,60,60,0.9)", width=3),
+            name="G_N<sup>emerg</sup> M", legend="legend2",
         ),
-        row=1, col=2,
+        row=2, col=1,
     )
-    # α=1 vanishing point
-    fig.add_shape(
-        type="line",
-        x0=1.0, x1=1.0, y0=-1.5, y1=10.0,
-        line=dict(color="rgba(80,80,80,0.6)", width=1, dash="dot"),
-        row=1, col=2,
+    fig.add_trace(
+        go.Scatter(
+            x=mass_ratio, y=np.ones_like(mass_ratio),
+            mode="lines",
+            line=dict(color="rgba(80,80,80,0.8)", width=2, dash="dash"),
+            name="1 / Λ_UV", legend="legend2",
+        ),
+        row=2, col=1,
+    )
+    fig.add_vrect(
+        x0=0.0, x1=1.0, fillcolor=COLORS["steel_blue"], opacity=0.15,
+        line_width=0, layer="below", row=2, col=1,
+    )
+    fig.add_vrect(
+        x0=1.0, x1=2.0, fillcolor=COLORS["amber"], opacity=0.15,
+        line_width=0, layer="below", row=2, col=1,
+    )
+    fig.add_vline(
+        x=1.0, line=dict(color="rgba(80,80,80,0.6)", width=1, dash="dot"),
+        row=2, col=1,
     )
     fig.add_annotation(
-        x=1.0, y=0.5,
-        text="α_ADW = 1<br>(bare Sakharov-Adler:<br>δ_ADW vanishes)",
-        showarrow=False,
-        font=dict(size=10, color="rgba(60,60,60,0.9)"),
-        row=1, col=2,
-    )
-    # Zero baseline
-    fig.add_shape(
-        type="line",
-        x0=0.1, x1=10.0, y0=0.0, y1=0.0,
-        line=dict(color="rgba(120,120,120,0.4)", width=1),
-        row=1, col=2,
+        x=1.03, y=0.75, xanchor="left", text="M = M<sub>c</sub>",
+        showarrow=False, font=dict(size=16), row=2, col=1,
     )
 
-    fig.update_xaxes(title_text="Time t / τ_cool (acoustic) or t / t_evap (Schwarzschild)", row=1, col=1)
+    fig.update_xaxes(
+        title_text="Time: t / τ_cool (exponential)<br>or t / t_evap (Schwarzschild)",
+        row=1, col=1,
+    )
     fig.update_yaxes(title_text="T_H / T_H,0", row=1, col=1, range=[0, 4])
-    fig.update_xaxes(title_text="α_ADW", row=1, col=2)
-    fig.update_yaxes(title_text="δ_ADW / Λ_UV", row=1, col=2)
+    fig.update_xaxes(title_text="Mass M / M<sub>c</sub>", row=2, col=1)
+    fig.update_yaxes(title_text="Length / cutoff length", row=2, col=1)
 
+    # Size for a 0.96-column-width consumer, not a full-screen canvas.
     apply_layout(
         fig,
-        title=dict(
-            text=(
-                "Hawking temperature evolution across the "
-                "Schwarzschild ↔ acoustic regime partition"
-            ),
-            font=TITLE_FONT,
+        font={**FONT, "size": 16},
+        height=640,
+        width=480,
+        margin=dict(l=76, r=16, t=38, b=66),
+    )
+    fig.update_xaxes(tickfont=dict(size=16), title_font=dict(size=17))
+    fig.update_yaxes(tickfont=dict(size=16), title_font=dict(size=17))
+    fig.update_xaxes(tickvals=[0, 1, 2, 3, 4, 5], row=1, col=1)
+    fig.update_yaxes(tickvals=[0, 1, 2, 3, 4], row=1, col=1)
+    fig.update_xaxes(tickvals=[0, 0.5, 1, 1.5, 2], row=2, col=1)
+    for annotation in fig.layout.annotations:
+        annotation.font.size = 16
+    fig.update_layout(
+        legend=dict(
+            x=0.98, y=0.99, xanchor="right", yanchor="top",
+            font=dict(size=16), bgcolor="rgba(255,255,255,0.88)",
         ),
-        height=600,
-        width=1100,
-        margin=dict(t=110, b=80),
+        legend2=dict(
+            x=0.02, y=0.34, xanchor="left", yanchor="top",
+            font=dict(size=16), bgcolor="rgba(255,255,255,0.88)",
+        ),
     )
     return fig
 
