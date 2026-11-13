@@ -21,6 +21,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT))
 sys.path.insert(0, str(SK_ROOT / "scripts"))
@@ -57,11 +59,24 @@ to the Hawking spectrum is $\delta_{\mathrm{diss}} \approx 1.59\times10^{-3}$
 contribution further suppressed by $\xi/c_s$; its sign and magnitude
 are substrate predictions.
 
-\item \textbf{Spectral floor at $\omega \sim 6 T_H$ for Heidelberg.}
+\item \textbf{Spectral floor at $\omega_\times \simeq 6.44\,T_{\rm eff}$ for Heidelberg.}
   The exact-WKB closure produces a spectral-density floor onto which
-  the thermal Hawking tail settles once the thermal occupation falls to
-  the FDR floor $\delta_{\mathrm{diss}}$; for Heidelberg this crossover
-  sits at $\omega_\times = T_H \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right) \approx 6.44\, T_H$.
+  the thermal Hawking tail settles once the thermal occupation
+  $\left(e^{\omega/T_{\rm eff}(\omega)}-1\right)^{-1}$ falls to the FDR floor at zero environment temperature. That floor
+  is $\delta_{\mathrm{diss}}$, not $\delta_{\mathrm{diss}}/2$: the
+  factor of two is already taken inside
+  $n_{\mathrm{noise}} = \delta_k/2 = (2\Gamma_H/\kappa)/2 = \Gamma_H/\kappa
+  = \delta_{\mathrm{diss}}$
+  (\texttt{WKBConnection.noise\_floor\_eq\_delta\_diss}). The thermal scale is
+  $T_{\rm eff}(\omega) = \kappa_{\rm eff}(\omega)/(2\pi)$, distinct from
+  the bare scale $T_H = \kappa/(2\pi)$ used for the ultraviolet cutoff.
+  Here $T_{\rm eff}$ refers to the thermal component, rather than a
+  temperature fitted to the total occupation including noise. The crossover is
+  therefore
+  $\omega_\times = T_{\rm eff}(\omega_\times) \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right)
+  \approx 6.44\, T_{\rm eff}(\omega_\times)$ for Heidelberg.
+  The frequency dependence of $\kappa_{\rm eff}$ makes this an implicit
+  equation for $\omega_\times$.
 
 analog-Hawking systems. On the BEC platform (Heidelberg), the
 dispersive correction is $\delta_{\mathrm{disp}} \approx -7.32\times10^{-5}$
@@ -131,7 +146,7 @@ class TestOneWrongValueAloneCarriesTheVerdict:
             f"expected exactly one failing detail, got {sorted(failed)}")
 
     def test_a_single_wrong_crossover_coefficient_fails(self, tmp_path, monkeypatch):
-        body = _FIXED_F.replace(r"\approx 6.44\, T_H", r"\approx 2.00\, T_H")
+        body = _FIXED_F.replace(r"\approx 6.44\, T_{\rm eff}", r"\approx 2.00\, T_{\rm eff}")
         assert body != _FIXED_F, "coefficient substitution did not apply"
         monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
         result = check_f_hierarchy_claims()
@@ -164,3 +179,90 @@ class TestGateFailsOnStale:
                     if d.name == "heidelberg.delta_disp.hierarchy")
         assert not disp.passed
         assert "not found" in disp.message
+
+
+def _replace_one(body, old, new):
+    assert body.count(old) == 1, (old, body.count(old))
+    return body.replace(old, new)
+
+
+class TestThermalCrossoverContract:
+    """R1: numeric proximity must not make mixed thermal/bare scales pass."""
+
+    @pytest.mark.parametrize("old,new,ground", [
+        (r"e^{\omega/T_{\rm eff}(\omega)}", r"e^{\omega/T_H}", "heidelberg.planck"),
+        (r"\omega_\times = T_{\rm eff}(\omega_\times)",
+         r"\omega_\times = T_H", "heidelberg.crossover"),
+        (r"\approx 6.44\, T_{\rm eff}(\omega_\times)",
+         r"\approx 6.44\, T_H", "heidelberg.crossover"),
+        # The true bare coefficient is numerically within the unchanged 0.5%
+        # tolerance of the thermal one. The unit, not closeness, must decide.
+        (r"\approx 6.44\, T_{\rm eff}(\omega_\times)",
+         r"\approx 6.43426\, T_H", "heidelberg.crossover"),
+        (r"\kappa_{\rm eff}(\omega)/(2\pi)", r"\kappa/(2\pi)",
+         "heidelberg.thermal_scale"),
+        (r"$T_H = \kappa/(2\pi)$", r"$T_H = \kappa_{\rm eff}(\omega)/(2\pi)$",
+         "heidelberg.bare_scale"),
+        ("= \\Gamma_H/\\kappa\n  = \\delta_{\\mathrm{diss}}$",
+         "= \\Gamma_H/\\kappa\n  = \\delta_{\\mathrm{diss}}/2$", "heidelberg.noise_floor"),
+    ])
+    def test_wrong_scale_alone_fails(self, tmp_path, monkeypatch, old, new, ground):
+        body = _replace_one(_FIXED_F, old, new)
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        result = check_f_hierarchy_claims()
+        assert not result.passed
+        assert ground in {d.name for d in result.details if not d.passed}
+
+    def test_wrong_logarithmic_law_fails_even_with_correct_coefficient(self, tmp_path, monkeypatch):
+        body = _replace_one(_FIXED_F, r"1 + 1/\delta_{\mathrm{diss}}", r"2/\delta_{\mathrm{diss}}")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        result = check_f_hierarchy_claims()
+        assert not result.passed
+        assert "heidelberg.crossover" in {d.name for d in result.details if not d.passed}
+
+    def test_wrong_heading_unit_fails(self, tmp_path, monkeypatch):
+        body = _replace_one(_FIXED_F, r"\simeq 6.44\,T_{\rm eff}", r"\simeq 6.44\,T_H")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        result = check_f_hierarchy_claims()
+        assert not result.passed
+        assert "heidelberg.crossover_heading" in {d.name for d in result.details if not d.passed}
+
+    def test_wrong_heading_coefficient_alone_fails(self, tmp_path, monkeypatch):
+        body = _replace_one(_FIXED_F, r"\simeq 6.44\,T_{\rm eff}", r"\simeq 7.14\,T_{\rm eff}")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        result = check_f_hierarchy_claims()
+        assert not result.passed
+        assert {d.name for d in result.details if not d.passed} == {"heidelberg.crossover_heading"}
+
+    def test_correct_law_in_comment_cannot_mask_wrong_live_law(self, tmp_path, monkeypatch):
+        good = (r"$\omega_\times = T_{\rm eff}(\omega_\times) "
+                r"\ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right) "
+                r"\approx 6.44\, T_{\rm eff}(\omega_\times)$")
+        body = _replace_one(_FIXED_F, r"\omega_\times = T_{\rm eff}(\omega_\times)",
+                            r"\omega_\times = T_H")
+        body = body.replace("  therefore\n", "  therefore\n% " + good + "\n")
+        assert "% " + good in body
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        assert not check_f_hierarchy_claims().passed
+
+    def test_correct_law_in_another_item_cannot_mask_wrong_floor_item(self, tmp_path, monkeypatch):
+        body = _replace_one(_FIXED_F, r"\omega_\times = T_{\rm eff}(\omega_\times)",
+                            r"\omega_\times = T_H")
+        body += (r"\item Another context: $\omega_\times = T_{\rm eff}(\omega_\times) "
+                 r"\ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right) "
+                 r"\approx 6.44\, T_{\rm eff}(\omega_\times)$.")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        assert not check_f_hierarchy_claims().passed
+
+    def test_missing_floor_item_cannot_pass(self, tmp_path, monkeypatch):
+        start = _FIXED_F.index(r"\item \textbf{Spectral floor at")
+        end = _FIXED_F.index("analog-Hawking systems.", start)
+        body = _FIXED_F[:start] + _FIXED_F[end:]
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        assert not check_f_hierarchy_claims().passed
+
+    def test_missing_F_is_not_success(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path)
+        result = check_f_hierarchy_claims()
+        assert not result.passed
+        assert result.error

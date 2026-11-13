@@ -1606,3 +1606,18 @@ the writer D14 is modelled on).
   lane inherits
 - `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` — charter and build-freeze (C1); D50 and
   D51 remain its own
+
+## D28. Distinguish explicit non-findings at creation
+
+**Proposed, 2026-11-03.** D8's historical §1.7 demonstrates that numbered
+review sections can record passes, inapplicability or prior-result recaps.
+The existing extractor mints those sections as open findings. The same
+behavior is present in other bundles. See the
+[finding creation specification](../superpowers/specs/2026-11-03-review-non-finding-design.md).
+
+Allow a section-local declaration of non-finding in the existing review
+grammar. Preserve historical review text, existing finding IDs and the
+supersession ledger. A conflict preserves the finding and is visible in
+extraction diagnostics. The section's declaration concerns whether it
+represents a finding at all. Status changes for actionable findings continue
+through the ledger. No new readiness gate or suppression registry is needed.

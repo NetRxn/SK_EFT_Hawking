@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-08-14T04:03:05+00:00",
+  "generated_at": "2026-11-07T06:13:21+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -357,13 +357,13 @@
     "Amelio2020": {
       "bibkey": "Amelio2020",
       "phase": "Phase-5w",
-      "tier_achieved": "crossref-json",
-      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.json",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-11T16:12:11+00:00",
-      "size_bytes": 7497,
-      "url_used": "https://api.crossref.org/works/10.1103/PhysRevB.101.064505",
-      "note": "no arxiv id"
+      "fetched_at": "2026-10-15T12:45:00+00:00",
+      "size_bytes": 2136611,
+      "url_used": "https://arxiv.org/pdf/1905.05855v2",
+      "note": null
     },
     "Amo2009": {
       "bibkey": "Amo2009",
@@ -397,6 +397,17 @@
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "AndersonBFP2014Graybody": {
+      "bibkey": "AndersonBFP2014Graybody",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T17:00:05+00:00",
+      "size_bytes": 480011,
+      "url_used": "https://arxiv.org/pdf/1404.3224v3",
+      "note": null
     },
     "AntaoSunFumegaLado2026PRL136": {
       "bibkey": "AntaoSunFumegaLado2026PRL136",
@@ -650,6 +661,17 @@
       "size_bytes": 239457,
       "url_used": "https://arxiv.org/pdf/hep-th/9404156",
       "note": null
+    },
+    "Barcelo2011": {
+      "bibkey": "Barcelo2011",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 2172677,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "BarceloLRR2005": {
       "bibkey": "BarceloLRR2005",
@@ -1017,13 +1039,13 @@
     "Brylinski2002": {
       "bibkey": "Brylinski2002",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 667,
-      "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "fetched_at": "2026-11-07T06:13:21+00:00",
+      "size_bytes": 166177,
+      "url_used": "https://arxiv.org/pdf/quant-ph/0108062v1",
+      "note": "Exact arXiv author v1 acquired from the versioned URL. SHA256 d646d64aabe5fe70762cfae67cd2c371a753df96e3683ac8bf241293a3b13cd3."
     },
     "Buballa2005": {
       "bibkey": "Buballa2005",
@@ -1523,13 +1545,13 @@
     "Coutant2014": {
       "bibkey": "Coutant2014",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "no-source",
-      "fetched_at": "2026-08-14T04:03:05+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T13:53:26+00:00",
+      "size_bytes": 640599,
+      "url_used": "https://arxiv.org/pdf/1402.2514v2",
+      "note": null
     },
     "CoutantParentani2010": {
       "bibkey": "CoutantParentani2010",
@@ -1551,6 +1573,17 @@
       "fetched_at": "2026-05-11T16:17:00+00:00",
       "size_bytes": 2641853,
       "url_used": "https://arxiv.org/pdf/1108.1821",
+      "note": null
+    },
+    "CoutantWeinfurtner2018KdV": {
+      "bibkey": "CoutantWeinfurtner2018KdV",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T13:53:26+00:00",
+      "size_bytes": 1349807,
+      "url_used": "https://arxiv.org/pdf/1707.09651v2",
       "note": null
     },
     "CreminelliVernizzi2017": {
@@ -1831,13 +1864,13 @@
     "DawsonNielsen2006": {
       "bibkey": "DawsonNielsen2006",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 1324,
-      "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "fetched_at": "2026-11-07T00:52:53+00:00",
+      "size_bytes": 222679,
+      "url_used": "https://arxiv.org/pdf/quant-ph/0505030",
+      "note": null
     },
     "Degenne2025BrownianMotion": {
       "bibkey": "Degenne2025BrownianMotion",
@@ -2223,6 +2256,17 @@
       "size_bytes": 8883,
       "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.85.124027",
       "note": "no arxiv id"
+    },
+    "FinazziLiberatiSindoni2012": {
+      "bibkey": "FinazziLiberatiSindoni2012",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 318882,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "FinazziLiberatiSindoni2012PRL": {
       "bibkey": "FinazziLiberatiSindoni2012PRL",
@@ -3338,13 +3382,13 @@
     "KMM2013": {
       "bibkey": "KMM2013",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 795,
+      "fetched_at": "2026-11-07T05:36:03+00:00",
+      "size_bytes": 547800,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing on disk; recorded without re-fetch. arXiv:1206.5236v4; SHA256 0946f767e7120ce6526b5e235b00a5cc8d5ded827920cdf5589422458c3d55c5."
     },
     "KMM2013ancilla": {
       "bibkey": "KMM2013ancilla",
@@ -3554,6 +3598,17 @@
       "size_bytes": 330438,
       "url_used": "https://arxiv.org/pdf/quant-ph/9707021",
       "note": null
+    },
+    "Kitaev2006": {
+      "bibkey": "Kitaev2006",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 1533535,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "Kitaev2009": {
       "bibkey": "Kitaev2009",
@@ -4306,13 +4361,13 @@
     "Mukhopadhyay2024": {
       "bibkey": "Mukhopadhyay2024",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 900,
+      "fetched_at": "2026-11-07T05:36:03+00:00",
+      "size_bytes": 961497,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing on disk; recorded without re-fetch. arXiv:2401.08950v1; SHA256 16b5c2c30086a872f9584f7a7f324c84d7e01c4936f16be172eb5d665c5ebdbd."
     },
     "NJL61": {
       "bibkey": "NJL61",
@@ -5208,13 +5263,13 @@
     "RossSelinger2016": {
       "bibkey": "RossSelinger2016",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 752,
+      "fetched_at": "2026-11-07T05:36:03+00:00",
+      "size_bytes": 597099,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing on disk; recorded without re-fetch. arXiv:1403.2975v3; SHA256 4792f897a1326cb5e039e167d13620d5d7d8c0ef82a3de6ce891a9ab4ed74a70."
     },
     "Roy2016": {
       "bibkey": "Roy2016",
@@ -5876,6 +5931,17 @@
       "url_used": "https://arxiv.org/pdf/2506.00036",
       "note": null
     },
+    "Verlinde1988": {
+      "bibkey": "Verlinde1988",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 12945,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
+    },
     "Verlinde2011Entropic": {
       "bibkey": "Verlinde2011Entropic",
       "phase": "Phase-6a",
@@ -6194,6 +6260,17 @@
       "size_bytes": 1015578,
       "url_used": "https://arxiv.org/pdf/2312.14928",
       "note": null
+    },
+    "Wang2026TMDPolariton": {
+      "bibkey": "Wang2026TMDPolariton",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 1152746,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "WangKimBZHe2026PennTMDPolariton": {
       "bibkey": "WangKimBZHe2026PennTMDPolariton",

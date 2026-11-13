@@ -1,0 +1,750 @@
+{
+  "before_gates": {
+    "check_review_severity_declared": {
+      "passed": false,
+      "details": [
+        {
+          "name": "summary",
+          "passed": false,
+          "message": "57 review document(s) dated >= 2026-08-01 checked; 4 with findings that do not declare severity, 0 declaring an unmappable severity value, 4 declaring an unmappable lane, 0 unresolvable `Blocked-by:` entr(ies) corpus-wide, 0 document(s) whose directory name is not an ISO date so their scope is undecidable (earlier documents keep glyph inference; `lane` is forward-only and its absence is not a failure)",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md:lane",
+          "passed": false,
+          "message": "declares lane value(s) `build_graph` cannot map: ['code']. Accepted: ['infra', 'lean', 'prose', 'pyrust', 'research', 'substrate', 'unclassified']. A lane that does not map routes the finding nowhere — no worker, no gate set, no fan-out key — so it is an unroutable finding, not a typo. `lane` is forward-only: OMITTING it reads `unclassified` and is fine; declaring a token that means nothing is not.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md:lane",
+          "passed": false,
+          "message": "declares lane value(s) `build_graph` cannot map: ['figure', 'harness', 'process']. Accepted: ['infra', 'lean', 'prose', 'pyrust', 'research', 'substrate', 'unclassified']. A lane that does not map routes the finding nowhere — no worker, no gate set, no fan-out key — so it is an unroutable finding, not a typo. `lane` is forward-only: OMITTING it reads `unclassified` and is fine; declaring a token that means nothing is not.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-d6-d9-overlap-population/infra.md",
+          "passed": false,
+          "message": "2 of 3 finding(s) declare no `- **Severity:**` line in their own section: ['### What I measured, 2026-08-15', '### ⚠️ This exact claim has now defeated three separate measurers']. From 2026-08-01 every finding must declare its severity explicitly: severity drives the blocking-closure bar, and inferring it from a glyph lets it be changed without leaving a trace.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-deps-extraction-races-a-merge/infra.md",
+          "passed": false,
+          "message": "1 of 2 finding(s) declare no `- **Severity:**` line in their own section: ['### Why this is worse than a stale file']. From 2026-08-01 every finding must declare its severity explicitly: severity drives the blocking-closure bar, and inferring it from a glyph lets it be changed without leaving a trace.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-e1-stage10-redraft/E1.md:lane",
+          "passed": false,
+          "message": "declares lane value(s) `build_graph` cannot map: ['figure', 'python']. Accepted: ['infra', 'lean', 'prose', 'pyrust', 'research', 'substrate', 'unclassified']. A lane that does not map routes the finding nowhere — no worker, no gate set, no fan-out key — so it is an unroutable finding, not a typo. `lane` is forward-only: OMITTING it reads `unclassified` and is fine; declaring a token that means nothing is not.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "passed": false,
+          "message": "16 of 16 finding(s) declare no `- **Severity:**` line in their own section: ['### 1.1 The right-handed-neutrino conclusion is refuted by both cited ', '### 1.2 The `lcm(16,3) = 48` without-$\\\\nu_R$ constraint is arithmetica', '### 2.1 `sixteen_convergence_unconditional` has a tautology where a bo', '### 2.2 `wang_sixteen_convergence`, a declared apex theorem, is half v', '### 2.3 The manuscript cited the arithmetic proxies for the Ext dimens', '### 2.4 `d4_rank_9` and `d5_rank_15` state rank bounds, not rank equal', '### 2.5 The Kitaev / Fidkowski-Kitaev attribution is wrong on three co', '### 2.6 The $E_8$ manifold is spin, and the manuscript said it is not', '### 2.7 Exactness of the free complex is not proved anywhere in tree', '### 3.1 The draft used project-wide counts where paper-scoped counts e', '### 3.2 The companion-paper citation leaks internal codes to the reade', \"### 3.3 `wang_bridge_full_chain`'s apex description overstates what it\", '### 3.4 Four cited works have no primary source in the local cache', '### 3.5 The `RokhlinBridge` naming inflates two tautologies', '### 3.6 Two attribution calibrations, cross-bundle', '### 2.8 The apex list and the charter still declare a contribution the']. From 2026-08-01 every finding must declare its severity explicitly: severity drives the blocking-closure bar, and inferring it from a glyph lets it be changed without leaving a trace.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md:lane",
+          "passed": false,
+          "message": "declares lane value(s) `build_graph` cannot map: ['figure', 'python']. Accepted: ['infra', 'lean', 'prose', 'pyrust', 'research', 'substrate', 'unclassified']. A lane that does not map routes the finding nowhere — no worker, no gate set, no fan-out key — so it is an unroutable finding, not a typo. `lane` is forward-only: OMITTING it reads `unclassified` and is fine; declaring a token that means nothing is not.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "papers/AutomatedReviews/2026-08-17-worktree-agents-cannot-read-notebooks/infra.md",
+          "passed": false,
+          "message": "1 of 2 finding(s) declare no `- **Severity:**` line in their own section: ['### Why this finding is NOT closed, and why its `Verify` cannot pass']. From 2026-08-01 every finding must declare its severity explicitly: severity drives the blocking-closure bar, and inferring it from a glyph lets it be changed without leaving a trace.",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "blocked_by_resolves",
+          "passed": true,
+          "message": "every declared `Blocked-by:` names a minted finding or a valued release scheme",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    },
+    "check_review_docs_mint_findings": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "181 document(s) carrying unresolved severity-labelled headings checked (a document mentioning a severity only inside a PASS/RESOLVED note carries no findings and is skipped); 0 mint zero",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    },
+    "check_review_verify_is_one_command": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "279 `Verify:` line(s) checked, 0 carrying anything other than a single backticked command",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    }
+  },
+  "after_gates": {
+    "check_review_severity_declared": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "57 review document(s) dated >= 2026-08-01 checked; 0 with findings that do not declare severity, 0 declaring an unmappable severity value, 0 declaring an unmappable lane, 0 unresolvable `Blocked-by:` entr(ies) corpus-wide, 0 document(s) whose directory name is not an ISO date so their scope is undecidable (earlier documents keep glyph inference; `lane` is forward-only and its absence is not a failure)",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "blocked_by_resolves",
+          "passed": true,
+          "message": "every declared `Blocked-by:` names a minted finding or a valued release scheme",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    },
+    "check_review_docs_mint_findings": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "181 document(s) carrying unresolved severity-labelled headings checked (a document mentioning a severity only inside a PASS/RESOLVED note carries no findings and is skipped); 0 mint zero",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    },
+    "check_review_verify_is_one_command": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "279 `Verify:` line(s) checked, 0 carrying anything other than a single backticked command",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    }
+  },
+  "seeded": {
+    "passed": false,
+    "details": [
+      {
+        "name": "summary",
+        "passed": false,
+        "message": "57 review document(s) dated >= 2026-08-01 checked; 0 with findings that do not declare severity, 0 declaring an unmappable severity value, 0 declaring an unmappable lane, 1 unresolvable `Blocked-by:` entr(ies) corpus-wide, 0 document(s) whose directory name is not an ISO date so their scope is undecidable (earlier documents keep glyph inference; `lane` is forward-only and its absence is not a failure)",
+        "warning": false,
+        "measured": true
+      },
+      {
+        "name": "review:2026-08-12-0200-citation-integrity:D10:1.17:blocked_by",
+        "passed": false,
+        "message": "blocked_by ['review:no-such-date:NOPE:9.9'] resolves to nothing — not a minted finding, and not a known release scheme with a value (run:, phase:, pub:, research:). A token nothing can satisfy makes the finding read WAITING when it is STUCK, and it reaches no worker either way.",
+        "warning": false,
+        "measured": true
+      }
+    ],
+    "error": null,
+    "measured": true
+  },
+  "restored_gates": {
+    "check_review_severity_declared": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "57 review document(s) dated >= 2026-08-01 checked; 0 with findings that do not declare severity, 0 declaring an unmappable severity value, 0 declaring an unmappable lane, 0 unresolvable `Blocked-by:` entr(ies) corpus-wide, 0 document(s) whose directory name is not an ISO date so their scope is undecidable (earlier documents keep glyph inference; `lane` is forward-only and its absence is not a failure)",
+          "warning": false,
+          "measured": true
+        },
+        {
+          "name": "blocked_by_resolves",
+          "passed": true,
+          "message": "every declared `Blocked-by:` names a minted finding or a valued release scheme",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    },
+    "check_review_docs_mint_findings": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "181 document(s) carrying unresolved severity-labelled headings checked (a document mentioning a severity only inside a PASS/RESOLVED note carries no findings and is skipped); 0 mint zero",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    },
+    "check_review_verify_is_one_command": {
+      "passed": true,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "279 `Verify:` line(s) checked, 0 carrying anything other than a single backticked command",
+          "warning": false,
+          "measured": true
+        }
+      ],
+      "error": null,
+      "measured": true
+    }
+  },
+  "before_count": 1822,
+  "after_count": 1838,
+  "before_status": {
+    "fixed": 861,
+    "open": 834,
+    "accepted": 127
+  },
+  "after_status": {
+    "fixed": 861,
+    "open": 850,
+    "accepted": 127
+  },
+  "routes": {
+    "review:2026-08-15-d1-stage10-redraft:D1:1.1": [
+      "code",
+      "pyrust"
+    ],
+    "review:2026-08-15-d1-stage10-redraft:D1:3.3": [
+      "code",
+      "pyrust"
+    ],
+    "review:2026-08-15-d1-stage10-redraft:D1:2.8": [
+      "code",
+      "pyrust"
+    ],
+    "review:2026-08-15-d1-stage10-redraft:D1:3.5": [
+      "code",
+      "pyrust"
+    ],
+    "review:2026-08-15-d3-stage10-redraft:D3:1.3": [
+      "harness",
+      "infra"
+    ],
+    "review:2026-08-15-d3-stage10-redraft:D3:5.1": [
+      "process",
+      "prose"
+    ],
+    "review:2026-08-15-d3-stage10-redraft:D3:5.2": [
+      "figure",
+      "prose"
+    ],
+    "review:2026-08-15-e1-stage10-redraft:E1:2.1": [
+      "python",
+      "pyrust"
+    ],
+    "review:2026-08-15-e1-stage10-redraft:E1:2.2": [
+      "figure",
+      "pyrust"
+    ],
+    "review:2026-08-15-e1-stage10-redraft:E1:2.4": [
+      "figure",
+      "pyrust"
+    ],
+    "review:2026-08-15-e1-stage10-redraft:E1:3.1": [
+      "python",
+      "prose"
+    ],
+    "review:2026-08-15-l3-stage10-redraft:L3:3.1": [
+      "figure",
+      "pyrust"
+    ],
+    "review:2026-08-15-l3-stage10-redraft:L3:3.2": [
+      "figure",
+      "pyrust"
+    ],
+    "review:2026-08-15-l3-stage10-redraft:L3:4.1": [
+      "python",
+      "prose"
+    ]
+  },
+  "new": {
+    "review:2026-08-15-l2-stage10-redraft:L2:3.2": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:3.2",
+      "type": "ReviewFinding",
+      "label": "3.2 The companion-paper citation leaks internal codes ",
+      "name": "The companion-paper citation leaks internal codes to the reader",
+      "verification": "verified",
+      "detail": "- **Severity:** RECOMMENDED - **Lane:** prose  The `Roehm2026D2` bibitem read \"in preparation (D2 deep companion to L2, 2026)\", and the `CITATION_REGISTRY` title for the same key is \"Anomaly constraints on Standard Model particle content (Bundle ...)\". A referee sees the project's own publication plan. Fixed in the manuscript; the registry entry is unfixed.",
+      "meta": {
+        "severity": "minor",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "3.2",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": null,
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.5": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.5",
+      "type": "ReviewFinding",
+      "label": "2.5 The Kitaev / Fidkowski-Kitaev attribution is wrong",
+      "name": "The Kitaev / Fidkowski-Kitaev attribution is wrong on three counts",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** prose - **Location:** `papers/L2/paper_draft.tex` Sec. \"The 16-convergence\" (pre-redraft); `lean/SKEFTHawking/RokhlinBridge.lean` header comment  The manuscript wrote: \"the period of the Kitaev periodic table of free-fermion topological superconductors in symmetry class~D, reduced from $\\mathbb{Z}$ to $\\mathbb{Z}_{16}$ under interactions\". I read Kitaev 2009 Ta",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.5",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`papers/L2/paper_draft.tex` Sec. \"The 16-convergence\" (pre-redraft);",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.1": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.1",
+      "type": "ReviewFinding",
+      "label": "2.1 `sixteen_convergence_unconditional` has a tautolog",
+      "name": "`sixteen_convergence_unconditional` has a tautology where a bordism group should be",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** lean - **Location:** `lean/SKEFTHawking/SpinRokhlinInterface.lean:92-99`  The manuscript said the enumeration of the four occurrences of 16 \"is recorded as `sixteen_convergence_unconditional`\". The theorem's four conjuncts are:  ``` (∑ f : SMFermion, components f) = 16          -- the Weyl count (16 : ZMod 16) = 0                            -- proved `by decide",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.1",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`lean/SKEFTHawking/SpinRokhlinInterface.lean:92-99`",
+        "lane": "lean",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.2": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.2",
+      "type": "ReviewFinding",
+      "label": "2.2 `wang_sixteen_convergence`, a declared apex theore",
+      "name": "`wang_sixteen_convergence`, a declared apex theorem, is half vacuous",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** prose - **Location:** `lean/SKEFTHawking/WangBridge.lean:128`; `papers/L2/bundle_metadata.json` `apex_theorems[1]`  ``` theorem wang_sixteen_convergence :     (∑ f : SMFermion, components f) = (16 : ℕ) ∧ (16 : ZMod 16) = 0 ```  `bundle_metadata.json` describes this as \"the 16-convergence, where the fermion count and the Rokhlin/eta constraint meet\". The second ",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.2",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`lean/SKEFTHawking/WangBridge.lean:128`; `papers/L2/bundle_metadata.json`",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.4": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.4",
+      "type": "ReviewFinding",
+      "label": "2.4 `d4_rank_9` and `d5_rank_15` state rank bounds, no",
+      "name": "`d4_rank_9` and `d5_rank_15` state rank bounds, not rank equalities",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** lean - **Location:** `lean/SKEFTHawking/A1Resolution.lean:189-191, 232-234`  ``` theorem d4_rank_9  : ∀ i : Fin 16, 9  ≤ i.val → ∀ j : Fin 24, rref4 i j = 0 theorem d5_rank_15 : ∀ i : Fin 24, 15 ≤ i.val → ∀ j : Fin 32, rref5 i j = 0 ```  Each says the rows at and beyond an index vanish in the reduced row echelon form, i.e. `rank ≤ 9` and `rank ≤ 15`. The manusc",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.4",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`lean/SKEFTHawking/A1Resolution.lean:189-191, 232-234`",
+        "lane": "lean",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.8": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.8",
+      "type": "ReviewFinding",
+      "label": "2.8 The apex list and the charter still declare a cont",
+      "name": "The apex list and the charter still declare a contribution the Letter no longer makes",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** prose - **Location:** `papers/L2/bundle_metadata.json` `apex_theorems[4]` (`A1.ext_dims_substantive`) and `apex_theorems[5]` (`A1.ext_computation_summary`); `docs/PAPER_STRATEGY.md` \"Paper L2\" lede  The charter lede claims \"The first machine-checked $\\mathrm{Ext}^n_{A(1)}(\\mathbb{F}_2,\\mathbb{F}_2)$ computation through degree 5 (in any proof assistant) backs th",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.8",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`papers/L2/bundle_metadata.json` `apex_theorems[4]`",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:3.1": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:3.1",
+      "type": "ReviewFinding",
+      "label": "3.1 The draft used project-wide counts where paper-sco",
+      "name": "The draft used project-wide counts where paper-scoped counts exist",
+      "verification": "verified",
+      "detail": "- **Severity:** RECOMMENDED - **Lane:** prose  `papers/L2/bundle_counts.tex` is generated and carries `\\bundleTheorems`, `\\bundleDecls`, `\\bundleModules` derived from this paper's own apex closure. Its own header warns that using the project-wide `\\substantivetheorems` for a paper-scoped claim \"overstates by orders of magnitude\". The manuscript did not `\\input` it, and wrote the project-wide `\\tot",
+      "meta": {
+        "severity": "minor",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "3.1",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": null,
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:1.2": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:1.2",
+      "type": "ReviewFinding",
+      "label": "1.2 The `lcm(16,3) = 48` without-$\\nu_R$ constraint is",
+      "name": "The `lcm(16,3) = 48` without-$\\nu_R$ constraint is arithmetically wrong",
+      "verification": "verified",
+      "detail": "- **Severity:** BLOCKER - **Lane:** prose - **Location:** `papers/L2/paper_draft.tex` Sec. \"The 16-convergence and the role of $\\nu_R$\" (pre-redraft); `lean/SKEFTHawking/RokhlinBridge.lean` §5 docstring and the `constraints_without_nu_R` docstring; `papers/L2/bundle_metadata.json` `notes` (\"lcm(16,3)=48 without-nu_R combined constraint\").  The manuscript argued: without right-handed neutrinos the ",
+      "meta": {
+        "severity": "critical",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "1.2",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`papers/L2/paper_draft.tex` Sec. \"The 16-convergence and the role of",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.7": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.7",
+      "type": "ReviewFinding",
+      "label": "2.7 Exactness of the free complex is not proved anywhe",
+      "name": "Exactness of the free complex is not proved anywhere in tree",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** lean - **Location:** `lean/SKEFTHawking/A1Resolution.lean`  The chain-complex identities $d_n d_{n+1} = 0$ are proved, and the minimality rows are proved, but nothing establishes that the complex is *exact*, which is what makes it a resolution rather than a complex. `exactness_rank_nullity` proves `1+7=8 and 7+9=16 and 9+7=16 and 7+9=16 and 9+15=24` by `omega`,",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.7",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`lean/SKEFTHawking/A1Resolution.lean`",
+        "lane": "lean",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:3.4": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:3.4",
+      "type": "ReviewFinding",
+      "label": "3.4 Four cited works have no primary source in the loc",
+      "name": "Four cited works have no primary source in the local cache",
+      "verification": "verified",
+      "detail": "- **Severity:** RECOMMENDED - **Lane:** research  `AlvarezGaumeWitten1984` (Crossref metadata only, no PDF), `Rademacher1973`, `diFrancesco1997`, `Rokhlin1952`, `Adams1974` and `ABP1967` all carry `primary_source_path: None`. Two of them were load-bearing in the prior draft: AGW carried both \"each Weyl fermion contributes $c = 1/2$\" and \"a fractional central charge is a gravitational anomaly\".  `c",
+      "meta": {
+        "severity": "minor",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "3.4",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": null,
+        "lane": "research",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.6": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.6",
+      "type": "ReviewFinding",
+      "label": "2.6 The $E_8$ manifold is spin, and the manuscript sai",
+      "name": "The $E_8$ manifold is spin, and the manuscript said it is not",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** prose - **Location:** `papers/L2/paper_draft.tex` Sec. \"The 16-convergence\" (pre-redraft), \"the $E_8$ manifold has $\\sigma = 8$ but is not spin\"; `lean/SKEFTHawking/RokhlinBridge.lean` docstring for `hirzebruch_weaker`, \"it is NOT spin (it has a non-trivial Stiefel-Whitney class $w_2$)\"  The $E_8$ form is even, so by Wu's formula $w_2 = 0$ and Freedman's $E_8$ ",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.6",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`papers/L2/paper_draft.tex` Sec. \"The 16-convergence\" (pre-redraft),",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:1.1": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:1.1",
+      "type": "ReviewFinding",
+      "label": "1.1 The right-handed-neutrino conclusion is refuted by",
+      "name": "The right-handed-neutrino conclusion is refuted by both cited primary sources",
+      "verification": "verified",
+      "detail": "- **Severity:** BLOCKER - **Lane:** prose - **Location:** `papers/L2/paper_draft.tex` abstract and Sec. \"The 16-convergence and the role of $\\nu_R$\" and Conclusion (pre-redraft text); `papers/L2/bundle_metadata.json` `apex_theorems[3]`; `docs/PAPER_STRATEGY.md` \"Paper L2\" lede.  The manuscript claimed, in three places:  - abstract: \"giving a formal independent argument for $\\nu_R$ from modular   i",
+      "meta": {
+        "severity": "critical",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "1.1",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`papers/L2/paper_draft.tex` abstract and Sec. \"The 16-convergence and the",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:3.6": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:3.6",
+      "type": "ReviewFinding",
+      "label": "3.6 Two attribution calibrations, cross-bundle",
+      "name": "Two attribution calibrations, cross-bundle",
+      "verification": "verified",
+      "detail": "- **Severity:** RECOMMENDED - **Lane:** prose  **Origination.** Garc\\'ia-Etxebarria and Montero do not originate the $\\mathrm{Spin}^{\\mathbb{Z}_4}$ structure or the Smith isomorphism; their §4.3 attributes both onward (\"This was called a $\\mathrm{Spin}^{\\mathbb{Z}_4}$ structure in [58]. The same reference also constructs a version of the Smith homomorphism\"), and the multiple-of-sixteen result to ",
+      "meta": {
+        "severity": "minor",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "3.6",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": null,
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:2.3": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:2.3",
+      "type": "ReviewFinding",
+      "label": "2.3 The manuscript cited the arithmetic proxies for th",
+      "name": "The manuscript cited the arithmetic proxies for the Ext dimensions, not the module that computes them",
+      "verification": "verified",
+      "detail": "- **Severity:** REQUIRED - **Lane:** prose - **Location:** `papers/L2/paper_draft.tex` Sec. \"Machine-checked Ext computation\" (pre-redraft); `lean/SKEFTHawking/A1Ext.lean` vs `lean/SKEFTHawking/A1ExtSubstantive.lean`  The manuscript cited `A1Ext.lean` as recording \"the resolution-rank values 1, 2, 2, 2, 3, 4\". Those theorems are:  ``` ext_dim_0 : Fintype.card (Fin 8)  / 8 = 1 ext_dim_4 : Fintype.c",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "2.3",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": "`papers/L2/paper_draft.tex` Sec. \"Machine-checked Ext computation\" (pre-redraft);",
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:3.5": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:3.5",
+      "type": "ReviewFinding",
+      "label": "3.5 The `RokhlinBridge` naming inflates two tautologie",
+      "name": "The `RokhlinBridge` naming inflates two tautologies",
+      "verification": "verified",
+      "detail": "- **Severity:** RECOMMENDED - **Lane:** lean  `z16_anomaly_always_cancels_with_nu_R : (16 * N_f : ZMod 16) = 0` is `0 * x = 0`. It is true of any coefficient congruent to zero and never mentions the fermion spectrum, so the physical content lives entirely in the external identification of the anomaly index with the Weyl-component count. Contrast `z16_anomaly_without_nu_R`, which is a genuine iff u",
+      "meta": {
+        "severity": "minor",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "3.5",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": null,
+        "lane": "lean",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    },
+    "review:2026-08-15-l2-stage10-redraft:L2:3.3": {
+      "id": "review:2026-08-15-l2-stage10-redraft:L2:3.3",
+      "type": "ReviewFinding",
+      "label": "3.3 `wang_bridge_full_chain`'s apex description overst",
+      "name": "`wang_bridge_full_chain`'s apex description overstates what it derives",
+      "verification": "verified",
+      "detail": "- **Severity:** RECOMMENDED - **Lane:** prose  `bundle_metadata.json` says it \"claims abstract headline -- the full Wang chain: SM fermion content + the 24|c_- framing constraint force N_f = 0 mod 3\". The statement is `(N_f : ℕ) (hN : 0 < N_f) (h_mod : (24 : ℤ) ∣ 8 * ↑N_f) : 3 ∣ N_f`, which takes the framing constraint as a hypothesis and discharges the arithmetic step. The same statement appears ",
+      "meta": {
+        "severity": "minor",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+        "review_date": "2026-08-15-l2-stage10-redraft",
+        "review_name": "L2",
+        "section": "3.3",
+        "inferred_paper": null,
+        "inferred_bundle": "L2",
+        "declared_paper": "L2",
+        "declared_bundle": "L2",
+        "blocks": null,
+        "target": null,
+        "lane": "prose",
+        "verify": null,
+        "blocked_by": [],
+        "needs_operator": null
+      }
+    }
+  },
+  "excluded": [
+    "papers/AutomatedReviews/2026-11-05-l1-reader-results/WHOLE_PROSE_INDEPENDENT_REVIEW.md",
+    "papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1-MAIN-MANUSCRIPT-RECONCILIATION-R1.md",
+    "papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md",
+    "papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md"
+  ],
+  "review_docs": 436,
+  "preimage_hashes": {
+    "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md": "3b133f68c85ec72123221629e050f5c4b8cc5f3b5b023c90b42643ee34d14ac1",
+    "papers/AutomatedReviews/2026-08-15-d6-d9-overlap-population/infra.md": "241b72d4b0bf7079eac0c027b105936cb2aed557769690d58f252013cd2c5249",
+    "papers/AutomatedReviews/2026-08-15-deps-extraction-races-a-merge/infra.md": "92d626d12a1f9af6439874bd62be4ea5ed24d1816f7903f97e5c5258969d00b5",
+    "papers/AutomatedReviews/2026-08-15-e1-stage10-redraft/E1.md": "838cb3c935925d149a61b82a48de3d329ae20a3b1d6ec89329e602a3d99aa470",
+    "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md": "19e0c5ac58dba81bfd6401c7d47526dad1d491f4ca0c87965ed917733bb3e84c",
+    "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md": "26d951e9548b456b5e7952e27abc48982b7a8e8ac665be55f613cef8729107a7",
+    "papers/AutomatedReviews/2026-08-17-worktree-agents-cannot-read-notebooks/infra.md": "b2f1f18c5e5efa6db66682a5b14a82a413f1c062535ba042a35f7a647609eff9",
+    "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md": "541a4c2a8b46598ef0b6a57502155d4496f92c58543aec7f6e6ea820f66159b3"
+  },
+  "postimage_hashes": {
+    "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md": "7dd98681c37b557d14f20be5ce578d55e7dc38b1cb3c1b572766ef794d224c98",
+    "papers/AutomatedReviews/2026-08-15-d6-d9-overlap-population/infra.md": "0922a4276cb5d3bb463b9d92e2c76de1baa9c8ded418fca6529044e51e231ec2",
+    "papers/AutomatedReviews/2026-08-15-deps-extraction-races-a-merge/infra.md": "9ed356ca86d071a8f07e216c3a793ddc1a75d1085fc57d200db0b850b4b68c14",
+    "papers/AutomatedReviews/2026-08-15-e1-stage10-redraft/E1.md": "d694c0feffccaf882fac59c13a730a03f5288c373fda2a9266d09bee55f4feac",
+    "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md": "6a1e7e923e9787e53b81eaba0b252b33b2093a150677efaace43740c55295932",
+    "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md": "96ab6ca75ac5839071d43740fda8baccf69159cdb7ca789cc62a1784b86101aa",
+    "papers/AutomatedReviews/2026-08-17-worktree-agents-cannot-read-notebooks/infra.md": "d434ee0204643f8967fb8bcffd57d254620b77d81f903d61098f28b651e8dd30",
+    "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md": "9c7aef483afb92c2084130fac7459405bfe97e739822b07d43305e23536e8518"
+  },
+  "protected_field_check": "all existing node fields exact except 14 lanes and corresponding detail",
+  "ledger_sha256": "d87e6bcf74f3192061e417d0b920d9a16cddf65ef2bfb54a56a366ed4271f97a",
+  "seeded_document_restored_sha256": "1eb8e03559f8e6cc463ad1a293f234d863df173cec397fe289737c3652fc5039"
+}

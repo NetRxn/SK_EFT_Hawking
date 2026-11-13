@@ -12425,3 +12425,34 @@ def memory_binary_robustness_reference(t, a, b, q, *, d0=0.0, d1=0.0,
             "observed_separation": abs(observed[1]-observed[0]),
             "ideal_bound": min(1., distances.sum()),
             "observed_bound": min(1., distances.sum()+allowances.sum())}
+
+
+def d8_compilation_length_bounds(epsilon, k):
+    """Evaluate D8 bounds in their native precision and word-count conventions.
+
+    Lean: SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLength_at_skLevel_polylog_le,
+      SKEFTHawking.FKLW.SolovayKitaevRecursion.ε₀_value,
+      SKEFTHawking.RossSelinger.rossSelinger_log_length_explicit,
+      SKEFTHawking.RossSelinger.Gate3.kmm_universal_headline
+    Aristotle: manual
+    Source: D8, the length mechanisms and their hypotheses.
+
+    The Ross–Selinger value is only the increment above the symbolic N₃
+    overhead. Its delta is a first-column precision parameter. KMM's error
+    value is a squared distance for ancilla-initialized input states.
+    """
+    epsilon = np.asarray(epsilon, dtype=float)
+    k = np.asarray(k)
+    if np.any(~np.isfinite(epsilon) | (epsilon <= 0) | (epsilon > 2.0**-23)):
+        raise ValueError("the recurrence bound requires 0 < ε ≤ 2⁻²³")
+    if not np.issubdtype(k.dtype, np.integer) or np.any(k < 0):
+        raise ValueError("the denominator exponent must be a natural number")
+    k = k.astype(float)
+    gamma = np.log(5.0) / np.log(1.5)
+    return {
+        "sk_length": 1000 * (-np.log(epsilon))**gamma,
+        "grid_increment": 8 * k,
+        "grid_delta": (1 + np.sqrt(2)) * np.exp2(-k / 2),
+        "kmm_length": 50400 * k + 812,
+        "kmm_squared_error": 9 * (2 * np.exp2(-2 * k) + 2 * np.sqrt(2) * np.exp2(-k)),
+    }

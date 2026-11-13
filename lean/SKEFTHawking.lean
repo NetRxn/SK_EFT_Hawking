@@ -5244,6 +5244,15 @@ import SKEFTHawking.SingularSurfaceIntersectionFormInstances
 import SKEFTHawking.SymTFT.CenterLinear
 import SKEFTHawking.SymTFT.ElectricSeparable
 import SKEFTHawking.SymTFT.VecGLinear
+import SKEFTHawking.ADW.GaussianPolynomialIBP
+import SKEFTHawking.ADW.GaussianPolynomialHermite
+import SKEFTHawking.ADW.GaussianPolynomialAffine
+import SKEFTHawking.ADW.GaussianAuxiliaryComplex
+import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
+import SKEFTHawking.ADW.FiniteGrassmannCoframe
+import SKEFTHawking.ADW.FiniteGrassmannEvaluation
+import SKEFTHawking.ADW.GaussianGrassmannAuxiliary
+import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

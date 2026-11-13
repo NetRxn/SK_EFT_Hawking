@@ -16,42 +16,15 @@ Reservoir-Corrected Predictions from SK-EFT}
 \date{\today}
 
 \begin{abstract}
-We present reservoir-corrected spectral predictions for analog Hawking
-radiation in exciton-polariton Bose-Einstein condensates, anchored to
-the all-optically tunable acoustic horizons demonstrated by Falque
-\textit{et al.} at LKB Paris (2025). Our predictions adopt Falque's
-measured parameters directly: (i)~the condensate speed of sound
-$c_s \approx 0.40~\mu\text{m/ps}$, a factor of $\sim$2.5 below
-reservoir-free theoretical estimates due to the excitonic reservoir
-absorbing 50--75\% of the blueshift without contributing to the dynamic
-sound speed; (ii)~the upstream healing length $\xi \approx 3.4~\mu\text{m}$
-and surface-gravity range $\kappa \in [0.07, 0.11]~\text{ps}^{-1}$
-measured across Falque's smooth and steep horizon configurations;
-(iii)~stimulated Hawking detection via CW pump-probe spectroscopy
-achieves signal-to-noise ratios $10^3{-}10^6$ times better than
-spontaneous correlation measurements.
-
-The smooth-horizon baseline ($\kappa = 7\times 10^{10}~\text{s}^{-1}$)
-gives $T_H \approx 85~\text{mK}$ with dispersive parameter
-$D = \xi\kappa/c_s \approx 0.60$; the steep-horizon maximum
-($\kappa = 1.1\times 10^{11}~\text{s}^{-1}$) gives $T_H \approx 134~\text{mK}$
-at $D \approx 0.93$. The leading dispersive correction
-$-\pi D^2/6$ spans $\sim$0.19 to $\sim$0.46 across the measured range;
-perturbative SK-EFT predictions are reliable in the smooth regime and
-should be treated as leading-order at steep horizon. The stimulated gain
-threshold $G(\omega) > 0.5$ occurs at $\omega < 0.175\kappa$ (exactly,
-$\omega/\kappa = \ln(3)/2\pi$), independent of $\kappa$ — a universal
-spectral signature. Detection requires only ${\sim}100$ probe photons
-per mode for $5\sigma$. All predictions derive from
-a formally verified computation pipeline (4049+ Lean~4 theorems,
-1~axiom [\texttt{gapped\_interface\_axiom}, not used by this paper;
-since retired into the tracked Prop \texttt{TPFConjecture}],
-verified by \texttt{lake build}). Polariton-specific results verified in
-\texttt{PolaritonTier1.lean} (6~theorems, zero
-sorry, all manual proofs): \texttt{attenuation\_ge\_one},
-\texttt{attenuation\_mono\_Gamma}, \texttt{attenuation\_eq\_one\_at\_zero\_decay}.
-Formulas: \texttt{stimulated\_hawking\_gain},
-\texttt{polariton\_hawking\_temperature} in \texttt{formulas.py}.
+The measured Paris-LKB smooth horizon sets a nominal polariton
+Hawking scale near 85 mK. We compute stimulated gain in an
+adopted dispersive model and compare cavity decay with the
+surface gravity. Under saturated greybody transmission, half gain
+occurs at $\omega/\kappa_{\rm eff}=\ln(3)/(2\pi)$. This gives a
+single-shot signal-to-noise ratio of five with 100 probe photons
+per mode under ideal shot-noise scaling. A physical detection
+prediction requires transmission, calibrated readout and background
+noise over a usable band.
 \end{abstract}
 
 \maketitle
@@ -71,9 +44,8 @@ The 2025 demonstration of all-optically tunable acoustic horizons with
 tailored curvature in a polariton quantum fluid at LKB
 Paris~\cite{Falque2025,Giacobino2025} --- including the first observation of
 negative-energy Bogoliubov modes in the supersonic (post-horizon) region ---
-establishes every prerequisite for Hawking detection except
-the measurement itself. We provide the quantitative predictions needed
-to guide that measurement.
+establishes the reported horizon and excitation profiles.
+We evaluate a model for a stimulated measurement at that horizon.
 
 Our analysis incorporates three corrections absent from prior
 theoretical predictions:
@@ -84,16 +56,14 @@ the dynamical speed of sound, reducing $c_s$ by a factor of
 ${\sim}2{-}3$ relative to naive Bogoliubov estimates
 \cite{Estrecho2021,Stepanov2019,Claude2023}.
 
-\item \textbf{Stimulated detection pathway}: CW pump-probe
-spectroscopy~\cite{Grisins2016} achieves classical-level signals
-that bypass the quantum noise floor, with quasinormal mode
-resonances~\cite{Burkhard2025} further concentrating the signal.
+\item \textbf{Stimulated measurement}: CW pump-probe
+spectroscopy~\cite{Grisins2016} motivates a stimulated gain measurement.
+The measured gain and its uncertainty depend on transmission,
+readout transfer and background noise.
 
-\item \textbf{Formally verified predictions}: All spectral formulas
-derive from a Lean~4 formalization with 4049+ verified theorems
-(of which the polariton-specific bounds are in \texttt{PolaritonTier1.lean});
-ensuring internal consistency between the EFT framework and
-platform-specific predictions.
+\item \textbf{Formal checks}: \texttt{PolaritonTier1.lean}
+proves properties of the adopted attenuation factor. The formal
+checks cover the stated mathematical relationships.
 \end{enumerate}
 
 %% ================================================================
@@ -138,10 +108,9 @@ configurations span a measured range of $\kappa$:
 Both smooth (red / purple traces in Falque Fig.~2) and steep
 (Falque \S IV.2) horizon configurations are reported by the primary source.
 The smooth-horizon value is used as the baseline throughout this paper;
-steep-horizon results are quoted as the platform's demonstrated upper reach.
-At steep horizon, $D = 0.93$ places the system in the non-perturbative
-regime where the leading $-\pi D^2/6$ correction is $\sim$46\%, so those
-predictions are leading-order only.}
+At the steep-horizon input $D=0.93$, the adopted term $-\pi D^2/6$ is
+approximately $-46\%$. A physical truncation error remains to be
+established.}
 \label{tab:params}
 \end{table}
 
@@ -156,13 +125,16 @@ undergoes anomalous Bogoliubov scattering with amplification
 G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\text{eff}}} - 1}
 \label{eq:gain}
 \end{equation}
-where $\Gamma(\omega)$ is the greybody factor and
-$\kappa_{\text{eff}} \approx \kappa(1 - c_1 D^2)$ incorporates
-dispersive corrections~\cite{Finazzi2012}. For the smooth-horizon baseline
-$D \approx 0.60$, the leading correction $-\pi D^2/6 \approx -0.19$
-(${\sim}19\%$); for the steep-horizon reach $D \approx 0.93$ the
-correction is $\sim$46\% and should be treated as leading-order only. In the non-dispersive limit,
-$G(\omega) \to 1/(e^{2\pi\omega/\kappa} - 1) = n_{\text{Planck}}(\omega, T_H)$.
+where $\Gamma(\omega)$ is the greybody factor.
+For the model illustration we adopt
+$\kappa_{\text{eff}} = \kappa(1 - c_1 D^2)$ with $c_1=\pi/6$.
+At the smooth-horizon baseline $D \approx 0.60$, this gives a model
+shift of about $-19\%$. At the steep horizon $D \approx 0.93$ the
+same expression gives about $-46\%$, outside the small-correction
+regime. A device-specific dispersion law and its error range remain
+to be established. At unit transmission in the nondispersive limit,
+$G(\omega) \to 1/(e^{2\pi\omega/\kappa} - 1)
+= n_{\text{Planck}}(\omega,T_H)$.
 
 For an input probe with $n_{\text{in}}$ quanta:
 \begin{equation}
@@ -173,46 +145,37 @@ where the first term is ordinary scattering, the second is
 spontaneous + stimulated Hawking emission with
 $|\beta_\omega|^2 = G(\omega)$.
 
-\subsection{Optimal probe frequency}
+\subsection{Illustrative probe frequencies}
 
-The gain peaks at low frequencies: $G(0.1\kappa) \approx 1.14$,
-$G(0.3\kappa) \approx 0.18$, $G(\kappa) \approx 0.002$.
-The \textbf{optimal probe window} is $\omega < 0.3\kappa$
-(Fig.~\ref{fig:gain}), where the stimulated signal exceeds 10\%
-of the probe intensity.
+At unit greybody transmission the model gives
+$G(0.1\kappa_{\rm eff}) \approx 1.14$,
+$G(0.3\kappa_{\rm eff}) \approx 0.18$, and
+$G(\kappa_{\rm eff}) \approx 0.002$.
+Figure~\ref{fig:gain} uses an adopted upper working edge of
+$0.3\kappa_{\rm eff}$. A physical error bound and a calibrated lower
+edge remain to be established.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_stimulated_hawking_spectrum.png}
-\caption{Stimulated Hawking gain $G(\omega)$ vs.\ normalized
-frequency $\omega/\kappa$. The dashed line marks the single-shot
-$5\sigma$ gain threshold $G = 0.5$ (equivalently
-$N_{\rm probe} = 25/G^2 = 100$ probe photons per mode); the
-threshold is crossed at the universal frequency
-$\omega/\kappa = \ln(3)/(2\pi) \approx 0.175$. The shaded region
-is the optimal probe window.
-%% [historical correction 2026-05-04: prior caption read "G = 0.01"
-%% and ">10^4 probe photons" — recompute G(0.175κ) =
-%% 1/(exp(2π·0.175)-1) = 1/2 = 0.5; recompute N_probe = 25/G²
-%% = 100 at G=0.5, not 10^4. Corrected post Stage-10 r1 review of
-%% E1 bundle lift; see docs/review_finding_supersessions.json.]
-}
+\caption{Unit-greybody model gain against $\omega/\kappa_{\rm eff}$.
+The dashed line marks half gain at $\ln(3)/(2\pi)$. In the ideal
+shot-noise model, half gain with 100 probe photons per mode yields
+a single-shot signal-to-noise ratio of five. The shaded working
+band illustrates the adopted upper edge.}
 \label{fig:gain}
 \end{figure}
 
 \subsection{Signal-to-noise ratio}
 
-For shot-noise-limited detection:
+Under ideal shot-noise scaling,
 \begin{equation}
-\text{SNR}(\omega) \approx \sqrt{N_{\text{shots}} \cdot N_{\text{probe}}}
-\cdot G(\omega)
+\mathrm{SNR}(\omega) = \sqrt{N_{\rm shots}N_{\rm probe}}\,G(\omega).
 \end{equation}
-At $\omega = 0.1\kappa$ with $G \approx 1.14$: a single CW measurement
-with $N_{\text{probe}} = 100$ photons per mode gives $\text{SNR} \approx 11$.
-This is a factor of $10^3{-}10^6$ improvement over spontaneous
-Hawking detection, which requires ${\sim}10^9$ repetitions to
-resolve correlations at $5 \times 10^{-5}$
-levels~\cite{Grisins2016,Jacquet2022}.
+The illustrative case $\omega = 0.1\kappa_{\rm eff}$ with 100 probe
+photons per mode gives a single-shot model SNR of about 11.
+A detection prediction requires calibrated transmission, readout
+transfer and background noise.
 
 %% ================================================================
 \section{Platform Comparison}
@@ -222,18 +185,14 @@ levels~\cite{Grisins2016,Jacquet2022}.
 % Autogenerated by scripts/render_paper_tables.py from
 % papers/paper12_polariton/tables.py. DO NOT hand-edit values.
 \input{tables/table3_platform_comparison.tex}
-\caption{Platform comparison. $\kappa\tau > 1$ is required for the Hawking
-process to develop before polariton decay. Values computed from Falque-measured
-$\kappa = 7\times 10^{10}$~s$^{-1}$ (smooth) and $\kappa = 1.1\times 10^{11}$~s$^{-1}$
-(steep). Feasibility labels reflect the Tier~1 perturbative-regime
-classification ($\Gamma_{\text{pol}}/\kappa$): \emph{perturbative} ($<0.1$),
-\emph{borderline} ($0.1{-}1$), \emph{intractable} ($>1$). Falque's actual
-8~ps cavity sits at the borderline; the projected long and ultralong cavities
-with the same SLM profile remain borderline by the
-$\Gamma_{\text{pol}}/\kappa = 0.143$ classifier ($> 0.1$ perturbative cutoff),
-approaching but not yet reaching the fully perturbative regime. The steep-horizon
-reach raises $T_H$ at the cost of dispersive-regime $D \approx 0.93$; the
-smooth-horizon baseline keeps $D \approx 0.60$, borderline perturbative.}
+\caption{Registered model parameters. The measured Paris cavity has
+8 ps lifetime and $\Gamma_{\rm pol}/\kappa\approx 1.79$. At the same
+horizon the projected 100 ps and 300 ps cavities give about 0.143
+and 0.048, respectively. Only the latter satisfies the adopted
+weak-loss criterion $\Gamma_{\rm pol}/\kappa<0.1$. Detection also
+requires a calibrated noise and readout model. The steep-horizon
+134 mK entry is a formal gradient scale for a nonthermal predicted
+spectrum.}
 \end{table}
 
 %% ================================================================
@@ -244,22 +203,17 @@ Key implications for Hawking physics:
 
 \begin{itemize}
 \item The acoustic metric description holds in the weak-loss,
-long-wavelength limit~\cite{Amelio2020}. The condition
-$\kappa\tau_{\text{pol}} > 1$ ensures the Hawking process
-develops before polariton decay.
+long-wavelength limit~\cite{Amelio2020}. The ratio $\kappa\tau_{\text{pol}}$ compares the cavity
+lifetime with the inverse surface gravity. A value above one
+means the cavity lifetime exceeds that characteristic timescale.
 
-\item The driven-dissipative steady state carries an effective
-noise temperature $T_{\text{noise}} = m^* c_s^2 / k_B \approx 0.81$~K
-(with Falque-measured $c_s = 0.40~\mu$m/ps), exceeding
-$T_H \approx 85$~mK (smooth-horizon baseline) by an order of magnitude. This
-noise is spectrally featureless and \textbf{does not affect the
-stimulated measurement}, which operates at the classical
-mean-field level.
+\item The scale $m^* c_s^2/k_B\approx 0.81$ K is the mean-field
+energy in temperature units. The stimulated measurement requires an
+independent background-noise spectrum.
 
-\item Quasinormal mode resonances~\cite{Jacquet2023QNM,Burkhard2025}
---- unique to the driven-dissipative setting --- concentrate the
-stimulated signal at specific frequencies, providing enhanced
-detection windows.
+\item The cited quasinormal mode studies~\cite{Jacquet2023QNM,Burkhard2025}
+motivate looking for resonant structure. Using a resonance to choose a
+probe frequency requires a calibrated response and noise spectrum.
 \end{itemize}
 
 %% ================================================================
@@ -276,7 +230,7 @@ function traceability:
   \texttt{hawking\_temp\_from\_surface\_gravity}
   (\texttt{AcousticMetric.lean})
 
-\item $G(\omega) = \Gamma/(\exp(2\pi\omega/\kappa)-1)$:
+\item $G(\omega) = \Gamma/(\exp(2\pi\omega/\kappa_{\rm eff})-1)$:
   \texttt{stimulated\_hawking\_gain}
   (Aristotle: pending)
 
@@ -308,18 +262,11 @@ resolved via the Deep Research Reconciliation Protocol
 %% ================================================================
 \section{Conclusion}
 
-Polariton BEC with reservoir-corrected parameters and stimulated
-Hawking detection via CW pump-probe spectroscopy offers a
-realistic pathway to analog Hawking radiation detection at
-temperatures ${\sim}10^8$ times higher than achieved in atomic BEC.
-All predictions are formally verified (4049+ Lean~4 theorems across
-the project; this paper's polariton bounds live in
-\texttt{PolaritonTier1.lean} and are traceable to specific
-computation modules).
-The LKB Paris platform with long-lifetime cavities
-($\tau \sim 100{-}300$~ps) and all-optically tailored SLM
-horizons~\cite{Falque2025,Giacobino2025} is directly suited for
-the measurement.
+The measured smooth-horizon gradient and decay rate fix the nominal
+temperature and cavity-loss scales used here. The gain curve is
+conditional on the adopted dispersion and unit transmission. A
+longer cavity addresses one requirement. The proposed experiment
+also needs a measured transfer and noise budget over the working band.
 
 \begin{thebibliography}{99}
 \bibitem{Steinhauer2016} J.~Steinhauer, Nat.\ Phys.\ \textbf{12}, 959 (2016).
