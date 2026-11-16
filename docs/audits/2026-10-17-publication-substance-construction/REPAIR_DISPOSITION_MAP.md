@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, six L1 directed-square representatives independently accepted.**
+
+The [independent batch review](L1_N16_C0_DIRECTED_SQUARE_BATCH_INDEPENDENT_R1.md) accepts five additional pure-EHC representatives, matching all 20 channel contributions and 40 layer values under forward and reverse contraction. The new 240 labels contribute `332897913905946331186387643261875/3541774862152233910272`. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_BATCH_R1.zip) preserves the report, reproducible replay and updated residual. Only the five new records were subtracted. The temporal block has **10,452 unresolved orbits / 903,531 labels**.
+
+The next cohort retains one directed quadratic square and allows the already supported single-owner degree-two or degree-four tensors on each square edge. The census identifies 42 additional candidates covering 3,840 labels. Complete their bounded author evaluation, independently verify the exact membership, weights and channel results, then record only accepted rows. Mixed-owner square edges and other temporal shapes remain separate. The full original `c0` remains open. L1 remains the sole active bundle, and PR119's full merge qualification and human approval remain open.
+
 **Current resume point — 16 November 2026, first L1 signed directed square independently accepted.**
 
 The [independent result review](L1_N16_C0_DIRECTED_SQUARE_PILOT_INDEPENDENT_R1.md) accepts the pure-EHC representative `(37086699520,8935831015554)` at weight 48. Both contractions give the value `43150358914340032656914557421875/510015580149921683079168`. Independent Fourier projection, alternate spatial grouping and signed site sewing match all four channels. Reversing the contraction schedule preserved the result. Omitting the spatial conjugation or the wedge sign changed it. The author's work count was retrospective. The independent replay counted products before expansion and reproduced all 207,296 spatial moment rows and 70,448 matrix rows. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_PILOT_R1.zip) preserves both routes and the exact residual.
