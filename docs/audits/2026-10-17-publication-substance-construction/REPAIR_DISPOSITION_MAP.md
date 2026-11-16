@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 two-edge chains independently accepted.**
+
+The [independent chain review](L1_N16_C0_TWO_EDGE_CHAIN_INDEPENDENT_R1.md) accepts 265 original representatives covering 24,576 labels. Leaf Haar pairs the channels. The two distinct own-side spatial anchors cannot both support a nontrivial even representation with only two coframes. This kills nontrivial channels before the shared central link is integrated. Independent literal controls give `2222/135` at the asymmetric fixed profile and distinguish the incorrect independent-center value `148/9`. All signed scalar contractions match, with weighted subtotal `2681723330496543533280954453/4503599627370496`. The [evidence archive](L1_N16_C0_TWO_EDGE_CHAIN_R1.zip) subtracts only these rows, leaving **10,103 unresolved orbits / 871,419 labels**.
+
+The next author cohorts use recursive leaf removal in disjoint forests (219 representatives / 18,996 labels) and reduction to one shared double-root edge (88 representatives / 7,872 labels). Both author tables are complete. Independently validate geometry and channel elimination on each removed edge, the shared-edge channel weights, and every signed coefficient before adding them to the accepted residual. L1 remains the sole active bundle. Full original `c0` and final qualification remain open.
+
 **Current resume point — 16 November 2026, L1 A-core mixed-owner directed squares independently accepted.**
 
 The [independent A-core review](L1_N16_C0_DIRECTED_SQUARE_MIXED_A_CORE_INDEPENDENT_R1.md) accepts 14 additional representatives covering 1,152 labels. All 56 signed channels and 112 spatial-layer values match. The two join refusals were recovered by disjoint exact partitions at the other pair of opposite vertices. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_MIXED_A_CORE_R1.zip) records the exact subtotal `94444265482534360455287322645/1152921504606846976` and subtracts only these rows. The temporal block retains **10,368 unresolved orbits / 895,995 labels**.
