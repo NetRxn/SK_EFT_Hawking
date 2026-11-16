@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 one-or-zero occupied shared-edge cohort independently accepted.**
+
+The [exact evidence and reproduction archive](L1_N16_C0_SHARED_EDGE_ONE_ZERO_R1.zip) records 152 independently matched representatives with 13,632 positive labels, including 123 representatives with coframes on one spatial side and 29 with neither occupied. The review verifies the normalized Haar coefficients, original site signs and factorials, and all 152 signed contractions. The weighted subtotal is `56317687141862691681381500463/36028797018963968`. Subtracting just these reviewed rows leaves **9,644 unresolved orbits / 830,919 labels**. Full `c0` and publication acceptance remain open.
+
+Continue the L1 single lane on the odd-root shared-connector class, which accounts for **717,129 remaining labels**. The author's preflight in the archive uses center parity to reduce the number of candidate representation assignments. Four literal enumeration controls agree. It finds 280,248 labels with fewer than 1,024 candidate assignments under this necessary parity condition. Matrix and signed sewing cost remain unmeasured for that class. Next run a prospectively capped exact pilot on `(103607566400,1256282136720)` to test reuse across connector profiles before attempting a broad batch.
+
 **Current resume point — 16 November 2026, L1 forest and leaf-reduced shared-edge cohorts independently accepted.**
 
 The [evidence and reproduction archive](L1_N16_C0_FOREST_SHARED_EDGE_R1.zip) records two disjoint cohorts from the previous residual: 219 scalar forest representatives covering 18,996 labels, and 88 shared-edge representatives covering 7,872 labels. Exact independent replay matched every signed coefficient. Both adjoints contribute in all 88 shared-edge cases. The combined weighted subtotal is `227954865061128808937738439/562949953421312`. The residual subtraction leaves **9,796 unresolved orbits / 844,551 labels**. The full original pure-EHC `c0` sign, value and nonvanishing remain open. This evidence checkpoint leaves bundle acceptance and publication gates open.
