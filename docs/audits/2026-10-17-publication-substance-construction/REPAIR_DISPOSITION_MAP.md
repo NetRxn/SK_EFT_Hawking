@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 odd-root pilot signed local factors computed.**
+
+The [author sewing-factor archive](L1_N16_C0_ODD_JOINT_SEW_FACTORS_AUTHOR_R1.zip) evaluates all 25 distinct spatial edge factors and 144 signed site factors for the nine candidate assignments. The largest planned spatial factor uses 3,862,912 products and the largest resulting edge and site tables have 60,928 and 62,592 nonzero rows. Eight literal mixed-owner edge entries and 256 literal layer wedge controls match. The archive has the scripts, preparation receipts and hashes for regenerating each exact factor table.
+
+Next validate the plaquette trace index wiring against literal finite links, then measure the final network joins with a prospective cap. Retain the original insertion factorials and obtain independent review of the signed value. **9,644 orbits / 830,919 labels** remain in the residual. The pilot has no complete signed coefficient yet and no publication gate advanced.
+
 **Current resume point — 16 November 2026, L1 odd-root joint pilot anchor tensors computed.**
 
 The [author pilot](L1_N16_C0_ODD_JOINT_PILOT_AUTHOR_R1.zip) for `(103607566400,1256282136720)` reduces 1,048,576 local representation assignments to nine candidates using joint temporal and spatial constraints. Literal enumeration matches all nine labels. The exact root, temporal and spatial Haar entry tables replay byte for byte from clean science candidate `51e7c745e`. The pilot's paired component shape accounts for 26,280 labels. One layer has multiple components for 273,201 of the 717,129 odd-root shared-connector labels.
