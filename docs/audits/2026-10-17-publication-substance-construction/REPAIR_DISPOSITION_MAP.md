@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 B-core mixed-owner directed squares independently accepted.**
+
+The [independent mixed-owner review](L1_N16_C0_DIRECTED_SQUARE_MIXED_OWNER_INDEPENDENT_R1.md) accepts 28 additional B-core representatives covering 2,544 labels. The independent calculation matched every mixed spatial tensor row and all 112 channel contributions. The three original refusals were recovered by exact, disjoint tiles fixing the other pair of opposite vertices, without changing the caps. Their combined weighted subtotal for the 28 representatives is `41101994788076062939485274495683/73786976294838206464`. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_MIXED_OWNER_R1.zip) subtracts exactly those rows, leaving **10,382 unresolved orbits / 897,147 labels** in the original temporal block.
+
+The mirrored A-core class has 14 representatives covering 1,152 labels and remains open. Resolve its two author join refusals with exact partition, independently verify all values and update the residual only after review. The next larger target is the two-edge chain class of 265 orbits covering 24,576 labels. Conditional temporal controls agree between the literal plaquette expansion and the leaf Schur reduction with shared central Haar. Signed spatial sewing and the full chain coefficients remain due. L1 is the sole active bundle. Full original `c0`, main merge qualification and final human approval remain open.
+
 **Current resume point — 16 November 2026, L1 same-owner directed-square cohort independently accepted.**
 
 The [independent extension review](L1_N16_C0_DIRECTED_SQUARE_SAME_OWNER_INDEPENDENT_R1.md) accepts 42 additional pure-EHC directed-square representatives. Independent forward and reverse schedules matched all 168 channel contributions and 336 layer values, with prospective work checks and no refusals. The new 3,840 labels contribute `1677014379339527105381299959417/18446744073709551616`. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_SAME_OWNER_R1.zip) preserves author and independent replays and subtracts precisely these 42 rows. The temporal block retains **10,410 unresolved orbits / 899,691 labels**.
