@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 odd-root pilot reduced to four unresolved chirality pairs.**
+
+The [author pair and pruning evidence](L1_N16_C0_ODD_JOINT_PAIR_PRUNING_AUTHOR_R1.zip) derives 18 equal-value chirality pairs from the corrected 36 assignments. Conjugation by the original gamma_3 maps the coframes and bivectors and preserves the filled Grassmann top and Haar law. The EHC sign cancels at exponent 32. All nine new pair representatives have empty factors after exact support pruning. With the five previous exact author zeros, **14 pairs are zero in author evidence**. Independent review of support, symmetry and earlier zero witnesses is in progress. The new nine pruning certificates still need independent review.
+
+Four all-one-chirality pairs remain to be evaluated. The adaptive author schedules and selected one- and two-mask slices for the first hard representative exceeded the tested row or product budgets. Next establish a bounded exact separator contraction for those four pairs, or a constructive simplification covering them jointly. Preserve the original source and signs. **9,644 orbits / 830,919 labels** remain. No pilot coefficient or publication gate closed.
+
 **Current resume point — 16 November 2026, L1 odd-root support corrected and five pilot channels evaluated.**
 
 The [correction and exact author evidence](L1_N16_C0_ODD_JOINT_SUPPORT_CORRECTION_AUTHOR_R1.zip) replaces the first-chirality spatial parity rule with the combined center parity rule. A literal single coframe has a nonzero right-fundamental moment with zero left spin. The earlier rule wrongly excludes it. The corrected search and literal traversal of 1,048,576 local tuples both retain **36 candidates**, including all nine earlier rows. The previous 256-assignment and 280,248-label complexity estimates are withdrawn. The residual census by component shape is still applicable.
