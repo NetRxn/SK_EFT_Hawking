@@ -38,15 +38,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 odd-root support corrected and five pilot channels evaluated.**
+
+The [correction and exact author evidence](L1_N16_C0_ODD_JOINT_SUPPORT_CORRECTION_AUTHOR_R1.zip) replaces the first-chirality spatial parity rule with the combined center parity rule. A literal single coframe has a nonzero right-fundamental moment with zero left spin. The earlier rule wrongly excludes it. The corrected search and literal traversal of 1,048,576 local tuples both retain **36 candidates**, including all nine earlier rows. The previous 256-assignment and 280,248-label complexity estimates are withdrawn. The residual census by component shape is still applicable.
+
+The same archive validates the repository's closed plaquette order on 24 literal finite-link checks. Sixteen checks distinguish it from the earlier reversed sketch. Of the nine previously assembled channels, five contract to exact zero in subnetworks whose boundary indices remain open. Four author schedules exceed the row budget, and the other 27 corrected channels await signed factor assembly. Reuse the corrected anchor tensors and test left/right exchange on the exact source before reusing coefficients. Carry the surviving channels through signed joins and independent verification. **9,644 orbits / 830,919 labels** remain in the residual.
+
 **Current resume point — 16 November 2026, L1 odd-root pilot signed local factors computed.**
 
-The [author sewing-factor archive](L1_N16_C0_ODD_JOINT_SEW_FACTORS_AUTHOR_R1.zip) evaluates all 25 distinct spatial edge factors and 144 signed site factors for the nine candidate assignments. The largest planned spatial factor uses 3,862,912 products and the largest resulting edge and site tables have 60,928 and 62,592 nonzero rows. Eight literal mixed-owner edge entries and 256 literal layer wedge controls match. The archive has the scripts, preparation receipts and hashes for regenerating each exact factor table.
+The [author sewing-factor archive](L1_N16_C0_ODD_JOINT_SEW_FACTORS_AUTHOR_R1.zip) evaluates 25 distinct spatial edge factors and 144 signed site factors for the earlier nine assignments. The corrected support above adds 27 assignments. The largest planned spatial factor uses 3,862,912 products and the largest resulting edge and site tables have 60,928 and 62,592 nonzero rows. Eight literal mixed-owner edge entries and 256 literal layer wedge controls match. The archive has the scripts, preparation receipts and hashes for regenerating each exact factor table.
 
 Next validate the plaquette trace index wiring against literal finite links, then measure the final network joins with a prospective cap. Retain the original insertion factorials and obtain independent review of the signed value. **9,644 orbits / 830,919 labels** remain in the residual. The pilot has no complete signed coefficient yet and no publication gate advanced.
 
 **Current resume point — 16 November 2026, L1 odd-root joint pilot anchor tensors computed.**
 
-The [author pilot](L1_N16_C0_ODD_JOINT_PILOT_AUTHOR_R1.zip) for `(103607566400,1256282136720)` reduces 1,048,576 local representation assignments to nine candidates using joint temporal and spatial constraints. Literal enumeration matches all nine labels. The exact root, temporal and spatial Haar entry tables replay byte for byte from clean science candidate `51e7c745e`. The pilot's paired component shape accounts for 26,280 labels. One layer has multiple components for 273,201 of the 717,129 odd-root shared-connector labels.
+The [author pilot](L1_N16_C0_ODD_JOINT_PILOT_AUTHOR_R1.zip) for `(103607566400,1256282136720)` historically retained nine assignments under the superseded center-parity rule. Use the corrected support and anchor tensors above. The exact root, temporal and spatial Haar entry tables replay byte for byte from clean science candidate `51e7c745e`. The pilot's paired component shape accounts for 26,280 labels. One layer has multiple components for 273,201 of the 717,129 odd-root shared-connector labels.
 
 Next sew these tensors with the original coframe factors, signed generator order and insertion factorials. Track work prospectively and measure whether reuse of the temporal components generalizes. An independently verified signed value is still required. The residual remains **9,644 unresolved orbits / 830,919 labels**. Full `c0` and publication acceptance remain open.
 
@@ -54,7 +60,7 @@ Next sew these tensors with the original coframe factors, signed generator order
 
 The [exact evidence and reproduction archive](L1_N16_C0_SHARED_EDGE_ONE_ZERO_R1.zip) records 152 independently matched representatives with 13,632 positive labels, including 123 representatives with coframes on one spatial side and 29 with neither occupied. The review verifies the normalized Haar coefficients, original site signs and factorials, and all 152 signed contractions. The weighted subtotal is `56317687141862691681381500463/36028797018963968`. Subtracting just these reviewed rows leaves **9,644 unresolved orbits / 830,919 labels**. Full `c0` and publication acceptance remain open.
 
-Continue the L1 single lane on the odd-root shared-connector class, which accounts for **717,129 remaining labels**. The author's preflight in the archive uses center parity to reduce the number of candidate representation assignments. Four literal enumeration controls agree. It finds 280,248 labels with fewer than 1,024 candidate assignments under this necessary parity condition. Matrix and signed sewing cost remain unmeasured for that class. Next run a prospectively capped exact pilot on `(103607566400,1256282136720)` to test reuse across connector profiles before attempting a broad batch.
+Continue the L1 single lane on the odd-root shared-connector class, which accounts for **717,129 remaining labels**. The archive preserves the historical center-parity preflight. Its candidate counts and derived coverage estimates are withdrawn in the correction above. Next run a prospectively capped exact pilot on `(103607566400,1256282136720)` to test reuse across connector profiles before attempting a broad batch.
 
 **Current resume point — 16 November 2026, L1 forest and leaf-reduced shared-edge cohorts independently accepted.**
 
