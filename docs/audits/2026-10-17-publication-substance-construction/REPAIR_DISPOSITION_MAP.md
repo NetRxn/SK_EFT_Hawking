@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 odd-root pilot complete in author computation.**
+
+The [exact author evidence](L1_N16_C0_ODD_PILOT_EXACT_AUTHOR_R1.zip) closes the four surviving pairs computationally by merging proportional signed slices on their full shared index tuples. The original representative `(103607566400,1256282136720)` has author coefficient `20706441900927168861083984375/1267650600228229401496703205376`, before weight 96. The first surviving pair matches both the five-factor and original 72-factor routes. The four exact signed joins consume 3,821 to 5,479 products after the slice reductions, separate from factor preparation and support scans. All four have zero imaginary part. The replay restores the original 64 coframe quarter factors and insertion factorials.
+
+Next independently reconstruct the slice identity, full wire incidences, original source normalization and all four values. Subtract the pilot only after acceptance. If the signed method survives review, test it on multiple distinct connector shapes and measure total factor-generation cost before any broad batch. The residual remains **9,644 orbits / 830,919 labels** and publication qualification remains open.
+
 **Current resume point — 16 November 2026, L1 odd-root zero pairs independently verified.**
 
 The [independent review archive](L1_N16_C0_ODD_14_ZERO_PAIRS_INDEPENDENT_R1.zip) accepts the corrected 36-state roster, the chirality exchange, five signed zero witnesses and nine whole-overlap support zeros. **14 of 18 pairs are independently confirmed zero**. The four pairs `(0,32)`, `(1,33)`, `(2,34)` and `(3,35)` remain open. These reviews use the frozen exact local-factor tables and do not supply a complete pilot coefficient. The residual stays at **9,644 orbits / 830,919 labels**.
