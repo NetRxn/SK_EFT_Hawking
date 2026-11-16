@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 odd-root zero pairs independently verified.**
+
+The [independent review archive](L1_N16_C0_ODD_14_ZERO_PAIRS_INDEPENDENT_R1.zip) accepts the corrected 36-state roster, the chirality exchange, five signed zero witnesses and nine whole-overlap support zeros. **14 of 18 pairs are independently confirmed zero**. The four pairs `(0,32)`, `(1,33)`, `(2,34)` and `(3,35)` remain open. These reviews use the frozen exact local-factor tables and do not supply a complete pilot coefficient. The residual stays at **9,644 orbits / 830,919 labels**.
+
+The first hard pair's boundary-aware author schedule now exports five exact live factors and 18 scalar factors after 46,812,672 admitted matched products. The next unpartitioned join exceeds the 800,000-row limit. One binary representation-index slice reached four factors and still exceeded the row limit. Resume from the hashed five-factor frontier and test a wider exact separator or a streamed closing contraction. Count every complementary slice and retain the original insertion factorials. Publication acceptance remains open.
+
 **Current resume point — 16 November 2026, L1 odd-root pilot reduced to four unresolved chirality pairs.**
 
 The [author pair and pruning evidence](L1_N16_C0_ODD_JOINT_PAIR_PRUNING_AUTHOR_R1.zip) derives 18 equal-value chirality pairs from the corrected 36 assignments. Conjugation by the original gamma_3 maps the coframes and bivectors and preserves the filled Grassmann top and Haar law. The EHC sign cancels at exponent 32. All nine new pair representatives have empty factors after exact support pruning. With the five previous exact author zeros, **14 pairs are zero in author evidence**. Independent review of support, symmetry and earlier zero witnesses is in progress. The new nine pruning certificates still need independent review.
