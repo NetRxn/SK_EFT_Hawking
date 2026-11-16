@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 odd-root joint pilot anchor tensors computed.**
+
+The [author pilot](L1_N16_C0_ODD_JOINT_PILOT_AUTHOR_R1.zip) for `(103607566400,1256282136720)` reduces 1,048,576 local representation assignments to nine candidates using joint temporal and spatial constraints. Literal enumeration matches all nine labels. The exact root, temporal and spatial Haar entry tables replay byte for byte from clean science candidate `51e7c745e`. The pilot's paired component shape accounts for 26,280 labels. One layer has multiple components for 273,201 of the 717,129 odd-root shared-connector labels.
+
+Next sew these tensors with the original coframe factors, signed generator order and insertion factorials. Track work prospectively and measure whether reuse of the temporal components generalizes. An independently verified signed value is still required. The residual remains **9,644 unresolved orbits / 830,919 labels**. Full `c0` and publication acceptance remain open.
+
 **Current resume point — 16 November 2026, L1 one-or-zero occupied shared-edge cohort independently accepted.**
 
 The [exact evidence and reproduction archive](L1_N16_C0_SHARED_EDGE_ONE_ZERO_R1.zip) records 152 independently matched representatives with 13,632 positive labels, including 123 representatives with coframes on one spatial side and 29 with neither occupied. The review verifies the normalized Haar coefficients, original site signs and factorials, and all 152 signed contractions. The weighted subtotal is `56317687141862691681381500463/36028797018963968`. Subtracting just these reviewed rows leaves **9,644 unresolved orbits / 830,919 labels**. Full `c0` and publication acceptance remain open.
