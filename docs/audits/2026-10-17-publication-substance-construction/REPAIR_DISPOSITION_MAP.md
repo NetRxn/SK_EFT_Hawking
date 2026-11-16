@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 same-owner directed-square cohort independently accepted.**
+
+The [independent extension review](L1_N16_C0_DIRECTED_SQUARE_SAME_OWNER_INDEPENDENT_R1.md) accepts 42 additional pure-EHC directed-square representatives. Independent forward and reverse schedules matched all 168 channel contributions and 336 layer values, with prospective work checks and no refusals. The new 3,840 labels contribute `1677014379339527105381299959417/18446744073709551616`. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_SAME_OWNER_R1.zip) preserves author and independent replays and subtracts precisely these 42 rows. The temporal block retains **10,410 unresolved orbits / 899,691 labels**.
+
+The next cohort uses mixed-owner degree-four spatial coframes on at least one directed-cycle edge. Its new spatial tensors and signed pilot are author results pending independent reconstruction. Carry through the bounded mixed-owner run and independently verify the tensor, orientation, factorials, per-channel values and any resource refusals before subtracting rows. The full original `c0` is open. L1 remains the sole active bundle. PR119 remains draft with full merge qualification and human approval open.
+
 **Current resume point — 16 November 2026, six L1 directed-square representatives independently accepted.**
 
 The [independent batch review](L1_N16_C0_DIRECTED_SQUARE_BATCH_INDEPENDENT_R1.md) accepts five additional pure-EHC representatives, matching all 20 channel contributions and 40 layer values under forward and reverse contraction. The new 240 labels contribute `332897913905946331186387643261875/3541774862152233910272`. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_BATCH_R1.zip) preserves the report, reproducible replay and updated residual. Only the five new records were subtracted. The temporal block has **10,452 unresolved orbits / 903,531 labels**.
