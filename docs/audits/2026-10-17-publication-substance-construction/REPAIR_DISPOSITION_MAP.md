@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, first L1 signed directed square independently accepted.**
+
+The [independent result review](L1_N16_C0_DIRECTED_SQUARE_PILOT_INDEPENDENT_R1.md) accepts the pure-EHC representative `(37086699520,8935831015554)` at weight 48. Both contractions give the value `43150358914340032656914557421875/510015580149921683079168`. Independent Fourier projection, alternate spatial grouping and signed site sewing match all four channels. Reversing the contraction schedule preserved the result. Omitting the spatial conjugation or the wedge sign changed it. The author's work count was retrospective. The independent replay counted products before expansion and reproduced all 207,296 spatial moment rows and 70,448 matrix rows. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_PILOT_R1.zip) preserves both routes and the exact residual.
+
+One accepted representative removes 48 labels, leaving **10,457 unresolved orbits / 903,771 labels** in the temporal block. The archive includes author results for six same-pattern orbits with 288 labels. Independently replay the five additional values and update the residual only after acceptance. The broader square family and original full `c0` remain open. L1 remains the sole active bundle. PR119 remains draft at `26b8ba9ff` with full merge qualification and human approval open.
+
 **Current resume point — 16 November 2026, L1 raw N16 replay and main-draft qualification.**
 
 L1 remains the sole active bundle. The full raw N16 metric-sewing and literal-contact test passed on the clean, pushed [coefficient candidate](https://github.com/NetRxn/SK_EFT_Hawking/commit/51e7c745eccad5e99676cdc8e4b523ad73e617b1). The test exercises both exact edge routes, original signed coefficients and zero contacts, and the declared work and payload limits. The run used `python -m pytest -p no:cacheprovider -m slow -q tests/test_original_coefficient_jets.py::test_full_original_f60_g52_and_contacts` and exited zero with one pass in 10.22 s. Raw metric and contact coefficients do not supply the evaluated interacting denominator.
