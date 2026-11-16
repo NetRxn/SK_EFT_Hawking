@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 forest and leaf-reduced shared-edge cohorts independently accepted.**
+
+The [evidence and reproduction archive](L1_N16_C0_FOREST_SHARED_EDGE_R1.zip) records two disjoint cohorts from the previous residual: 219 scalar forest representatives covering 18,996 labels, and 88 shared-edge representatives covering 7,872 labels. Exact independent replay matched every signed coefficient. Both adjoints contribute in all 88 shared-edge cases. The combined weighted subtotal is `227954865061128808937738439/562949953421312`. The residual subtraction leaves **9,796 unresolved orbits / 844,551 labels**. The full original pure-EHC `c0` sign, value and nonvanishing remain open. This evidence checkpoint leaves bundle acceptance and publication gates open.
+
+Continue the L1 single lane. The archive preserves 152 author-evaluated shared-edge representatives with coframes on one side or neither covering 13,632 labels. They remain in the residual pending independent replay. Then prioritize a method that covers a larger fraction of the residual or gives a certified bound on its signed contribution. Compare coverage and projected cost before selecting the next contraction family.
+
 **Current resume point — 16 November 2026, L1 two-edge chains independently accepted.**
 
 The [independent chain review](L1_N16_C0_TWO_EDGE_CHAIN_INDEPENDENT_R1.md) accepts 265 original representatives covering 24,576 labels. Leaf Haar pairs the channels. The two distinct own-side spatial anchors cannot both support a nontrivial even representation with only two coframes. This kills nontrivial channels before the shared central link is integrated. Independent literal controls give `2222/135` at the asymmetric fixed profile and distinguish the incorrect independent-center value `148/9`. All signed scalar contractions match, with weighted subtotal `2681723330496543533280954453/4503599627370496`. The [evidence archive](L1_N16_C0_TWO_EDGE_CHAIN_R1.zip) subtracts only these rows, leaving **10,103 unresolved orbits / 871,419 labels**.
