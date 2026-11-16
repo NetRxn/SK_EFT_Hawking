@@ -38,6 +38,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — 16 November 2026, L1 A-core mixed-owner directed squares independently accepted.**
+
+The [independent A-core review](L1_N16_C0_DIRECTED_SQUARE_MIXED_A_CORE_INDEPENDENT_R1.md) accepts 14 additional representatives covering 1,152 labels. All 56 signed channels and 112 spatial-layer values match. The two join refusals were recovered by disjoint exact partitions at the other pair of opposite vertices. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_MIXED_A_CORE_R1.zip) records the exact subtotal `94444265482534360455287322645/1152921504606846976` and subtracts only these rows. The temporal block retains **10,368 unresolved orbits / 895,995 labels**.
+
+The next target is the 265-orbit two-edge chain cohort covering 24,576 labels. The literal and reduced conditional temporal calculations agree and distinguish the shared central link from independent center integrations. The author paired-anchor moment tables reproduce the established scalar references. Assemble the paired representation matrices, contract the central Haar tensor with the original signed spatial and site masks, and independently replay the resulting values before updating the residual. L1 remains the sole active bundle. Full original `c0` and final qualification remain open.
+
 **Current resume point — 16 November 2026, L1 B-core mixed-owner directed squares independently accepted.**
 
 The [independent mixed-owner review](L1_N16_C0_DIRECTED_SQUARE_MIXED_OWNER_INDEPENDENT_R1.md) accepts 28 additional B-core representatives covering 2,544 labels. The independent calculation matched every mixed spatial tensor row and all 112 channel contributions. The three original refusals were recovered by exact, disjoint tiles fixing the other pair of opposite vertices, without changing the caps. Their combined weighted subtotal for the 28 representatives is `41101994788076062939485274495683/73786976294838206464`. The [evidence archive](L1_N16_C0_DIRECTED_SQUARE_MIXED_OWNER_R1.zip) subtracts exactly those rows, leaving **10,382 unresolved orbits / 897,147 labels** in the original temporal block.
