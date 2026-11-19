@@ -2371,8 +2371,8 @@ PARAMETER_PROVENANCE = {
         'unit': 'dimensionless',
         'tier': 'PROJECTED',
         'source': 'Wave 1 tracked-hypothesis natural range (-1 OOM from Sakharov)',
-        'detail': 'Lower edge of the natural α_ADW range. Vergeles-derived value almost certainly '
-                  'lies within [0.1, 10] = ±1 order of magnitude from the Sakharov default of 1.',
+        'detail': 'Lower endpoint of the project-adopted α_ADW scan [0.1, 10], one decade below '
+                  'the Sakharov baseline of 1. The microscopic ADW coefficient remains undetermined.',
         'doi': None,
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED operational lower edge of α_ADW scan.',
@@ -2385,8 +2385,8 @@ PARAMETER_PROVENANCE = {
         'unit': 'dimensionless',
         'tier': 'PROJECTED',
         'source': 'Wave 1 tracked-hypothesis natural range (+1 OOM from Sakharov)',
-        'detail': 'Upper edge of the natural α_ADW range. ±1 order of magnitude from the '
-                  'Sakharov default of 1.',
+        'detail': 'Upper endpoint of the project-adopted α_ADW scan [0.1, 10], one decade above '
+                  'the Sakharov baseline of 1. The microscopic ADW coefficient remains undetermined.',
         'doi': None,
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED operational upper edge of α_ADW scan.',
