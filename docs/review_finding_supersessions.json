@@ -10853,6 +10853,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:6",
+      "status": "fixed",
+      "evidence": "Independent Paper25 reader/render review at the repair commit inspected all five pages and found zero TeX errors or unresolved references. A fresh forced isolated compile of checkpoint 888e5937d also passed at five pages with zero TeX errors, overfull reports and unresolved PDF references.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/READER_RENDER_R2.md",
+      "date": "2026-11-19",
+      "commit": "87ae47bfd",
+      "verified_by": {
+        "command": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+        "declared": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-19"
+      }
     }
   ]
 }
