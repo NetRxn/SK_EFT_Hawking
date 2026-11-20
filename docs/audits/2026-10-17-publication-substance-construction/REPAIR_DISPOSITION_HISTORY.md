@@ -4123,3 +4123,44 @@ preparation of the shared original factor state and independent review.
 The complete maximum-row case supplies a second harder route sample.
 Costs for the remaining groups, the full coefficient, physical
 acceptance and publication gates remain open.
+
+### L1 dense cut chirality transfer
+
+The [reviewed exact pairing and replay](L1_N16_C0_DENSE_CHIRAL_CUT_PAIRING_R1.zip)
+applies the previously independently accepted gamma3 change of variables
+for the same original occupancy profile `(503841882182,1461451755920)`.
+The 16 fixed cut axes retain their physical positions and the two chirality
+degrees exchange within each ordered value. Restricting a full assignment
+to the cut commutes with this exchange. The equal-weight original source
+bijection therefore pairs the signed sums over the two cut fibers. The
+full replay verifies 1,936 disjoint pairs covering all 3,872 cut groups,
+including all 2,456 compiled block records under the corresponding
+temporal chirality family exchange. Original Haar, orientations,
+occupation prefactor and Gaussian signs are retained.
+
+Independently evaluated Groups 128, 672 and 934 transfer to Groups 3603,
+3102 and 2937 respectively. The six-group exact normalized subtotal before
+the external profile weight 48 is
+`-73512691260185505044800099547086599/1393796574908163946345982392040522594123776 + 0i`.
+There are 1,933 unevaluated representatives among the remaining 3,866
+groups. The unfinished dense profile remains in the original coefficient
+residual.
+
+All four maximum-row groups load 3,436,540 rows. The original serial
+preparation of Groups 2937, 1673 and 2198 took 49.17, 47.70 and 46.39 seconds.
+Groups 934 and 2937 produce 1,298,202 rows after two sweeps. Groups 1673
+and 2198 produce 1,110,546. All eight conditioned row counts within each
+pair agree under the ordered label exchange. Group 1673 is the next
+held-out upper-input terminal case. This test measures actual contraction
+cost beyond preparation and checks which of the previously accepted
+routes generalizes. Existing measured terminal costs come from distinct
+schedules, and the full profile has no qualified runtime forecast yet.
+Physical B3 and final publication acceptance remain open.
+
+A held-out author attempt on Group 1673's smallest joint assignment
+reached a 22-factor cap in 52.01 seconds. The accepted Group 934
+unsharded algorithm transferred to that cap and reached an 18-factor
+bounded stop in another 42.17 seconds. The saved frontier carries
+1,820,644 signed rows and a reproduced source roster. This bounded
+measurement still needs independent verification and a terminal value.
+The replay scripts and frontier hashes are in the archive.
