@@ -172,7 +172,10 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "count_literals": (
         "test_always_pass_dispositions.py",
-        "WARN-only against a retreating target; now a ratchet on COUNT_LITERAL_CEILING",
+        "Fixture both-directions cases plus journalled D6 production seed: one numeric "
+        "count increases the actual census by one, fails the configured zero-headroom "
+        "ratchet, and restores exact bytes and a green verdict. TestCountLiteralRatchet "
+        "owns the production method; no input or configuration patch is used.",
     ),
     "bundle_tables_use_pipeline": (
         "test_d5_papers_prose.py",
@@ -997,6 +1000,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # The real D6 numeric-count seed method verifies +1 debt, a named ratchet failure,
+    # and byte-exact journal restoration under the configured zero-headroom ceiling.
+    "count_literals",
     # 2026-08-15: a real review document carrying SEED_MARKER written into the live
     # papers/AutomatedReviews/ corpus through `seed_journal.seeded_artifact` -> red,
     # naming the file; removed on exit and the check green again. Keeps
@@ -1204,7 +1210,8 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 51  # 2026-08-14: 54 -> 51, `citation_primary_sources_present`
+FIXTURE_ONLY_CEILING = 50  # Numeric-count production seeding discharges one registered check.
+                           # 2026-08-14: 54 -> 51, `citation_primary_sources_present`
                            #   `bundle_metadata_matches_graph` and `counts_fresh`
                            #   production-seeded (see their entries above).
                            # 2026-08-13 (ADR-013 P4): UNCHANGED by the Index check's

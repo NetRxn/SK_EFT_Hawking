@@ -543,3 +543,37 @@ def test_every_cell_kind_has_a_css_rule_and_every_rule_names_a_real_kind():
         f"CSS names .flow-{sorted(phantom)} which is not a cell kind and not a layout "
         f"class — either a kind was renamed and the stylesheet did not follow, or the "
         f"selector was invented; both look like styling that is doing something")
+
+
+class TestBorrowedBoardInputs:
+    """Empty inputs retain their existing distinct meanings at the board seam."""
+
+    def test_explicit_empty_gates_are_unmeasured_and_omitted_uses_fallback(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(df, 'PAPERS_DIR', tmp_path)
+        monkeypatch.setattr(df, 'BUNDLE_CODES', ('X1',))
+        monkeypatch.setattr(df, 'registered_lean_modules', lambda code: {
+            'measured': False, 'count': None, 'unresolved': None, 'note': 'fixture unknown'})
+        monkeypatch.setattr(df, 'manuscript_length', lambda *args: {
+            'measured': False, 'value': None, 'unit': 'pages', 'target': None,
+            'unmeasured_reason': 'fixture unknown', 'note': 'fixture'})
+        loaded = []
+        def gates():
+            loaded.append(True)
+            return []
+        monkeypatch.setattr(df, 'load_gate_nodes', gates)
+        inputs = dict(by_bundle={'X1': {'open_finding_ids': ['f1']}},
+                      finding_nodes=[_finding('f1', bundle='X1')], freshness_findings=[])
+        explicit = df.flow_board(**inputs, gate_nodes=[])
+        assert loaded == []
+        assert explicit['rows'][0]['cells']['submission']['kind'] == 'unmeasured'
+        assert explicit['rows'][0]['metadata_present'] is False
+        assert df.flow_board(**inputs) == explicit
+        assert loaded == [True]
+
+    def test_empty_findings_or_roster_still_refuse_before_loaders(self, monkeypatch):
+        monkeypatch.setattr(df, 'BUNDLE_CODES', ('X1',))
+        with pytest.raises(RuntimeError, match='ReviewFinding population is EMPTY'):
+            df.flow_board(by_bundle={}, finding_nodes=[], gate_nodes=[], freshness_findings=[])
+        monkeypatch.setattr(df, 'BUNDLE_CODES', ())
+        with pytest.raises(RuntimeError, match='BUNDLE_CODES is EMPTY'):
+            df.flow_board(by_bundle={}, finding_nodes=[_finding('f1')], gate_nodes=[], freshness_findings=[])

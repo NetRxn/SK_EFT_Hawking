@@ -92,3 +92,7 @@ _Initial bookkeeping created 2026-05-31T14:04:05Z by `scripts/bundle_source_mani
 - LaTeX compile gate: pdflatex + bibtex + pdflatex ×2 — 0 errors, 0 undefined citations/references,
   9 pp (was 5 pp). Stage-13 redo flagged (`stage13_redo_required=true`); reviewer triple (Stages
   9/10/13) is the separately queued Stage-F goal.
+
+## 2026-10-15 — Citation identity and source-fidelity reconciliation
+
+Reconciled the three existing companion BibTeX entries with current D4/D6/D9 titles/authors and explicit internal draft status; registered their existing citing keys. No parallel inline bibliography or extractor implementation was introduced. Scoped review and evidence: `../AutomatedReviews/2026-10-15-publication-citation-coverage/`. Broader publication gates remain pending.

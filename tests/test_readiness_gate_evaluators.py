@@ -42,6 +42,13 @@ sys.path.insert(0, str(SK_ROOT))
 import readiness_gates as rg  # noqa: E402
 
 
+@pytest.fixture(autouse=True)
+def _dummy_papers_root(tmp_path, monkeypatch):
+    papers = tmp_path / 'papers'
+    papers.mkdir()
+    monkeypatch.setattr(rg, 'PAPERS_DIR', papers)
+
+
 def _empty_graph(paper_id="paper:paper1_sk_eft"):
     """A graph containing ONE Paper node and nothing else — the 'no evidence'
     case every evaluator must refuse to pass."""

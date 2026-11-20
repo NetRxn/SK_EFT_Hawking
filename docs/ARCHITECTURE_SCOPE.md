@@ -394,3 +394,7 @@ Cross-phase impact memos are in `docs/stakeholder/Phase5y_Impact_on_*.md`
 *Phase 5y terminal closure artifact. Supersedes no prior architecture
 document — this is the first explicit `ARCHITECTURE_SCOPE.md` for the
 program.*
+
+## Finite memory and calibrated inference
+
+The finite-memory work supplies a model-specific, formally verified inference and temporal-approximation substrate alongside the emergent-physics program. It does not change the scope of cosmological or horizon predictions. Operational separation, calibrated statistical exclusion and collision-model forgetting have distinct hypotheses and evidence; see [the D9 claim map](dev-loops/MemoryProcesses/PUBLICATION_MAP.md) and [owning contract](dev-loops/MemoryProcesses/CALIBRATION_COARSE_GRAINING.md). Arbitrary process-tensor compression, quantum advantage and experimental applicability are not established by these models.

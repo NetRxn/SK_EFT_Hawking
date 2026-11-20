@@ -1,5 +1,14 @@
 # Phase 6e: Nonlinear Effective Action from ADW — Heat-Kernel Expansion to Full Einstein Equations
 
+## Current L1/ADW correspondence boundary — 2026-10-17
+
+The dated six-wave formal delivery and action calculations below are preserved. They do not themselves discharge the separately owed physical tetrad-channel correspondence in Phase5d or the original L1 B3/mode/transport targets in Phase6a. **Those scientific successors remain OPEN BUILD.** This is a bounded consumer/dependency reconciliation, not a new audit or rejection of every Phase6e theorem.
+
+For L1, construct the metric-channel source/projector and normalized response, a stable constrained propagating mode with matter coupling, and the actual dissipative/frequency map before using the GW arrival-time bound. The accepted scalar bubble/RPA-zero manual milestone (`construction-L1-bubble-r1`, independent review `0f13436b`) does not provide those physical bridges. For the ADW/tetrad channel, derive the regulated determinant, channel factors and saddle/GL-to-order-parameter map rather than infer it from matched scalar critical coefficients. Independent scientific review and subsequent ordinary native/consumer verification are required. A named historical destination ('Phase6e or H1 follow-up') is not an accepted executor receipt; present ownership follows below.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
 ## Technical Roadmap — April 2026 — **CLOSED 2026-04-28**
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22) §8. The central missing calculation for "GR from condensate." Derives the full Einstein-Hilbert action (all orders in curvature) from the ADW 8-fermion microscopic theory via heat-kernel / derivative expansion of the fermion determinant.*

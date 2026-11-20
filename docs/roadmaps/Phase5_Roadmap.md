@@ -1,5 +1,14 @@
 # Phase 5: Analytical Completion + Wall Formalization
 
+## Current physical construction status — 2026-10-17
+
+**ONE shared D1/E1/E2 dispersive-law construction: OPEN BUILD**, carried here under the original Wave1A kappa-scaling objective. Preserve the dated sweeps, coefficient-delegation repair and true algebra about the adopted `-pi D^2/6` definition. They do not derive a nonzero leading quadratic law or its coefficient for physical devices. The fixed PROSE finding `review:2026-10-15-publication-source-propagation:E1:1.1` remains a valid source-scope closure, not scientific discharge. Do not duplicate this construction in Phase5w or each paper. First milestone: derive scattering/occupation for one specified physical dispersion/profile and state, with flux normalization and an asymptotic/error remainder independent of the desired answer; compare the local-linear and profile-specific KdV limits before generalizing. Independent analogue-gravity/mathematical review must distinguish a leading term from a loose upper bound and any demonstrated obstruction from untested difficulty.
+
+**E1 response/calibration/error-controlled detection band: OPEN BUILD** under Wave1B. Derive the actual pumped polariton/reservoir retarded response, noise and loss-to-readout map for one source-qualified operating point; connect the physical pump/dynamics dependency to Phase6q/Wave6v.3 without duplicating it. Then independently calibrate optical transmission, transfer and in-band noise/covariance to exhibit a nonempty usable band with a controlled error budget. The scalar exponential-loss/gain identities and an adopted frequency edge do not supply those constructions. Preserve fixed source/prose/figure closures and delivered modules/tests, while treating the original research-confirmed-survival/all-physics-computed language below as dated adopted-model delivery, not current physical closure. E2's distinct electrical/geometry work is in Phase5w; both platforms consume the ONE shared law above.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
 ## Technical Roadmap — March 2026
 
 *Prepared 2026-03-28 | Follows Phase 4 (vestigial gravity, fracton Layer 2, experimental predictions) and Wave 5 quality hardening*

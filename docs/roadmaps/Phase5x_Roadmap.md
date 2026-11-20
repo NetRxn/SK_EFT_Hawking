@@ -1,5 +1,16 @@
 # Phase 5x: Dark Sector Connections — Dark Matter & Dark Energy from Emergent Gravity
 
+## Current construction status — 2026-10-17
+
+**Physical ADW correspondence, an independently derived nonzero vacuum magnitude and quantitative cosmological inference remain OPEN BUILD under the original Wave 3 goal.** This reconciliation corrects the body’s former magnitude/DESI claims, not only its status header. Actual P still contains unvalidated 2.8/2.3 meV defaults, “accuracy” and fixed KV/DESI reporting in `src/dark_sector/adw_cosmological_constant.py`; Paper 17 still conflates local de Sitter temperature with a vacuum-density fourth root, and Paper 5 identifies distinct scalar/NJL equations. Their source/runtime/figure/consumer propagation remains owed. N’s stronger branch-selecting/uncomputed-default reporting API and manuscript corrections are separately retained work, not installed or executed in this P target. Historical helper/test/draft delivery below is not current physical acceptance.
+
+Credit the actual accepted milestones at their boundaries. The N-local stipulated-NJL numerical repair has independent installed review `c13432678d19923704eeaf7ab6b1b2076035f92904c02e765a3a7882a02bc626` and ROOT intake `publication-njl-ROOT-installed-runtime-intake-20261017-r1.json`; it is implemented and accepted locally, not a future unimplemented solver, a microscopic ADW derivation or proof of protected delivery/main. Separately, `../audits/2026-10-17-publication-substance-construction/ADW_REGULATED_SCALAR_MINIMUM.md` carries the exact manual regulated-potential construction, independently accepted as recorded in the existing `REPAIR_DISPOSITION_MAP.md`: positive-integral residual, parameter-dependent unique magnitude minimum, domain/endpoint countercases, brackets and magnitude/energy error contract. Production evaluation/optimizer and native proof remain open. A generic polynomial quartic identity does not substitute for that construction, and sharing G_c does not make the NJL and regulated-potential nonzero roots equal.
+
+Next physical milestones retain full strength: derive the microscopic tetrad-channel/determinant normalization and scalar reduction with Phase 5d; derive independently scaled equilibrium departure or vacuum response/evolution, gravitational coupling, unit-complete nonzero magnitude and uncertainty; select a source-supported KV model/branch and construct the finite-redshift background/perturbation/observable map with data, likelihood, priors, identifiability and error controls. Observed H inserted into Friedmann is supplied-input conversion, not an independent prediction of H or density. A zero ideal equilibrium or a catalogue/classification/disclosure cannot discharge these constructions. Independent scientific review must assess actual calculations; no target reduction or approved deferral follows from this reconciliation.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication notebook r40 and retained by current r50. Completion requires actual construction, independent scientific review and existing canonical closure. ROOT retains shared-primary/native admission, integration and protected Git/main authority; no new lease, checker, tracker or closure is created here.
+
+
 ## Technical Roadmap — April 2026 (Updated post-Deep-Research)
 
 *Prepared 2026-04-16 | Updated 2026-04-16 post-deep-research | Updated 2026-07-20 post-Wave-1b | Updated post-Fracton-DM-Kinetic-Stability-Drilldown | Updated 2026-04-29 post-Phase-6c.3-closure | Triggered by: brainstorm session identifying 10 concrete-to-speculative connections between the fluid-based physics / SK-EFT-Hawking research program and dark matter (DM) / dark energy (DE). Updated after completion of all 6 Wave 1 deep research tasks and 3 Wave 1b follow-up tasks.*
@@ -43,9 +54,11 @@
 The ℤ₁₆ anomaly admits multiple solutions, but Wang's Ultra Unification identifies a **K-gauge TQFT with zero particle content** (solution T-0) as physically preferred when ν_R is absent. This means the hidden sector is a gapped anyon system — completely invisible to LZ, XENONnT, and all planned direct detection. The minimal *particle* solution is S-0 (3 sterile neutrinos). There are 24,576 total deformation classes of the SM. 7 near-term Lean theorems (T1-T3, T8, T10-T12) are achievable with existing Mathlib.
 - **Source:** `Lit-Search/Phase-5x/ℤ₁₆ Anomaly-Forced Hidden Sector  Dark Matter Candidate Constraints.md`
 
-### Finding 2: Volovik CC Mechanism Naturally Produces ρ_Λ ~ T⁴ ~ (meV)⁴ ⚡W1b: KV Level D Tension with DESI
-The tetrad-determinant equilibrium gives Λ=0 exactly in perfect Minkowski vacuum. Perturbation by thermal matter yields residual ρ_vac ~ T⁴ — **tantalizingly close to the observed (2.3 meV)⁴**. The mechanism is heuristic (not a theorem), but the coincidence-problem resolution is structural. T_dS = H/π (twice Gibbons-Hawking) from modified spatial translations. ~~DESI DR2 2.8-4.2σ preference for evolving DE is marginally compatible with Klinkhamer-Volovik oscillating vacuum.~~
-- ⚡**W1b CORRECTION (Level D tension):** KV oscillating vacuum predicts (w₀, wₐ) = (-1, 0) for the current epoch. DESI DR2 excludes this at **2.9σ (Pantheon+) to 4.4σ (DESY5)**. KV oscillations are Planck-scale (~10⁻⁴⁴ s), NOT cosmological — w_eff = 0 during oscillation (CDM-like), not phantom-crossing. RVM (Solà Peracaula) with ν~10⁻³ accommodates DESI but Volovik-motivated ν~10⁻¹²² is 10⁸² too small. **Strongest surviving empirical hook:** Λ magnitude prediction ρ_vac ~ (2.8 meV)⁴ vs observed (2.3 meV)⁴ (~20% accuracy). QCD topological DE (Van Waerbeke-Zhitnitsky 2025, arXiv:2506.14182) with 0 free parameters and phantom crossing is the strongest DESI-compatible bridge from the KV framework. **Paper 17 reframe: withdraw "KV explains DESI"; keep "KV predicts Λ magnitude"; add "ADW motivates exploring beyond frozen plateau."** Falsifiable: DESI DR3 (2026-2027) decisive.
+### Finding 2: Volovik CC mechanism and model-scoped KV interpretation
+
+**KV source scope:** distinguish the 2008 dynamical four-form equilibrium and perturbed-chemical-potential branches (arXiv:0806.2805v7 §V) from the 2011 stepwise plateau scenario (arXiv:1102.3152v4 §5/6). Bare-field, effective homogeneous and approximate plateau equations of state do not by themselves supply a finite-redshift CPL fit. Select the model/regime and specify a forward model, dataset and likelihood before a quantitative comparison. The current report leaves the fit uncomputed. ADW magnitude inputs/accuracy and QCD alternatives require separate primary-source, unit and numerical assessment.
+**ADW magnitude/input scope:** The determinant equilibrium in arXiv:2011.06466v9 (May 2021), §XI, gives zero vacuum energy in ideal Minkowski equilibrium under its matter/coupling assumptions; its imaginary-determinant 4+0 thermodynamic temperature is distinct. For local de Sitter temperature, arXiv:2312.02292v16 Eq. (22) gives ρ_vac = 3H²/(8πG) = 3πT_dS²/(8G), so ρ_vac^(1/4) scales as G^(-1/4)T_dS^(1/2), not T_dS. The p.16 T⁴ expression is relativistic matter; CMB thermal energy is a third distinct scale. Eqs. (70)–(73) give a phenomenological stiff-matter/cosmic-age alternative, not an independent fixed 2.8 meV prediction. A nonzero present magnitude needs a specified model, justified inputs and unit-consistent conversion. An independent physical magnitude and predictive accuracy have not been computed. The actual public target still reports stored-input comparisons as defaults, as disclosed in the current status and module-delivery entry below; those comparisons are arithmetic only.
+- **KV model comparison:** in the selected 2008 equilibrium asymptotics, coupled F+G homogeneous expansion is CDM-like (effective w=0), distinct from bare-F w=-1; clustering remains open. A perturbed chemical potential can give late de Sitter expansion. The separate 2011 scenario describes approximate vacuum-like plateaux and conditional remnants. Report the selected source/regime and uncomputed CPL/likelihood status; DESI ΛCDM/CPL statistics are not a KV exclusion significance.
 - **Source (W1):** `Lit-Search/Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md`
 - **Source (W1b):** `Lit-Search/Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md`
 
@@ -112,7 +125,7 @@ L=6,8 MC data is **insufficient** to determine transition order (first vs second
 | **Z16AnomalyComputation.lean** | 23 | `hidden_sector_required`, `three_gen_is_neg3`, `dai_freed_spin_z4` | Forces hidden sector with anomaly +3 mod 16 (3 gen, no ν_R). Deep research confirms Wang's T-0 (topological order) is preferred solution. |
 | **SMFermionData.lean** | 18 | `sm_z4_all_odd`, `total_components_with_nu_R` | Constrains what hidden sector can couple to; all SM fermions odd under ℤ₄ |
 | **GenerationConstraint.lean** | 4 | `generation_mod3_constraint`, `chiral_central_charge_coeff` | N_f ≡ 0 mod 3 independent of ℤ₁₆ (deep research confirms independence: T12) |
-| **ADWMechanism.lean** | 21 | `critical_coupling_pos`, `vergeles_mode_count`, `zero_C_with_fluct_gives_vestigial`, `pos_C_gives_full_tetrad` | CC from condensation equilibrium; vestigial phase DM epoch. Deep research: V_eff(C₀) = -Λ⁴/(4e), residual ρ_vac ~ T⁴ ~ (meV)⁴ |
+| **ADWMechanism.lean** | 21 | `critical_coupling_pos`, `vergeles_mode_count`, `zero_C_with_fluct_gives_vestigial`, `pos_C_gives_full_tetrad` | Conditional coupling/phase algebra retained. It does not derive the regulated scalar stationary root, its microscopic tetrad correspondence or an independent present vacuum magnitude; those remain separate BUILD obligations. |
 | **VestigialGravity.lean** | 18 | `vestigial_has_metric_no_tetrad`, `ep_violation_in_vestigial`, `phase_hierarchy`, `phase_levels_ordered` | Vestigial relics, DM from phase transitions. Deep research: L=6,8 insufficient — MUST extend MC to L=10,12,16 |
 | **FractonGravity.lean** | 20 | `linearized_equivalence`, `bootstrap_gap_order_2`, `dof_mismatch_4d`, `derivative_order_mismatch` | Fracton DM stability. Deep research: `bootstrap_divergence` → mass bounded from below; `DOF_gap` → σ_eff → 0 (Bullet Cluster) |
 | **FractonHydro.lean** | 17 | `conserved_charges_fracton`, `fracton_exceeds_standard_3d_order2`, `information_retention_monotone` | Subdiffusion → cored profiles (core-cusp solution); HSF → diversity problem explanation |
@@ -129,7 +142,7 @@ L=6,8 MC data is **insufficient** to determine transition order (first vs second
 | Computation | Result | Dark Sector Relevance | Deep Research Update |
 |---|---|---|---|
 | Vestigial MC (L=6,8) | Three phases, split transition Δ ≈ 0.63 | Phase transition cosmology | **INSUFFICIENT** — must extend to L=10,12,16 with Binder cumulants to determine transition order |
-| Gap equation V_eff(C) | ~ C⁴ ln C | Vacuum energy → CC | C₀ = Λ·e^{-1/4}; V_eff(C₀) = -Λ⁴/(4e) ~ -M_P⁴/10 — Volovik self-tuning absorbs to leave ~T⁴ |
+| Regulated scalar ansatz V_exact(C) | C²/(2G)−A[Λ²C²−C⁴ log(1+Λ²/C²)], A=N_f/(16π²) | Candidate scalar vacuum landscape → physical CC construction still owed | Exact manual analysis in `../audits/2026-10-17-publication-substance-construction/ADW_REGULATED_SCALAR_MINIMUM.md` establishes parameter-dependent minima under its stated model/domain; native/production optimizer, microscopic correspondence and a nonzero physical magnitude are separate open work. The universal C₀/depth pair does not describe this ansatz. |
 | SM anomaly computation | 45 ≡ 13 ≡ -3 mod 16 | Hidden sector fermion content | Confirmed: 24,576 deformation classes; Class B (n_νR=0, TQFT) is observationally motivated |
 
 ### Existing Deep Research References
@@ -137,7 +150,7 @@ L=6,8 MC data is **insufficient** to determine transition order (first vs second
 | File | Connection | Status |
 |---|---|---|
 | `Lit-Search/Phase-5x/ℤ₁₆ Anomaly-Forced Hidden Sector  Dark Matter Candidate Constraints.md` | ℤ₁₆ → hidden sector, Wang Ultra Unification, 24,576 deformation classes, T-0 topological order DM | **COMPLETE** |
-| `Lit-Search/Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md` | Volovik CC mechanism, T_dS = H/π, ~~DESI DR2 compatibility~~ ⚡Level D tension, SK-EFT for de Sitter | **COMPLETE** |
+| `Lit-Search/Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md` | Historical ADW/KV research memo and temperature/equilibrium arguments; magnitude scales, KV branch selection and quantitative inference require the current Wave 3 corrections | **Research task complete; physical construction open** |
 | `Lit-Search/Phase-5x/Fang-Gu Torsion Dark Matter  Phenomenology from Topological Gravity.md` | e-loop DM, traceless T^μν, σ~10⁻⁹⁰ cm², two independent torsion channels in ADW+FG | **COMPLETE** |
 | `Lit-Search/Phase-5x/SK-EFT Dissipative Framework Applied to Superfluid Dark Matter  Feasibility Study.md` | SFDM parameter mapping, T_H unobservable, MOND corrections, FDR noise in RAR, cluster mergers | **COMPLETE** |
 | `Lit-Search/Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md` | Phase transition order TBD, KZ relic abundance, EP violation, GL(4)/SO(3,1) homotopy, STEP mission | **COMPLETE** |
@@ -154,13 +167,13 @@ L=6,8 MC data is **insufficient** to determine transition order (first vs second
 
 The deep research findings substantially reshape the wave priorities:
 
-1. **Track A confirmed highest priority.** Both ℤ₁₆ (Wave 2) and ADW CC (Wave 3) have concrete, formalizable results with Lean theorem targets identified. Track A alone could yield Paper 17. ⚡W1b: KV empirical hook weakened (Level D tension), but Λ magnitude prediction (~20% accuracy) and QCD topological DE bridge survive.
+1. **Track A confirmed highest priority.** Both ℤ₁₆ (Wave 2) and ADW CC (Wave 3) have concrete formalization targets. KV branch/model selection and likelihood remain uncomputed; ADW magnitude and QCD provenance require separate validation.
 2. **Wave 5 (SFDM) reframed ⚡AND ELEVATED.** The original goal of computing T_H for galactic sonic horizons is moot — T_H is unobservable (10⁻²³-10⁻²⁹ K). Redirect entirely to: dissipative MOND corrections, FDR noise in RAR scatter, and cluster merger sonic boom phenomenology. ⚡**W1b: Merger forecast now CONDITIONAL GO with quantitative S/N (3.5–5.7σ stacked ≥30). Fills confirmed BK literature gap. Paper 17's "money plot." PROMOTED to co-primary with Track A.**
 3. **Wave 6 (Vestigial Relics) BLOCKED by MC extension.** All downstream relic physics depends on determining the transition order. L=10,12,16 MC with Binder cumulants is the gate. Cross-reference Phase 5d (ADW/RHMC) for shared infrastructure.
 4. **Wave 7 (Fracton DM) critical vulnerability resolved ⚡Drilldown: UPGRADED to VIABLE (conditional).** 3D gapped fracton topological order destroyed at T > 0, BUT p-wave dipole superfluid is thermodynamically stable at all T > 0 in d=3 (Kapustin-Spodyneiko PRB 2022, Jensen-Raz PRL 2024). ~~⚡W1b: NON-VIABLE (weak form).~~ ⚡**Drilldown: z=4 subdiffusion survives in p-wave phase (Głódkowski et al. 2024). BBN constraint relaxed from Arrhenius M_d ≳ 10 MeV to condensate condition μ ≳ 1 MeV. Dark QCD UV completion naturally places M_d ~ Λ_dark ~ MeV–GeV. Viable window expanded from 4 decades to ~6–9 decades (MeV–TeV, conservatively). Theorem 13 split into 13a-d (+1 net new).**
 5. **Wave 4 (Fang-Gu) has limited formalization upside.** Mass parametrically undetermined; only 4 priority gaps identified. Best treated as a shorter assessment wave rather than a full 8-stage pipeline.
 6. **NEW: Extend MC computation must be added** as a prerequisite to Wave 6. This can run in parallel with Track A.
-7. ⚡**W1b NEW: DESI DR3 (2026-2027) is a decisive external milestone.** If DESI DR3 strengthens away from (-1,0), KV ruled out; if retreats toward (-1,0), KV less excluded. Paper 17 should be structured to accommodate either outcome.
+7. **DESI follow-up:** quantitative KV interpretation requires a selected model/regime, specified forward model and likelihood. A phenomenological CPL posterior alone does not decide the whole family.
 
 ---
 
@@ -173,7 +186,7 @@ The deep research findings substantially reshape the wave priorities:
 | # | Task File | Result File | Track | Key Outcome |
 |---|---|---|---|---|
 | 1 | `Tasks/Phase5x_z16_hidden_sector_dark_matter.md` | `Phase-5x/ℤ₁₆ Anomaly-Forced Hidden Sector  Dark Matter Candidate Constraints.md` | A | T-0 (TQFT) preferred; 7 near-term Lean theorems; 24,576 classes |
-| 2 | `Tasks/Phase5x_adw_cosmological_constant_dark_energy.md` | `Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md` | A | ρ_vac ~ T⁴ ~ (meV)⁴; T_dS = H/π; 6 Lean targets; DESI compatible |
+| 2 | `Tasks/Phase5x_adw_cosmological_constant_dark_energy.md` | `Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md` | A | Historical temperature/equilibrium proposal and6 Lean targets delivered; neither T⁴→meV magnitude nor generic DESI compatibility is established; current Wave 3 BUILD remains |
 | 3 | `Tasks/Phase5x_fang_gu_torsion_dark_matter.md` | `Phase-5x/Fang-Gu Torsion Dark Matter  Phenomenology from Topological Gravity.md` | B | σ ~ 10⁻⁹⁰ cm²; R=0; mass undetermined; 4 priority gaps |
 | 4 | `Tasks/Phase5x_superfluid_dark_matter_sk_eft.md` | `Phase-5x/SK-EFT Dissipative Framework Applied to Superfluid Dark Matter  Feasibility Study.md` | C | T_H unobservable → redirect to MOND/FDR; 6 Lean theorems |
 | 5 | `Tasks/Phase5x_vestigial_gravity_relics_dark_matter.md` | `Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md` | B | MC extension required; EP violation distinguishing; 5 priority questions |
@@ -189,15 +202,15 @@ The deep research findings substantially reshape the wave priorities:
 
 | # | Task File | Result File | Feeds | Verdict | Key Outcome |
 |---|---|---|---|---|---|
-| 7 | `Tasks/Phase5x_klinkhamer_volovik_desi_w0wa.md` | `Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md` | W3, W9 | **LEVEL D TENSION** | KV predicts (w₀,wₐ)=(-1,0), excluded at 2.9-4.4σ by DESI DR2. No phantom crossing possible. Reframe Paper 17: keep Λ magnitude prediction (~20% accuracy), withdraw DESI compatibility claim. QCD topological DE (Van Waerbeke-Zhitnitsky 2025) is strongest DESI-compatible bridge. |
+| 7 | `Tasks/Phase5x_klinkhamer_volovik_desi_w0wa.md` | `Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md` | W3, W9 | **Historical Level D label; model fit UNCOMPUTED** | The completed report’s former fixed-pair/exclusion/magnitude/QCD-ranking conclusions are superseded as current guidance by source/model/units corrections. Distinguish 2008 equilibrium and perturbed branches from 2011 approximate plateaux; build a branch-specific finite-redshift likelihood. A completed research report is not a computed magnitude, calibrated period or empirical exclusion. |
 | 8 | `Tasks/Phase5x_gapless_fracton_finite_T_stability.md` | `Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md` | W7 | ~~NON-VIABLE (weak form)~~ **⚡Drilldown: VIABLE (conditional)** | ~~BBN kills eV-scale M_d.~~ Drilldown: p-wave dipole superfluid thermodynamically stable at T>0 in d=3 (Kapustin-Spodyneiko, Jensen-Raz). BBN relaxed to μ ≳ MeV. Dark QCD UV completion viable. Theorem 13 → 13a/13b/13c/13d. |
 | 9 | `Tasks/Phase5x_sfdm_cluster_merger_sonic_boom_forecast.md` | `Phase-5x/5x-SFDM Cluster Merger Sonic Boom  Observational Forecast for Euclid Roman.md` | W5, W9 | **CONDITIONAL GO** | Single S/N 0.3–1.0; stacked ≥30 mergers → 3.5–5.7σ. BK has no quantitative forecast (confirmed gap). Smoking gun: velocity-threshold step function at M=1. First 3σ ~2028. |
 
 **Impact on downstream waves:**
-- **Wave 3:** KV empirical hook weakened → pivot to Λ magnitude prediction + QCD topological DE bridge
+- **Wave 3:** model/branch-scoped source assessment with explicit uncomputed CPL/likelihood; separate ADW magnitude/QCD provenance work remains open.
 - **Wave 5:** Merger forecast provides Paper 17's "money plot" with concrete stacking strategy
 - **Wave 7:** ~~Fracton DM assessment must include M_d > 10 MeV BBN floor.~~ ⚡Drilldown: p-wave dipole superfluid resolves finite-T vulnerability; BBN relaxed to μ ≳ MeV; Dark QCD UV completion viable; verdict upgraded to VIABLE (conditional); theorem 13 → 13a-d split
-- **Wave 9:** Paper 17 structure revised — KV claims downgraded, merger forecast elevated, fracton viability narrowed
+- **Wave 9:** Paper 17’s ADW/KV claims require current source/units/scalar-model propagation and quantitative BUILD; preserve other merger/fracton draft history without treating it as new validation.
 
 ---
 
@@ -324,17 +337,17 @@ Lean Formalization Targets:
 
 ### Wave 3 — ADW Cosmological Constant & Dark Energy [Pipeline: Stages 1-8] ⚡W1b: KV REFRAMED
 
-**Goal:** Assess the ADW-derived cosmological constant mechanism quantitatively. Formalize the Volovik equilibrium argument and T_dS = H/π. Compute Λ from the gap equation. Map vestigial correlator onto dark energy equation of state. **W1b update:** KV oscillating vacuum empirical hook demoted from "compatible with DESI" to "Level D tension" — Λ magnitude prediction and QCD topological DE bridge are the surviving empirical connections.
+**Goal:** Assess the ADW-derived cosmological constant mechanism quantitatively. Formalize the Volovik equilibrium argument and T_dS = H/π. Compute Λ from the gap equation. Map vestigial correlator onto dark energy equation of state. **Current KV scope:** distinguish the 2008 dynamical branches from the separately selected stepwise plateau scenario. No family-wide CPL pair, model-fit verdict or transferred DESI exclusion is established.
 
 **Prerequisites:** Wave 1 Task 2 ✅ COMPLETE. Wave 1b Task 7 ✅ COMPLETE.
 
 **Deep Research Findings to Incorporate:**
 
 - **Volovik mechanism is heuristic, not theorem** — the crucial unproven step is that the UV completion self-tunes e → e_eq without fine-tuning. Central gap in the argument.
-- **Residual ρ_vac ~ T⁴ ~ (2.8 meV)⁴** — tantalizingly close to observed (2.3 meV)⁴. Coincidence problem structurally solved: Λ tracks dominant energy density.
-- **T_dS = H/π (twice Gibbons-Hawking)** from de Sitter modified spatial translations r → r - e^{Ht}a. Universal across dimensions. The KMS condition at this temperature governs local processes (ionization, proton decay), not horizon radiation.
-- ~~**Klinkhamer-Volovik oscillating vacuum**: vacuum energy oscillates at period ~ H₀⁻¹ — effective w varies on cosmological timescales, **compatible with DESI DR2** signal (2.8-4.2σ evolving DE).~~
-- ⚡**W1b KV/DESI CORRECTION:** KV oscillating vacuum predicts (w₀,wₐ) = (-1,0) for the current epoch — **excluded at 2.9σ (Pantheon+) to 4.4σ (DESY5)** by DESI DR2. No phantom crossing is possible in KV. The oscillations are Planck-scale (~10⁻⁴⁴ s) with w_eff=0, not cosmological. RVM with Volovik-motivated ν~10⁻¹²² is 10⁸² orders too small for DESI. **Surviving hooks:** (a) Λ magnitude prediction ρ_vac ~ (2.8 meV)⁴ vs (2.3 meV)⁴ (~20% accuracy); (b) QCD topological DE (Van Waerbeke-Zhitnitsky 2025, arXiv:2506.14182) — 0 free parameters, phantom crossing, DESI-compatible, strongest bridge from KV framework. Paper 17 recommended claims (from W1b §Block 8): keep "KV predicts Λ magnitude," withdraw "KV explains DESI dynamics," add "ADW motivates exploring beyond frozen plateau." Falsifiable by DESI DR3 (2026-2027).
+- **Magnitude remains uncomputed:** distinguish the Eq. (22) vacuum relation ρ_vac ∝ T_dS²/G from relativistic-matter T⁴, CMB thermal energy and imaginary-determinant 4+0 temperature. The alternative cosmic-age/stiff-matter scenario is phenomenological. A specified physical model and supported inputs must precede a nonzero prediction or accuracy statement.
+- **Temperature identity and units:** the adopted local de Sitter convention is T_dS=H/π and T_GH=H/(2π) in ℏ=c=k_B=1; physically k_B T_dS=ℏH/π. This local process temperature is distinct from horizon temperature, CMB thermal energy, imaginary-determinant Euclidean temperature and ρ_vac^(1/4); the scalar helper does not derive their physical identification. In 3+1 dimensions, the carrying source’s Eq.(22) gives ρ_vac=3πT_dS²/(8G_N). Also 1(meV)⁴=10⁻¹²(eV)⁴; an SI density conversion additionally needs the energy conversion and (ℏc)⁻³. The current P module’s stated 1.602e-3 conversion is not a valid fourth-power metric-prefix conversion and needs source repair/validation.
+- **2008 dynamical source:** the selected equilibrium branch has microscopic oscillations and asymptotic coupled F+G homogeneous w=0, while the bare field has w=-1. Its clustering properties remain open. The source report supplies no calibrated SI period or finite-redshift dark-energy CPL fit.
+- **2011 plateau and model comparison:** arXiv:1102.3152v4 §5/6 and Fig1 describe locally approximate vacuum-like plateaux, schematic transitions and conditional remnants. This is a distinct selected scenario, not the 2008 equilibrium CDM regime or an exact constant-plateau CPL prediction. A branch-specific forward model, data and likelihood are required for a quantitative DESI verdict. Keep ADW magnitude and QCD provenance/numerical validation as separate open work.
 - **Vladimirov-Diakonov lattice result**: Einstein gravity realized exactly at phase transition critical surface; CC "probably automatically zero" at criticality.
 - **SK-EFT for de Sitter is feasible** but requires 3 new ingredients: (1) replace acoustic metric with de Sitter in SK path integral, (2) identify gravitational viscosities as transport coefficients, (3) verify T_dS = 2T_GH from SK doubling of time contour. Stochastic inflation noise kernel (Burgess-Holman-Tasinato) is the closest existing analog to δ_diss.
 - **Anderson-Mottola**: de Sitter unstable to particle creation → cosmological analog of our acoustic BH cooling toward extremality.
@@ -345,21 +358,21 @@ Lean Formalization Targets:
 |---|---|---|---|
 | T1 | `double_temperature_dS` | T_dS = 2 × T_GH exactly, given modified translation symmetry | Medium (needs de Sitter axioms + KMS condition) |
 | T2 | `volovik_equilibrium` | ρ_vac(e_eq) = 0 given δS/δe = 0 in Minkowski vacuum | Medium |
-| T3 | `v_eff_critical_point` | C₀ = Λ·e^{-1/4} and V_eff(C₀) = -Λ⁴/(4e) | Easy |
+| T3 | Regulated scalar stationary point and minimum | For V=C²/(2G)−A[Λ²C²−C⁴ log(1+Λ²/C²)], A=N_f/(16π²), the accepted manual construction gives the parameter-dependent root, magnitude-domain global minimum and depth. Complete its native proof and production optimizer/error contract; establish the microscopic ADW identification separately. The old universal C₀/depth pair is not a valid target for this ansatz. | Native analysis/integration and physical BUILD remain |
 | T4 | `vestigial_ep_violation` | In vestigial phase: bosons follow g_μν geodesics; fermions have no gravitational coupling | Medium-Hard |
 | T5 | `holographic_consistency` | S_volume(V_H) = S_horizon(A) in 3+1 de Sitter at T = H/π | Hard |
 | T6 | `transition_sequence` | disorder → GR → ECSK is strict hierarchy as symmetry breaking | Hard |
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [x] `lean/SKEFTHawking/CosmologicalConstant.lean` (PARTIAL 2026-04-22) — T1 double-temperature relation (algebraic form), T3 quartic Coleman-Weinberg critical-point identity (general math backbone, `-A²/(4B)` not the specific `-Λ⁴/(4e)`), Λ magnitude-ratio utilities. **0 sorry, 0 new axioms**. Deferred: T2 `volovik_equilibrium` (needs thermodynamic axioms), full T3 ADW specialization (needs RG/log-potential infrastructure), T4-T6 (Hard, Phase 6).
-- [x] `src/dark_sector/adw_cosmological_constant.py` (PARTIAL 2026-04-22) — T_dS/T_GH formulas, Λ magnitude ratio (2.8/2.3)⁴ ≈ 2.20, W1b-corrected Klinkhamer-Volovik prediction (frozen plateau; does NOT explain DESI), quartic CW critical-point helper, structured `assess_cosmological_constant_status` summary. 45 tests. Deferred: w(z) phase-transition parametrization, numerical `Λ from gap equation` runner (existing `src/adw/gap_equation.py` already covers NJL-form Λ via `adw_effective_potential`).
+- [x] `lean/SKEFTHawking/CosmologicalConstant.lean` (PARTIAL delivery 2026-04-22) — T1 double-temperature algebra, generic polynomial quartic critical-point identity `-A²/(4B)` and positive-input magnitude-ratio utilities are retained historical work. Those declarations do not prove the regulated scalar optimizer, its microscopic ADW identification or a physical meV scale. The separate exact manual regulated-scalar construction is credited above; T2 physical-equilibrium derivation, native regulated-potential T3, microscopic correspondence and T4–T6 remain BUILD. Historical zero-sorry/axiom reports are not a fresh native build here.
+- [x] `src/dark_sector/adw_cosmological_constant.py` (PARTIAL delivery 2026-04-22; current target limitations rechecked 2026-10-17) — actual P retains T_dS/T_GH arithmetic, supplied-scale fourth-power comparison, generic polynomial quartic helper and structured status records. Its current defaults still label stored 2.8/2.3 meV inputs as a prediction/accuracy and attach a fixed KV pair/period/DESI significance; these are reporting artifacts, not validated magnitude or branch-specific fit results. The module also documents an incorrect meV⁴→eV⁴ conversion. N has a separately retained branch-selecting/uncomputed-default reporting repair; it is NOT installed in this P target. Source/API/consumer/test propagation and actual target validation remain OPEN; historical 45 tests are not current receipts. The separate N-local NJL numerical repair is credited above but does not solve this potential’s optimizer or the physical `Λ from gap equation` objective.
 - [ ] `src/dark_sector/de_sitter_sk_eft.py` — SK-EFT transport coefficients for cosmological horizon; δ_diss mapping to stochastic inflation noise
-- [ ] ΛCDM compatibility table (from deep research §4.2 — ADW vs DESI DR2 vs Planck). ⚡**W1b: Must now include KV Level D tension column — ADW plateau gives w=-1 (consistent with Planck), KV oscillations give w_eff=0 (CDM-like, inconsistent with DESI). Add QCD topological DE row as DESI-compatible bridge.**
-- [ ] Assessment memo: is the CC problem "solved" or "reframed" by ADW? (Answer from deep research: **reframed** — heuristic argument, not theorem, but quantitatively compelling). ⚡**W1b addendum: honest statement that KV oscillating vacuum does NOT explain DESI DR2, but Λ magnitude prediction stands.**
+- [ ] Model comparison table: distinguish bare F, equilibrium coupled homogeneous expansion (clustering open), perturbed chemical potential and the separate stepwise plateau scenario. Fit status stays uncomputed until a selected forward model, data and likelihood exist; QCD alternatives require independent assessment.
+- [ ] Assessment memo: distinguish algebraic identities from the heuristic ADW magnitude argument, and source-scoped regimes from a computed cosmological fit. No demonstrated KV explanation or quantitative exclusion follows from the current reporting record; magnitude/QCD validation remains open.
 - [ ] Priority computation: vestigial susceptibility χ_v from gap equation at one loop (feeds Paper 10/11)
-- [ ] ⚡**W1b NEW:** Comparative DE model table from W1b §Block 5 — 6 alternative models (pNGB, RVM, QCD topological, Quintom, oscillating w(z)) with DESI compatibility assessment
-- [ ] ⚡**W1b NEW:** Revised Paper 17 claims table (from W1b §Block 8) — 5 claims with status (keep/withdraw/add)
+- [ ] Comparative DE model table (historical W1b §Block 5 task): retain the alternative-model comparison objective, including pNGB, RVM, QCD topological, Quintom and oscillating-w(z) candidates. Assess each source, parameterization, dataset and likelihood independently; do not preassign QCD compatibility, zero-parameter status or an empirical ranking.
+- [ ] Revised Paper 17 claims table (historical W1b §Block 8 task): preserve traceability of the five original claim dispositions, replacing unsupported current magnitude/KV significance claims with actual source/mathematical evidence and the explicit physical construction required to settle them. A disclosure-only table is not completion.
 
 **Lean infrastructure reuse:** ADWMechanism (21), VestigialGravity (18), HawkingUniversality (8). **Estimated: 6 new theorems.**
 
@@ -631,7 +644,7 @@ Lean Formalization Targets:
 |---|---|---|---|
 | **ℤ₁₆ × vestigial relics**: hidden sector fermions with Z₁₆ charges → vestigial relics carry discrete topological charge → relic decay forbidden by charge conservation | W2 + W6 | Vestigial §5.2 | Medium-High |
 | **ℤ₁₆ × fracton DM**: YM incompatibility (FractonNonAbelian) means fractons cannot carry non-abelian hidden sector charges; T-0 (TQFT) hidden sector is compatible with fracton extended objects | W2 + W7 | ℤ₁₆ §2.1 + Fracton §5.3 | Medium |
-| **ADW CC × SFDM**: Volovik residual Λ ~ T⁴ mechanism + SFDM condensate → dark energy and dark matter from same fermionic vacuum substrate | W3 + W5 | ADW §1.2, SFDM §Block 5 | Conceptual (not quantitative) |
+| **ADW CC × SFDM**: candidate vacuum response + SFDM condensate; a common fermionic substrate is a conceptual link, with nonzero DE magnitude uncomputed | W3 + W5 | ADW §1.2, SFDM §Block 5 | Conceptual (not quantitative) |
 | **Fang-Gu × ADW vestigial**: Two independent torsion channels coexist in tetrad phase — both fermion-sourced (Boos-Hehl) and loop-sourced (FG) | W4 + W6 | Fang-Gu §5.3 | High (structural) |
 | **SFDM × fracton**: Both produce cored profiles via different mechanisms — SFDM from soliton, fracton from z=4 subdiffusion. Observationally distinguishable by outer halo profile and diversity predictions | W5 + W7 | SFDM §Block 4, Fracton §4 | Medium |
 | **5:1 DM:baryon ratio**: Calculable from ADW gap equation + KZ density formula IF vestigial relic mass, transition temperature, and baryon asymmetry are all known | W3 + W6 + W2 | Vestigial §5.2 | High (if parameters known) |
@@ -648,9 +661,9 @@ Lean Formalization Targets:
     2. Fracton DM core-cusp resolution (testable with next-gen dwarf galaxy kinematics) — ⚡W1b: survives only if M_d > 10 MeV (BBN floor)
     3. EP violation from vestigial relics (requires STEP mission at η ~ 10⁻¹⁸)
     4. N_eff constraint separating Class A vs B (CMB-S4 at σ(N_eff) ~ 0.03)
-    5. ⚡**W1b NEW:** DESI DR3 (2026-2027) — if w₀ strengthens away from -1, KV ruled out decisively; if retreats, KV less excluded
+    5. **DESI follow-up:** evaluate a specified model/regime with an explicit likelihood; CPL posterior movement is not a universal KV exclusion.
 - Which connections survive adversarial scrutiny?
-  - **Strongest:** ℤ₁₆ + ADW CC (machine-verified constraints + quantitative coincidence). ⚡W1b: KV w₀-wₐ dynamics demoted to Level D tension, but Λ magnitude prediction survives.
+  - **Track A assessment:** formalized algebra and stored magnitude arithmetic are separate from uncomputed KV CPL/likelihood and unresolved magnitude provenance.
   - **Strong phenomenology, ⚡foundations upgraded:** Fracton DM (no finite-T topological protection in 3D for gapped phases, BUT p-wave dipole superfluid is thermodynamically stable). ~~⚡W1b: NON-VIABLE (weak form).~~ ⚡**Drilldown: VIABLE (conditional)** — p-wave phase resolves finite-T vulnerability; Dark QCD UV completion viable; BBN relaxed to μ ≳ MeV.
   - **Elevated:** SFDM cluster merger — ⚡W1b: Now **strongest empirical prediction** with quantitative forecast and confirmed literature gap.
   - **Coherent but speculative:** Vestigial relics (needs MC extension gate)
@@ -658,7 +671,7 @@ Lean Formalization Targets:
 
 **Deliverables:**
 - [x] **Shipped 2026-04-22 session 4** — `docs/dark_sector/W8_Synthesis_and_CrossConnections.md` (memo) + `lean/SKEFTHawking/DarkSectorSynthesis.lean` (22 theorems, 0 sorry, 0 new axioms, 1 tracked `Prop` hypothesis `H_VestigialRelicCarriesZ16Charge` for the ℤ₁₆ × vestigial cross-connection; discharge path registered in `docs/roadmaps/Phase6_Deferred_Targets.md`). Full-project `lake build SKEFTHawking.ExtractDeps` clean (8420 jobs). `src/dark_sector/synthesis.py` (cross-connection matrix of 7 entries, Python mirror of Lean constants). `tests/test_dark_sector_synthesis.py` (70 passing tests, cross-checking EoS distinctness, collective invisibility, cored-profile taxonomy, torsion-channel independence, candidate matrix, empirical-hook ranking, cross-connection matrix, overall assessment). Covers CC1 hidden-sector × fracton compatibility; CC2 collective invisibility (log10 σ_DD ≤ -50 for all five emergent-gravity DM kinds); CC3/CC4/CC4' EoS distinctness across the three Phase 5x stress-energy sectors; CC5 cored-profile mechanism taxonomy (`SolitonCondensate ≠ Z4Subdiffusion`); CC6 ℤ₁₆ × vestigial stability (conditional on tracked hypothesis); CC7/CC7' two-torsion-channel independence (Dirac axial ⊥ FG loop, full discharge); Synth2 candidate viability matrix (4 of 5 canonical candidates basic-viable; FG excluded at CDM level); Rank1/Rank2 empirical-hook ranking (merger sonic boom > fracton core-cusp > EP violation > DESI DR3 > direct nuclear recoil).
-- [x] Priority ranking for further development — SFDM merger promoted (Rank 1, Lean-decidable). Cross-connection matrix has 6 of 7 entries Lean-backed; the 1 memo-only entry (ADW-CC × SFDM conceptual link) waits for W5 numerics.
+- [x] Historical priority ranking for further development — SFDM merger promoted (Rank 1, Lean-decidable classification). Cross-connection matrix records 6 of 7 entries as Lean-backed; the memo-only ADW-CC×SFDM conceptual link still requires an independently scaled vacuum response and physical SFDM matching, not merely W5 numerical output. No present nonzero CC prediction is credited by this classification.
 - [x] Experimental prediction summary table — shipped in §5 of the memo (ranked by detectability + timeline; pins the Paper 17 §9 ranking claim to Lean-decidable ground via `empirical_hook_ranking_strict`).
 - [x] "Which combinations are consistent?" analysis — shipped in §3 of the memo, with per-claim honesty table in §6.
 
@@ -680,7 +693,7 @@ Lean Formalization Targets:
 **Paper structure (⚡revised based on W1b outcomes):**
 1. Introduction: emergent gravity programs and the dark sector — the unique position of machine-verified constraints. ⚡**H₀ tension hook: BK-Wang (2017) phonon-mediated acceleration connects SFDM phonon EFT to H₀ tension; >5σ (H0DN April 2026) strengthens motivation for phonon-sector observational testing**
 2. **Machine-verified anomaly constraints on the hidden sector** (ℤ₁₆): 3 gen → +3 mod 16; minimal solutions (S-0, T-0); Wang T-0 as preferred candidate; 24,576 deformation classes
-3. **Cosmological constant from tetrad condensation equilibrium** (ADW): Volovik mechanism; ρ_vac ~ T⁴ ~ (meV)⁴; ~~DESI DR2 compatibility~~ ⚡**honest assessment: Λ magnitude prediction is compelling (~20% accuracy), but KV oscillating vacuum is in Level D tension with DESI DR2 (2.9–4.4σ)**; T_dS = H/π; QCD topological DE as DESI-compatible bridge
+3. **Cosmological constant from tetrad condensation equilibrium** (ADW): retain temperature/algebraic content; distinguish KV source models/regimes and uncomputed fits. Do not transfer ΛCDM/CPL statistics to KV; ADW magnitude and QCD provenance remain separate open work.
 4. **Fracton dark matter from machine-verified gauge constraints**: YM incompatibility → SM singlet; z=4 subdiffusion → core-cusp; σ_eff = 0 → Bullet Cluster; ⚡**Drilldown: p-wave dipole superfluid thermodynamically stable in d=3 at T>0 (Kapustin-Spodyneiko, Jensen-Raz); BBN relaxed to μ ≳ MeV; Dark QCD UV completion; VIABLE (conditional)**
 5. ⚡**PROMOTED: SFDM cluster merger sonic boom forecast** — Rankine-Hugoniot analysis; 5 canonical targets; stacking strategy for 3–5σ detection; condensate fraction; Euclid/Roman S/N; **Paper 17's "money plot"** (fills confirmed BK literature gap)
 6. SK-EFT for superfluid dark matter — dissipative MOND corrections and FDR noise (complementary to §5)
@@ -710,7 +723,7 @@ Lean Formalization Targets:
 Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
   │
   ├──→ Wave 1b (3 follow-up tasks — parallel) ✅ COMPLETE
-  │     ├──→ Task 7 (KV w₀-wₐ) ✅ LEVEL D ─→ Wave 3 (KV reframed: Λ magnitude survives, DESI dynamics withdrawn)
+  │     ├──→ Task 7 (KV w₀-wₐ) ✅ historical report ─→ Wave 3 (source/branch/units corrections; independent nonzero magnitude and model-specific fit remain BUILD)
   │     ├──→ Task 8 (fracton finite-T) ✅ ~~NON-VIABLE (weak)~~ ⚡VIABLE (conditional) ─→ Wave 7 (p-wave phase stable, μ ≳ MeV, theorem 13→13a-d)
   │     └──→ Task 9 (merger forecast) ✅ CONDITIONAL GO ─→ Wave 5 (money plot confirmed, fills BK gap)
   │
@@ -742,7 +755,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | Deep Research Result | Waves | Key Content |
 |---|---|---|
 | `Lit-Search/Phase-5x/ℤ₁₆ Anomaly-Forced Hidden Sector  Dark Matter Candidate Constraints.md` | W2, W8, W9 | T-0 preferred; 24,576 classes; 7 near-term Lean theorems; SMG threshold; Wang N_f=3 uniqueness |
-| `Lit-Search/Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md` | W3, W8, W9 | ρ_vac ~ T⁴; T_dS = H/π; Klinkhamer-Volovik oscillating vacuum; ~~DESI DR2 compatibility~~ ⚡Level D tension; 6 Lean targets |
+| `Lit-Search/Phase-5x/ADW Emergent Gravity and the Cosmological Constant  Dark Energy from Condensation Equilibrium.md` | W3, W8, W9 | Historical research memo; source-scoped equilibrium/local-temperature arguments require distinct scales and independent magnitude inputs. KV branches/plateaux and likelihood remain separately scoped; 6 proposed Lean targets |
 | `Lit-Search/Phase-5x/Fang-Gu Torsion Dark Matter  Phenomenology from Topological Gravity.md` | W4, W8, W9 | σ~10⁻⁹⁰; R=0 from traceless T^μν; two torsion channels; mass undetermined; 4 priority gaps |
 | `Lit-Search/Phase-5x/SK-EFT Dissipative Framework Applied to Superfluid Dark Matter  Feasibility Study.md` | W5, W8, W9 | T_H unobservable → MOND/FDR/merger payoff; full parameter mapping; 6 Lean theorems; distinction from FDM |
 | `Lit-Search/Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md` | W6, W8, W9 | MC extension needed; GUT-scale T_c; EP violation unique; GL(4)/SO(3,1) homotopy; 5 priority questions |
@@ -752,7 +765,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 
 | Deep Research Result | Waves | Verdict | Key Content |
 |---|---|---|---|
-| `Lit-Search/Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md` | W3, W9 | **LEVEL D TENSION** | KV predicts (w₀,wₐ)=(-1,0), excluded at 2.9–4.4σ by DESI DR2; no phantom crossing; RVM ν~10⁻¹²² too small by 10⁸²; Λ magnitude ~20% accuracy survives; QCD topological DE (arXiv:2506.14182) is DESI-compatible bridge; 6 alternative DE models compared; Paper 17 claims table (5 claims) |
+| `Lit-Search/Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md` | W3, W9 | **Historical Level D report; current fit UNCOMPUTED** | The original report compared alternative DE models and proposed five Paper 17 claim dispositions. Its transferred KV significance, fixed family-wide CPL pair, 2.8meV/accuracy claim, period and QCD preference are not current conclusions. Source-selected KV forward modelling, magnitude/units and independently assessed alternatives remain BUILD. |
 | `Lit-Search/Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md` | W7 | ~~NON-VIABLE (weak form)~~ ⚡**Drilldown: VIABLE (conditional)** | Shen no-go exempt for gapless U(1); ~~BBN kills eV-scale M_d~~ Drilldown: p-wave phase thermodynamically stable; Arrhenius applies only to gapped scenario; condensate condition μ ≳ MeV; Dark QCD UV completion; theorem 13 → 13a/13b/13c/13d split; 6 gapless phases surveyed |
 | `Lit-Search/Phase-5x/5x-SFDM Cluster Merger Sonic Boom  Observational Forecast for Euclid Roman.md` | W5, W9 | **CONDITIONAL GO** | c_s=1525 km/s; all 5 mergers supersonic; S/N 0.3–1.0 single, 3.5–5.7σ stacked ≥30; BK has no forecast (confirmed gap); velocity-threshold smoking gun; condensate fraction complication; A520 dark core; El Gordo SIDM discriminant; SK-EFT shock width; first 3σ ~2028 |
 | `Lit-Search/Phase-5x/5x-Fracton DM Kinetic Stability  Deep Drilldown on the Viability Verdict/Fracton-DM-Kinetic-Stability-Drilldown.md` | W7 | **⚡VIABLE (conditional)** | Kapustin-Spodyneiko (PRB 2022) dipole SSB allowed d≥3; Jensen-Raz (PRL 2024) SSB throughout phase diagram; Głódkowski et al. (2024) z=4 in p-wave; Feistl-Schraven-Warzel (2026) multipole MW; Dark QCD UV completion; μ ≳ MeV replaces Arrhenius; theorem 13→13a-d; supersedes W1b NON-VIABLE |
@@ -783,7 +796,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | Risk | Pre-Research | Post-Research | Impact | Mitigation | Status |
 |------|-------------|---------------|--------|------------|--------|
 | ℤ₁₆ hidden sector has no unique DM candidate | Medium | **Confirmed: non-unique** | Medium | T-0 (TQFT, preferred) and S-0 (3 ν_R) both viable. Non-uniqueness IS publishable: "anomaly constrains but does not determine" with Lean-verified bounds | Mitigated |
-| ADW CC mechanism is heuristic, not rigorous | High | **Confirmed: heuristic** | Medium | Quantitative ρ_vac ~ T⁴ ~ (meV)⁴ compelling even without proof. Honest assessment is the deliverable. | Accepted |
+| ADW CC mechanism is heuristic, not rigorous | High | **Confirmed: heuristic** | Medium | Distinguish physical scales, specify a response/evolution model and justify independent inputs before a nonzero magnitude or accuracy claim. Generic algebra is insufficient. | Open input/model debt |
 | Fang-Gu torsion DM mass scale is Planck-scale (unobservable) | Medium | **Confirmed: mass undetermined** | High | Mass parametrically undetermined → BLOCKER for quant. predictions. Wave 4 shortened to assessment. | Partially mitigated |
 | SFDM sonic horizons impossible | Medium | **Resolved: T_H real but unobservable** | Low | T_H exists (10⁻²³-10⁻²⁹ K) but too cold. Redirect to MOND corrections, FDR noise, cluster mergers → HIGHER payoff. | Fully mitigated |
 ## Risk Assessment (Updated with Deep Research + ⚡W1b Outcomes)
@@ -791,14 +804,14 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | Risk | Pre-Research | Post-Research | ⚡Post-W1b | Impact | Mitigation | Status |
 |------|-------------|---------------|-----------|--------|------------|--------|
 | ℤ₁₆ hidden sector has no unique DM candidate | Medium | **Confirmed: non-unique** | Unchanged | Medium | T-0 (TQFT, preferred) and S-0 (3 ν_R) both viable. Non-uniqueness IS publishable: "anomaly constrains but does not determine" with Lean-verified bounds | Mitigated |
-| ADW CC mechanism is heuristic, not rigorous | High | **Confirmed: heuristic** | Unchanged | Medium | Quantitative ρ_vac ~ T⁴ ~ (meV)⁴ compelling even without proof. Honest assessment is the deliverable. | Accepted |
-| ⚡**KV oscillating vacuum incompatible with DESI** | Medium | "Marginally compatible" | **LEVEL D TENSION (2.9–4.4σ)** | High | Λ magnitude prediction (~20% accuracy) survives. QCD topological DE (Van Waerbeke-Zhitnitsky 2025) provides DESI-compatible bridge. Paper 17: withdraw dynamics claim, keep magnitude claim. DESI DR3 (2026-2027) falsifiable. | **Reframed** |
+| ADW CC mechanism is heuristic, not rigorous | High | **Confirmed: heuristic** | Unchanged | Medium | Distinguish physical scales, specify a response/evolution model and justify independent inputs before a nonzero magnitude or accuracy claim. Generic algebra is insufficient. | Open input/model debt |
+| **KV model interpretation and comparison** | Medium | "Marginally compatible" (historical) | Historical Level D label superseded | High | Select model/regime, distinguish bare/effective/plateau statements, and specify forward model/likelihood. ADW magnitude/QCD provenance is separate. | **Open fit debt** |
 | Fang-Gu torsion DM mass scale is Planck-scale (unobservable) | Medium | **Confirmed: mass undetermined** | Unchanged | High | Mass parametrically undetermined → BLOCKER for quant. predictions. Wave 4 shortened to assessment. | Partially mitigated |
 | SFDM sonic horizons impossible | Medium | **Resolved: T_H real but unobservable** | Unchanged | Low | T_H exists (10⁻²³-10⁻²⁹ K) but too cold. Redirect to MOND corrections, FDR noise, cluster mergers → HIGHER payoff. | Fully mitigated |
 | ⚡**SFDM merger forecast not competitive** | — | Rank 1 observable (qualitative) | **CONDITIONAL GO (quantitative)** | Low | S/N 3.5–5.7σ stacked ≥30; fills confirmed BK literature gap; first 3σ ~2028; Paper 17 money plot. H₀ tension (H0DN >5σ) shifts Σ_cr ~8%, S/N ~4% — not meaningful. | **Fully mitigated** |
 | Vestigial relics too speculative for publication | Medium-High | **Narrowed: coherent but gated** | Unchanged | Medium | MC extension gate (Wave 6a) resolves. If transition is 2nd order → KZ relics viable. If crossover → no relics. | Downstream resolution |
 | Fracton DM incompatible with 3+1D gravity | Medium | **Clarified: finite-T no-go for gapped 3D** | ⚡**Drilldown: VIABLE (conditional)** | **Medium** | ⚡Drilldown: p-wave dipole superfluid thermodynamically stable at T>0 in d=3 (Kapustin-Spodyneiko, Jensen-Raz). BBN relaxed to μ ≳ MeV. Dark QCD UV completion viable. Remaining gap: production mechanism. Phenomenology (σ=0, z=4, HSF) all survive. Theorem 13 → 13a-d split. | **⚡Substantially mitigated** |
-| No single connection strong enough for a focused paper | Low | **Resolved: Track A is paper-ready** | ⚡**Strengthened: Track A + W5 merger** | N/A | ℤ₁₆ + ADW CC + merger forecast + fracton DM → Paper 17 with 4 strong sections. Merger fills genuine literature gap. | Fully mitigated |
+| No single connection strong enough for a focused paper | Low | Historical “Track A is paper-ready” assessment | Historical Track A+W5 draft rationale | N/A | Retain the delivered multi-section Paper 17 draft and other mechanisms’ history; its ADW/KV component still requires source/runtime propagation, nonzero physical magnitude and a model-specific cosmological calculation with independent review. This roadmap correction does not establish publication readiness for any component. | ADW/KV BUILD open; no new paper-ready verdict |
 | **NEW: MC extension computationally expensive** | — | Medium | Unchanged | Medium | L=10,12,16 requires significant HPC time. Coordinate with Phase 5d RHMC infrastructure. Can run in parallel. | Plan exists |
 | **NEW: Deep research invisible DM candidates unpublishable** | — | Low | Unchanged | Medium | "All emergent gravity DM is invisible to direct detection" is itself a thematic result — unified by theoretical structure. | Thematic framing |
 
@@ -809,7 +822,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | Wave | Module | Near-Term Theorems | Deferred/Hard | LOC (est.) | Reused Theorems |
 |---|---|---|---|---|---|
 | W2 | HiddenSectorClassification.lean | 7 (T1-T3, T8, T10-T12) | 5 (T4-T7, T9 — need bordism/TQFT) | 300-500 | Z16Anomaly (23), SMFermionData (18), GenConstraint (4) |
-| W3 | CosmologicalConstant.lean | 3 (T2-T3 easy/med; T1 med) | 3 (T4-T6 hard) | 200-400 | ADWMechanism (21), VestigialGravity (18), HawkingUniv (8) |
+| W3 | CosmologicalConstant.lean | 3 historical near-term slots: T1 algebra retained; T2 physical equilibrium and native regulated-potential T3 still open | 3 historical T4–T6 slots; microscopic ADW and magnitude remain BUILD | 200-400 historical estimate | ADWMechanism (21), VestigialGravity (18), HawkingUniv (8); actual manual scalar analysis credited separately |
 | W4 | (no new module) | 0 | 0 | 0 | ADWMechanism, VestigialGravity (assessment only) |
 | W5 | SFDMAcousticMetric.lean | 4 (L1-L2 easy, L3 L6 med) | 2 (L4-L5 hard) | 200-400 | WKBConnection (18), WKBAnalysis (17), HawkingUniv (8), AcousticMetric (12) |
 | W6b | VestigialRelics.lean | 4 (coset homotopy, EP bound, skyrmion τ, self-int) | 1 (KZ density) | 150-300 | VestigialGravity (18), ADWMechanism (21), SO4Weingarten (16) |
@@ -824,9 +837,9 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 
 **Minimum viable (Waves 2-3, ~2-3 months):**
 - [x] All 6 deep research tasks completed with gap analysis documents ✅
-- [x] ⚡All 3 Wave 1b follow-up tasks completed ✅ (KV Level D, fracton NON-VIABLE weak, merger CONDITIONAL GO)
+- [x] All 3 Wave 1b research reports completed (historical KV LevelD, fracton NON-VIABLE weak, merger CONDITIONALGO labels); current KV inference/magnitude conclusions are superseded as detailed in Wave 3. Report delivery is not scientific completion.
 - [ ] ℤ₁₆ hidden sector classification: 7 new Lean theorems (T1-T3, T8, T10-T12) + hidden sector enumeration code
-- [ ] ADW CC quantitative assessment: V_eff critical point formalized, Volovik equilibrium formalized, ΛCDM compatibility table. ⚡W1b: include KV Level D tension, QCD topological DE bridge, revised claims table.
+- [ ] ADW CC quantitative assessment: retain the generic quartic algebra and independently accepted manual regulated-scalar minimum; obtain the actual native regulated-potential theorem, microscopic/response derivation and nonzero unit-complete physical magnitude, and build a source-selected cosmological forward model/likelihood. Source/provenance and QCD assessment remain open; documentary honesty does not complete this success criterion.
 - [ ] Clear, honest assessment of which connections are derivable vs speculative
 
 **High-impact deliverable (+ Waves 4-5, ~4-6 months):**
@@ -851,7 +864,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | Phase | Connection | Deep Research Update |
 |-------|-----------|---------------------|
 | Phase 1-2 (SK-EFT) | Dissipative framework directly applicable to superfluid DM (W5) and de Sitter horizon (W3) | SFDM deep research confirmed full parameter mapping: CGL coefficients → BK DM mass/Λ/α. FDR noise floor is new observable. |
-| Phase 3 (WKB/ADW) | Gap equation → CC (W3); WKB → SFDM sonic horizons (W5) | ADW deep research: Volovik equilibrium mechanism validated; T_H exists but unobservable (10⁻²³ K). MOND corrections are higher-payoff. |
+| Phase 3 (WKB/ADW) | Gap equation → CC (W3); WKB → SFDM sonic horizons (W5) | ADW source assessment: ideal-equilibrium cancellation is conditional; a nonzero present magnitude is uncomputed. Generic temperature identities do not validate physical inputs. |
 | Phase 4 (fractons) | Fracton formalization → fracton DM (W7); string-net excitations → DM candidates | Fracton deep research: 86 existing theorems directly reusable. NEW: finite-T 3D no-go (Krishna et al. 2024) — kinetic stability is the viable path. |
 | Phase 5 (topological gravity) | Fang-Gu torsion DM (W4); emergent gravity → dark sector | FG deep research: σ~10⁻⁹⁰ rules out direct detection; two torsion channels (FG + Boos-Hehl); mass undetermined = BLOCKER. |
 | Phase 5b (hydrodynamic wall) | Wang ℤ₁₆ → hidden sector (W2); SMG threshold | ℤ₁₆ deep research: T-0 (TQFT) preferred; 24,576 deformation classes; N_f=3 uniqueness proof. |
@@ -875,7 +888,8 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 **ADW / Cosmological Constant (Wave 3):**
 - Diakonov, "Towards lattice-regularized quantum gravity," arXiv:1109.0091
 - Volovik, "Dimensionless physics," arXiv:2312.09435, JETP Lett. 119 (2024)
-- Volovik, "de Sitter thermodynamics," arXiv:2307.14370; arXiv:2310.05754
+- Volovik, "Thermodynamics and Decay of de Sitter Vacuum," held arXiv:2312.02292v16: Eq. (22), p.16 matter T⁴ and Eqs. (70)–(73) must be distinguished. DOI 10.3390/sym16060763 identifies the 2024 journal article; canonical source admission is required.
+- Volovik, "Combined Lorentz symmetry," held arXiv:2011.06466v9 (May 2021), §§XI–XII; published under the expanded title "Combined Lorentz Symmetry: Lessons from Superfluid 3He," online 2021, JLTP 206 (2022), 1–15, DOI 10.1007/s10909-021-02630-7. The held v9 is the read edition; later author/publisher bodies were not assessed.
 - Klinkhamer, Volovik, "Self-tuning vacuum variable and cosmological constant," PRD 77 (2008)
 - DESI Collaboration, "DESI DR2 baryon acoustic oscillations," arXiv:2503.14738 (2025)
 
@@ -911,9 +925,9 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 - Feistl, Schraven, Warzel, "Mermin-Wagner-type theorems for quantum lattice systems with multipole symmetries," arXiv:2601.23078 (Jan 2026) — confirms Kapustin-Spodyneiko, extends to multipoles
 
 **⚡W1b Additional References:**
-- DESI Collaboration, "DESI DR2 baryon acoustic oscillations: measurement of the expansion rate and geometry at z < 2.1," arXiv:2503.14738 (2025) — KV Level D tension source
+- DESI Collaboration, “DESI DR2 baryon acoustic oscillations: measurement of the expansion rate and geometry at z<2.1,” arXiv:2503.14738 (2025) — background/CPL context; not a branch-specific KV likelihood or exclusion certificate
 - Berezhiani, Khoury, "Superfluid dark matter," Physics Reports (2025), arXiv:2505.23900 — 118-page review with NO quantitative merger forecast
-- Van Waerbeke, Zhitnitsky, "QCD topological dark energy," arXiv:2506.14182 (2025) — 0 free parameters, phantom crossing, DESI-compatible
+- Van Waerbeke, Zhitnitsky, “QCD topological dark energy,” arXiv:2506.14182 (2025) — proposed comparison candidate; source/parameter/magnitude/likelihood assessment remains separate, with no ranking or compatibility verdict established here
 - Shen, Cheng, Hu, et al., "3D fracton topological order destroyed at any T > 0," arXiv:2203.09298 (2022) — no-go theorem (gapped phases only)
 - Prem, Haah, Nandkishore, "Glassy quantum dynamics in translation invariant fracton models," PRB 95, 155133 (2017) — superexponential relaxation
 - Jee et al., "The dark core in Abell 520," ApJ 747, 96 (2012) — >10σ dark core detection, M/L=588
@@ -964,7 +978,7 @@ audit is unaffected.
 |---|---|---|---|---|
 | 1.3 | `BK2025` page count 118 → 136 | CitationIntegrity | **FIXED** | `paper17/paper_draft.tex:376` now reads "136 pages" (was "118"); verified via WebFetch of arXiv:2505.23900 abstract comment field |
 | 3.1 | No `PARAMETER_PROVENANCE` entries for paper 17 parameters | ParameterProvenance | **FIXED (LLM-verified tier)** | `src/core/provenance.py` extended with SFDM.m_DM_BK (0.6 eV), SFDM.Lambda_BK (0.2 meV), SFDM.c_s_subcluster_BK (1525 km/s), SFDM.merger_Mach_canonical (dict of 5 Mach numbers). All tier THEORETICAL / DERIVED, `llm_verified_date: 2026-04-24`. **User-action item:** human_verification of per-cluster infall velocities (Bullet 2700, El Gordo 2500, Pandora 3400, A520 2300, MACS J0025 2000 km/s) required before paper-17 submission; each needs a specific per-cluster paper citation in the provenance entry. Flagged in `SFDM.merger_Mach_canonical` notes. CHECK 15 still WARN-level acceptable at draft |
-| 3.2 | `T_dS = 2 × T_GH` tuning claim undisclosed | ParameterProvenance | **FIXED** | `paper17/paper_draft.tex` §adw-cc rewritten. Removed the "(few) × T_dS ≈ 2.8 meV" number and the "20% agreement" language. New language: "reproduces the meV scale without tuning; the specific O(1) prefactor is deferred to Phase 6". Abstract + Discussion updated to match |
+| 3.2 | `T_dS = 2 × T_GH` tuning claim undisclosed | ParameterProvenance | **Historical recorded FIXED (prefactor-disclosure repair only)** | `paper17/paper_draft.tex` §adw-cc rewritten. Removed the "(few) × T_dS ≈ 2.8 meV" number and the "20% agreement" language. New language: "reproduces the meV scale without tuning; the specific O(1) prefactor is deferred to Phase 6". Abstract + Discussion updated to match. Current correction: the recorded withdrawal of a numerical prefactor does not establish the retained “without tuning” meV-scale assertion; actual P Paper 17 still contains that unsupported temperature/energy-scale identification. Independent nonzero magnitude and source/runtime/manuscript propagation remain owed; this note does not modify the canonical finding lifecycle. |
 | 5.4 | `torsion_channels_distinct_sources_distinct` = enum distinctness | LeanProofSubstance | **FIXED (via paper reframe)** | Honesty table row updated from "Derived" to "MCC". Formal Verification Summary lists it under MCC with full annotation (channel identification sourced to Boos-Hehl 2019 + Fang-Gu Eq. (3.6); Lorentz-irrep decomposition proof is a Phase 6 target) |
 | 5.5 | `empirical_hook_ranking_strict` = hand-chosen priorities | LeanProofSubstance | **FIXED (via paper reframe)** | Fig. 109 caption updated. Table 1 caption updated. Honesty table row → MCC. Formal Verification Summary lists it under MCC with Phase 6 target (a `detectability` scoring function deriving the order from Euclid/Roman S/N + DESI + STEP + DARWIN sensitivities) |
 | 6.1 | `H_MixedChannelZ16Cancels` load-bearing for C-1 but not named in prose | AssumptionDisclosure | **FIXED** | §Z16 C-1 bullet now explicitly states: "This theorem takes a tracked Prop hypothesis `H_MixedChannelZ16Cancels`... C-1 viability is therefore conditional on the Wan-Wang mechanism; discharging the hypothesis requires the Phase 6 bordism upgrade" |

@@ -12,30 +12,26 @@ import Mathlib.Tactic.FieldSimp
 
 ## Overview
 
-This module formalizes the kappa-scaling predictions for analog Hawking
-radiation in BEC systems. When the surface gravity κ is varied while
-holding BEC material properties (ξ, c_s, γ₁, γ₂) fixed, the dispersive
-and dissipative EFT corrections scale with different powers of κ:
+This module formalizes the kappa dependence of adopted correction definitions
+for analog Hawking models. When the surface gravity κ is varied while
+holding BEC material properties (ξ, c_s, γ₁, γ₂) fixed, these defined
+corrections scale with different powers of κ:
 
   - Dispersive: |δ_disp(κ)| = (π/6) · (ξκ/c_s)²  ∝  κ²
   - Dissipative: δ_diss(κ) = (γ₁+γ₂) · κ / c_s²   ∝  κ
 
-The different scaling exponents (2 vs 1) provide an experimental
-discriminant. At the crossover κ_cross = 6(γ₁+γ₂)/(πξ²), the two
-corrections are equal in magnitude. Below κ_cross dissipation dominates;
-above κ_cross dispersion dominates.
+The different scaling exponents (2 vs 1) distinguish these model terms.
+At the defined crossover κ_cross = 6(γ₁+γ₂)/(πξ²), the two expressions
+are equal in magnitude. Their ordering reverses there within this ansatz;
+changing the adopted dispersive coefficient moves the crossover.
 
 ## Physical Significance
 
-The κ-scaling test is the most accessible experimental test of the SK-EFT
-framework because:
-
-1. It requires only varying the flow velocity (potential step height),
-   not changing the BEC atomic species or interaction strength.
-2. The prediction (quadratic vs linear) is a qualitative signature,
-   not just a quantitative correction factor.
-3. The crossover κ_cross is a sharp prediction that can be compared
-   against measurement.
+A κ sweep can test the adopted functional dependences if material parameters
+remain fixed. The quadratic dispersive form and its coefficient are modelling
+choices, not a physical derivation supplied by this module. Comparing the
+crossover with an experiment additionally requires a justified device/profile
+mapping and independent control of damping and readout effects.
 
 ## References
 
@@ -82,7 +78,7 @@ The EFT corrections as explicit functions of κ at fixed material parameters.
 /-- Dispersive correction as a function of κ.
     δ_disp(κ) = -(π/6) · (ξ·κ/c_s)²
 
-    This is negative (blue-shift) and quadratic in κ.
+    This defined correction is negative and quadratic in κ.
 
     ⚠️ **`π/6` IS A DECLARED PROJECT NORMALIZATION, NOT A DERIVED CONSTANT.**
     Everything downstream — `crossoverKappa` (whose `6/π` is this coefficient
@@ -91,30 +87,24 @@ The EFT corrections as explicit functions of κ at fixed material parameters.
     δ_disp numbers printed in papers E1, E2 and D1 — is a statement about THIS
     DEFINITION, and moves if this number moves.
 
-    What is established, and what is not:
+    The whole quadratic functional form, as well as π/6, is adopted for these
+    applications. The theorems below factor and bound that expression; they do
+    not derive a device-specific dispersive temperature shift.
 
-    * The **D² scaling** is supported. Coutant–Weinfurtner (PRD 2017) obtain
-      analytic expressions in the KdV approximation and find the leading
-      correction to the effective temperature is O(ξ²κ²/c_s²) = O(D²) in the
-      adiabatic regime. That is a *parametric* O(·) result.
-    * The **coefficient is not derived anywhere, and no universal value exists.**
-      A near-horizon Hamilton–Jacobi computation shows why: with
-      ω = (v(x)+c_s)k + (c_sξ²/8)k³ and the inverse-profile series x(u) = Σ cᵖₙuⁿ,
-      the tunneling exponent is 2π·Res_{k=0}[x dk] and only n ≡ 1 (mod 3) survives,
-      giving ω·(cᵖ₁ − 4β cᵖ₄ ω² + 21β² cᵖ₇ ω⁴ + …) with β = c_sξ²/8. The leading
-      term cᵖ₁ = 1/κ gives T_H = κ/2π exactly; the first dispersive term is
-      −4β cᵖ₄ ω³, cubic in ω (a non-thermal distortion, not a temperature
-      rescaling) with magnitude set by cᵖ₄ — a fourth-order datum of the velocity
-      profile. Coutant–Parentani (PRD 90, 121501(R), 2014) prove the same by full
-      mode calculation: β_ω = e^{−πω/κ}α_ω exactly for a locally linear profile,
-      with a correction appearing only from the profile's non-linear part. Del
-      Porro–Liberati–Schneider (arXiv:2406.14603) get (3/8)α² for a specific tanh
-      profile and say the coefficient "depends crucially on the specific geometry".
-    * **Do not attribute π/6 to Corley–Jacobson 1996** (numerical; fitted powers
-      whose exponent is itself profile-dependent — p ≈ 3, 2, 1 across profiles;
-      no D² law, no π/6) **or to Finazzi–Parentani 2012** (their D = κL/Λ is a
-      different parameter, and their analytic coefficients there are 1/6 and
-      3√3/8 multiplying D linearly).
+    Coutant–Weinfurtner, PRD 97, 025005 (2018; arXiv:1707.09651v2), analyze a
+    weak-dispersive KdV model neglecting co-propagating coupling. For their
+    specified profile, Eqs.39–40 give T_eff/T_H = tanh(π q_r), with an
+    exponentially small smooth-limit departure. This does not establish a
+    nonzero leading local-D² temperature term.
+
+    Coutant–Parentani, PRD 90, 121501(R) (2014; arXiv:1402.2514v2), obtain
+    β_ω = exp(-πω/κ) α_ω for their locally linear near-horizon solution within
+    a weak-dispersion momentum-space WKB approximation neglecting left-mover
+    mixing. Its validity region and profile-perturbation analysis limit the
+    conclusion; it is not an exact global all-orders result.
+
+    Corley–Jacobson (1996) report profile-dependent fitted numerical powers.
+    Neither that study nor Finazzi–Parentani (2012) derives the law defined here.
 
     Canonical Python home: `src/core/formulas.DISPERSIVE_C1`; standing recorded in
     `PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1']`; see
@@ -139,12 +129,12 @@ noncomputable def crossoverKappa (mat : MaterialParams) : ℝ :=
 /-!
 ## Scaling Law Theorems
 
-These theorems establish the functional form of the corrections
-and verify the scaling exponents.
+These theorems factor the defined corrections and verify their algebraic
+scaling exponents. The physical standing of the ansatz is separate.
 -/
 
 /-- The dispersive correction factors as A · κ² where A depends only on
-    material properties, establishing the quadratic scaling law.
+    material properties, establishing the quadratic dependence of this definition.
 
     Specifically: δ_disp(κ) = A · κ² with A = -(π/6)(ξ/c_s)².
     The factored form makes the κ² dependence manifest.
@@ -264,8 +254,8 @@ of the transport coefficients — they are the statements `src/core/formulas.py`
 
     ⚠️ This theorem was previously headed "(Corley–Jacobson 1996;
     Coutant–Parentani 2014)". That attribution is withdrawn: neither paper
-    contains a `D²` law or the constant π/6, and π/6 is a DECLARED PROJECT
-    NORMALIZATION of an O(1) profile-dependent coefficient — see
+    derives this `D²` law or the constant π/6. The whole law is adopted,
+    with π/6 a DECLARED PROJECT NORMALIZATION — see
     `dispersiveCorrection` for the standing and the sources that do apply.
 
     Companion of `kappa_scaling_dispersive_quadratic`, which fixes the same

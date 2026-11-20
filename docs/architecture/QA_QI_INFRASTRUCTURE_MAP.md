@@ -278,6 +278,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | artifact | writer | staleness key | auto-synced? |
 |---|---|---|---|
 | `lean/lean_deps.json` | `extract_lean_deps.py` | **content hash** of every `.lean` under `SKEFTHawking/` **plus the root aggregate `lean/SKEFTHawking.lean`** | yes |
+| `lean/.lean_*_cache.json` | `lean/SKEFTHawking/ExtractDeps.lean` | declaration hashes and source/dependency pins under ADR-005 D-G.2 | saved during extraction as compact JSON with the existing schemas and readers (D-G.3) |
 | `docs/counts.json` / `.tex` | `update_counts.py` | **hybrid** — **value compare** on the five glob figures, mtime vs sources for `pytest_cases` (see below) | yes |
 | `papers/*/tables/*.tex` | `render_paper_tables.py` | mtime | yes |
 | `docs/MODULE_CENSUS.md` | `module_census.py` | **content compare** (`render(collect())`) | yes |
@@ -307,6 +308,14 @@ proxy because it costs a pytest collection, and it needs no more: a deleted file
 **The generalisable rule for this table: an mtime is a proxy for "did the answer change", and it
 only works in one direction. Where the answer is cheap to recompute, recompute it** — which is
 why the rows above split into *mtime* and *content compare* at all, and why this row is now both.
+
+The source manifest writer `scripts/bundle_source_manifest.py` formats its source mtime
+as a UTC string to whole seconds. The separate freshness reader in
+`scripts/check_bundle_source_freshness.py` retains fractional seconds in a timezone-aware
+datetime and additionally excludes `bundle_metadata.json` and `append_log.json`.
+Both source-mtime readers filter hidden components and `__pycache__` relative to the selected source-paper directory, so checkout ancestors do not affect file eligibility.
+Missing, empty or wholly excluded source trees supply no timestamp. Manifest regeneration
+alone does not establish a completed lift or scientific freshness.
 
 ### 2.1 The module census — one derived answer, with no hand-written half
 
@@ -479,15 +488,17 @@ failed.
 findings this project filed itself. An entry written from a sample and never summed reads
 exactly like one written from a full count.
 
-The VERIFIES resolver is the worked example. Two rules gate it, each closing a direction the
-resolver could fail in: a ref rooted at a **module alias** is a Python module, never a Lean
-declaration (without this it fabricated Lean-targeted edges, resolving the *tail* of a Python
-name against Lean short names — `np.all` → `FaultTolerance.Pauli.all`); and a **dotted** ref
-resolves only as a full Lean name, never by its tail (without this it dropped test nodes,
-keying ids on `module::function` with the class omitted).
+The Lean VERIFIES branch rejects a reference rooted at a recorded Python module
+alias before exact membership and short lookup. Allowed dotted references resolve
+only as full Lean names; undotted names may use an unambiguous in-graph short match.
+Formula and Parameter selection takes precedence. A deduplicated Lean edge requires
+at least one valid supporting raw reference to that exact target.
 
-**Its consumer is `last_modified.py`'s VERIFIES propagation**, where a bad edge stamps an
-unrelated test file's mtime onto Lean nodes. No readiness gate consumes it — the gates read
+Class-qualified PythonTest IDs preserve distinct methods with the same name in
+different classes. This identity mechanism is separate from dotted reference resolution.
+
+**Its consumer is `last_modified.py`'s VERIFIES propagation**, where a bad edge propagates an
+unrelated test node's metadata timestamp onto Lean nodes. No readiness gate consumes it — the gates read
 `formula:` targets only.
 
 ⚠️ **A measurement is scoped by a predicate, and fixing what that predicate keyed on voids

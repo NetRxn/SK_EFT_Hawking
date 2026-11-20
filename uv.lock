@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 resolution-markers = [
     "sys_platform == 'win32'",
@@ -2266,6 +2266,7 @@ mlx = [
 dev = [
     { name = "maturin" },
     { name = "playwright" },
+    { name = "werkzeug" },
 ]
 
 [package.metadata]
@@ -2315,6 +2316,7 @@ provides-extras = ["fermion-bag", "jax-cpu", "gpu", "mlx", "rust", "mc-all"]
 dev = [
     { name = "maturin", specifier = ">=1.12.6" },
     { name = "playwright", specifier = ">=1.50" },
+    { name = "werkzeug", specifier = ">=3.0" },
 ]
 
 [[package]]

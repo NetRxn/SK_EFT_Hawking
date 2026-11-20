@@ -65,10 +65,10 @@ def _bundle_dir(bundle: str) -> Path:
 
 def _last_source_modification(paper: str) -> str | None:
     """Return the most recent mtime of any file under papers/<paper>/ as
-    an ISO-8601 UTC timestamp, or None if the directory does not exist.
+    an ISO-8601 UTC timestamp, or None if no eligible positive mtime is found.
 
-    Used both by source_manifest.md (informational) and by CHECK 22
-    (`bundle_source_freshness`)."""
+    This is the informational manifest measurement; the freshness check has
+    its own reader with additional bookkeeping-file exclusions."""
     paper_dir = PAPERS_DIR / paper
     if not paper_dir.exists():
         return None
@@ -77,7 +77,7 @@ def _last_source_modification(paper: str) -> str | None:
         if not p.is_file():
             continue
         # Skip caches / generated bookkeeping
-        if any(part.startswith(".") or part == "__pycache__" for part in p.parts):
+        if any(part.startswith(".") or part == "__pycache__" for part in p.relative_to(paper_dir).parts):
             continue
         latest = max(latest, p.stat().st_mtime)
     if latest == 0.0:
@@ -216,7 +216,7 @@ def write_source_manifest(bundle: str, sources: list[str], assignments: dict[str
 ## Coverage notes
 
 - Insertion points are derived from `PAPER_DRAFT_MAPPING.md`'s "New destination(s)" column.
-- "Last source modification" is the latest mtime in `papers/<source>/`, used by `validate.py --check bundle_source_freshness` (CHECK 22).
+- "Last source modification" is the latest eligible mtime in `papers/<source>/`. The separate `bundle_source_freshness` reader additionally excludes bundle metadata and append logs.
 - `Lift-flagship` rows appear in the F bundle's manifest as well as the source's primary bundle.
 - Re-run `scripts/bundle_source_manifest.py --bundle {bundle}` after any change to `docs/PAPER_DRAFT_MAPPING.md` affecting this bundle.
 

@@ -85,6 +85,13 @@ from bundle_registry import (  # noqa: E402
     bundle_sort_key,
 )
 
+# These are the board's actual readers, imported before the request borrows a
+# cached graph. Importing them performs no measurement or artifact write.
+import bundle_readiness as br  # noqa: E402
+import check_bundle_source_freshness as fresh  # noqa: E402
+from bundle_migration import parse_mapping, MAPPING_DOC  # noqa: E402
+from validation.checks import bundles_readiness as readiness  # noqa: E402
+
 PAPERS_DIR = PROJECT_ROOT / "papers"
 
 
@@ -230,21 +237,18 @@ def load_gate_nodes() -> list[dict]:
             if n.get("type") == "ReadinessGate"]
 
 
-def load_aggregate() -> dict:
+def load_aggregate(*, graph=None) -> dict:
     """`bundle_readiness.aggregate_by_bundle` over the live tree.
 
     ⚠️ Read-only: `resolve_stage13_reviews(backfill=False)` inside it writes no metadata.
     A board that backfilled the artifact it reports on would be its own upstream.
     """
-    import bundle_readiness as br
-    from bundle_migration import parse_mapping, MAPPING_DOC
     assignments = parse_mapping(MAPPING_DOC.read_text())
-    return br.aggregate_by_bundle(assignments, br.load_findings_by_paper())
+    return br.aggregate_by_bundle(assignments, br.load_findings_by_paper(), graph=graph)
 
 
 def load_freshness() -> list[dict]:
     """The S12 freshness findings. Pure — `write_metadata=False` touches no file."""
-    import check_bundle_source_freshness as fresh
     return fresh.check(write_metadata=False)
 
 
@@ -300,15 +304,12 @@ def registered_lean_modules(code: str) -> dict:
     written dotted, path-style and bare, and `SKEFTHawking.<name>` alone calls 182 of 444
     registrations nonexistent (`docs/dev-loops/MEASUREMENT_TRAPS.md`).
     """
-    from check_bundle_source_freshness import _registered_lean_modules
-    from validation.checks.bundles_readiness import _resolve_module
-
-    mods = _registered_lean_modules(code)
+    mods = fresh._registered_lean_modules(code)
     if mods is None:
         return {"measured": False, "count": None, "unresolved": None,
                 "note": "append_log.json unreadable — the registration list is "
                         "UNMEASURED, which is not the same as 'registers nothing'"}
-    unresolved = sorted(m for m in mods if _resolve_module(m) is None)
+    unresolved = sorted(m for m in mods if readiness._resolve_module(m) is None)
     return {
         "measured": True,
         "count": len(mods),
@@ -333,10 +334,8 @@ def manuscript_length(code: str, metadata: dict | None) -> dict:
     `bundle_manuscript_length` uses — deliberately not a second sizer, and deliberately
     not the stored `compiled_pages`, which cannot be told apart from a stale one.
     """
-    from validation.checks.bundles_readiness import _measure_manuscript
-
     target = (metadata or {}).get("length_target") or None
-    value, unit, note = _measure_manuscript(code)
+    value, unit, note = readiness._measure_manuscript(code)
     return {
         "measured": value is not None,
         "value": value,
@@ -410,17 +409,15 @@ def _stage13_cell(metadata: dict | None) -> dict:
     one from the path would manufacture, for eighteen bundles at once, exactly the evidence
     this gate exists to demand.
     """
-    from bundle_readiness import _KINDS_SUFFICIENT_FOR_GREEN
-
     md = metadata or {}
     kind = md.get("stage13_review_kind")
     redo = bool(md.get("stage13_redo_required"))
-    sufficient = str(kind or "") in _KINDS_SUFFICIENT_FOR_GREEN
+    sufficient = str(kind or "") in br._KINDS_SUFFICIENT_FOR_GREEN
     withheld = []
     if not sufficient:
         withheld.append(
             f"review kind is {kind!r}; only "
-            f"{'/'.join(sorted(_KINDS_SUFFICIENT_FOR_GREEN))} earns green")
+            f"{'/'.join(sorted(br._KINDS_SUFFICIENT_FOR_GREEN))} earns green")
     if redo:
         withheld.append("stage13_redo_required is set — a later append invalidated the "
                         "recorded review")
@@ -502,11 +499,8 @@ def readiness_by_bundle(gate_nodes: list[dict]) -> dict[str, dict]:
     gates never mention is simply absent from this map, and `_submission_cell` renders
     that as unmeasured.
     """
-    from validation.checks.bundles_readiness import (
-        classify_readiness, partition_readiness)
-
-    per_paper = classify_readiness(gate_nodes)
-    green, yellow, red = partition_readiness(per_paper)
+    per_paper = readiness.classify_readiness(gate_nodes)
+    green, yellow, red = readiness.partition_readiness(per_paper)
     state_of = {**{p: "green" for p in green}, **{p: "yellow" for p in yellow},
                 **{p: "red" for p in red}}
     out: dict[str, dict] = {}

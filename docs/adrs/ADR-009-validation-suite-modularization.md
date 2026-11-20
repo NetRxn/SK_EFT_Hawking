@@ -771,67 +771,30 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    them, (ii) mechanize a submission-gate runner that passes `--strict`, or (iii) accept them as
    human-run submission checks, is an operator decision and belongs with the publication workstream, not
    with this ADR.
-7. ✅ **DONE 2026-08-03 — both halves.** **`build_graph`'s Lean-side VERIFIES resolver manufactured
-   coverage from library aliases.** Found while attributing a characterization diff.
-   `extract_verifies_edges` (`build_graph.py:3634`; earlier revisions of this ADR called it
-   `extract_test_verifies_edges`, a name that has never existed) resolves each of a test's
-   `referenced_names` against Formula, Parameter, then **Lean short names**. The *formula* branch is
-   deliberately guarded — `_FORMULA_MODULE_ALIASES` restricts dotted tails to
-   `{F, formulas, src.core.formulas}`, with a comment stating that a blanket tail fallback
-   "would let `np.sum` or `math.exp` match a formula named `sum` or `exp`, manufacturing coverage that does
-   not exist". **The Lean branch had no equivalent guard**, so exactly that happened.
+7. **Lean VERIFIES correspondence and test-node identity.** `extract_verifies_edges`
+   resolves each raw reference against Formula, then Parameter, then Lean. Earlier-index
+   selection blocks Lean fallback even if its selected node is absent from the graph.
+   In the Lean branch, reject a reference whose first dotted component is a recorded
+   module alias **before both exact membership and short-name lookup**. An allowed
+   exact name wins; only an undotted name may use the in-graph short-name index, and
+   exactly one candidate is required. Preserve sequence multiplicity for ambiguity.
+   `ast.Import` bindings across the file populate `_TEST_MODULE_ALIASES`;
+   `ast.ImportFrom` symbols remain eligible for name correspondence. Formula's allowed
+   qualified forms and Parameter input-order priority remain unchanged.
 
-   **⚠️ Two claims in the original filing were wrong, and both were corrected by measuring rather than
-   by re-reading the note.**
+   The existing pytest guard requires existential valid support for each deduplicated
+   Lean edge, including complete earlier-index priority and exact target identity.
+   Mixed genuine and alias references can support an edge only through the genuine
+   reference. The producer-seeded ordering mutant and paired corpus/consumer controls
+   are specified in `docs/superpowers/specs/2026-10-14-verifies-exact-alias-design.md`.
+   Exact-alias incident evidence belongs to
+   `papers/AutomatedReviews/2026-10-15-verifies-exact-alias/infra.md`.
 
-   - **The count was understated 14-fold.** This item recorded "10 of the 534". The real figure is
-     **144 of 536** — the original was a sample of five example names, not a sum. Measured by
-     partitioning every ref that reaches the Lean branch: `np.all` (58) → `FaultTolerance.Pauli.all`,
-     `v` (21, the conventional `import validate as v`) → `EWMassMatrixInputs.v`, `np.diag` (11) →
-     `IsCharQ.diag`, `np.dot` (10) → `KMM.Col.dot`, `mx.eval` (8) → `IntFundamentalClass.eval`,
-     `CITATION_REGISTRY.get` / `PARAMETER_PROVENANCE.get` (8) → `NeutrinoMixing.get`, and 18 more.
-   - **`ComputationCorrectness` was named as the consumer and is not one.** That gate iterates
-     `formula_ids` and reads `idx.incoming(fid, 'VERIFIES')` for `formula:` targets only
-     (`readiness_gates.py:283-294`) — it never sees a Lean-targeted edge. The real consumers are
-     `last_modified.py`'s `PROPAGATION_EDGE_TYPES` (VERIFIES propagates a test file's mtime onto the Lean
-     node, feeding the Wave-10c change-bus and sentence-freshness check) and any human or dashboard
-     reading the graph's Lean coverage picture. So the defect was *staleness pollution plus fabricated
-     evidence in the graph*, not a wrong gate verdict — a smaller blast radius than filed, and worth
-     recording as such rather than leaving the stronger claim standing.
-
-   The protection that did exist was accidental: collisions are spared only by AMBIGUITY — the resolver
-   skips names with ≥2 candidates, and the run log shows `np.sum`, `np.conj`, `math.e`, `re.compile`,
-   `sp.I` all being *attempted*. A name that happens to be unique gets through, so the guard weakened as
-   the Lean library grew more unique short names.
-
-   **The fix was not one line.** The filing proposed "an alias allow-list, or require the ref to be
-   undotted". Neither alone suffices: `v` is undotted, and there is no Python alias that means "Lean", so
-   an allow-list has nothing to list. The measurement showed the two failure modes are independent and
-   need one rule each:
-   - a ref rooted at a **module alias** (`import X [as y]`) denotes a Python module and can never be a
-     Lean declaration — this is what kills bare `v`, `m`, `time`, `ext` *and* every `np.*`/`mx.*`/`sp.*`;
-   - a **dotted** ref is a Python attribute access, so it may resolve only as a full Lean name, never by
-     its tail — this is what kills `PARAMETER_PROVENANCE.get` and the five distinct
-     `CANDIDATE_*.basic_viability` refs that all collapsed onto one Lean field.
-
-   Both mutation-verified as load-bearing: dropping either rule alone is CAUGHT. Module aliases are
-   recorded during test-node extraction into `_TEST_MODULE_ALIASES` (the `_LEAN_SHORT_INDEX` pattern —
-   a property of the file, so not stored on all 4,400 test nodes). `from M import a` is deliberately NOT
-   recorded: those symbols are the Python↔Lean naming correspondence the branch exists to follow, and
-   `from src.core import formulas as F` is a from-import, so the formula branch's `F.` path is untouched.
-
-   **Why it was safe to land mid-remediation:** the Lean branch runs only after the Formula and Parameter
-   indexes have both missed, so it can neither add nor remove a formula- or param-targeted edge. Verified
-   empirically — **1,390 non-Lean edges before and after, bit-identical** — which is what makes "no
-   `ComputationCorrectness` verdict can move" a measurement rather than an argument.
-
-   Characterization: one check moved, fully attributed. `graph_integrity` **+16 nodes** (the 16 tests in
-   the new guard file), **−144 edges** (the fabricated set exactly; zero added), **+167 orphans** = 135
-   PythonTests that lost their last edge + 16 Lean declarations that lost their last edge + the 16 new
-   test nodes, with **0 nodes leaving** the orphan set. That 135 is the honest picture arriving: those
-   tests' only graph coverage was fabricated. All 17 Lean declarations that lost an edge lost *every*
-   edge they had — none had genuine coverage mixed in, which is the strongest evidence the partition is
-   the right one. 16 tests, 6 mutations all caught, clean negative control.
+   Lean coverage and `last_modified.py` VERIFIES propagation consume these edges.
+   `ComputationCorrectness` follows Formula targets; it does not consume Lean edges.
+   The 2026-08-03 historical characterization removed 144 of 536 Lean edges and
+   preserved 1,390 non-Lean edges. Those dated measurements describe that earlier
+   short/dotted repair, not completeness of the exact-name guard or today's corpus.
 
    **⚠️ The same subsystem also DROPPED real coverage**, found while attributing a Phase-3
    characterization delta. `extract_python_test_nodes` minted its node id as

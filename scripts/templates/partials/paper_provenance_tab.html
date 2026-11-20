@@ -923,20 +923,40 @@
        is always patched fresh from SSE so toggling is instant. #}
     <div id="pp-audit-pane" data-show="$showAudit"></div>
 
-    {# Keyboard shortcuts (window-level). v1 + v2 share the same surface;
-       v2 binds the sentence-level shortcuts. #}
-    <div data-on:keydown__window__key.ArrowRight__prevent="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=next`)"></div>
-    <div data-on:keydown__window__key.ArrowLeft__prevent="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=prev`)"></div>
-    {# v2 — link nav within the active sentence. #}
-    <div data-on:keydown__window__key.ArrowDown__prevent="$activePaper && $activeSentence && @get(`/api/papers/${$activePaper}/provenance?nav=link-next`)"></div>
-    <div data-on:keydown__window__key.ArrowUp__prevent="$activePaper && $activeSentence && @get(`/api/papers/${$activePaper}/provenance?nav=link-prev`)"></div>
-    {# v2 — sentence state shortcuts. Each shells out to the verify endpoint
-       on the currently-active sentence. #}
-    <div data-on:keydown__window__key.v="$activePaper && $activeSentence && @post(`/api/papers/${$activePaper}/sentences/${$activeSentence}/verify`, {contentType:'json', body: JSON.stringify({state:'verified', actor:'user:dashboard'})}); $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
-    <div data-on:keydown__window__key.i="$activePaper && $activeSentence && @post(`/api/papers/${$activePaper}/sentences/${$activeSentence}/verify`, {contentType:'json', body: JSON.stringify({state:'interpretive', actor:'user:dashboard'})}); $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
-    <div data-on:keydown__window__key.r="$activePaper && $activeSentence && @post(`/api/papers/${$activePaper}/sentences/${$activeSentence}/verify`, {contentType:'json', body: JSON.stringify({state:'needs_recheck', actor:'user:dashboard'})}); $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
-    {# v1 — fail/warn jumps. #}
-    <div data-on:keydown__window__key.f="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=FAIL`)"></div>
-    <div data-on:keydown__window__key.w="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=WARN`)"></div>
-    <div data-on:keydown__window__key.Escape="$filterLayers = ($filterLayers && $filterLayers.length) ? [] : $filterLayers; $activeClaim = ''; $activeSentence = ''; $activeLinkIdx = -1; $gateFilter = ''; $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
+    {# One stable keyboard surface dispatches only the matching existing key. #}
+    <div id="pp-keyboard-shortcuts" data-on:keydown__window="
+        const paper = $activePaper;
+        const sentence = $activeSentence;
+        if (paper) {
+            const provenance = '/api/papers/' + paper + '/provenance';
+            switch (evt.key) {
+                case 'ArrowRight':
+                    evt.preventDefault(); @get(provenance + '?nav=next'); break;
+                case 'ArrowLeft':
+                    evt.preventDefault(); @get(provenance + '?nav=prev'); break;
+                case 'ArrowDown':
+                    if (sentence) { evt.preventDefault(); @get(provenance + '?nav=link-next'); }
+                    break;
+                case 'ArrowUp':
+                    if (sentence) { evt.preventDefault(); @get(provenance + '?nav=link-prev'); }
+                    break;
+                case 'v':
+                case 'i':
+                case 'r':
+                    if (sentence) {
+                        const state = {v: 'verified', i: 'interpretive', r: 'needs_recheck'}[evt.key];
+                        @post('/api/papers/' + paper + '/sentences/' + sentence + '/verify',
+                            {contentType: 'json', payload: {state: state, actor: 'user:dashboard'}})
+                            .then(() => @get('/api/papers/' + $activePaper + '/provenance'));
+                    }
+                    break;
+                case 'f': @get(provenance + '?nav=FAIL'); break;
+                case 'w': @get(provenance + '?nav=WARN'); break;
+                case 'Escape':
+                    $filterLayers = ($filterLayers && $filterLayers.length) ? [] : $filterLayers;
+                    $activeClaim = ''; $activeSentence = ''; $activeLinkIdx = -1; $gateFilter = '';
+                    @get(provenance); break;
+            }
+        }
+    "></div>
 </div>

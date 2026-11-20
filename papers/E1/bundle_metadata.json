@@ -9,7 +9,7 @@
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_ge_one",
-      "claims": "§III: the occupation-recovery factor A = exp(Γ_pol L / v_g) satisfies 1 ≤ A, so dividing it out never deflates an inferred occupation. STATEMENT is exactly that and nothing more; it follows from Γ_pol ≥ 0, L ≥ 0, v_g > 0 and uses no BEC or Re G ≥ 0 result.",
+      "claims": "§III: the occupation-recovery factor A = exp(Γ_pol L / v_g) satisfies 1 ≤ A, so multiplying the nonnegative measured occupation by A never deflates it. The theorem bounds the defined factor; the occupation-recovery relation is the attenuation model, not a conclusion of this theorem. The bound follows from Γ_pol ≥ 0, L ≥ 0, v_g > 0 and uses no BEC or Re G ≥ 0 result.",
       "declared": "2026-08-07",
       "statement_verified": "2026-08-15 (PolaritonTier1.lean:84)"
     },
@@ -21,7 +21,7 @@
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_eq_one_at_zero_decay",
-      "claims": "§III: A = 1 exactly at Γ_pol = 0, the closed-system limit.",
+      "claims": "§III: Γ_pol = 0 implies A = 1, the closed-system limit. No converse is claimed: the carrier also permits L = 0, for which A = 1 at positive decay.",
       "declared": "2026-08-07",
       "statement_verified": "2026-08-15 (PolaritonTier1.lean:98)"
     }
@@ -80,9 +80,9 @@
     "abstract_ceiling": {
       "unit": "characters",
       "ceiling": 600,
-      "source": "PRL author guide — abstract of roughly 600 characters",
-      "source_verified": false,
-      "source_note": "UNVERIFIED against the primary. A 2026-08-15 research-scout pass could not reach journals.aps.org: its robots.txt disallows automated agents and every author-guide fetch returned 403. This figure is the one recorded in papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md §5.1, not one read off the APS author guide. Confirm by hand before treating a pass here as venue conformance; the current abstracts are 2-5x over, so the exact figure does not change any live verdict."
+      "source": "APS Journals Style Guide (February 2026), Abstract subsection, printed p.11 / PDF p.12: PRL <=600 characters; linked from https://journals.aps.org/prl/authors",
+      "source_verified": true,
+      "source_note": "Direct primary page-level text inspected 2026-10-15 at https://res.cloudinary.com/apsphysics/image/upload/APS_Journals_Style_Guide_Authors022326_guzwhx.pdf. The guide also excludes numbered references from abstracts. This confirms the existing PRL ceiling; it does not certify publisher-side counting or conformance to a different venue."
     }
   },
   "compiled_pages": 4,

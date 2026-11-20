@@ -205,7 +205,10 @@ class GraphIndex:
         evaluators", in the same commit, for the same defect. Neither was the
         count. Enumerated here once, authoritatively.)
         """
-        tex_path = PAPERS_DIR / paper_key / "paper_draft.tex"
+        from src.core.paper_artifacts import paper_artifact_path
+        tex_path = paper_artifact_path(PAPERS_DIR, paper_key, "paper_draft.tex")
+        if tex_path is None:
+            return None
         try:
             return tex_path.read_text()
         except (OSError, UnicodeDecodeError):

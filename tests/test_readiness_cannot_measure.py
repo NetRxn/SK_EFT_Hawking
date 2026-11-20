@@ -36,6 +36,30 @@ import bundle_readiness as br  # noqa: E402
 import readiness_gates as rg  # noqa: E402
 
 
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _dummy_readiness_roots(tmp_path, monkeypatch):
+    import build_graph
+    import provenance_dashboard as dashboard
+    import sentence_state
+    import verification_state
+    import psycopg
+    (tmp_path / 'papers').mkdir()
+    monkeypatch.setenv('SK_EFT_GRAPH_SOURCE', 'json')
+    for module in (build_graph, dashboard):
+        monkeypatch.setattr(module, 'PROJECT_ROOT', tmp_path)
+    monkeypatch.setattr(rg, 'PAPERS_DIR', tmp_path / 'papers')
+    monkeypatch.setattr(br, 'PAPERS_DIR', tmp_path / 'papers')
+    monkeypatch.setattr(sentence_state, 'PAPERS_ROOT', tmp_path / 'papers')
+    monkeypatch.setattr(verification_state, 'LOG_PATH', tmp_path / 'verification_log.jsonl')
+    monkeypatch.setattr(verification_state, 'LOCK_PATH', tmp_path / 'verification_log.jsonl.lock')
+    monkeypatch.setitem(dashboard.app.config, 'PG_SYNC_ENABLED', False)
+    monkeypatch.setattr(build_graph, 'build_graph_json', lambda: {'nodes': [], 'links': []})
+    monkeypatch.setattr(psycopg, 'connect', lambda *a, **k: pytest.fail('unexpected DB connection'))
+
+
 class TestEvaluatorCrashIsBlocking:
 
     def test_evaluator_crash_blocks(self, monkeypatch):
@@ -193,3 +217,110 @@ class TestStage13EvidenceKindWithholdsGreen:
         two sets drifted, a verdict the writer rejected could still show GREEN."""
         import record_review as rr
         assert br._KINDS_SUFFICIENT_FOR_GREEN == rr.KINDS_SUFFICIENT_FOR_GREEN
+
+
+class TestSuppliedGraphDowngrade:
+    """Exercise the optional input without touching the live corpus or rebuilding it."""
+
+    @staticmethod
+    def graph():
+        return {"nodes": [{"id": "paper:X1", "type": "Paper", "meta": {}}], "links": []}
+
+    @staticmethod
+    def forbid_build(monkeypatch):
+        import build_graph
+        def unexpected(*args, **kwargs):
+            raise AssertionError("explicit graph must not invoke standalone builder")
+        monkeypatch.setattr(build_graph, "build_graph_json", unexpected)
+
+    def test_real_fix_propagation_promotes_p2_and_downgrades(self, monkeypatch, tmp_path):
+        import copy
+        self.forbid_build(monkeypatch)
+        monkeypatch.setattr(rg, "GATES", [("FixPropagation", 2, rg._eval_fix_propagation)])
+        graph = self.graph()
+        graph["nodes"].append({"id": "review:blocker", "type": "ReviewFinding",
+                               "meta": {"status": "open", "severity": "major"}})
+        graph["links"].append({"source": "review:blocker", "target": "paper:X1", "type": "FLAGS"})
+        original = copy.deepcopy(graph)
+        monkeypatch.setattr(br, "_VALID_BUNDLE_TARGETS", ("X1",))
+        monkeypatch.setattr(br, "PAPERS_DIR", tmp_path)
+        review = {"X1": {"date": "2026-10-15", "kind": "full-adversarial"}}
+        assert br._blocked_p1_gates_by_paper(graph=graph) == {"X1": ["FixPropagation"]}
+        row = br.aggregate_by_bundle({}, {}, review, graph=graph)["X1"]
+        assert row["readiness"] == "YELLOW"
+        assert row["blocked_p1_gates"] == ["FixPropagation"]
+        assert graph == original
+
+    def test_full_clear_equals_standalone_and_retains_review_guards(self, monkeypatch, tmp_path):
+        import build_graph
+        graph = self.graph()
+        builds = []
+        def build():
+            builds.append(True)
+            return graph
+        monkeypatch.setattr(build_graph, "build_graph_json", build)
+        monkeypatch.setattr(rg, "GATES", [("FixPropagation", 2, rg._eval_fix_propagation)])
+        monkeypatch.setattr(br, "_VALID_BUNDLE_TARGETS", ("X1",))
+        monkeypatch.setattr(br, "PAPERS_DIR", tmp_path)
+        (tmp_path / "X1").mkdir()
+        (tmp_path / "X1" / "claims_review.json").write_text("{}")
+        review = {"X1": {"date": "2026-10-15", "kind": "full-adversarial"}}
+        assert br._blocked_p1_gates_by_paper(graph=graph) == {}
+        borrowed = br.aggregate_by_bundle({}, {}, review, graph=graph)
+        assert builds == []
+        assert borrowed["X1"]["readiness"] == "GREEN"
+        assert br.aggregate_by_bundle({}, {}, review) == borrowed
+        assert br.aggregate_by_bundle({}, {}, review, graph=None) == borrowed
+        assert len(builds) == 2
+        review["X1"]["kind"] = "targeted"
+        assert br.aggregate_by_bundle({}, {}, review, graph=graph)["X1"]["readiness"] == "UNMEASURED"
+        review["X1"]["kind"] = "full-adversarial"
+        (tmp_path / "X1" / "claims_review.json").unlink()
+        assert br.aggregate_by_bundle({}, {}, review, graph=graph)["X1"]["readiness"] == "UNMEASURED"
+
+    def test_whole_failure_is_unknown_and_individual_failure_blocks(self, monkeypatch, tmp_path, capsys):
+        self.forbid_build(monkeypatch)
+        graph = self.graph()
+        monkeypatch.setattr(br, "_VALID_BUNDLE_TARGETS", ("X1",))
+        monkeypatch.setattr(br, "PAPERS_DIR", tmp_path)
+        review = {"X1": {"date": "2026-10-15", "kind": "full-adversarial"}}
+        def explode(*args):
+            raise RuntimeError("controlled evaluator failure")
+        monkeypatch.setattr(rg, "GATES", [("Exploding", 1, explode)])
+        assert br._blocked_p1_gates_by_paper(graph=graph) == {"X1": ["Exploding"]}
+        monkeypatch.setattr(rg, "evaluate_all_gates", explode)
+        assert br._blocked_p1_gates_by_paper(graph=graph) is None
+        row = br.aggregate_by_bundle({}, {}, review, graph=graph)["X1"]
+        assert row["readiness"] == "YELLOW"
+        assert "UNVERIFIED" in row["readiness_display"]
+        assert "GREEN will be withheld" in capsys.readouterr().err
+
+    def test_explicit_bad_shapes_never_rebuild_or_evaluate_as_clear(self, monkeypatch, tmp_path):
+        self.forbid_build(monkeypatch)
+        monkeypatch.setattr(br, "_VALID_BUNDLE_TARGETS", ("X1",))
+        monkeypatch.setattr(br, "PAPERS_DIR", tmp_path)
+        def unexpected(*args):
+            raise AssertionError("malformed input reached evaluator")
+        monkeypatch.setattr(rg, "evaluate_all_gates", unexpected)
+        review = {"X1": {"date": "2026-10-15", "kind": "full-adversarial"}}
+        bad = [{}, [], False, "graph", {"nodes": []}, {"links": []},
+               {"nodes": {}, "links": []}, {"nodes": [], "links": {}},
+               {"nodes": [], "links": []}, {"nodes": [None], "links": []},
+               {"nodes": [{"type": "Paper"}], "links": []},
+               {"nodes": [{"id": [], "type": "Paper"}], "links": []},
+               {"nodes": [{"id": "gate:X1:G", "type": "ReadinessGate"}], "links": []},
+               {"nodes": self.graph()["nodes"], "links": [None]},
+               {"nodes": self.graph()["nodes"], "links": [{"source": "paper:X1"}]},
+               {"nodes": self.graph()["nodes"], "links": [{"source": [], "target": "p", "type": "FLAGS"}]}]
+        # Count observable calls as well: the helper intentionally catches exceptions.
+        builds, evaluations = [], []
+        import build_graph
+        monkeypatch.setattr(build_graph, "build_graph_json", lambda: builds.append(True))
+        monkeypatch.setattr(rg, "evaluate_all_gates", lambda g: evaluations.append(g) or [])
+        for graph in bad:
+            assert br._blocked_p1_gates_by_paper(graph=graph) is None, repr(graph)
+            row = br.aggregate_by_bundle({}, {}, review, graph=graph)["X1"]
+            assert row["readiness"] == "YELLOW", repr(graph)
+            assert "UNVERIFIED" in row["readiness_display"]
+        assert builds == []
+        assert evaluations == []

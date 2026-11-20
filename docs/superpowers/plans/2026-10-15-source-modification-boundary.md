@@ -1,0 +1,10 @@
+# Source modification boundary plan
+
+Constraints: ordinary assigned publication candidate only; no Lean/controller calls, broad seeded suite, production metadata writes or manual ledger edits. Keep E1 one coherent PR. Independent specification review precedes implementation; independent code/closure review precedes delivery.
+
+1. Record baseline red for the existing infra finding and read-only real source measurement. Run the existing infra planner; use its finding identity rather than minting parallel routing state.
+2. Review ADR-018 and the specification adversarially for scope, exclusion semantics and preserved timestamps. Resolve review issues before implementation.
+3. Own `scripts/bundle_source_manifest.py`, `scripts/check_bundle_source_freshness.py` (exact source-mtime reader only) and `tests/test_bundle_source_manifest.py`: implement the relative predicate and deterministic visible/hidden ancestor, nested cache/hidden, nested ordinary, empty/missing and writer-row regressions. No new gate registration is owed because no check is introduced.
+4. Own the source-manifest claim in `docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md`, plus a matching prose assertion in the dedicated regression test. Preserve the remainder of that map. State the relative boundary and reader-specific exclusions; keep the incident in the review evidence.
+5. Run dedicated tests and existing bundle JSON serializer tests, the declared finding Verify and `git diff --check`. Use the production reader read-only on the existing E1 source. Compare E1 metadata/source manifest to HEAD. Coordinate broader fast/merge gates with primary rather than running them concurrently.
+6. Record independent review in `papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/PRODUCER_REVIEW.md`, close only the independently reviewed source-reader findings 2.1 and 2.2 via `scripts/close_finding.py`, independently audit ledger preservation, and commit intended paths under normal hooks. Update PR89 and report exact acceptance limits. Closure is distinct from merged-wave acceptance.

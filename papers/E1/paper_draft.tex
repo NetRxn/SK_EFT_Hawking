@@ -38,25 +38,18 @@ Exciton-Polariton Microcavities}
 \date{\today}
 
 \begin{abstract}
-Exciton-polariton fluids now support acoustic horizons of tailored
-curvature with the surface gravity measured directly. At the
-Paris-LKB platform's published smooth-horizon value
-$\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$~\cite{Falque2025} the
-standard analog-Hawking relation gives
-$T_H = \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$, eight orders above the
-atomic-BEC analogs, and a coherent probe crossing the horizon is
-amplified by $G(\omega) = \Gamma(\omega)/(e^{2\pi\omega/\kappa_{\rm eff}}-1)$,
-which reaches one half at
-$\omega = \input{tables/lkb_gain_threshold.tex}\unskip\,\kappa_{\rm eff}$ for a
-saturated greybody factor. The obstacle is not the horizon but the
-cavity: the as-built \input{tables/lkb_tau_cav_ps_standard.tex}\unskip\,\si{\pico\second}
-device has $\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$,
-so the weak-dissipation expansion that licenses these numbers fails
-by more than an order of magnitude and holds only for
-$\tau_{\rm cav} \gtrsim \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$.
-We give the predicted spectrum, its falsifiable window
-$\omega \lesssim 0.3\,\kappa$, and the two measurements that would
-close it.
+Cavity loss limits tests of analog Hawking radiation in
+exciton-polariton fluids. At the Paris-LKB smooth horizon, the
+standard relation gives
+$T_H = \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$.
+The as-built cavity fails our weak-dissipation criterion; a
+fixed-horizon lifetime above about
+$\input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$ is required.
+For such a cavity and a saturated greybody factor, stimulated gain
+reaches one half at
+$\omega/\kappa_{\rm eff} = \input{tables/lkb_gain_threshold.tex}\unskip$,
+where $\kappa_{\rm eff}$ is the adopted effective surface gravity.
+We give a working band and required calibrations.
 \end{abstract}
 
 \maketitle
@@ -69,13 +62,14 @@ condensates at $T_H \approx \SI{0.35}{\nano\kelvin}$
 \cite{Steinhauer2016,deNova2019}, so far below every systematic in
 the apparatus that the signal must be recovered from
 density-density correlations accumulated over thousands of
-realizations. Exciton-polariton fluids remove that constraint
-rather than fighting it: their sound speed exceeds a dilute atomic
+realizations. Exciton-polariton fluids offer a different scale:
+their sound speed exceeds a dilute atomic
 gas's by some eight orders of magnitude, and their horizons are
 written optically, so the velocity gradient setting the surface
-gravity is both large and adjustable, and predicted temperatures
-lie in the \SI{0.1}{\kelvin} to \SI{1}{\kelvin} range
-\cite{Gerace2012,Nguyen2015}.
+gravity is both large and adjustable. Earlier work proposed and
+realised stationary polariton horizons~\cite{Gerace2012,Nguyen2015};
+quantitative temperature comparisons require the device profile
+and surface-gravity convention specified below.
 
 Falque \emph{et al.}~\cite{Falque2025} have now built the horizon.
 Their microcavity polariton fluid crosses from sub- to supersonic
@@ -88,14 +82,14 @@ not yet have is a prediction sharp enough to falsify, and a
 statement of the device conditions under which that prediction is
 entitled to be believed.
 
-This Letter supplies both. We evaluate the Schwinger-Keldysh
-effective-field-theory (SK-EFT) analog-Hawking spectrum at the
-published Paris-LKB parameters, and ask in the same expansion
-whether the cavity is quiet enough for that spectrum to be the
-leading behavior. The answer is that the horizon is already
-good enough and the cavity is not. Cavity loss, not surface gravity,
-is the gating parameter, and the gate closes at a lifetime we can
-name.
+This Letter quantifies a necessary device condition for the
+Schwinger-Keldysh effective-field-theory (SK-EFT) analog-Hawking
+spectrum to describe the published Paris-LKB parameters. The
+as-built cavity lies outside the weak-dissipation expansion. We
+derive the lifetime threshold at fixed horizon steepness and give
+conditional stimulated-gain targets for a longer-lived cavity.
+Testing them also requires a calibrated transfer function and
+noise budget.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Device parameters and the predicted Hawking temperature}
@@ -124,26 +118,26 @@ horizon steepnesses are reported: a smooth configuration at
 $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ and a steep one at
 $\kappa = \input{tables/lkb_kappa_steep.tex}\unskip\,\mathrm{s}^{-1}$.
 
-That sound speed is not a reservoir-free Bogoliubov estimate
-rescaled after the fact: the dark excitonic reservoir is already
-inside it, carried as $g_r n_r \approx 1.84\,gn$ through the
-dispersion from which $c_s$ is extracted. Reservoir-free estimates
-for this class of device reach
-$\sim \SI{1.0}{\micro\meter/\pico\second}$, so the reservoir costs a
-factor of about two and a half, but that reduction is the primary
-source's result rather than
-ours~\cite{Estrecho2021,Stepanov2019,Claude2023}.
+Falque \emph{et al.}'s sound-speed reconstruction already includes
+the reservoir: their spectral fit uses
+$g_r n_r \approx 1.84\,gn$ to recover the condensate interaction
+energy~\cite{Falque2025,Claude2023}. We use the reported sound
+speed directly. Reservoir-induced differences between dynamical
+sound speeds and estimates based on the total blueshift also
+occur under other excitation conditions~\cite{Estrecho2021,Stepanov2019};
+those devices do not establish a matched reservoir-free comparison
+for the adopted Paris parameters.
 
 \begin{center}
 \input{tables/lkb_device_params.tex}
 \end{center}
 
-The dimensionless ratio $D = \xi\kappa/c_s$ compares the horizon's
-gradient scale to the healing length and controls how far the
-hydrodynamic description can be trusted. It is
+The dimensionless ratio $D = \xi\kappa/c_s$ compares the healing
+length to the horizon's gradient scale; the hydrodynamic limit
+requires this scale separation. It is
 $\input{tables/lkb_D_smooth.tex}\unskip$ at the smooth horizon and
-$\input{tables/lkb_D_steep.tex}\unskip$ at the steep one. We take the leading
-dispersive correction to be
+$\input{tables/lkb_D_steep.tex}\unskip$ at the steep one. We adopt a
+phenomenological parametrization of a possible dispersive shift,
 \begin{equation}
 \delta_{\rm disp} = -c_1 D^2 ,
 \qquad c_1 \equiv \frac{\pi}{6},
@@ -152,28 +146,32 @@ dispersive correction to be
 giving $\input{tables/lkb_delta_disp_smooth.tex}\unskip$ and
 $\input{tables/lkb_delta_disp_steep.tex}\unskip$ respectively.
 
-The $D^2$ scaling is the established one: Coutant and Weinfurtner obtain
-the leading correction to the effective temperature as
-$O(\xi^2\kappa^2/c_s^2)$ in the adiabatic regime. The \emph{coefficient}
-is not. No derivation of a universal $c_1$ exists, and none is possible in
-the form Eq.~\eqref{eq:delta_disp} suggests: for a locally linear
-velocity profile the near-horizon calculation returns
-$\beta_\omega = e^{-\pi\omega/\kappa}\alpha_\omega$ exactly, so the
-temperature is $\kappa/2\pi$ with no $D^2$ term at all, and a correction
-appears only through the profile's non-linear part~\cite{Coutant2014}.
+Neither the quadratic form nor its coefficient is derived here for
+this device. In the weakly dispersive Korteweg--de Vries (KdV) model, Coutant and
+Weinfurtner obtain a profile-specific low-frequency temperature
+ratio $\tanh(\pi q_r)$ in their profile parameter $q_r$, with an
+exponentially small departure from
+the Hawking value in their smooth-profile limit~\cite{CoutantWeinfurtner2018KdV}.
+That result does not establish a nonzero leading $D^2$ temperature term.
+For a locally linear velocity profile, Coutant and Parentani obtain
+$\beta_\omega = e^{-\pi\omega/\kappa}\alpha_\omega$ within their
+near-horizon, weak-dispersion momentum-space WKB approximation
+neglecting left-moving-mode coupling;
+departures from linearity affect the mixing through the broadened
+horizon region~\cite{Coutant2014}.
 Corley and Jacobson, correspondingly, report numerically fitted powers
 $(T_H/k_0)^p$ whose exponent is itself profile-dependent, $p \simeq 3$ and
 $2$ for smooth profiles and $p \simeq 1$ for kinked
-ones~\cite{CorleyJacobson1996}. What that literature establishes is the
-robustness of $T_H$, not a coefficient. The value $c_1 = \pi/6$ is
-therefore fixed here as a declared normalization of an $O(1)$
-profile-dependent quantity --- it is the single value carried by this
-project's computational and formal substrate, so that every $\delta_{\rm
-disp}$ quoted below and in the companion papers is the same statement
-about the same definition. A reader who prefers a different $O(1)$
+ones~\cite{CorleyJacobson1996}. These results concern robustness in
+specified models, rather than a derivation of Eq.~\eqref{eq:delta_disp}.
+The quadratic law and $c_1 = \pi/6$ are adopted here for comparison.
+This definition is used throughout the
+computational and formal definitions, so every $\delta_{\rm disp}$
+quoted below and in the companion papers uses the same normalization.
+A reader who prefers a different $O(1)$
 normalization should rescale every dispersive number in this paper by
-$c_1/(\pi/6)$; the quadratic $\kappa$-scaling and the
-dispersive-versus-dissipative ordering are unaffected.
+$c_1/(\pi/6)$. The defined quadratic dependence survives that
+rescaling, but the crossover with dissipation can move.
 
 The Hawking temperature follows from the surface gravity alone,
 \begin{equation}
@@ -186,8 +184,8 @@ $T_H = \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$.
 Two qualifications attach to that number, and both come from the
 primary source rather than from the theory.
 
-The first is a normalization. Falque \emph{et al.} quote a Hawking
-temperature of \SI{3}{\kelvin} for their smoothest horizon, and
+The first is a normalization. In arXiv version~2, Falque
+\emph{et al.} quote a Hawking temperature of \SI{3}{\kelvin} for their smoothest horizon, and
 their Eq.~(9) writes the emitted flux as
 $1/(e^{\omega/2\pi\kappa}-1)$. That exponent corresponds to
 $k_B T = h\kappa$, which at the same
@@ -196,7 +194,9 @@ $\input{tables/lkb_T_H_falque_norm_K.tex}\unskip\,\si{\kelvin}$ and reproduces t
 flux values they report. It exceeds Eq.~\eqref{eq:T_H} by
 $(2\pi)^2 \approx \input{tables/lkb_norm_ratio.tex}\unskip$. We use
 Eq.~\eqref{eq:T_H}, the convention of the analog-gravity literature
-the same paper cites~\cite{Visser1998,Unruh1981,Barcelo2011}, and we
+the same paper cites~\cite{Visser1998,Unruh1981,Barcelo2011}.
+In the 2011 review's acceleration notation, our frequency gradient
+is $\kappa=g_H/c_H$ [Eqs.~(63)--(64)]. We
 flag the factor here so that a reader holding \SI{3}{\kelvin} in
 mind does not read
 $\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ as a
@@ -206,10 +206,11 @@ quantity; they normalize $T_H$ differently.
 The second is that Eq.~\eqref{eq:T_H} is only an observable where
 the spectrum is thermal, and at the steep horizon it is not. Falque
 \emph{et al.} state that the steep-horizon spectrum is dominated by
-nonlinear frequency dispersion and is therefore not thermal, which
-$D = \input{tables/lkb_D_steep.tex}\unskip$ anticipates: the dispersive correction
-Eq.~\eqref{eq:delta_disp} is then near one half and the expansion
-that produced it has stopped converging. We therefore quote a
+nonlinear frequency dispersion and is therefore not thermal.
+At $D = \input{tables/lkb_D_steep.tex}\unskip$, the adopted correction
+Eq.~\eqref{eq:delta_disp} is near one half; its size alone supplies
+neither a convergence test nor a controlled higher-order error estimate.
+We therefore quote a
 Hawking temperature at the smooth horizon only, and treat the steep
 configuration as what the source shows it to be, a demonstration
 that $\kappa$ is tunable, not a hotter black hole.
@@ -230,39 +231,36 @@ that $\kappa$ is tunable, not a hotter black hole.
 %%   All four kernel-only; axiom closure {propext, Classical.choice,
 %%   Quot.sound}; no project-local axioms, no tracked Props.
 
-Polaritons leak. A quantum written into the fluid at the horizon
-decays at the cavity rate $\Gamma_{\rm pol} = 1/\tau_{\rm cav}$
-while it propagates to where it is read out, so the occupation the
-apparatus records is smaller than the occupation the horizon
-emitted by
+Propagation at decay rate $\Gamma_{\rm pol} = 1/\tau_{\rm cav}$
+reduces the emitted occupation by the factor
 \begin{equation}
 A = \exp\!\left(\frac{\Gamma_{\rm pol} L}{v_g}\right),
 \label{eq:attenuation}
 \end{equation}
 with $L$ the propagation distance and $v_g$ the group velocity.
-Recovering the intrinsic spectrum means dividing by $A$. Three
-elementary properties of Eq.~\eqref{eq:attenuation} are checked in
-Lean~4 for every parameter choice rather than a fitted one:
+The attenuation model relates emitted and measured occupations by
+\begin{equation}
+N_{\rm meas} = N_{\rm emit}/A,
+\qquad N_{\rm emit} = A N_{\rm meas}.
+\end{equation}
+Recovery multiplies by $A$. Lean~4 checks three properties of this
+defined factor for all admissible parameters:
 $A \geq 1$ always, so the recovery never deflates an inferred
 occupation (\texttt{attenuation\_ge\_one}); $A$ is monotone in
 $\Gamma_{\rm pol}$ at fixed geometry
-(\texttt{attenuation\_mono\_Gamma}); and $A = 1$ exactly at
-$\Gamma_{\rm pol} = 0$, the closed-system limit
+(\texttt{attenuation\_mono\_Gamma}); and $\Gamma_{\rm pol} = 0$ implies $A = 1$, the closed-system limit
 (\texttt{attenuation\_eq\_one\_at\_zero\_decay}).
+At zero propagation distance, $A = 1$ even with positive decay.
 
-The question is not whether $A$ can be divided out, but whether
-$\Gamma_{\rm pol}$ is small enough that what is being corrected is
-still the emission Eq.~\eqref{eq:T_H} describes. Dissipation
-enters the SK-EFT as an expansion in $\Gamma_{\rm pol}/\kappa$, and
-we take
+The recovery relation assumes that loss changes propagation while the
+intrinsic emission retains the form described by Eq.~\eqref{eq:T_H}.
+Its perturbative use requires small $\Gamma_{\rm pol}/\kappa$.
+We impose
 \begin{equation}
 \Gamma_{\rm pol} < \input{tables/lkb_weak_dissipation_ratio.tex}\unskip\,\kappa
 \label{eq:weak_dissipation}
 \end{equation}
-as the condition under which the leading term is the answer. The
-cut in Eq.~\eqref{eq:weak_dissipation} is a declared convention, not
-a derived boundary; what is not conventional is the size of the gap
-between it and the device.
+as a declared validity convention, not a derived boundary.
 
 Falque \emph{et al.} measure a polariton decay rate
 $\hbar\gamma \approx \SI{80}{\micro\electronvolt}$, or
@@ -272,17 +270,13 @@ Against $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ t
 \frac{\Gamma_{\rm pol}}{\kappa} = \input{tables/lkb_ratio_standard.tex}\unskip ,
 \label{eq:ratio_asbuilt}
 \end{equation}
-about eighteen times the cut. The as-built cavity is not weakly
-dissipative: over one healing length the recovery factor $A$ is
-already
-$\input{tables/lkb_atten_per_xi_standard.tex}\unskip$, because the exponent in
-Eq.~\eqref{eq:attenuation} per healing length is exactly the product
-$(\Gamma_{\rm pol}/\kappa)\,D$ of this Letter's two dimensionless
-parameters.
+about eighteen times the cut. Over one healing length, the exponent
+in Eq.~\eqref{eq:attenuation} is $(\Gamma_{\rm pol}/\kappa)D\,c_s/v_g$.
+Taking $v_g = c_s$ gives the recovery factor
+$\input{tables/lkb_atten_per_xi_standard.tex}\unskip$. The per-healing-length
+estimates here use this velocity identification.
 
-This is a cavity specification, and it is the one axis of the
-platform that is a fabrication choice rather than a physical limit.
-Holding the horizon fixed and varying only the mirror stack, a
+At fixed horizon, a
 \SI{100}{\pico\second} cavity gives
 $\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_long.tex}\unskip$ and a
 \SI{300}{\pico\second} cavity gives
@@ -293,11 +287,9 @@ is met from
   \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}\;}
 \label{eq:tau_required}
 \end{equation}
-onward, where the per-healing-length recovery factor has fallen to
-$\input{tables/lkb_atten_per_xi_required.tex}\unskip$. Whether a GaAs
-microcavity at that lifetime is available to this group is a
-fabrication question rather than a physics one; the horizon itself
-does not need to change.
+onward, with per-healing-length recovery factor
+$\input{tables/lkb_atten_per_xi_required.tex}\unskip$. Availability of such a
+GaAs cavity remains a fabrication question; the horizon is unchanged.
 %% TODO: the claim that GaAs microcavities with tau_cav >= 143 ps are
 %% demonstrated is NOT made here, because it is not verified. The
 %% repo's PARAMETER_PROVENANCE cites Ballarini 2017 for long-lifetime
@@ -307,9 +299,8 @@ does not need to change.
 %% draft asserts availability. Filed nowhere else deliberately: this
 %% is a source-acquisition task, not a defect in the present text.
 
-Figure~\ref{fig:regime} places the device on that axis. The same
-criterion applied outside the GaAs family closes the other end of
-the range: the UPenn MoSe$_2$ nanocavity of Wang \emph{et
+Figure~\ref{fig:regime} locates the GaAs devices. Outside that family,
+the UPenn MoSe$_2$ nanocavity of Wang \emph{et
 al.}~\cite{WangKimBZHe2026PennTMDPolariton}, whose lower-polariton
 linewidth $\gamma_{\rm LP} = \SI{1.8}{\milli\electronvolt}$ implies
 $\Gamma_{\rm LP} \approx \SI{2.7e12}{\per\second}$, sits at
@@ -333,31 +324,22 @@ Falque \emph{et al.}~\cite{Falque2025}. The as-built
 \input{tables/lkb_tau_cav_ps_standard.tex}\unskip\,\si{\pico\second} device
 (``standard'') sits at $\input{tables/lkb_ratio_standard.tex}\unskip$, above unity,
 where the weak-dissipation expansion of
-Eq.~\eqref{eq:weak_dissipation} does not apply. The dotted line is
-$\Gamma_{\rm pol}/\kappa = 1/(\tau_{\rm cav}\kappa)$, the trajectory
-a longer cavity moves the device along at fixed horizon; it crosses
-the criterion at Eq.~\eqref{eq:tau_required}. The
+Eq.~\eqref{eq:weak_dissipation} does not apply. The dotted trajectory
+$\Gamma_{\rm pol}/\kappa = 1/(\tau_{\rm cav}\kappa)$ crosses the criterion
+at Eq.~\eqref{eq:tau_required}. The
 \SI{100}{\pico\second} (``long'') and \SI{300}{\pico\second}
 (``ultralong'') points are projected cavity generations, not
-measured devices. Shaded bands are the qualitative regimes the
-expansion passes through, coarsest at top.}
+measured devices. Shaded bands indicate qualitative decay scales.}
 \label{fig:regime}
 \end{figure}
 
-Two consequences separate cleanly, and the rest of this Letter
-depends on the separation. What does \emph{not} depend on the
-cavity is anything fixed by $\kappa$ alone: the horizon exists, its
-steepness is measured, and Eqs.~\eqref{eq:T_H} and~\eqref{eq:gain}
-set the temperature and the shape of the gain spectrum, including
-the frequency at which the gain crosses any given threshold. What
-\emph{does} depend on the cavity is the claim that those leading-order
-expressions are the whole answer, and with it the quoted gain
-magnitudes, the recovery of an intrinsic occupation through
-Eq.~\eqref{eq:attenuation}, and the error bars on the window of
-\S V. The numbers in \S IV and \S V are therefore stated for a
-device satisfying Eq.~\eqref{eq:tau_required}; at the as-built
-cavity they are the correct target of the measurement, not a
-prediction of what it will return.
+The measured horizon fixes $\kappa$ independently of the cavity.
+The leading-order temperature and gain expressions,
+Eqs.~\eqref{eq:T_H} and~\eqref{eq:gain}, are predictions only when
+the dissipation expansion applies. The gain magnitudes, occupation
+recovery and window uncertainties in \S IV and \S V therefore assume
+Eq.~\eqref{eq:tau_required}. They are targets for an improved cavity,
+not predictions for the as-built device.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The stimulated-Hawking gain spectrum}
@@ -380,43 +362,40 @@ G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\rm eff}} - 1},
 \end{equation}
 with $\Gamma(\omega)$ the greybody transmission factor and
 $\kappa_{\rm eff} = \kappa\,(1 + \delta_{\rm disp})$ the surface
-gravity carrying the dispersive correction of
+gravity defined by the adopted dispersive ansatz of
 Eq.~\eqref{eq:delta_disp}. At the smooth horizon
 $\kappa_{\rm eff}/\kappa = \input{tables/lkb_kappa_eff_ratio_smooth.tex}\unskip$.
 
 Every number below assumes the greybody-saturation limit
-$\Gamma(\omega) \equiv 1$, and the statements that follow are
-universal in $\kappa$ only within that limit. The assumption is
-defensible in the low-frequency window
-$\omega \lesssim 0.3\,\kappa$ of interest here, where greybody
-corrections enter at $\mathcal{O}(\omega^2/\kappa^2)$ in the
-hydrodynamic regime and leave the plateau
-flat~\cite{Finazzi2012,Jacquet2023QNM}; it is not defensible outside
-it, and a measured $\Gamma(\omega)$ profile is one of the things the
-experiment would deliver.
+$\Gamma(\omega) \equiv 1$. This is an adopted model for the
+numerical illustration, not a measured transmission profile.
+The hydrodynamic approximation alone does not establish its
+accuracy over the chosen band. Independent calibration of
+$\Gamma(\omega)$ and the detection transfer function is required
+to test the predicted gain.
 
 Under it the gain falls monotonically from a low-frequency
 divergence: $G = \input{tables/lkb_gain_at_0p1.tex}\unskip$ at
 $\omega = 0.1\,\kappa_{\rm eff}$,
 $\input{tables/lkb_gain_at_0p3.tex}\unskip$ at $0.3\,\kappa_{\rm eff}$, and
 $\input{tables/lkb_gain_at_1.tex}\unskip$ at $\kappa_{\rm eff}$. Setting
-$G = 1/2$ inverts Eq.~\eqref{eq:gain} exactly, with no device
-parameter surviving:
+$G = 1/2$ inverts Eq.~\eqref{eq:gain} exactly, within this assumed limit:
 \begin{equation}
 \frac{\omega_{1/2}}{\kappa_{\rm eff}} = \frac{\ln 3}{2\pi}
   = \input{tables/lkb_gain_threshold.tex}\unskip .
 \label{eq:threshold}
 \end{equation}
-Equation~\eqref{eq:threshold} is the sharpest prediction in this
-Letter, because it is a pure number. Expressed in the surface
-gravity the experiment measures rather than in $\kappa_{\rm eff}$,
-it sits at $\omega_{1/2} = \input{tables/lkb_gain_threshold_absolute.tex}\unskip\,\kappa$
-at the smooth horizon, and the difference between
-$\input{tables/lkb_gain_threshold.tex}\unskip$ and
-$\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ is exactly the dispersive
-correction. A measurement that locates the half-gain frequency
-therefore measures $\delta_{\rm disp}$, and through it $D$, without
-needing an absolute calibration of the probe.
+The dimensionless ratio in Eq.~\eqref{eq:threshold} is independent
+of $\kappa$ in the saturated-greybody model. The dimensional
+frequency still scales with $\kappa_{\rm eff}$. Expressed relative
+to the measured surface gravity, the adopted dispersive correction
+gives $\omega_{1/2}/\kappa =
+\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ at the smooth
+horizon. A nonunit greybody factor shifts the crossing: even a
+constant $\Gamma$ gives
+$\omega_{1/2}/\kappa_{\rm eff}=\ln(1+2\Gamma)/(2\pi)$.
+Inferring a dispersive correction from this crossing therefore
+requires independent calibration of transmission and detected gain.
 
 \begin{figure}[t]
 \centering
@@ -426,120 +405,100 @@ gain $G(\omega)$ against normalized frequency, at the smooth-horizon
 $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ and
 $D = \input{tables/lkb_D_smooth.tex}\unskip$ of Falque \emph{et al.}~\cite{Falque2025},
 in the greybody-saturation limit $\Gamma \equiv 1$. The abscissa is
-$\omega/\kappa$ with the dispersive correction \emph{not} folded in,
-so the plotted crossing of the dashed $G = 1/2$ line sits at
-$\ln(3)/2\pi = \input{tables/lkb_gain_threshold.tex}\unskip$; carrying
-$\kappa_{\rm eff}$ moves it to
-$\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ in these units.
-At $G = 1/2$ a single shot with 100 probe photons per mode reaches
-$5\sigma$. The shading marks the upper bound
-$\omega \lesssim 0.30\,\kappa$ of Eq.~\eqref{eq:window}; it is drawn
-down to $\omega = 0$ because this Letter does not fix the window's
-lower edge.}
+$\omega/\kappa_{\rm eff}$, so the dashed $G=1/2$ crossing lies at
+$\ln(3)/(2\pi)=\input{tables/lkb_gain_threshold.tex}\unskip$.
+The ideal shot-noise model assigns $5\sigma$ to this gain with
+100 probe photons per mode; this is conditional on the calibrated
+readout, not demonstrated detector performance. Shading denotes
+the adopted working band of Eq.~\eqref{eq:window}, not a derived
+validity bound. Its unresolved lower edge is not shown.}
 \label{fig:gain}
 \end{figure}
 
-For a shot-noise-limited readout,
-$\mathrm{SNR} = \sqrt{N_{\rm shots} N_{\rm probe}}\;G(\omega)$, so
-$G = 1/2$ with $N_{\rm probe} = 100$ probe photons per mode is a
-single-shot $5\sigma$ detection. At
-$\omega = 0.1\,\kappa_{\rm eff}$ the same 100 photons give
-$\mathrm{SNR} = \input{tables/lkb_snr_at_0p1.tex}\unskip$. What matters is
-the scaling rather than any single figure: a spontaneous correlation
-signal at the $5\times 10^{-5}$ level needs of order $10^9$
-repetitions to resolve~\cite{Grisins2016,Jacquet2022}, and a
-stimulated measurement trades that repetition count for probe
-power.
+For an ideal shot-noise-limited readout we adopt
+$\mathrm{SNR}=\sqrt{N_{\rm shots}N_{\rm probe}}\;G(\omega)$.
+This model assigns a single-shot $5\sigma$ significance to
+$G=1/2$ with 100 probe photons per mode, and
+$\mathrm{SNR}=\input{tables/lkb_snr_at_0p1.tex}\unskip$ at
+$\omega=0.1\,\kappa_{\rm eff}$. These are conditional readout
+estimates. Applying them to detected counts requires the collection
+and detection efficiencies, transfer function and measured
+background to be included in the noise budget.
 
 %% ══════════════════════════════════════════════════════════════════
-\section{Noise floor and the falsifiable window}
+\section{Noise budget and the working frequency band}
 
-The polariton fluid is not cold. Its mean-field energy scale
-corresponds to
+The mean-field energy expressed in temperature units is
 \begin{equation}
-T_{\rm noise} = \frac{m^* c_s^2}{k_B} = \input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin},
+T_{\rm mf}=\frac{m^*c_s^2}{k_B}
+=\input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin}.
 \end{equation}
-an order of magnitude above $T_H$: in a spontaneous measurement the
-Hawking occupation would have to be dug out of a background ten
-times larger.
+This energy scale does not determine a mode occupation,
+a thermodynamic temperature or the detected noise power spectrum.
+Its ratio to $T_H$ therefore does not specify a spontaneous
+background-to-signal ratio.
 
-The stimulated measurement does not face that ratio, and the reason
-is spectral and phase structure rather than magnitude. The
-driven-dissipative background is broadband and phase-incoherent
-with the probe, whereas Eq.~\eqref{eq:gain} describes a response at
-the probe frequency, phase-locked to it. A narrowband
-phase-referenced readout therefore rejects the background by the
-ratio of its bandwidth to the detection bandwidth, and this is not
-a modification of the Paris-LKB apparatus but a description of it:
-the existing coherent probe spectroscopy already modulates the
-probe at \SI{5}{\mega\hertz} and detects in a \SI{300}{\hertz}
-bandwidth around that modulation~\cite{Falque2025}. What survives
-in that band is the probe's own shot noise, which is what the SNR
-above assumes; the background enters only through condensate
-amplitude fluctuations, spectrally flat across the
-window~\cite{Amelio2020} and so unable to mimic the Planckian shape
-of Eq.~\eqref{eq:gain}.
+Coherent probe spectroscopy offers a frequency-selective readout.
+Falque \emph{et al.} modulate the probe at
+\SI{5}{\mega\hertz} and filter the photodiode signal in a
+\SI{300}{\hertz} resolution bandwidth~\cite{Falque2025}.
+These settings characterize the readout; they do not establish
+that only probe shot noise survives in that band. The ideal SNR
+estimate requires a measured in-band noise budget at the proposed
+operating point. Reservoir and pump fluctuations, detector noise
+and any response correlated with the probe must be characterized.
+Reservoir-induced dynamical instability and loss of coherence can
+occur in the author-preprint model of Amelio and
+Carusotto~\cite{Amelio2020}; that result supplies no calibrated
+noise spectrum for this experiment. We assume neither spectral
+flatness nor automatic rejection of that background.
 
-That shape is what makes the prediction falsifiable. We give the
-window
+For illustration we adopt the working band
 \begin{equation}
-\boxed{\;\omega/\kappa \lesssim 0.30\;}
+\boxed{\;\omega/\kappa_{\rm eff}\lesssim 0.30\;}
 \label{eq:window}
 \end{equation}
-at the smooth horizon. The upper edge is derived: above it $D$ is
-no longer small against the frequencies being probed, the
-$\mathcal{O}(\omega^2/\kappa^2)$ greybody corrections that
-Eq.~\eqref{eq:gain} neglects stop being negligible, and
-$G$ has fallen to $\input{tables/lkb_gain_at_0p3.tex}\unskip$, near the point where
-the returned signal is no longer a large fraction of the probe. The
-lower edge is set by the apparatus, not by the theory: $G$ grows
-without bound as $\omega \to 0$, and what stops the window there is
-the frequency resolution of the probe scan and the finite spatial
-extent of the fluid. We do not fix it here, because fixing it
-requires the resolution figures for the tailored-profile
-configuration rather than for the one already
-published.
+at the smooth horizon. The upper edge is a working choice, not a
+derived hydrodynamic or greybody error bound. At that edge the
+saturated-greybody gain is
+$\input{tables/lkb_gain_at_0p3.tex}\unskip$. The usable interval must
+also satisfy measured dispersion, transmission and noise limits.
+Its lower edge depends on probe-scan resolution, fluid extent and
+low-frequency response; the model's divergence as $\omega\to0$
+does not establish an experimentally accessible signal there.
 
-Inside the window the prediction is over-determined, which is what
-gives it teeth. The three measured quantities $(c_s, \xi, \kappa)$
-enter $G(\omega)$ only through the single combination
-$\kappa_{\rm eff}$, so a measured gain profile is a one-parameter
-fit to a three-parameter set already fixed independently.
-Disagreement in the \emph{shape} of $G(\omega)$, as opposed to its
-overall scale, cannot be absorbed into the greybody factor, and
-falsifies the framework.
+Once $c_s$, $\xi$ and $\kappa$ are measured, the adopted quadratic
+model fixes $\kappa_{\rm eff}$. A gain-shape comparison is
+then a test of this conditional model only after independent
+calibration of the frequency-dependent greybody factor, transfer
+function and background. An unknown $\Gamma(\omega)$ in
+Eq.~\eqref{eq:gain} can change the shape as well as the scale.
+A discrepancy without those controls cannot isolate a failure of
+the predicted thermal factor.
 
 %% ══════════════════════════════════════════════════════════════════
-\section{What would settle it}
+\section{Conclusions and required measurements}
 
-The horizon is built and its steepness is measured, so the analog
-Hawking temperature at the Paris-LKB platform is not an open
-theoretical question: Eq.~\eqref{eq:T_H} fixes it at
-$\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ from a
-quantity already in print. What is open is whether the leading-order
-spectrum is what the device emits, and that is decided by the
-mirror stack rather than by the optics that write the horizon. At
-$\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$ the
-as-built cavity is outside the expansion; at
-$\tau_{\rm cav} \gtrsim \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$
-it is inside, and the same horizon then emits a spectrum whose
-half-gain frequency, Eq.~\eqref{eq:threshold}, is a pure number that
-no device parameter can move.
+The measured smooth horizon sets the standard temperature scale
+$T_H=\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$.
+At $\Gamma_{\rm pol}/\kappa=
+\input{tables/lkb_ratio_standard.tex}\unskip$, the as-built cavity
+is outside the weak-dissipation expansion. A fixed-horizon lifetime
+above about
+$\input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$
+is necessary for the leading-order spectrum used here.
+Within that model and $\Gamma\equiv1$, the dimensionless ratio
+$\omega_{1/2}/\kappa_{\rm eff}$ in Eq.~\eqref{eq:threshold} is fixed;
+the frequency itself remains device-dependent.
 
-Two measurements would convert this from a prediction into a test,
-and both are within the existing apparatus. The first is the
-in-situ polariton decay rate $\Gamma_{\rm pol}$ and cavity lifetime
-$\tau_{\rm cav}$ at the tailored-profile configuration rather than
-at the homogeneous fluid, since Eq.~\eqref{eq:weak_dissipation} is
-evaluated there and the published
-$\hbar\gamma \approx \SI{80}{\micro\electronvolt}$ is not. The
-second is the probe-scan frequency resolution and the fluid's usable
-extent at that configuration, which is what would let the lower edge
-of Eq.~\eqref{eq:window} be fixed by the experiment instead of left
-open. Given a longer-lifetime cavity generation and its $\kappa$,
-the band edges follow from the same expressions used here, and we
-would recompute and circulate them before rather than after a
-measurement.
+A test requires the in-situ decay rate and cavity lifetime at the
+tailored horizon, the probe-scan resolution and usable fluid extent,
+and independent transmission, detector-response and noise
+calibrations. The first measurements locate the device in the
+assumed regime and delimit the accessible frequencies; the latter
+make the gain comparison identifiable. A longer lifetime meets a
+necessary expansion condition, while the full set of controls is
+needed to assess whether the emitted spectrum follows it.
 
 \begin{acknowledgments}
 Formal-verification layer built on Lean~4 (v\leantoolchain) with
@@ -581,8 +540,9 @@ M.~Visser, Class.\ Quantum Grav.\ \textbf{15}, 1767 (1998)
 
 \bibitem{Barcelo2011}
 C.~Barcel\'o, S.~Liberati, and M.~Visser,
-Living Rev.\ Relativ.\ \textbf{8}, 12 (2005)
-[arXiv:gr-qc/0505065].
+Living Rev.\ Relativ.\ \textbf{14}, 3 (2011),
+doi:10.12942/lrr-2011-3
+[arXiv:gr-qc/0505065v3].
 
 \bibitem{Gerace2012}
 D.~Gerace and I.~Carusotto,
@@ -595,8 +555,9 @@ Phys.\ Rev.\ Lett.\ \textbf{114}, 036402 (2015).
 \bibitem{Falque2025}
 K.~Falque, A.~Delhom, Q.~Glorieux, E.~Giacobino, A.~Bramati,
 and M.~J.~Jacquet,
-Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025)
-[arXiv:2311.01392].
+Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025),
+\href{https://doi.org/10.1103/t5dh-rx6w}{doi:10.1103/t5dh-rx6w}
+[arXiv:2311.01392v2].
 
 \bibitem{Estrecho2021}
 E.~Estrecho \emph{et al.},
@@ -614,14 +575,6 @@ Phys.\ Rev.\ B \textbf{107}, 174507 (2023).
 P.~Grisins \emph{et al.},
 Phys.\ Rev.\ B \textbf{94}, 144518 (2016).
 
-\bibitem{Jacquet2022}
-M.~Jacquet \emph{et al.},
-Eur.\ Phys.\ J.\ D \textbf{76}, 152 (2022).
-
-\bibitem{Finazzi2012}
-S.~Finazzi and R.~Parentani,
-Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
-
 \bibitem{CorleyJacobson1996}
 S.~Corley and T.~Jacobson,
 Phys.\ Rev.\ D \textbf{54}, 1568 (1996).
@@ -630,13 +583,14 @@ Phys.\ Rev.\ D \textbf{54}, 1568 (1996).
 A.~Coutant and R.~Parentani,
 Phys.\ Rev.\ D \textbf{90}, 121501(R) (2014).
 
-\bibitem{Jacquet2023QNM}
-M.~Jacquet \emph{et al.},
-Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
+\bibitem{CoutantWeinfurtner2018KdV}
+A.~Coutant and S.~Weinfurtner,
+Phys.\ Rev.\ D \textbf{97}, 025005 (2018).
 
 \bibitem{Amelio2020}
 I.~Amelio and I.~Carusotto,
-Phys.\ Rev.\ B \textbf{101}, 064505 (2020).
+Phys.\ Rev.\ B \textbf{101}, 064505 (2020);
+\href{https://arxiv.org/abs/1905.05855v2}{arXiv:1905.05855v2}.
 
 \bibitem{WangKimBZHe2026PennTMDPolariton}
 Z.~Wang, B.~Kim, B.~Zhen, and L.~He,
