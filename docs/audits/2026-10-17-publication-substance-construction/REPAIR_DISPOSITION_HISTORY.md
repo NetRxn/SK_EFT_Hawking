@@ -3470,3 +3470,30 @@ ROOT verified all 45 archive members, matched all 21 upstream and support bodies
 The [four independently reviewed outer cuts](L1_N16_C0_DENSE_CHILD01_TUPLE0_PAIRED_C7_C14_C15_C16_R1.zip) cover 71 distinct signed terms. Cut 7 completes its 23-value roster, including both four-factor terminals, and reproduces the scalar at cut 1 by separate exact arithmetic. The remaining three new cuts each verify 16 inverse lifts and all 48 inner commands. Cuts 14 and 16 close eight generic terms and eight triangle terms each. Cut 15 closes all 16 terms by triangle shards. Cut 16 matches cut 12 as a scalar with separately verified factor tables. The ledger now accepts 42 of 48 with subtotal `-214391538822902712318513/40564819207303340847894502572032 + 0i`. Cuts 17–22 remain open.
 
 The [group 672 fiber-split evidence](L1_N16_C0_GROUP672_EXACT_FIBER_SPLITS_R1.zip) independently verifies the second selected fold and its 14-factor cap. Pair (1,2) has 3,055,488 distinct nonzero output rows. Neither the ten original bounded peer checks nor the 35 additional tested three-peer projections remove a product on that pair. The prior row-cap serialization omitted 2,186,112 inherited products, which the pinned predecessor and measured log recover exactly. A same-source rank-two split and first 7,008-product join reach the earlier row cap again. Three exact splits instead reconstruct all 1,744, 7,008 and 10,512 affected signed rows and replace each split with a single summed auxiliary index. Three unsharded joins use 144,192 products. Independent signed row replays and ROOT's separate reconstruction agree on all three joins and the full denominator. The next actual continuation on tuple-index pair (1,12) reaches a distinct 1,150,848-product row cap. This establishes a different exact contraction route with a bounded measured increment. The interval scalar, J child and total group runtime remain open.
+
+
+### L1 group 128 first-index branch 0 complete
+
+ROOT and independent reviewers closed outer cuts 17–22 of descendant (0,1),
+tuple 0. Cuts 17–19 each cover 16 signed continuations and cuts 20–22
+each cover nine. The complete 48-coordinate ledger agrees with two independent
+retallies. Tuple 0 is
+`-3421066796274305094734655/649037107316853453566312041152512`.
+Combining it with the other five independently accepted tuples gives the full
+(0,1) descendant
+`-17865027341916851312184266649/2658455991569831745807614120560689152`.
+This equals the independently evaluated (0,0) descendant. Their disjoint
+sum for group 128 first-index branch 0 is
+`-17865027341916851312184266649/1329227995784915872903807060280344576`.
+Each imaginary component vanishes. Each term carries its original normalization
+through the recombination. [Frozen arithmetic and review evidence](L1_N16_C0_DENSE_CHILD01_PAIRED_COMPLETE_BRANCH0_R1.zip).
+
+ROOT also screened the raw operands for the opposite
+branch. Two of six original L assignments have author-verified row bijections,
+with identity signs and unchanged denominators. The other four searches were
+inconclusive. Direct pilots for assignments 3 and 5 each reached a seven-factor cap of
+1,069,056 rows in 9.26 and 11.97 seconds respectively. Neither produced a scalar. The witness, exact source pins and pilot receipts
+are included for a fresh replay. Review the two maps before reuse. Complete the
+remaining four contributions and reconcile the full group. Group 672 still
+needs a costed scalar route before broad enumeration. The full signed coefficient,
+physical susceptibility, manuscript gates and final human review remain open.
