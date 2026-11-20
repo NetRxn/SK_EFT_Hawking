@@ -4318,3 +4318,66 @@ The upper-quartile Group 1441 trial continues separately. Independent
 reference replays already verify its original L1 and L5 values and
 their distinct signed source and cap tables. They enter no group
 subtotal until all eight original ordinals have independent evidence.
+
+### L1 upper-quartile dense Group 1441
+
+The [complete original signed replay](L1_N16_C0_DENSE_GROUP1441_COMPLETE_R1.zip)
+binds all eight original ordinals, all original signed cap and
+continuation tables, and the exact pair retally. All eight labels
+survive source preparation. Six signed contractions end in
+axis-empty factors. Ordinals 4 and 6 contain empty signed factors
+after exact continuation, independently verified at their terminal
+checkpoints with all remaining indices of degree two.
+
+For original ordinal 4 the first exact empty factor comes from
+153,600 signed products. For ordinal 6 it comes from 4,032.
+Neither first cancellation uses later support gates. The later
+division by zero comes from a heuristic that assumes a nonempty
+marginal. The exact proof evaluates the saved signed data and
+does not use the subsequent failed heuristic. The reproducible
+zero terminal check records the original label, lineage, denominator
+and closed wire incidence for both cases.
+
+The signed numerator sum is
+`-205370097555830391850179049733668559105023924527220095549702144 + 0i`
+at inherited denominator `9484343302046464884971246029111296`.
+The original orientation and occupation/coframe multiplier give
+`-10826795857943958901725444507/2722258935367507707706996859454145691648 + 0i`.
+The prior exact signed chirality exchange gives the same scalar for
+Group 2710. The fourteen covered groups now have subtotal
+`-220382679257727784386626225332146933/87112285931760246646623899502532662132736 + 0i`
+after the original profile weight 48. The dense remainder is 3,858
+groups or 1,929 distinct representatives. The full-coefficient
+profile remains open.
+
+The Group 1441 original author elapsed durations sum to 278.32
+seconds for guarded contractions and 837.91 seconds for
+continuation. These component runs overlap and exclude source
+preparation and independent review. The next fixed-rank trial
+covers original Groups 1189 and 1600, two distinct uncompleted
+representatives selected at the lower and upper eighths of the
+same source-row census. Preparation, guarded contraction, exact
+terminal work and independent review are measured separately.
+
+### L1 conditional raw mixed-force lemma accepted
+
+ROOT verified Executor donor `c387c8319`, all 21 new evidence
+members plus the nested 17 and 29 original members, and the
+canonical original and reviewed source bodies. The two independent
+actual reviews accept the [raw mixed-force lemma and its scope](../2026-11-05-l1-physical-bridges/ORIGINAL_TWO_FORCE_RAW_MIXED_ACCEPTANCE.md).
+For the specified degree-preserving connector, the exact raw
+composition raises the shared Grassmann degree at least four per
+round and vanishes after seventeen rounds. The original integrated
+cap witness equals 1/8. The conditional implication to a
+positive adjoint square is exact if the original mixed join
+identification holds at every iterate. The reviews leave that
+identification open, along with full positivity and the physical
+ordered tetrad insertion.
+
+Executor owns the commissioned original complement-bearing cap
+connector tests. The first acceptance evidence must show the
+actual unit and dual cap transport in both orientations, composed
+mixed evaluation at the saturated cap, and the full original
+nine-entry normalized unit/force sewing with its reflected defect
+and source contacts. The numerical and physical publication gates
+remain open.
