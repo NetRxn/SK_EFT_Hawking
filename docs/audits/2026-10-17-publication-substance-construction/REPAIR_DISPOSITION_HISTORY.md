@@ -3803,3 +3803,70 @@ more general source and operator identification. The commissioning
 message authorizes source-bound construction and review. It supplies no
 scientific runtime or Lean admission, physical acceptance, or gate
 transition.
+
+
+### L1 group 672 complete original joint-L assignments 0 and 7
+
+The [portable exact evidence](L1_N16_C0_GROUP672_LABEL0_LABEL7_COMPLETE_R1.zip)
+covers two of the original eight disjoint joint-L assignments.
+The original source support and signs are pinned by the prior label route.
+The full J=(2,) and J=(3,) children of assignment 7 remain unpartitioned
+through the newly reviewed runs. Each independently reproduces the exact
+value of J=(1,) from its own original input. The three children exhaust
+the full assignment. The original 734,528 matched pairs at the parent
+refusal are covered by the verified disjoint J roster.
+
+The independent J=(2,) terminal checks both triangle anchor choices.
+The J=(3,) terminal agrees across a direct signed join closure and two
+triangle anchor choices. The independent assignment-0 replay checks
+the full original input and every accepted signed table through the
+final scalar. All work uses the common original factor denominator;
+the phase +1 and original occupation prefactor are applied once.
+
+From their already prepared caps, the authors reached the J=(2,) terminal
+in about 112.13 elapsed seconds using one triangle anchor and reached
+J=(3,) in about 113.69 seconds with ordinary joins. Each peaked at about
+1.36 GB RSS. The direct assignment-0 run took 77.70 elapsed seconds and
+peaked at 1.52 GB RSS from its earlier 15-factor cap. The runs overlapped.
+These receipts measure the recorded inputs and exclude their prior
+preparation and independent review.
+
+The exact normalized contribution of assignment 7 is
+`146326713515170532896995/664613997892457936451903530140172288`.
+Assignment 0 gives
+`2267140012292129639011574121/5316911983139663491615228241121378304`.
+The reviewed two-assignment subtotal is
+`2268310626000251003274750081/5316911983139663491615228241121378304`.
+All three results have zero imaginary part. The sharply different
+magnitudes reinforce the need to retain each original signed contribution.
+
+Assignment 1 has a frozen author scalar and original cap lineage in the
+archive for independent review. That result is excluded from the accepted
+subtotal. Assignments 1 through 6, the complete hard group cost, full
+signed coefficient, physical susceptibility window and remaining original
+L1 publication requirements are open.
+
+
+### L1 physical temporal-source assignment accepted by Executor
+
+Executor accepted **L1-PHYS-Q00-JET-01** under source
+`2678f1cd280a6398687cb694b5b5fa279260b094`. The governing kinetic
+correspondence matches this publication checkout byte for byte
+(SHA-256 `50bb6c95b3c135c0956fb8b56a14c4ee443894d0abfe7455dbd08f4a59bbe019`).
+The R1 brief SHA-256 is
+`3003533e19235a061f3cc4628b63d8e7a1e953ff1b47d764932f60a353dc4464`.
+
+The explicit next attempt derives a source-completed kinetic boundary
+relation on the original unaveraged link memory. Fix the temporal source
+at the time-zero spatial origin and the independent frame perturbation
+that adds its direction-1 coframe component to direction 0. Derive the
+product, state, adjoint, boundary and transfer maps for those actual
+source directions. Check the first and full mixed equations and the
+reverse and periodic contacts against the accepted loss controls.
+
+Executor dispatched `/root/q00_map_math_prospective` and
+`/root/q00_map_source_prospective` to review the construction brief.
+Their review is prospective. The actual mathematical and source
+acceptance pair follows the construction. The parallel page-0 basis
+implementation has a private frozen source snapshot awaiting static
+review. Its implementation and scientific execution remain open.
