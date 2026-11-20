@@ -3977,3 +3977,74 @@ The original-source report SHA-256 is
 Approval covers the attempt on the two specified endpoint constraints
 and associated open-kernel witness. The actual construction and its
 independent acceptance remain open.
+
+
+### L1 bounded signed quotient reuse test
+
+The [guarded pilot](L1_N16_C0_SIGNED_QUOTIENT_CACHE_PILOT_R1.zip)
+runs the original two ordered quotient sweeps with a cache keyed by the
+two ordered immutable signed factor identities and their exact closed
+shared axes. The original function computes every cache miss. The cache
+holds at most two million row references in its memoized output pairs.
+The independent review reproduced exact hits and exercised differing
+axis closure, sign, direction, retained boundary and eviction. Its
+adverse test also demonstrates why the pilot requires exclusive ownership
+of each backing dictionary. A read-only view cannot prevent a caller
+with a retained mutable alias from changing a cached input. The actual
+pilot creates those dictionaries privately, and the original quotient
+uses replacement tables for its output. The pilot also keeps its raw
+input tuples alive for the entire run. The independent adverse control
+reproduced a stale token when a raw input was released and its identity
+was reused. Both ownership and object lifetime are required for this key. The row-reference bound is
+a cache policy and does not bound total RSS.
+
+All 88 signed tables matched the original uncached frontier in each of
+Groups 672 and 934. The trial observed zero hits across 2,048 quotient
+calls. The two recorded quotient durations were 33.60 and 58.64 seconds.
+The prior raw-input-only pilot measured 33.08 and 57.54 seconds on the
+same respective groups. These are observed durations, with no controlled
+speedup claimed. Peak process RSS in the bounded intermediate-cache trial
+was 2.43 GB. A shared-input census identifies 55 of 256 linked pairs with
+both raw tables shared between these groups. None is among the eleven
+pairs whose two operands are untouched on first encounter in the original
+sweep order. The raw-key overlap does not make an intermediate cache
+effective in this traversal at this payload bound.
+
+A separate ordered-topology replay groups the eleven untouched-input pairs
+by their original family/block keys at their first encounter. At this
+point the two source tables and degree context are fixed by the original
+inputs. The original two directed quotients were evaluated once for each
+of 252 exact classes covering 42,592 pair visits. The inputs carry
+1,016,982,208 rows counted by reference and 5,402,696 rows counted once
+per class, before counting the second directed operation. The recorded
+batch produced 3,978,328 output row references, with at most 101,184 in
+one pair. It took 14.66 seconds and peaked at 159.5 MB RSS while streaming
+the classes. These are scoped potential savings for those specific inputs.
+They do not establish the cost of holding batched outputs or of the full
+quotient and terminal contraction. The next integration check is exact
+substitution at the corresponding original sweep position. Independent review derived the incidence
+order and class census, and checked a signed two-direction control against
+the literal boundary contraction. That review did not rerun all 252
+numerical classes or the recorded timing.
+
+On the separate maximum-row Group 934 route, the smallest supported
+joint-L assignment is 4, with 291,228 initial signed rows. Its original
+conditioned guard reached 20 factors and 1,346,656 saved rows in
+33.62 seconds. Three further exact passes took 66.67 summed process
+seconds. The resulting real raw numerator is
+`17102917328091839619858991015219058648224125577663565495349018624`
+at inherited factor denominator `10925963483957527547486875425536212992`,
+with zero imaginary part. Independent replay checked all source support
+and signed rows, the 68 retained guarded joins, all 20 saved cap tables,
+and all three continuation checkpoints. The other seven assignments and
+the exact normalized full group remain open.
+
+### L1 temporal-source construction assigned
+
+Executor assigned `/root/q00_map_constructor` the original temporal
+source construction from the dual-approved R2 brief. The assignment
+retains the two original endpoint constraints, the independently scoped
+first and mixed source tests, and the exact open-kernel witness
+requirement. Independent actual mathematics and source review follows
+the constructor's result. Physical product, state, adjoint and source
+matching remain original acceptance requirements.
