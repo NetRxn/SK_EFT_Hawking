@@ -4904,3 +4904,29 @@ qualify the actual action and one source-matched ordered insertion.
 The design establishes a gap in the inspected constructions. A physical
 realization or an impossibility theorem remains unestablished. G11
 and the original physical obligations remain open.
+
+
+### L1 Group 1418 exact result and measured work
+
+The [Group 1418 independent archive](L1_N16_C0_DENSE_GROUP1418_COMPLETE_R1.zip) has SHA-256
+`f298006a8163e686b43749f06047f436e855d4892d3a72a8aeb6dd8ad0b39432`. ROOT verified all 182 members and compared the six
+nonzero-route terminals to the frozen author outputs. Independent
+preparation reproduced the 252 original blocks and 88 signed factor
+tables. Original ordinals 5 and 7 each have seven empty restrictions and
+are exact zeros. Replays checked six native caps, 15 retained passes and
+18 refused continuations. Weight 192 is applied once, giving
+`-31937485184424189101211543/41538374868278621028243970633760768 + 0i`.
+
+Summed author phase timings total 437.336713 seconds. Summed author solve
+walls with preparation total 449.63 seconds. Independent phases total
+491.061872 seconds. The archive contains comparable same-format receipts
+for Groups 1284, 183 and 189. Group 1418's pre-sweep row count of 1,981,325
+places it at ranks 56–57 among the 1,032 representatives remaining before
+its acceptance. The median was 2,601,510. The pilot measures a lower-row
+group and supplies no completion-time estimate for the remaining profile.
+
+The cumulative reviewed subtotal is
+`-511255503717349095749336708759594229/87112285931760246646623899502532662132736 + 0i`.
+There are 25 accepted representatives and 1,031 remaining. The remaining
+pre-sweep workload proxy is 2,705,452,157 rows. Full signed coefficient,
+physical susceptibility, finding 2.1 and publication readiness remain open.
