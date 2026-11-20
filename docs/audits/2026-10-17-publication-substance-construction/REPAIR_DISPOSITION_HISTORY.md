@@ -4568,3 +4568,33 @@ excludes the preserved first roster refusal and independent replay.
 Review pins the current publication head after the unrelated connector
 checkpoint and confirms its numerical inputs by digest. Full signed
 coefficient and physical publication acceptance remain open.
+
+
+### L1 component 98 preparation and whole-group zeros
+
+The [independent review of seven selected original groups](L1_N16_C0_DENSE_COMPONENT98_PREPARATION_R1.zip)
+has SHA-256 `7bc453b3af91f71bdef58fb1deeb4885928dae083b89f9c9b855ab9416da5ad6`. ROOT verified all 121 archive
+members and the exact final per-group records. Each review checks
+252 original compiled blocks across 88 factors and all eight original
+label assignments against the accepted signed cut schedule.
+
+Groups 1225 and 1255 are exact zeros. In the first sweep the
+directed M16 to E141 quotient takes 992 and 2,144 rows to 248 and
+zero in both groups, with 24 exact aliases. The independent replay
+conserves the shared representation labels, exact Gaussian scales,
+closed physical wires, and all denominators. Each completed sweep
+has nine globally empty factors, which makes all original terms
+zero. The measured author preparations took 13.36 s and 16.63 s.
+
+The exact preparation of Groups 1261, 1278, 1284, 1296 and 1302
+likewise verifies original ordinals 5 and 7 are zero. Together with
+the two whole-group results, this closes 26 of the 56 original
+outstanding terms in component 98. The remaining 30 have prepared
+signed operands and keep original ordinals 0, 1, 2, 3, 4 and 6.
+Group 1231 was already accepted. The 1,044 whole-group residual
+has a pre-sweep row proxy of 2,733,562,865. The
+exact additive subtotal stays
+`-513568742521578812305962454291162869/87112285931760246646623899502532662132736 + 0i`.
+This one-component observation does not measure zero prevalence
+or cost elsewhere in the dense profile. Full signed coefficient
+and original physical publication acceptance remain open.
