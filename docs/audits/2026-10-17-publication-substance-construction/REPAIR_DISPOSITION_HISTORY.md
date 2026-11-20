@@ -3497,3 +3497,42 @@ are included for a fresh replay. Review the two maps before reuse. Complete the
 remaining four contributions and reconcile the full group. Group 672 still
 needs a costed scalar route before broad enumeration. The full signed coefficient,
 physical susceptibility, manuscript gates and final human review remain open.
+
+
+### L1 group 128 opposite branch assignments 3 to 5
+
+Three of the six original L assignments in first-index branch 1 now have exact
+independently verified values. On assignments 4 and 5, full row bijections match
+all ten conditioned factors and both endpoint domains on all 32 edges, with
+unchanged individual denominators. The independent replay also binds the source
+values to both earlier descendants. Assignment 3 contracts all 16 disjoint
+values of G(1,5,2), covering 1,069,056 products of the previously refused join.
+The independent retally uses the original normalization and sums every value once.
+
+| Assignment | Exact normalized real contribution |
+| --- | ---: |
+| 3 | `341130692358955201725/83076749736557242056487941267521536` |
+| 4 | `6319960913952819098631/166153499473114484112975882535043072` |
+| 5 | `-10493250771659057325/649037107316853453566312041152512` |
+
+All three imaginary parts are zero. [Signed ledgers and review evidence](L1_N16_C0_DENSE_BRANCH1_LABELS345_R1.zip).
+Assignments 0, 1 and 2 have retained author caps and remain open. Group 128 is
+still incomplete. The signed coefficient, physical B3, publication gates and
+human approval remain open.
+
+### Intake of the original six-EHC mixed kernel and boundary projection
+
+Executor donor `1cba3341bef8cba103444dc552268986d185d21d` derives the signed
+mixed-endpoint kernel. A fundamental source entry of +1/8 rules out universal
+endpoint-sum annihilation for the original source. The reviewed parity and Gram
+reduction leaves at most 5,856 boundary cells. One projected weight is exactly
+−2. The complete projected-boundary certificate has a constructive bound of
+204,672 choices or products. That bound covers the boundary calculation. The
+correlated core still requires a costed construction and the surviving
+coefficient has no evaluated value or sign.
+
+The independent mathematics and original-source reviews both accept the exact
+R2. ROOT checked all 50 archive member hashes and confirmed byte identity
+for all 25 archived original and prior scientific artifacts against this
+publication branch. The six donor paths transfer intact.
+[Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_MIXED_ENDPOINT_KERNEL_ACCEPTANCE.md).
