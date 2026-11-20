@@ -4598,3 +4598,31 @@ exact additive subtotal stays
 This one-component observation does not measure zero prevalence
 or cost elsewhere in the dense profile. Full signed coefficient
 and original physical publication acceptance remain open.
+
+
+### L1 complete signed Group 1261
+
+The [independently verified full group](L1_N16_C0_DENSE_GROUP1261_COMPLETE_R1.zip) has SHA-256
+`c5f83bd66ab8880c9a38d0dc3d06125e805832bfe970ba4b6d53f297330e2908`. ROOT checked all 214 manifest members
+and compared the complete eight-term author and independent ledgers.
+Original ordinals 5 and 7 keep their accepted zero restrictions.
+The six surviving ordinals replay exactly through the original guard
+and retained continuation. Independent third traversals reproduce both
+author pivots for the original L0 and L6 triangles over 8,182,848
+and 15,261,696 compatible products respectively.
+
+The raw reduced scalar is `4872730389038958797349765120 + 0i`.
+The physical divisor is `2^132` and the grouped cover weight is 192.
+The weighted contribution is
+`892223581977348412600665/5192296858534827628530496329220096 + 0i`.
+The exact additive subtotal is
+`-513553773493823684624536995812714229/87112285931760246646623899502532662132736 + 0i`.
+Thirteen representatives have verified values. The 1,043 remaining
+include the four outstanding component 98 groups with six original
+surviving terms each.
+
+Author measured components total 482.484844 s, including 22.22 s
+preparation, 176.066525 s guard, 260.678319 s continuation and 23.52 s
+for both separate triangles. Independent work and original refusal
+details are in the archive. This timing covers Group 1261 only.
+Full signed coefficient, physical B3 and publication acceptance remain open.
