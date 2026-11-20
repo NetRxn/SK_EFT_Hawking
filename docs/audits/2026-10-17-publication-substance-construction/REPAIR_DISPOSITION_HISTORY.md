@@ -3598,3 +3598,44 @@ in its source test and retains those daggers. This correction preserves the
 historical review bytes and the accepted local Fierz proof and rank.
 Independent correction receipt SHA-256
 `57ee48b1562b0988e2250aea65dac14c024f94a1cd4795492bef1fbced3212e3`. [Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_CORE_CHIRAL_FIERZ_ACCEPTANCE.md).
+
+
+### L1 group 128 opposite branch assignment 0, first two contributions and exact reuse
+
+The first of the eight outer G(0,5,1) contributions is independently complete.
+Exact pair histograms cover the 22 G(0,2,0) splits and 22,030,848 compatible
+products of the selected seven-factor join. Eight of the split values require
+eight-case nested partitions and two require sharded sparse triangles. All
+original signs, factor denominators and weights are preserved through the exact
+retally. The value is
+`-1746699869512866458538495/649037107316853453566312041152512`
+with zero imaginary part. [Exact scalar and review evidence](L1_N16_C0_DENSE_BRANCH1_LABEL0_REUSE_R1.zip).
+
+The independently verified raw signed map from outer 0 to 1 transfers the exact
+value, which also matches the separately completed author calculation for 1.
+Both distinct outer coordinates enter once. Exact row bijections from 2 to
+3–5 and from 6 to 7 preserve every source row, sign pairing and factor
+denominator. These maps reduce the remaining six contributions to two
+independent scalar calculations. The full assignment will sum `2 S0 + 4 S2 + 2 S6`,
+with unit weight on every original term. The archive binds each of the original
+eight scopes and keeps exact operand and source reconstruction pins.
+
+Group 128, the representative hard profile, the full signed coefficient and
+the physical acceptance criteria remain open.
+
+### Intake of the original covariant page reduction
+
+Executor donor `6830c734218ed094f632092bd372ad9a263a2711` establishes the
+original partial-page covariance and independent invariant bases of dimensions
+8, 12 and 9 at a hub. The resulting three page coefficient domains contain at
+most 2,304, 16,200 and 16,200 entries. The exact joint rank-two Haar projector
+retains the shared central anchors and their original orientations. The donor
+also records the separately reviewed [page 0 orientation correction](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_PAGE_ORIENTATION_CORRECTION.md).
+
+ROOT verified all 27 portable hashes and all ten archived upstream artifacts
+against the publication checkpoint. Both fresh actual reviews accept the
+source-specific reduction. Executor owns the next exact page-0 compiler design
+with coefficient and intermediate bounds, and a costed contraction order
+preserving the signed boundary factorization. The domain bounds do not license
+a whole-core run. The core value and physical realization remain open.
+[Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_COVARIANT_PAGE_ACCEPTANCE.md).
