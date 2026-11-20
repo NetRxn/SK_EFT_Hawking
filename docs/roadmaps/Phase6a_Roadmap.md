@@ -1,15 +1,19 @@
 # Phase 6a: Gravitational Dynamics — Linearized EFE, GW, BH Entropy, FLRW, Four Laws, Positive Mass
 
-## Current L1 scientific successors — 2026-11-06
+<a id="current-l1-scientific-successors--2026-11-06"></a>
 
-**20 November applicability decision.** The [independent physical and mathematical applicability check and proposed plan](../audits/2026-11-05-l1-physical-bridges/L1_PHYSICAL_APPLICABILITY_20261120.md) rules out full finite-rank cap completion and direct pointwise dressed-shear substitution for the original temporal source. It identifies the common-source forward/reflected Q00 test and acceptance criteria within [PR115 W1](https://github.com/NetRxn/SK_EFT_Hawking/blob/c0a775c942fc62528fec2d0b645e4dfe858ae61c/docs/roadmaps/L1_Physical_Bridges_Roadmap.md#L63-L75). Review the plan before implementation.
+## Current L1 scientific successors
 
-**Latest accepted delivery / active implementation:** focused main draftPR118 is pushed ata56e6a644 with complete different source/canonical ACCEPT and own native10,843PASS. Actual full merge qualification is live; no main/publication pass. Original coefficient R2 has separate physics/cost ACCEPT; full Task1 source builder is being implemented under bounded TDD, followed by different scientific/code review and separate heavy computation admission. ROOT completed full intake of Executor's scoped composite/Wick/bare-cycle result (integrated3b1e1fd90), with physicalpositive-domain/kernel/source/B3 obligations still BUILD and numerical/physical cut crosswalk under review. [Exact source populations, measured gates, receipts and resume roles](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) govern; older pending statements below are historical.
+**20 November 2026 applicability result and proposed test.** The [independent physical and mathematical applicability check](../audits/2026-11-05-l1-physical-bridges/L1_PHYSICAL_APPLICABILITY_20261120.md) rules out full finite-rank cap completion and direct pointwise dressed-shear substitution for the original temporal source. Its proposed forward/reflected Q00 test belongs to [PR115 W1](https://github.com/NetRxn/SK_EFT_Hawking/blob/c0a775c942fc62528fec2d0b645e4dfe858ae61c/docs/roadmaps/L1_Physical_Bridges_Roadmap.md#L63-L75). It consumes the [accepted original kernel orientations and C2 source transport](#actual-full-p0n0c3-cutsource-construction) and [reflected EHC defect and source adjoint controls](#publication-continuation-original-ehc-reflection-and-source-adjoint). Those results settle coefficient and coordinate identities at their stated scope. The physical product, state and calibration remain owed. Executor retains the commissioned physical research and ROOT retains publication ownership and intake. The [controlled Euclidean and Lorentzian continuation routes](#publication-research-assignment-original-lorentzian-boundary-continuation) retain their existing scope. The plan awaits review before physics implementation.
 
-**Latest ordinary construction milestone:** full original C3 has different source/kernel ACCEPT at056ccb9f0 (168exports/70new closing states), normal primary absorption/native epochbb8c4eb3 and remote preservation. The focused exact-current-main nine-module candidate0c0c85c8 passes its OWN native10,843jobs; composition/canonical/full merge qualification remains required. Initial aggregate placement failure and correction are preserved. The older source420 R6 snapshot remains the last all21 measurement,160pass/25blocked/28open/18recheck. Original coefficient-plan R1 has separate physics/cost REVISE; accepted author repairs all requested conventions, source grading, complete original one-site control cost and minor/resource accounting, reusing existing accepted factorization. No scientific computation or B3/physical closure follows. [Current evidence and resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) supersede older active C2/C3 statements below.
+**Delivery checkpoint on 20 November.** The [L1 handoff inventory](../audits/2026-10-17-publication-substance-construction/L1_DELIVERY_HANDOFF_20261120.md) identifies PR117 as the manuscript delivery draft and PR118 as a proof donor. The [disposition map](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md) governs current execution and qualification. The November 6 activity snapshots below retain their original evidence and timing.
+
+**6 November delivery and implementation snapshot:** focused main draftPR118 is pushed ata56e6a644 with complete different source/canonical ACCEPT and own native10,843PASS. Actual full merge qualification is live; no main/publication pass. Original coefficient R2 has separate physics/cost ACCEPT; full Task1 source builder is being implemented under bounded TDD, followed by different scientific/code review and separate heavy computation admission. ROOT completed full intake of Executor's scoped composite/Wick/bare-cycle result (integrated3b1e1fd90), with physicalpositive-domain/kernel/source/B3 obligations still BUILD and numerical/physical cut crosswalk under review. [Exact source populations, measured gates, receipts and resume roles](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) govern; older pending statements below are historical.
+
+**6 November ordinary construction milestone:** full original C3 has different source/kernel ACCEPT at056ccb9f0 (168exports/70new closing states), normal primary absorption/native epochbb8c4eb3 and remote preservation. The focused exact-current-main nine-module candidate0c0c85c8 passes its OWN native10,843jobs; composition/canonical/full merge qualification remains required. Initial aggregate placement failure and correction are preserved. The older source420 R6 snapshot remains the last all21 measurement,160pass/25blocked/28open/18recheck. Original coefficient-plan R1 has separate physics/cost REVISE; accepted author repairs all requested conventions, source grading, complete original one-site control cost and minor/resource accounting, reusing existing accepted factorization. No scientific computation or B3/physical closure follows. [Current evidence and resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) supersede older active C2/C3 statements below.
 
 
-**Current ordinary auxiliary construction milestone:** Eq4 compensation, B1
+**6 November ordinary auxiliary construction milestone:** Eq4 compensation, B1
 actual coframes, C1 actual exterior norm/evaluation and C3-S original source
 polynomials have independent source/math/kernel/composition acceptance. Main-based
 PR117 at `42037383847cc7fa5a3e3761032456fe3050f653` passes its own native
@@ -258,7 +262,8 @@ preserves the exact intake and removes only its temporary generated corpus copy.
 - Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
 
 **Phase 6a downstream dependencies registered:**
-- The missing one-loop ⟨h h⟩ broken-phase 2-pt computation — natural follow-up paper, target Phase 6e or Wave 1+ refinement.
+- The delivered `LinearizedEFE.lean` takes α_ADW as an input and provides a match locus and explicit ansatz. The `FLRWDynamics.lean` source carries Friedmann/conservation identities and a tracked DESI compatibility predicate. Paper 23 is the existing Wave 1/4 consumer. [Draft mapping](../PAPER_DRAFT_MAPPING.md)
+- The one-loop broken-phase ⟨h h⟩ match remains distinct from the delivered parameterized result. [Phase 6e’s physical scope](Phase6e_Roadmap.md#current-l1adw-correspondence-boundary--2026-10-17) preserves the microscopic correspondence obligation.
 - Phase 6b.2 (cosmological perturbation theory) discharges `H_DESICompatibility` from Wave 4.
 
 
@@ -343,27 +348,31 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ---
 
-## Track B: Gravitational Waves (6a.2) — **SHIPPED 2026-04-25**
+<a id="track-b-gravitational-waves-6a2--shipped-2026-04-25"></a>
 
-**Historical delivery status:** Track B Wave 2 closed end-to-end. Pipeline through Stage 12. **Current B3/mode/transport constructions remain OPEN**, as specified above.
+## Track B: Gravitational Waves (6a.2) — **conditional results shipped 2026-04-25**
+
+**Historical delivery status:** Wave 2 shipped conditional algebra, software and a draft through Stage 12. **Current B3, physical mode and transport constructions remain OPEN** under the scientific successors above.
 - `GravitationalWaves.lean`: 17 theorems, 0 sorry, 0 new axioms.
 - `src/gravitational_waves/`: 4 Python modules + 43 pytest cases.
 - `papers/paper25_gravitational_waves/`: PRD draft, 4 pages, 421 KB, compiles clean.
 - `fig_c_GW_vs_ligo_constraint`: shipped to `figures/`, registered in `review_figures.py`.
-- **Load-bearing falsification result.** Natural χ_vest range [0.1, 10] gives Δc/c ∈ [-0.68, +2.16], failing GW170817 cap (3e-15) by ~7×10¹⁴. Both endpoint falsifiers proven in Lean: `natural_lower_violates_ligo`, `natural_upper_violates_ligo`, bundled `vestigial_natural_range_violates_ligo`.
-- Phase 5y H1 caveat encoded as the existential meta-theorem `second_sound_graviton_not_derived_DOF`.
+- **Conditional GW170817 interval.** Under the assumed speed law, the adopted symmetric cap τ = 3 × 10⁻¹⁵ gives the compatible interval `[(1 − τ)², (1 + τ)²]` for χ_vest ≥ 0. It contains unity. Lean proves exclusion of the two adopted comparison endpoints, 0.1 and 10, through `natural_lower_violates_ligo` and `natural_upper_violates_ligo`. The full interval is established by `c_GW_match_iff_chi_close_to_one`. The physical range and the identification with the observed tensor mode still require derivation.
+- Phase 5y H1 records the physical identification caveat. The old existential placeholder `second_sound_graviton_not_derived_DOF` is a historical reference and supplies no current result.
 - Tracked-hypothesis bundle `H_VestigialModeIsGraviton` (positivity ∧ LigoSatisfied ∧ luminal) with three falsifier theorems (lower, upper, zero).
 - 2 new bibkeys: `Abbott2017GW170817`, `CrossleyGloriosoLiu2017`.
 - Validate.py 22/22 PASS in 1003s.
 - Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
 
 **Phase 6a downstream dependencies registered:**
-- Phase 6e or Phase 5y H1 follow-up wave: derived-DOF mechanism for χ_vest = 1 (or alternate metric-channel identification), needed to convert Wave 2's natural-range falsification into a positive identification.
+- Phase 6e and Phase 5y H1 supply historical context. The current successor must derive the physical source and mode, calibrate its matter and light reference, and match transport to the observation. The physical solution may change the response law or domain and would need its own disposition.
 - Phase 6b.2 (cosmological perturbation theory): GW background calibration depends on resolution of the vestigial identification.
 
 
 
 ### Wave 2 — `GravitationalWaves.lean` [Pipeline: Stages 1–12]
+
+The module outline, proposed names and original estimate below are historical planning. Current physical acceptance follows the [L1 successor](#current-l1-scientific-successors).
 
 **Goal:** GW propagation speed + dispersion from vestigial-phase susceptibility. Volovik's identification of second sound as graviton made quantitative — with explicit caveats from Phase 5y H1 (NO-GO with PARTIAL footnote).
 
@@ -399,7 +408,7 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 **Estimated LOE:** 2–4 person-months
 **Risk:** Medium. The Phase 5y H1 finding (second-sound mode not derived as propagating DOF) limits what this wave can claim — scope must be explicit about operating in identified-mode mode.
 
-**Correctness-push highlight.** LIGO bound is extreme. Any deviation at the $10^{-15}$ level falsifies the vestigial-second-sound identification — publishable outcome either direction.
+**Correctness test.** Apply the GW170817 bound only after deriving which physical mode the matter and gravitational-wave observables share, its relative speed and the uncertainty in the timing inference. A physical prediction outside the supported interval would exclude that prediction under those assumptions.
 
 ---
 
@@ -478,6 +487,8 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 **Correctness-push highlight.** 1/4 match = consistent microscopic derivation; mismatch = predicted log correction or falsification of MTC-counting ansatz. Both outcomes publishable.
 
 ### Wave 5 — `BHThermodynamicsFourLaws.lean` (6a.5) [Pipeline: Stages 1–12]
+
+**Current source and publication scope.** Main carries the regime-partition source. The separately reviewed fixed-G first law and nozzle work are delivery inputs with distinct qualification states. The historical Wave 5 ship status does not resolve the original physical four-laws or acoustic balance obligations. [L3 source reconciliation and remaining obligations](../audits/2026-10-17-publication-substance-construction/L3_READINESS_RECONCILIATION_20261105.md)
 
 **Goal:** Bardeen-Carter-Hawking four laws as formal theorems in emergent framework, with regime-partition reconciling Schwarzschild evaporation (Hawking 1975) and acoustic evaporation (Balbinot 2005).
 
@@ -612,6 +623,8 @@ This wave pays that cost.
 
 ### Wave 6 — `PositiveMassTheorem.lean` [Pipeline: Stages 1–12]
 
+**20 November source readback.** [Phase 6f](Phase6f_Roadmap.md) supplies curvature and algebraic DEC infrastructure, and main carries the Schwarzschild-specific ADM mass identity. These are completed prerequisites and examples. The checked main and candidate declaration indexes did not establish the general Witten spinor theorem or the planned module and Paper 28. The historical biconditional target would need a separate justification for its converse. The standard implication from DEC to nonnegative mass gives no such inference.
+
 **Goal:** Classical Schoen-Yau / Witten positive mass theorem formalized via Witten's spinor proof (uses Dirac spinors natively — well-matched to the ADW fermion substrate).
 
 **Prerequisites:** Wave 1 (`LinearizedEFE.lean`). Requires partial 6f.1 (`Curvature.lean`) or inline curvature objects. Requires Phase 6f.3 (`EnergyConditions.lean`) or inline DEC predicate.
@@ -686,7 +699,7 @@ and committed together with the root `lean/SKEFTHawking.lean` `import SKEFTHawki
 line. Counts: **12566 thm / 0 axiom / 0 sorry / 945 modules**; validate.py **43/43**. InducedGravityEntropy
 is now a live import (no longer orphan); the on-disk chain is fully self-consistent.
 
-All 10 commits on `main`, **NOT pushed**. Full chain: `9c12cd34` (W8) → `c1c2a156 64ecf70d f739f230
+At the time of this June summary the ten commits were local. The named chain is now in remote main ancestry. Full chain: `9c12cd34` (W8) → `c1c2a156 64ecf70d f739f230
 210c6ce3` (W7B) → `474c3fcc` (W9) → `f80d94fc` (closure) → `b148ef4f` (this summary) → `794987a9`
 (wall-confirmation) → `45046ed5` (autogen + root-import reconcile).
 
@@ -1067,7 +1080,7 @@ entropy) + counts + Inventory + Inventory_Index synced; Stage-13 fresh-context a
 0 blockers; full `validate.py` green; committed (own explicit paths only). **Goal prompt:**
 `Phase6a_Wave7C_goal_prompt.md`.
 
-**▶ WAVE 7C COMPLETE 2026-06-14 (MORNING SUMMARY).** All 5 deliverables shipped kernel-pure
+**▶ WAVE 7C COMPLETE 2026-06-14 (MORNING SUMMARY).** The [root import](https://github.com/NetRxn/SK_EFT_Hawking/commit/13b3903c1) and [generated-index reconcile](https://github.com/NetRxn/SK_EFT_Hawking/commit/b9f7d6c60) subsequently landed on remote main. The current source includes the faithful continuum definition, nonzero `kmConstant`, and per-G_N O(1/A) theorem. The figures below are the original completion receipts. All 5 deliverables shipped kernel-pure
 ({propext, Classical.choice, Quot.sound}); counts **12641 thm / 0 axiom / 0 sorry / 948 modules**;
 full library + ExtractDeps builds (9266 jobs); `validate.py` **43/43**. 6 commits on `main`,
 **NOT pushed**: `ca87ffd5` (brick 1) → `5b7047e4` (brick 2) → `88dd5918` (brick 3) → `98209249`
@@ -1161,10 +1174,9 @@ The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link a
 > **✅ GATE A.2 CLOSED (2026-06-14, Wave 9).** The 1/4 is derived (not merely tuned) via the
 > Frolov–Fursaev induced-gravity route: `InducedGravityEntropy.frolov_fursaev_quarter_coefficient`
 > proves `H_Sakharov ∧ (S_BH = S_ent) ∧ (FF heat-kernel a₂ form) ⟹ S_BH = A/(4 G_N)`, kernel-pure,
-> the 1/4 from the shared-`a₂` 48:12 ratio (NOT γ-tuning). The MTC-counting route supplies the
-> `−3/2` log (Wave 7B). Both routes consistent (`frolov_fursaev_matches_kaulMajumdar_leading`).
+> the 1/4 from the shared `a₂`. The [subsequent Dirac trace correction](https://github.com/NetRxn/SK_EFT_Hawking/commit/be81b9835) changed the individual prefactors to `G_N_from_a2 = 3π/(N_f Λ²)` and `S_ent = N_f Λ² A/(12π)`. The conditional quarter ratio survives. The earlier 48:12 design figures record the June convention. The MTC-counting route separately supplies the `−3/2` log, strengthened to the per-G_N O(1/A) rate in Wave 7C.
 
-**Gate A.3 — before Wave 6 (`PositiveMassTheorem`) begins:** Is Phase 6f.1 (`Curvature.lean`) + 6f.3 (`EnergyConditions.lean`) at least partially available? If NO, Wave 6 carries the needed objects inline but documents the Mathlib-PR candidates explicitly.
+**Gate A.3 — supporting source available.** The [Phase 6f](Phase6f_Roadmap.md) modules `Curvature.lean` and `EnergyConditions.lean` are present and imported on main. The spinorial/geometric requirements for a full positive-mass theorem remain a separate Wave 6 assessment.
 
 ---
 
@@ -1175,7 +1187,8 @@ The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link a
 6a.1 → 6a.5 (BHThermodynamicsFourLaws)
 6a.1 → 6a.6 (PositiveMassTheorem)
 
-6a.2 (GravitationalWaves) — independent; parallel with 6a.1
+6a.2 (conditional GravitationalWaves algebra) — independent; parallel with 6a.1
+The current physical successor follows PR115 W1–W5, starting with original source and state.
 
 6a.3 (BHEntropyMicroscopic) — independent; parallel with 6a.1, 6a.2
 6a.3 → 6a.5
@@ -1192,7 +1205,7 @@ The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link a
 | Wave | Scope | PM | Dependencies | Priority |
 |------|-------|-----|--------------|----------|
 | 6a.1 | `LinearizedEFE.lean` + PRD paper + `G_N^emerg` | 3–5 | None | **TIER 0 — foundational** |
-| 6a.2 | `GravitationalWaves.lean` + PRD paper + LIGO check | 2–4 | None; parallel with 6a.1 | **TIER 1** |
+| 6a.2 | Historical conditional algebra, draft and GW170817 comparison | 2–4 (original estimate) | Current physical successors use PR115 W1–W5 | **TIER 1** |
 | 6a.3 | `BHEntropyMicroscopic.lean` + Annals paper + MTC spectrum | 4–6 | None; parallel with 6a.1/6a.2 | **TIER 1** |
 | 6a.4 | `FLRWDynamics.lean` + short paper | 3–5 | 6a.1 | **TIER 1** |
 | 6a.5 | `BHThermodynamicsFourLaws.lean` + paper | 5–10 | 6a.1, 6a.3 | **TIER 2** |
@@ -1212,7 +1225,7 @@ The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link a
 
 ## Open Questions
 
-**O.1 — Historical disposition: RESOLVED 2026-04-25; current physical successors OPEN (2026-10-17).** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in "use-as-identified" mode with explicit caveat theorem `second_sound_graviton_not_derived_DOF`. The natural-range falsification result is the load-bearing finding: Wave 2 *negatively* resolves the identification at leading order, opening Phase 6e (full nonlinear emergent action) or a Phase 5y H1 follow-up wave to provide a derived-DOF χ_vest = 1 mechanism.
+**O.1 — Physical second-sound identification remains OPEN.** The April Wave 2 delivery established a conditional speed-law constraint. It excludes the adopted endpoints and admits unity. Phase 5y H1 did not derive a propagating tensor degree of freedom. The current successors above retain the physical source and state, B3, tensor/matter/light and transport obligations. The proposed Q00 test is an intermediate W1 acceptance test.
 
 **O.2 — RESOLVED 2026-04-26.** MTC horizon BC for 6a.3 ships in Outcome-3 tracked-hypothesis mode (`H_HorizonBoundaryCondition` Lean Prop bundle with five falsifier theorems) + Outcome-2 SU(2)_k sub-corollary (Kaul-Majumdar -3/2 closed form under `gaussianSaddleAsymptotic` axiom + Immirzi γ tuning). Per the deep-research return verdict: no published derivation pins a specific MTC at a 4D BH horizon in an ADW substrate, so the choice is a research-level conjecture flagged in the module + paper. The Walker-Wang anomaly-inflow conjecture (Z₂ time-reversal bulk → boundary chiral c_- mod 8) is the natural derivation path for future work.
 
@@ -1226,7 +1239,7 @@ The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link a
 
 **Per wave:**
 - 6a.1: `G_N^emerg` closed form, correct sign, testable against observed `G_N`
-- 6a.2: `c_GW` computation compared to GW170817 bound; Phase 5y H1 caveat documented
+- 6a.2: retain the proven conditional interval, and complete the physical source, normalized response, tensor/matter calibration and transport acceptance in the L1 successor.
 - 6a.3: `S = A/4G` reproduced from MTC counting (or log-correction prediction if coefficient mismatches)
 - 6a.4: Friedmann equations as ODE reduction of 6a.1
 - 6a.5: Four laws in both regimes (Schwarzschild-limit and ADW-extremality-limit)
