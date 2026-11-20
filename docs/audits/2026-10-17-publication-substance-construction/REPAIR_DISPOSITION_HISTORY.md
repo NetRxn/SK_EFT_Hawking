@@ -4413,3 +4413,46 @@ running the existing continuation. Independent review of that recovery
 and the other remaining ordinals is still owed. No group moves into the
 covered set on the strength of this pilot. The full signed coefficient,
 the normalized physical susceptibility and publication acceptance remain open.
+
+
+### L1 complete eighths pilot groups
+
+The [complete original signed replay](L1_N16_C0_DENSE_EIGHTHS_COMPLETE_R1.zip)
+has SHA-256 `d430e60437cc6e2f95ba5c673a773dbb60f2454b54a71e6d6bc7f5059145ffda`. Independent review binds all
+eight original ordinals of Group 1189 and all eight of Group 1600
+to the earlier independently reconstructed preparation. The paired
+pilot already carried reviewed ordinal 0 for each group. The new
+review checks original ordinals 1–7 through their exact terminals.
+ROOT verified both nested manifests and independently retallied all
+sixteen original signed scalars against the author and reviewer ledgers.
+
+Group 1189 ordinal 4 agrees on 11,123,712 compatible triples under
+a third independent pivot, with the existing denominator. Group 1600
+ordinal 3's original guard refusal is reproduced. Its 53 linked pairs
+were explicitly checked and the smallest would require 10,813,440
+products against the 8,000,000 limit. The capture-only retry saves the
+same 14-factor exact frontier. Independent replay agrees on each
+retained continuation and exact terminal.
+
+| Group | Preparation | Guard | Continuation | Extra triangle | Refused attempt | Measured component sum |
+|---|---:|---:|---:|---:|---:|---:|
+| 1189 | 21.51 s | 149.506630 s | 453.577870 s | 6.18 s | — | 630.774500 s |
+| 1600 | 40.12 s | 276.622406 s | 392.402179 s | 5.87 s | 42.659754 s | 757.674339 s |
+
+The component sums exclude separate independent replay and unmeasured
+overhead. They support scoped cost comparison. The held-out original
+groups have different costs and a full-profile wall-clock forecast
+still needs its own evidence.
+
+The signed chirality involution maps complete Groups 1189 and 1600 to
+2322 and 2273 respectively. With the original profile weight 48, the
+four original groups add
+`-4446783093033520413711784918047/10633823966279326983230456482242756608`
+and `-63673850360512188421027335/21267647932558653966460912964485513216`
+to the previous subtotal. All imaginary parts are zero. The eighteen
+covered groups give
+`-256810987163949460273676939908752117/87112285931760246646623899502532662132736`.
+There are 3,854 uncovered original cut groups paired into 1,927
+representatives under the accepted chirality identity. A proposed
+additional geometric cover is in independent review. The full signed
+dense contribution, physical B3 and publication acceptance remain open.
