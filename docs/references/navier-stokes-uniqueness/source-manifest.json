@@ -1,0 +1,27 @@
+{
+  "repository": "https://github.com/openai/NavierStokesAndEuler",
+  "commit": "f9e8bc5b38b6e212696e8a30e3e91517af887bbd",
+  "upstream_toolchain": "leanprover/lean4:v4.34.0-rc2",
+  "upstream_mathlib": "85e3a25e006c35636f0e53b0e9296caca2685bc0",
+  "target": "NavierStokes.PeriodicUniqueness.classical_uniqueness_on_Icc",
+  "modules": [
+    {
+      "path": "NavierStokes/PeriodicIntegration.lean",
+      "upstream_sha256": "4f637ee61edc17fd3e99da4c407f13a9c749bf7e6f6a2c49a85396e7a56eec1a"
+    },
+    {
+      "path": "NavierStokes/PeriodicUniqueness.lean",
+      "upstream_sha256": "fa8f82a4f4fabb6bd6b6c8d0d450152ab7fa540f9bf22235ea8eb70931a30558"
+    },
+    {
+      "path": "NavierStokes/ProblemStatement.lean",
+      "upstream_sha256": "d2f5cdf24a060acd41011b50492e89058991965e18d2cb797c58d915f95af633"
+    }
+  ],
+  "port_modifications": [
+    {
+      "path": "NavierStokes/PeriodicIntegration.lean",
+      "change": "Replace unavailable ite_eq_left rfl with if_pos rfl in the equal-index boundary branch; statement unchanged."
+    }
+  ]
+}

@@ -67,6 +67,11 @@ rev = "c48433678e8fb6306ebcd48453300c8e16058a62"
 [[lean_lib]]
 name = "SKEFTHawking"
 
+# Periodic upstream library uses its original implicit-variable policy.
+[[lean_lib]]
+name = "NavierStokes"
+leanOptions = { autoImplicit = true }
+
 [[lean_exe]]
 name = "extractDeps"
 root = "SKEFTHawking.ExtractDeps"
