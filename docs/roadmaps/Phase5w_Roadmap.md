@@ -1,5 +1,16 @@
 # Phase 5w: Graphene Dirac Fluid — SK-EFT Transport & Analog Hawking Radiation
 
+## Current physical construction status — 2026-10-17
+
+**Electronic response, calibration, reduction and usable band: OPEN BUILD.** The original first-principles/nozzle objective is retained. Historical Wave10a/10b/10c COMPLETE entries below credit the dimensional-prefactor correction, implemented adopted PSD, scalar/algebraic lemmas, EOS calculation and later honest hypothesis-signature repair. They do not establish the physical electrical-current/noise coupling, bilayer regime transfer, finite-width PDE/scattering errors, physical UV cutoff or achieved detector sensitivity.
+
+First substantive milestones: (1) a source-qualified actual bilayer operating-point/profile/EOS/transport map, distinguishing estimates, adopted inputs, monolayer transfers and independent measurements; (2) a current observable and retarded/noise kernel with contacts/readout, PSD/frequency/bath conventions and a derived excess signal; (3) a controlled 2D-to-1D scattering comparison deriving the assumed surface/evanescent bounds and finite-frequency transmission; (4) a nonempty calibrated band with model, systematic and statistical errors. Independent transport/noise/PDE and numerical/statistical review must assess these actual constructions before any physical completion. Keep the existing conditional lemmas; assuming their desired `h_bound` inputs is not their derivation.
+
+The infrared BEC source and matching assumption do not derive graphene transmission or the quadratic roll-off. The fixed `review:2026-10-15-e2-greybody-readout:E2:1.1` is a scoped citation/readout repair. Cutoff arithmetic, provenance-role and grid/domain source repairs remain separate from the physical BUILD; the validity architecture remains UNSETTLED/unimplemented and cannot be changed incidentally here. **The shared D1/E1/E2 physical dispersive-law BUILD is owned once in Phase5 Wave1A**, not a second Phase5w derivation task.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
 > **Status: FULLY SHIPPED end-to-end (W1-W10)** — verified 2026-04-29.
 > The roadmap originally planned three separate Lean modules (DiracFluidSK / DiracFluidFDR / DiracFluidViscosity) for Waves 5/6/7. Actual ship **consolidated W5+W6+W7 into a single `lean/SKEFTHawking/DiracFluidSK.lean`** (9 substantive theorems, with W5/W6/W7 sub-sections per the module's own docstring). Several Python deliverables were also consolidated (e.g., `wiedemann_franz.py` content lives in `transport_counting.py::wiedemann_franz_lorenz_ratio`). Per-deliverable `[x]` flips with consolidation notes are in each Wave section below.
 
@@ -322,11 +333,11 @@ Wave 1 (deep research) ─── COMPLETE
 
 **Deep research task:** `Lit-Search/Tasks/Phase5w_landauer_buttiker_noise_electronic_analog_horizon.md`
 
-**Status:** Wave 10a COMPLETE (2026-04-16). Deep research returned and integrated. Noise formula CORRECTED.
+**Historical implementation status:** Wave 10a COMPLETE (2026-04-16). Deep research returned and integrated. Noise formula CORRECTED. **Current physical response/calibration BUILD remains OPEN** above.
 
 **Deliverables:**
 
-**10a. Noise formula from first principles — COMPLETE 2026-04-16:**
+**10a. Historical delivery label: “Noise formula from first principles — COMPLETE 2026-04-16.” Current physical response derivation: OPEN BUILD:**
 - [x] Deep research result: `Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md` — Keldysh + Landauer-Büttiker derivation
 - [x] Corrected formula: `ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω)` in `formulas.py` (`graphene_hawking_noise_psd`)
 - [x] Old formula `(2e²/π)σ_Q ω n_H` was DIMENSIONALLY WRONG (C² not J·s, off by 2e²/h ≈ 77.5 μS)
@@ -340,7 +351,7 @@ Wave 1 (deep research) ─── COMPLETE
 - [x] `src/graphene/bilayer_eos.py` — ζ/η ≈ 0.02, negligible impact
 - [x] Paper 16 §II.D updated
 
-**10c. Greybody factor + quasi-1D bound (HIGH — COMPLETE 2026-04-23):**
+**10c. Historical delivery label: “Greybody factor + quasi-1D bound (HIGH — COMPLETE 2026-04-23).” Current physical scattering/error-bound construction: OPEN BUILD:**
 - [x] Deep research filed + returned: `Lit-Search/Phase-5w/Greybody Factor and Quasi-1D Validity for the Graphene de Laval Nozzle.md`
 - [x] Key finding: **Γ₀ ≈ 0.9994** (NOT vanishing) — adversarial critique's premise was wrong for 1D acoustic BHs
 - [x] Γ₀ = 4c_R v/(c_R+v)² is profile-independent (Anderson, Balbinot, Fabbri, Parentani PRD 87)

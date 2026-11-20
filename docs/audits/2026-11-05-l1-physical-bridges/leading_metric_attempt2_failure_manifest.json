@@ -1,0 +1,7 @@
+{
+  "archive": "leading_metric_attempt2_failure_evidence.zip",
+  "bytes": 311544,
+  "members": 27,
+  "sha256": "1a9b9c15478898bd4febee00ce8f3466980929590b70692d864146b4a301cb22",
+  "scope": "Six passed control groups,480-entry support roster, empty00 result and first nonempty word row-cap failure; no completed nonempty target word or full tensor; executable excluded; exact source and full C++ rows preserved"
+}

@@ -1,0 +1,23 @@
+{
+  "source_commit": "226ee77d63884c9259d3ec8ab339eaf248335cfb",
+  "archive_sha256": "6cd4e17a0da195b77e74ef20ad5e7ddc6f4c4684d282e5e5456f85e6cdf8386c",
+  "archive_bytes": 5491172,
+  "members": {
+    "graph.json": {
+      "sha256": "ff283b4238b5e60a9d99237788d3722f833502a76ab6b986dbcf1e9d1b316f53",
+      "bytes": 87681727
+    },
+    "stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "stderr.txt": {
+      "sha256": "c8ac8ac21773f593f89dacf849c4f142835e5a4d21060802e868aa631653f008",
+      "bytes": 13030
+    },
+    "readback.json": {
+      "sha256": "4594020580b9252b57524fdf1dafa708ddbeda156a5772d770052b82528fa3b6",
+      "bytes": 404279
+    }
+  }
+}

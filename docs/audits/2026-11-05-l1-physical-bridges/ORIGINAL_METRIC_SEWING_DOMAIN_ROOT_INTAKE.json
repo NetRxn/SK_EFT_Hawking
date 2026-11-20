@@ -1,0 +1,13 @@
+{
+  "peer_commit": "3457a34826db6a54f1cf22aab86c4436a5548860",
+  "proposal_sha256": "f03bae88035a0236399fa52a6ce5e166738feb6dbc8a5df896b20461a3c9df14",
+  "archive_sha256": "c75c5b7e3b212387aa52ee148c37857d79c2c43eb6e296a66ab88213ead3874e",
+  "archive_all_hashes_crc": true,
+  "unique_members": 25,
+  "exact_canonical_copies": 6,
+  "current_accepted_input_copies": 13,
+  "parent_archive_crc_members": 28,
+  "phase6a_actual_git_object_matches": true,
+  "root_read": "Complete192line R2 proposal, both complete actual prospective R2 reports and acceptance94lines",
+  "accepted": "Bounded manual attempt only; no scientific result or runtime admission. Full physical and publication obligations remain open."
+}

@@ -1,0 +1,25 @@
+{
+  "archive": "original_state_premise_evidence.zip",
+  "bytes": 137505,
+  "members": 13,
+  "sha256": "611c0bedfbc9cf9b0870868412f9f12dc421b52a6ca72587f6d17d5d5199600e",
+  "accepted_source_sha256": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+  "parent_scientific_checkpoint": "6905caf8ad86d769472c1adb6c83d7529c975d35",
+  "roadmap_source_commit": "c0a775c942fc62528fec2d0b645e4dfe858ae61c",
+  "files": {
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "charter/Phase6a_Roadmap.md": "f37c9e1606b640408c58887c2607ad75caf1036278d3731d5fe6ad53d60c014e",
+    "construction/l1-original-state-premise-correspondence-r1.md": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+    "parent/N16_SATURATION_MATH_REVIEW_R1.md": "48a9c06b9f70b8323a49f050759ee49aa20fb369bbca0a69ed64f385c749330a",
+    "parent/N16_SATURATION_PHYSICS_REVIEW_R1.md": "f06d50b5b0447b225676ca1a1ad908e2e96007861dff0b9c83cf3721d6490e92",
+    "parent/N16_SATURATION_STATE_OBSTRUCTION.md": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+    "parent/n16_saturation_obstruction_evidence.zip": "c4d854b9d8e16ecbc3ac3627cbf82e472f2958f2f19a73585608673ab1ac54cf",
+    "parent/n16_saturation_obstruction_manifest.json": "1a2540998ee46fae4772b28471b4272477cf83492236af7a2e1e81df2b31f456",
+    "review/l1-original-premise-correspondence-intake-r1.md": "e6fd4db18952ccab78a974a7c91ef82db1fdc50f0c60e80dcf49ded81443ed76",
+    "review/l1-original-state-premise-math-review-r1.md": "a083ea9d146babf7b68c25f32676921a72d060663bfefd9ba14bd00de44f80b6",
+    "review/l1-original-state-premise-physics-review-r1.md": "2d2eff339a91db7f333fed3f4ed341b9491d36bdee6913208cd5ff152374c421",
+    "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef",
+    "source/primary-source-pins-r1.json": "eda114d418135fcb469e4031454f7b72743eca69e1ead3270b505e31f9cee2c7"
+  },
+  "scope": "Independent manual original-body correspondence and algebraic half-reflection/unitary temporal twist/full-pairing-preserving quotient robustness of finite N16 raw incompatibility; no changed physical premise, normalized point, fullZ, N4, state, continuum, native or publication certification"
+}

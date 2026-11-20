@@ -1,0 +1,128 @@
+[
+  {
+    "key": "abstract-finite-window",
+    "original_line": 44,
+    "before": "$\\cGW = c$ window inside",
+    "after": "finite-tolerance compatible window inside"
+  },
+  {
+    "key": "abstract-endpoint-ratios",
+    "original_line": 51,
+    "before": "exceeding the GW170817 cap by $\\sim 7\\times 10^{14}$ at the\nendpoints",
+    "after": "exceeding the GW170817 cap by $\\sim 2.3\\times 10^{14}$ and\n$\\sim 7.2\\times 10^{14}$ at the lower and upper endpoints,\nrespectively"
+  },
+  {
+    "key": "abstract-quarter",
+    "original_line": 56,
+    "before": "$\\chivest = 1/4$ \u2014 the last isolating P3' independence at saturation\n$|\\dccap| = 1/2$)",
+    "after": "$\\chivest = 1/4$, where $|\\dccap|=1/2$ fails both P2 and P3')"
+  },
+  {
+    "key": "abstract-interval-prior",
+    "original_line": 75,
+    "before": "fine-tuned to within $3 \\times 10^{-15}$ of unity --- a window of\nexponentially small measure in any natural-range parameter prior.",
+    "after": "confined to $[(1-\\tau)^2,(1+\\tau)^2]$, centered at $1+\\tau^2$\nwith half-width $2\\tau=6\\times10^{-15}$. Its relative width within\n$[0.1,10]$ is $4\\tau/9.9$; a probability mass additionally requires\na specified prior."
+  },
+  {
+    "key": "intro-width-prior",
+    "original_line": 127,
+    "before": "$[(1-\\tau)^{2}, (1+\\tau)^{2}]$ has measure $\\sim 4\\tau$ in\n$\\chivest$, vanishingly small under any natural-range prior, and lies\nstrictly interior to $[0.1, 10]$ about the anchor $\\chivest = 1$.",
+    "after": "$[(1-\\tau)^{2}, (1+\\tau)^{2}]$ has width exactly $4\\tau$ in\n$\\chivest$ and lies strictly interior to $[0.1,10]$, containing the\nanchor $\\chivest=1$. Its relative width is $4\\tau/9.9$; its\nprobability mass depends on the prior."
+  },
+  {
+    "key": "intro-conditional-constraint",
+    "original_line": 131,
+    "before": "This is not a refutation of emergent gravity, nor of the ADW\nprogram, nor of the linearized-Einstein\nidentification~\\cite{Roehm2026LinearizedEFE}. It is a refutation\nof one specific kinematic identification (second-sound mode =\ngraviton) in the absence of a fine-tuning mechanism for\n$\\chivest$.",
+    "after": "This is a conditional constraint on one specific kinematic\nidentification (second-sound mode = graviton). It excludes the two\nnatural-range endpoints under the assumed speed law while allowing\nthe finite interval above. The width comparison alone neither\nrefutes emergent gravity or the ADW program nor tests the\nlinearized-Einstein identification~\\cite{Roehm2026LinearizedEFE}."
+  },
+  {
+    "key": "theorem-A-interpretation",
+    "original_line": 203,
+    "before": "For $\\chivest \\geq 0$, Eq.~\\eqref{eq:bicond} holds.",
+    "after": "For $\\chivest \\geq 0$, Eq.~\\eqref{eq:bicond} holds.\nThe susceptibility interval has center $1+\\tau^2$ and half-width\n$2\\tau$, since its endpoints are $1\\mp2\\tau+\\tau^2$.\nExact luminality holds only at $\\chivest=1$; finite-tolerance\ncompatibility holds throughout this interval."
+  },
+  {
+    "key": "proof-real-inequalities",
+    "original_line": 244,
+    "before": "These are\n\\emph{decidable} inequalities at the level of Lean's real-number\ntype.",
+    "after": "The Lean source supplies proofs of these two concrete\nreal-number inequalities."
+  },
+  {
+    "key": "bundle-introduction",
+    "original_line": 294,
+    "before": "The strengthening pass also revised \\verb|H_VestigialModeIsGraviton|.\nThe original P3 conjunct ($\\forall c > 0,\\, \\cGW(\\chivest, c) > 0$)\nwas redundant with P1 (positive susceptibility implies positive\n$\\cGW$ via $\\sqrt{\\chivest} > 0$ for $\\chivest > 0$ and $c > 0$).\nThe project's preemptive-strengthening discipline (see\n\\texttt{feedback\\_post\\_wave\\_strengthening\\_audit.md} P2 bundle-\nredundancy rule) requires removing redundant conjuncts. We replace\nP3 with the load-bearing quantitative constraint\nP3' (sub-half-deviation):\n",
+    "after": "The recorded Prop has three conjuncts: positive susceptibility\n(P1), GW170817 compatibility (P2), and sub-half-deviation (P3'):\n"
+  },
+  {
+    "key": "bundle-redundancy",
+    "original_line": 311,
+    "before": "P1 demands positive susceptibility, P2 is the GW170817 compatibility,\nand P3' is the load-bearing sub-half-deviation bound (genuinely\nindependent of P1: $\\chivest = 1/10$ satisfies P1 but\n$|\\dccap(1/10)| = |{\\sqrt{1/10}}-1| \\approx 0.684$ violates P3').",
+    "after": "At the fixed tolerance $\\tau=3\\times10^{-15}$, P2 implies P3'\nbecause $\\tau<1/2$. On the nonnegative physical domain, the\ncompatible interval in Eq.~\\eqref{eq:bicond} also supplies P1.\nThe three clauses are therefore not independent; the recorded Prop\nretains all three clauses."
+  },
+  {
+    "key": "falsifier-header",
+    "original_line": 319,
+    "before": "\\textbf{Falsifier theorems} (four; the fourth isolates P3'\nindependence).",
+    "after": "\\textbf{Falsifier theorems} (four pointwise failures)."
+  },
+  {
+    "key": "quarter-both-fail",
+    "original_line": 325,
+    "before": "$\\chivest = 1/4$, $\\dccap = -1/2$ saturates the bound).",
+    "after": "$\\chivest = 1/4$, $\\dccap=-1/2$ saturates the strict P3' bound\nand also fails P2). The quarter-point witness satisfies P1 and\nshows that P1 alone does not imply P3'; it does not establish\nindependence from P2."
+  },
+  {
+    "key": "bundle-width-probability",
+    "original_line": 327,
+    "before": "The natural-range falsifiers are non-trivial: they demonstrate\nthat the bundle is not vacuously satisfied (avoiding the\n\\verb|feedback_subagent_lean_quality.md| pattern), and that the\n``second sound = graviton'' identification has support of measure\n$4\\tau \\approx 1.2\\times 10^{-14}$ over the natural-range prior ---\nvanishingly small, but non-empty, and containing $\\chivest = 1$.",
+    "after": "The falsifiers show that the Prop is not universally satisfied;\nTheorem~E supplies a satisfying point. On the nonnegative physical\ndomain its compatible set is precisely the interval in\nEq.~\\eqref{eq:bicond}, of width $4\\tau=1.2\\times10^{-14}$ and\ncontaining $\\chivest=1$. Its probability mass depends on the prior;\nunder a uniform prior on $[0.1,10]$ it equals $4\\tau/9.9$."
+  },
+  {
+    "key": "caption-finite-window-endpoints",
+    "original_line": 376,
+    "before": "$\\sim 10^{14}\\times$. The GW170817-compatible $\\chivest$ window\n$[(1-\\tau)^{2}, (1+\\tau)^{2}]$ shrinks to a point at $\\chivest=1$\non this scale --- the gold star.",
+    "after": "$\\sim 2.3\\times10^{14}$ and $\\sim 7.2\\times10^{14}$,\nrespectively. The GW170817-compatible $\\chivest$ window\n$[(1-\\tau)^{2},(1+\\tau)^{2}]$ has finite width $4\\tau$,\nunresolved at this scale. The gold star marks its anchor\n$\\chivest=1$, not a singleton compatible set."
+  },
+  {
+    "key": "discussion-finite-tolerance",
+    "original_line": 396,
+    "before": "GW170817 does not exclude the leading-order vestigial-second-sound\nidentification outright: it survives at $\\chivest = 1$. What it rules\nout is the identification as a \\emph{generic} consequence of the\nnatural range. The identification\n$\\cGW = c\\,\\sqrt{\\chivest}$ requires\n$\\chivest = 1 \\pm 3\\times 10^{-15}$, a fine-tuning so extreme\nthat it cannot follow from a generic UV theory --- so any surviving\nversion owes an account of why $\\chivest$ sits exactly at unity.",
+    "after": "Under the assumed leading-order law $\\cGW=c\\sqrt{\\chivest}$,\nthe conservative symmetric cap requires\n$\\chivest\\in[(1-\\tau)^2,(1+\\tau)^2]$. The susceptibility offsets\nfrom unity are $-2\\tau+\\tau^2$ and $2\\tau+\\tau^2$,\napproximately $\\pm6\\times10^{-15}$; the speed-deviation tolerance\nis $\\pm3\\times10^{-15}$. Exact luminality occurs at $\\chivest=1$,\nbut finite measurement tolerance permits the whole nonzero-width\ninterval. Its small relative width within $[0.1,10]$ alone neither\nestablishes a prior probability nor rules out generic UV theories\nor requires an exact fixed point at unity."
+  },
+  {
+    "key": "comparison-endpoints-only",
+    "original_line": 443,
+    "before": "Wave~2 ships the opposite verdict for the second-sound graviton\nidentification: the natural range fails by $10^{14}$.",
+    "after": "For the assumed second-sound graviton speed law, both natural-range\nendpoints fail the cap by more than $10^{14}$, while the narrow\ncompatible interval remains inside the adopted range."
+  },
+  {
+    "key": "comparison-no-selection",
+    "original_line": 449,
+    "before": "where the relevant scale is the dimensionless $\\chivest$ which\nthe natural range happens to pin around 1 only by accident.",
+    "after": "where $\\chivest$ is a free dimensionless parameter. The adopted\nrange contains unity but selects no value of this susceptibility."
+  },
+  {
+    "key": "conclusion-finite-window",
+    "original_line": 461,
+    "before": "locating the $\\cGW = c$ window",
+    "after": "locating the finite-tolerance compatible interval"
+  },
+  {
+    "key": "conclusion-quarter",
+    "original_line": 466,
+    "before": "at $\\chivest = 1/4$ isolating P3' independence)",
+    "after": "at $\\chivest=1/4$ failing both P2 and P3')"
+  },
+  {
+    "key": "conclusion-finite-interval",
+    "original_line": 475,
+    "before": "\\emph{this specific identification} to a fine-tuned locus rather\nthan refuting it",
+    "after": "\\emph{this specific identification} to a finite interval rather\nthan refuting it"
+  },
+  {
+    "key": "downstream-no-false-dichotomy",
+    "original_line": 485,
+    "before": "perturbation theory): if a derived-DOF mechanism pins\n$\\chivest = 1$, the linearized GW background is consistent with\nthe Wave~4 FLRW analysis~\\cite{Roehm2026LinearizedEFE}; otherwise\n6b.2 must adopt the alternative metric-channel identification.",
+    "after": "perturbation theory): under the assumed speed law, compatibility\nwith the conservative cap requires $\\chivest$ in the finite\ninterval of Eq.~\\eqref{eq:bicond}. A mechanism selecting\n$\\chivest=1$ would satisfy this cap exactly; the finite-tolerance\nconstraint alone does not require that mechanism or select an\nalternative metric-channel identification."
+  }
+]

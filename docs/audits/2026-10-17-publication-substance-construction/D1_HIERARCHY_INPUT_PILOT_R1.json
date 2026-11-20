@@ -1,0 +1,109 @@
+{
+  "base": "ddc320ec365a1f42fd5d8d81796ae07bc0bb029c",
+  "inline": [
+    [
+      "Steinhauer.delta_disp",
+      true,
+      "paper=-8.53e-05, canon=-8.532e-05, rel=0.03%"
+    ],
+    [
+      "Steinhauer.delta_diss",
+      true,
+      "paper=2.38e-05, canon=2.377e-05, rel=0.12%"
+    ],
+    [
+      "Steinhauer.dominance",
+      true,
+      "paper='disp', canon='disp'"
+    ],
+    [
+      "Heidelberg.delta_disp",
+      true,
+      "paper=-7.32e-05, canon=-7.319e-05, rel=0.01%"
+    ],
+    [
+      "Heidelberg.delta_diss",
+      true,
+      "paper=0.00159, canon=0.001593, rel=0.16%"
+    ],
+    [
+      "Heidelberg.dominance",
+      true,
+      "paper='diss', canon='diss'"
+    ],
+    [
+      "Trento.delta_disp",
+      true,
+      "paper=-9.89e-05, canon=-9.891e-05, rel=0.01%"
+    ],
+    [
+      "Trento.delta_diss",
+      true,
+      "paper=1.41e-05, canon=1.413e-05, rel=0.21%"
+    ],
+    [
+      "Trento.dominance",
+      true,
+      "paper='disp', canon='disp'"
+    ],
+    [
+      "crossover[0].delta_diss_match",
+      true,
+      "\u03b4_diss=0.00159, nearest canon rel=0.16%"
+    ],
+    [
+      "crossover[0].coefficient",
+      true,
+      "paper=6.44, canon=6.444, rel=0.06%"
+    ],
+    [
+      "crossover[1].delta_diss_match",
+      true,
+      "\u03b4_diss=2.38e-05, nearest canon rel=0.12%"
+    ],
+    [
+      "crossover[1].coefficient",
+      true,
+      "paper=10.65, canon=10.65, rel=0.03%"
+    ]
+  ],
+  "migrated": [
+    [
+      "Steinhauer.row",
+      false,
+      "table row not found"
+    ],
+    [
+      "Heidelberg.row",
+      false,
+      "table row not found"
+    ],
+    [
+      "Trento.row",
+      false,
+      "table row not found"
+    ],
+    [
+      "crossover[0].delta_diss_match",
+      true,
+      "\u03b4_diss=0.00159, nearest canon rel=0.16%"
+    ],
+    [
+      "crossover[0].coefficient",
+      true,
+      "paper=6.44, canon=6.444, rel=0.06%"
+    ],
+    [
+      "crossover[1].delta_diss_match",
+      true,
+      "\u03b4_diss=2.38e-05, nearest canon rel=0.12%"
+    ],
+    [
+      "crossover[1].coefficient",
+      true,
+      "paper=10.65, canon=10.65, rel=0.03%"
+    ]
+  ],
+  "canonical_input_closure_resolves_generated_table": true,
+  "migrated_error": null
+}

@@ -1,0 +1,20 @@
+{
+  "source_commit": "425324077b03d7de1db9f4a342f5a760bf7af001",
+  "archive_bytes": 5484900,
+  "archive_sha256": "6d95c56cff67a1997bed28185c2f1ad95ef2788ef57fc7a576a41607be79e506",
+  "members": {
+    "canonical-graph.json": {
+      "bytes": 87637418,
+      "sha256": "29f8e4e01480499f7147897569adf12183cc4e6787347b38858c7cccb8bde423"
+    },
+    "graph-build.txt": {
+      "bytes": 13045,
+      "sha256": "8c7ea43f1dcbd572752c18fafdab3bb816e49b9eb3d4bb01f7628ea0e3cfdca2"
+    },
+    "gate-readback.json": {
+      "bytes": 404509,
+      "sha256": "bb11f42f2ff6275d0c5d0a597f891524d4f51c1ae7e5d60f0df8601bfe28dfb8"
+    }
+  },
+  "scope": "Exact existing canonical producer measurement,21bundles231gates; counts159passed25blocked28open19needs-recheck, no state changes versusAF255, no new green bundle or publication acceptance."
+}

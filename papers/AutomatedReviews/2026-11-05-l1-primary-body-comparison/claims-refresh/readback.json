@@ -1,0 +1,43 @@
+{
+  "schema_errors": [],
+  "active_units": 125,
+  "retained_assessments": 118,
+  "new_units": 7,
+  "replaced_units": 6,
+  "prior_candidates_unchanged": true,
+  "blockers_unchanged": true,
+  "prior_human_state_not_written": true,
+  "line_offset_delta": 4,
+  "all_quotes_uniquely_located": true,
+  "unique_ids": true,
+  "summary": {
+    "total_sentences": 125,
+    "by_type": {
+      "formal-claim": 27,
+      "numeric": 20,
+      "methodology": 20,
+      "citation": 17,
+      "qualitative": 14,
+      "parameter": 4,
+      "theorem-ref": 18,
+      "transition": 3,
+      "metaclaim": 2
+    },
+    "by_verdict": {
+      "PASS": 88,
+      "INFO": 25,
+      "TRANSITION": 4,
+      "WARN": 7,
+      "UNGROUNDED": 1
+    },
+    "by_finding_class": {
+      "HD": 1,
+      "SD": 1
+    },
+    "non_reproducing_count": 54,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 54,
+    "agent_text": "125 current content units;118 assessments retained and seven bounded primary-body source-comparison assessments PASS. Original49 supersession candidates preserved; five historical source WARN candidates added, zero auto closure. Four scientific blocker identities and full prose/stage/main/human holds retained. Historical81/89 receipts are not fresh executions."
+  },
+  "sha256": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23"
+}

@@ -1,0 +1,75 @@
+{
+  "review_date": "2026-11-05T17:16:30.794080+00:00",
+  "figures_reviewed": 3,
+  "overall_status": "issues_found",
+  "figures": [
+    {
+      "name": "L1/fig_c_GW_vs_ligo_constraint",
+      "status": "fail",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "Actual four-page PDF page 3: endpoint callout labels, star text, title/subtitle, ticks and axes are unreadably small at 0.96 columnwidth. Source width 920; 9px callout fonts become at most 2.348pt at 240pt embedding. pdfimages shows 2760px/845ppi, approximately 235.17pt embedding."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Canonical curve, three traces, monotonicity, cap ±3e-15 and log-axis span [-2,2] passed direct data assertions. Caption explicitly distinguishes unresolved finite interval from a singleton; manuscript discloses assumed speed law and adopted range. Top subtitle intrudes into plotting area in full-size PNG; no claim of clipping. Title/callouts require simpler layout/larger print text."
+    },
+    {
+      "name": "paper25_gravitational_waves/fig_c_GW_vs_ligo_constraint",
+      "status": "fail",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "Stale log-axis range continues to 10B; upper endpoint arrow points into empty right canvas; lower callout overflows below plot."
+        ]
+      },
+      "physics": {
+        "status": "issues",
+        "issues": [
+          "Subtitle says natural range fails by ~10^14, without endpoint qualifier. Star gives susceptibility 1 ± 3e-15 rather than exact squared endpoints (approximately 1 ± 6e-15)."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": false,
+      "notes": "Actual source PNG read visually; byte hash 653775690d300e8d74de3e2a813ba5969fbc7ecfe4936578624e997546312176. Source paper contains exactly one includegraphics. Current canonical producer has corrected log coordinates and interval text; old image is stale."
+    },
+    {
+      "name": "D3/fig_c_GW_vs_ligo_constraint",
+      "status": "fail",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "issues",
+        "issues": [
+          "Star label gives χ_vest = 1 ± 3×10^-15, which confuses speed tolerance with susceptibility tolerance. Correct interval is [(1−τ)^2,(1+τ)^2], approximately 1 ± 6×10^-15."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": false,
+      "notes": "BundleFigureMismatch: D3 PNG differs from L1 numerical annotation although D3 prose/tables use correct cap 3e-15 and squared interval. Byte hash 83200753ed0c13a2d47a3b2447fe9e0b93a1d8af52b003314f50c935fed013f2. D3 PDF not supplied/reviewed; no full D3 layout claim."
+    }
+  ],
+  "summary": "RED for current scoped bundle figure review. L1 canonical numerical curve and finite-interval caption PASS; actual print legibility, stale source/D3 assets and FigureSpec citation need repair. No full Stage 9 or publication acceptance.",
+  "recommendations": [
+    "Simplify the canonical figure for single-column reproduction; enlarge labels and use manuscript caption for long explanation, then inspect actual regenerated PDF at final print width.",
+    "Propagate corrected canonical output to L1, paper25 and D3; independently visually inspect all regenerated consumer PNGs and actual L1 PDF.",
+    "Correct FigureSpec source anchor to Abbott 2017 ApJL848 L13 §4.1 Eq.(1), verified in held primary PDF p6."
+  ]
+}

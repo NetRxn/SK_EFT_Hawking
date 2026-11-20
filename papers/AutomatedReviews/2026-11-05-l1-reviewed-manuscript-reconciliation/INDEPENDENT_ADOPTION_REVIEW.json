@@ -1,0 +1,23 @@
+{
+  "decision": "ACCEPT",
+  "scope": "Narrow source adoption and user-directed role clarification only",
+  "layout": "HOLD",
+  "full_scientific_or_publication_acceptance": false,
+  "base": "d7a8f8a991c8ba2ec19b775239ee3f6ccc977a89",
+  "reviewed_sha256": {
+    "papers/L1/paper_draft.tex": "7fdce46421f188f4143d23a3ff8a21ae1eb3c31ef6536b7635c6573f414f1297",
+    "papers/L1/paper_draft.pdf": "500dd008b97a74b4d116e055b2786b618508ac508a6b57ced29975265775ef5b",
+    "papers/L1/change_log.md": "dd805b8b16e8b1dbbadb69b56d97ce7c25fe0b67ec449c0f8d1a08d7dcf89ab6",
+    "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md": "d6ced0001545352f7b7036d0702b04e36c5d6ee256a57c886c410f86db0a61d7",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_preparation_checkpoint.md": "a9d7464e1663bf22034c6004bcb3a9f911c4b02b09e37874896244bba1187825",
+    "papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/HISTORY_RECONCILIATION.md": "da02ab138eafbd0bf76583408e10adb0cd26b51485374b47ca3a029faffb0cdb",
+    "papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/CANDIDATE_RECEIPT.json": "7f1261bbaff4d84d9eaae9df09178540ea536a123636091857eef921c12d4dfd"
+  },
+  "necessary_followups": [
+    "Repair gutter-crossing and other long identifiers/function path overflows; recompile/render",
+    "Repair visibly blank Sec. references; recompile/render",
+    "Current complete claims reconciliation and canonical reevaluation",
+    "Original physical BUILD and publication obligations remain open"
+  ],
+  "report_sha256": "49d7f41c62861dc99a28f837932c443649e932eaadaf759f91918f41cd1f234a"
+}

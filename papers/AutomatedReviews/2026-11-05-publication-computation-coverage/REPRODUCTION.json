@@ -1,0 +1,53 @@
+{
+  "source_head": "5eb636bed",
+  "public_source_functions": 436,
+  "formula_nodes": 410,
+  "missing_public": [
+    "G_N_emergent",
+    "G_N_emergent_at_coupling",
+    "G_N_emergent_matches_observed",
+    "G_N_from_seeley_dewitt",
+    "G_N_sakharov",
+    "alpha_ADW_linear_ansatz",
+    "c_GW_deviation_from_c",
+    "c_GW_from_chi_vest",
+    "c_GW_natural_range",
+    "deSitter_Ricci_predicted",
+    "deSitter_einsteinTensor_predicted",
+    "deSitter_hawking_temp",
+    "deSitter_hubble_radius",
+    "deSitter_lambda_from_K",
+    "deSitter_scalar_predicted",
+    "deSitter_surface_gravity",
+    "de_sitter_lambda_from_K",
+    "dispersion_correction_from_GammaH",
+    "gauss_bonnet_4D_identity",
+    "generation_constraints_with_without_nu_R",
+    "heat_kernel_a2_matches_GN_sakharov",
+    "higher_curvature_R_sq_coefficient",
+    "higher_curvature_Ricci_sq_coefficient",
+    "higher_curvature_Riemann_sq_coefficient",
+    "seeley_dewitt_a2_R_coefficient",
+    "weyl_squared_4D"
+  ],
+  "missing_expected_gw": [
+    "c_GW_deviation_from_c",
+    "c_GW_from_chi_vest",
+    "c_GW_natural_range",
+    "dispersion_correction_from_GammaH"
+  ],
+  "L1_meta": {
+    "topic": "",
+    "formulas": [],
+    "lean_modules": [],
+    "platforms": [],
+    "n_claims": 0,
+    "tex_path": "papers/L1/paper_draft.tex",
+    "has_provenance_entry": false
+  },
+  "absent_only_gate_state": "passed",
+  "absent_only_gate_evidence": [
+    "1 formulas grounding paper claims (0 with golden/identity/roundtrip, 0 bounds-only, 0 no tests, 1 NOT IN GRAPH \u2014 not examined)",
+    "\u26a0\ufe0f 1 named formula(s) absent from the graph, so this gate says NOTHING about their test coverage: formula:missing_control"
+  ]
+}

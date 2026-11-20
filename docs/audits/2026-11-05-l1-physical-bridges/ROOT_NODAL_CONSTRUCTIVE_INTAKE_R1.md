@@ -1,0 +1,14 @@
+# ROOT intake: nodal coefficient and cross-edge construction
+
+ROOT personally read all nineteen text artifacts in checkpoint53765e44e: the four result reports, every final independent mathematical/source review pair, rejected R1 reports and review history, and lead acceptance. Verified the29-member archive CRC/hash, all eighteen exact artifact copies and seven current accepted scientific input copies. The twenty-path checkpoint is normally integrated; this is scoped manual mathematical/source acceptance, not kernel or numerical execution.
+
+Accepted results:
+
+- The complete pure curvature-direction sector factors as binom(16,8) times the square of a real original four-site coefficient sigma_Q. Correct based-anchor Haar translation removes retained links for this sector. Exact local moments and saturation give the stated three-pattern expression, retaining original coframe quarters and both25/144 terms.
+- Independent original anchor-center symmetry imposes uniform site parity for all mixed-direction sectors; the1177 assignments are only a loose pre-pruning roster. Full endpoint flow and multinomial factors remain necessary constraints, not a computational budget or surviving-term count.
+- Corrected full structural expansion retains every original sign and normalized invariant Haar projector. The fixed invariant Gram inverse is not a boundary-density square root or physical positivity assumption. The old incorrect cross-square coupling claim is withdrawn and preserved as rejected history.
+- Corrected cross-edge features conjugate only the10-family, reproducing the actual ordered seam. The constant-feature PSD/null-relation formulation is accepted as a conditional feasibility reformulation. No coefficient array, L, N, or positive grouping has been constructed. Free-feature indefiniteness is not negativity of the original integrated boundary density.
+
+Full P0 and sigma_Q remain UNEVALUATED. Mixed directions can cancel a nonnegative subtotal; no component projection isolates it. Every other nodal grade block and the full source family remain owed. Positive P1–P4, original physical product/adjoint/domain, all four cut maps, both defect-inclusive kernels, full C2/Bopp/constraint/kinetic/dynamics, metric calibration, B3/window, modes/matter/transport/controlled limits and publication/human acceptance remain OPEN. No original-model no-go, scope reduction, deferral or physical closure is inferred.
+
+Executor owns the next substantive mixed-sector or original-factor amplitude/null construction. ROOT retains ordinary L1/Eq4–11/formal/numerical/publication ownership and runtime/slot admission. The separate one-site full scientific run remains live under its own frozen source and reviewed budget; this intake grants no eight-site numerical allocation. No tests, build, Lean or new scientific evaluator ran for this manual source checkpoint.

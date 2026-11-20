@@ -1,0 +1,25 @@
+{
+  "archive": "metric_operator_dictionary_evidence.zip",
+  "bytes": 233817,
+  "members": 13,
+  "sha256": "dbc859eda69d5377730a3f725380e23f457b565517aefca1ec99895a363c751a",
+  "accepted_source_sha256": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+  "parent_scientific_checkpoint": "503a78eb0befd0ccaf40cf87df2dbcb36a023119",
+  "publication_assignment_checkpoint": "945baa478",
+  "files": {
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "charter/publication-Phase6a-945baa478.md": "7c08089484b7a87b88856bbaefe9eadad19278e4a79cc0f083aee2c355720629",
+    "construction/l1-metric-operator-dictionary-attempt-r1.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "parent/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+    "parent/original_state_premise_evidence.zip": "611c0bedfbc9cf9b0870868412f9f12dc421b52a6ca72587f6d17d5d5199600e",
+    "parent/original_state_premise_manifest.json": "467daf8ac2d1f7c83ecf6dbf66d7c0408cac652a0c704881bd67161f3d346fe9",
+    "review/l1-metric-operator-dictionary-math-review-r1.md": "306ce756a81af17b49070a9ee2f01a93f3bbcb906d142a6d5983a0fc9c6b9ceb",
+    "review/l1-metric-operator-dictionary-physics-review-r1.md": "427c07b1421dd44ec20da8a61d2e1766078756c54c062cfc73485f5457893c56",
+    "source/COMMON_SOURCE_MATTER_INTERFACE.md": "f8aa1040d6ac359dd767910303aa335c9841c7168294be9043b1db9de46d8fbf",
+    "source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef",
+    "source/primary-and-substrate-pins-r1.json": "1ac318987d3787b494e19f3dcaeb466059234a79844b384e8a10d9885130cc6b",
+    "substrate/QuantumNetwork-MixedState.lean": "1d7119f829efeac46b9e9e235f54e4862844bc4a27e448a07f3a8774a24b44ab"
+  },
+  "scope": "Independent manual original kinetic/source construction attempts and fixed positive one-mode control: zero-body bare inverse, conditional high-order ordinary-power and finite-affine-Gibbs dictionary exclusions. No mandated original dictionary, physical state/no-go, new contact/CAR/model, normalized point, c0/N4, native or publication closure."
+}

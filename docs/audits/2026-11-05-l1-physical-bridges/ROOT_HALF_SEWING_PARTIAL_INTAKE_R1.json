@@ -1,0 +1,14 @@
+{
+  "original_commit": "5ad2c7e0ba6f9236dd27308c609739b3b563c727",
+  "integrated_commit": "187bad87e11f7a6c2d9dc95c0337e1548b2d2bfc",
+  "root_read_all_12_tracked_paths": true,
+  "archive_sha256": "b8bf7332c0d0109349dc9c56418a540cee99f8a7266487c0e51e72022a518a61",
+  "archive_members": 17,
+  "artifact_copies_verified": 10,
+  "current_accepted_input_copies_verified": 4,
+  "specified_self_pairing_failure_accepted": true,
+  "partial_nodal_reduction_accepted": true,
+  "P0_evaluated": false,
+  "positive_physical_construction_complete": false,
+  "original_obligations_deferred": false
+}

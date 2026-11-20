@@ -1,0 +1,40 @@
+{
+  "source_commit": "976d16e0d61e9c3998c9845bd27e99d38039da1e",
+  "exit_code": 0,
+  "args": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_architecture_inventory.py::TestTheFreshnessCheck::test_the_live_tree_is_fresh",
+    "tests/test_build_graph_memo.py::TestTheMemoIsSemanticallyInvisible::test_the_memoized_build_equals_the_unmemoized_build",
+    "tests/test_dependency_declaration.py::test_every_third_party_import_is_declared",
+    "tests/test_lean_slots.py::test_an_idle_slot_mints_a_session_on_initialize",
+    "tests/test_lean_slots.py::test_each_initialize_mints_a_distinct_session",
+    "tests/test_lean_slots.py::test_global_backend_limit_counts_other_repository_roles",
+    "tests/test_lean_slots.py::test_one_physical_slot_cannot_have_two_repository_backends",
+    "tests/test_lean_slots.py::test_the_minted_session_does_not_weaken_the_lease_gate",
+    "tests/test_bundle_json_serializer.py",
+    "--junitxml=/tmp/l1-976d-cohort.xml"
+  ],
+  "passed": 66,
+  "skipped": 1,
+  "seconds": 25.09,
+  "former_failed_cases_verified_passing": [
+    "tests/test_architecture_inventory.py::TestTheFreshnessCheck::test_the_live_tree_is_fresh",
+    "tests/test_build_graph_memo.py::TestTheMemoIsSemanticallyInvisible::test_the_memoized_build_equals_the_unmemoized_build",
+    "tests/test_dependency_declaration.py::test_every_third_party_import_is_declared",
+    "tests/test_lean_slots.py::test_an_idle_slot_mints_a_session_on_initialize",
+    "tests/test_lean_slots.py::test_each_initialize_mints_a_distinct_session",
+    "tests/test_lean_slots.py::test_global_backend_limit_counts_other_repository_roles",
+    "tests/test_lean_slots.py::test_one_physical_slot_cannot_have_two_repository_backends",
+    "tests/test_lean_slots.py::test_the_minted_session_does_not_weaken_the_lease_gate",
+    "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_no_blob_carries_escaped_unicode",
+    "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/D3/bundle_metadata.json]",
+    "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]"
+  ],
+  "scope": "Focused11-case repaired cohort plus serializer controls.34otherpreviousfailures notrun; not fullproject/main/publicationacceptance.",
+  "junit_sha256": "add2fe0f4de5f9803ef7ad210d98320ccbb61a887b0e015ad9ae3513e71ab705"
+}

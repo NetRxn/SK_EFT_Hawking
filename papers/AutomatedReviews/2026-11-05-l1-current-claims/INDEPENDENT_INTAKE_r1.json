@@ -1,0 +1,1304 @@
+{
+  "review": "l1-claim-catalog-intake-independent-20261105-r1",
+  "decision": "CORRECTION REQUIRED: bounded documentary evidence refresh before canonical intake",
+  "scope": "Full catalog identity/coverage/lineage and canonical writer dry-run only; no repeat science/native/full-source-body audit",
+  "packet": "l1-claim-catalog-intake-review-r1-20261105.json",
+  "packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "candidate_sha256": "463f015a91ecb3b42d82afaca6af34f0b11596220efca0cba70be53e3e902fa2",
+  "canonical_hashes": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/L1/claims_review.json": "623f2c4bbf4adf43067e38b94e8b4324e190c7b93761969830609ca101422542",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/L1/prose_state.json": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/L1/audit_log.jsonl": "079ad1e43e2d2434fcf2f221027a0e13bef350fd6a74498a77dc564af2c2ddc1",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/L1/paper_draft.tex": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2"
+  },
+  "review_report_hashes": {
+    "/tmp/l1-repaired-figure-review-20261105-r1.md": "f6d37dce7f5d1a40261c62707b9f9dac4e62e6320860801976053e7218b6408c",
+    "/tmp/l1-repaired-figure-review-20261105-r1.json": "bc96a8d118b19db659edb9241998b8d99cbed6e5fb954c6053835e6bb3849029",
+    "/tmp/l1-source-layout-final-review-20261105-r2.md": "f6eef53ad79990a8d72a91309fe7ac64f7e28a2931cc1ac188d4a4414aab030a",
+    "/tmp/l1-source-layout-final-review-20261105-r2.json": "89dc2416d643f8d17a88c997839730b6e51476f418c8313ec801c51f3ce8eea4"
+  },
+  "counts": {
+    "old": 114,
+    "new": 124,
+    "retained_ids": 72,
+    "absent_old_ids": 42,
+    "added_ids": 52,
+    "reconciliation": 49,
+    "auto_closed": 0,
+    "by_verdict": {
+      "PASS": 80,
+      "INFO": 26,
+      "TRANSITION": 4,
+      "WARN": 13,
+      "UNGROUNDED": 1
+    }
+  },
+  "schema_errors": [],
+  "canonical_ids_and_normalization": "124/124 recomputed through actual canonical compute_sentence_id; no mismatch",
+  "source_span_matches": "124/124 exact whitespace-safe or canonical-normalized source-span containment",
+  "coverage": "All current normalized source content abstract through pre-bibliography covered. Uncovered fragments: headings, structural/presentation TeX, and three semicolon clause separators only. Metadata/bibliography/comments/declined stub excluded per persona A.1.",
+  "r1_r2_ids_quotes_verdicts_equal": true,
+  "old114_comparison": [
+    {
+      "id": "sentence:L1:abstract:9a3de8fb",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:abstract:275ad002",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:abstract:600cc132",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:abstract:7597e1a0",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:aa9871c7",
+      "old_verdict": "INFO",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:edd83f38",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:4359af9b",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:57da65a6",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:21732113",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:869194ae",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:fae5cab1",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:b93e5e26",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:3ba45b23",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:c944eb5e",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:64249a15",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:43c7a2f1",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:64da36f6",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:0ef96618",
+      "old_verdict": "INFO",
+      "disposition": "retained",
+      "current_verdict": "INFO"
+    },
+    {
+      "id": "sentence:L1:introduction:bb2cf910",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:5ff500d7",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:555a000d",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:11fe3464",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:2da8b694",
+      "old_verdict": "TRANSITION",
+      "disposition": "retained",
+      "current_verdict": "TRANSITION"
+    },
+    {
+      "id": "sentence:L1:introduction:a07882f6",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:3f462fe0",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:ec137388",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:8f425cff",
+      "old_verdict": "INFO",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:92468fa1",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:c1128f8a",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:introduction:eb1c2e4c",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:introduction:92113836",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:introduction:c55144cc",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:introduction:131274cb",
+      "old_verdict": "INFO",
+      "disposition": "retained",
+      "current_verdict": "INFO"
+    },
+    {
+      "id": "sentence:L1:introduction:c88d44ca",
+      "old_verdict": "WARN",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:introduction:0acf10c2",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:e3f53f82",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:e17de389",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:fcbc3c66",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:introduction:f191f615",
+      "old_verdict": "INFO",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:introduction:2d303b8d",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:df96503e",
+      "old_verdict": "INFO",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:4ebaca5d",
+      "old_verdict": "INFO",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:introduction:5bda7b0e",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:9d46cbb0",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:c1c2c986",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:7cde98b1",
+      "old_verdict": "UNGROUNDED",
+      "disposition": "retained",
+      "current_verdict": "UNGROUNDED"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:fe4a081e",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:e189cdda",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:3cd70eb8",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:c694dfa5",
+      "old_verdict": "TRANSITION",
+      "disposition": "retained",
+      "current_verdict": "TRANSITION"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:6bb21996",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:a48e702c",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:b63f73a8",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:aa870922",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:c0a94df1",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:bb17ffb5",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:207942fe",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:0b2b6094",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:929692a7",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:5b0d5912",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:d8b52fd1",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:8e5524b2",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:6cfe0344",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:67680096",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:e18ae283",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:e8ff11e9",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:ff36d704",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:9dbf0010",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:928d4e3e",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:c566aed6",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:2d57174c",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:bbf37c66",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:41d63d4f",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:0f3f4a6d",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:152de090",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:a43e84f3",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:ea26e7aa",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:03a02b34",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:41403f4b",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:90db9920",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:8a067e2e",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:8a01d3fd",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:37c989ac",
+      "old_verdict": "FAIL",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:9656d214",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:6a252f06",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:c7c68df6",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:d3026983",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:443b79a2",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:49c6a59c",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:6a138e73",
+      "old_verdict": "INFO",
+      "disposition": "retained",
+      "current_verdict": "INFO"
+    },
+    {
+      "id": "sentence:L1:discussion:175a78b5",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:8e4393e7",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:285b31f4",
+      "old_verdict": "INFO",
+      "disposition": "retained",
+      "current_verdict": "INFO"
+    },
+    {
+      "id": "sentence:L1:discussion:30a66639",
+      "old_verdict": "INFO",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:11b605ef",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:bc5f96cb",
+      "old_verdict": "INFO",
+      "disposition": "retained",
+      "current_verdict": "INFO"
+    },
+    {
+      "id": "sentence:L1:discussion:4e039fbb",
+      "old_verdict": "UNGROUNDED",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:e8bf4f9a",
+      "old_verdict": "INFO",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:0c150980",
+      "old_verdict": "UNGROUNDED",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:ba94ab19",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:c24fbfc6",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:e47ade82",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:6c60d13b",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:af8e2146",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:7caeb5ce",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:b68e17fa",
+      "old_verdict": "WARN",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:discussion:c987e539",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:0c438d3f",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "PASS"
+    },
+    {
+      "id": "sentence:L1:discussion:40e3f093",
+      "old_verdict": "TRANSITION",
+      "disposition": "retained",
+      "current_verdict": "TRANSITION"
+    },
+    {
+      "id": "sentence:L1:discussion:6d8afeb6",
+      "old_verdict": "PASS",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    },
+    {
+      "id": "sentence:L1:discussion:ac7de9a4",
+      "old_verdict": "PASS",
+      "disposition": "retained",
+      "current_verdict": "WARN"
+    },
+    {
+      "id": "sentence:L1:discussion:31c6d6d6",
+      "old_verdict": "WARN",
+      "disposition": "candidate_for_supersession",
+      "current_verdict": null
+    }
+  ],
+  "non_reproducing_lineage": [
+    {
+      "prior_finding_id": "fu:2",
+      "prior_run_date": "2026-05-06T16:50:00Z",
+      "first_observed_date": "2026-05-06T16:50:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Postbibliography stub is commented/declined context, not current rendered sentence; no silent approval of absorption.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "fu:3",
+      "prior_run_date": "2026-05-06T16:50:00Z",
+      "first_observed_date": "2026-05-06T16:50:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Fresh r2 four-page render has no theorem-environment errors; existing overfull boxes remain. Source-specific reviewer disposition still required.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "fu:5",
+      "prior_run_date": "2026-05-06T16:50:00Z",
+      "first_observed_date": "2026-05-06T16:50:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "49 tests freshly pass; native Lean scope and universal numeric-test-coverage remain qualified; old partial count followup cannot be copied as current.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:877f37a5",
+      "prior_run_date": "2026-05-06T16:50:00Z",
+      "first_observed_date": "2026-05-06T16:50:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current sentence/source scope reviewed afresh. Adopted-window physical provenance and source-qualified reproducibility remain active where reproduced; rewritten or absent wording is not scientific closure. See current units42,75–77,90–104 and blocking issues.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:g4-kerr-schild-double-copy-on-petrov-d-analog-gravity:f33279fd",
+      "prior_run_date": "2026-05-06T16:50:00Z",
+      "first_observed_date": "2026-05-06T16:50:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current sentence/source scope reviewed afresh. Adopted-window physical provenance and source-qualified reproducibility remain active where reproduced; rewritten or absent wording is not scientific closure. See current units42,75–77,90–104 and blocking issues.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:aa9871c7",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:edd83f38",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:4359af9b",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:57da65a6",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:21732113",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:869194ae",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:fae5cab1",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:b93e5e26",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:3ba45b23",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:c944eb5e",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:64249a15",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:43c7a2f1",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:bb2cf910",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:5ff500d7",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:a07882f6",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:introduction:cd2d9076. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:8f425cff",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:introduction:d6933ae4. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:0acf10c2",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:e3f53f82",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:2d303b8d",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:df96503e",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:introduction:4ebaca5d",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:introduction:1277ae3f. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:9d46cbb0",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:formal-setup-and-result:06a02fb4. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:c0a94df1",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:formal-setup-and-result:ed33e4c6. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:5b0d5912",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:formal-setup-and-result:98b2e23b. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:8e5524b2",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:formal-setup-and-result:3868a57b. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:ff36d704",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:formal-setup-and-result:6b3a489b. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:8a01d3fd",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:37c989ac",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:9656d214",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:formal-setup-and-result:6a252f06",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:30a66639",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:11b605ef",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:4e039fbb",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:e8bf4f9a",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:0c150980",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:ba94ab19",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:c24fbfc6",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:e47ade82",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:6c60d13b",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:af8e2146",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: see full current catalog; no one-to-one semantic closure asserted. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:6d8afeb6",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:discussion:556783ed. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "sentence:L1:discussion:31c6d6d6",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "first_observed_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source quote changed or sentence boundaries/typesetting changed; historical assessment preserved in prior catalog hash. Current replacements: sentence:L1:discussion:064e25cb. No physical BUILD or human/canonical closure performed.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "L1-H1-endpoint-attribution",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source explicitly bounds endpoint theorem scope and replaces decidable-real wording with concrete source-proof statement. Semantic source correction is independently recorded by accepted source-adoption review; closure writer has not reconciled the historical catalog finding. Physical BUILD remains untouched.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    },
+    {
+      "prior_finding_id": "L1-real-decidability-wording",
+      "prior_run_date": "2026-11-05T06:08:26.951296Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current source explicitly bounds endpoint theorem scope and replaces decidable-real wording with concrete source-proof statement. Semantic source correction is independently recorded by accepted source-adoption review; closure writer has not reconciled the historical catalog finding. Physical BUILD remains untouched.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+    }
+  ],
+  "lineage_checks": "All42 absent old IDs present among49 unique candidates; all5 inherited records preserve prior fields/dates/status, add agent_run_id only;4 reproducing records exactly preserved; all124 predecessor id/run pairs resolve in old114 or supplied actual historical catalogs. No dangling blocker/followup sentence refs.",
+  "blocker_dispositions": [
+    {
+      "id": "L1-H1-endpoint-attribution",
+      "status": "source attribution candidate for scoped supersession; physical BUILD remains open"
+    },
+    {
+      "id": "L1-B3-physical-normalization",
+      "status": "open; no closure by this review"
+    },
+    {
+      "id": "L1-physical-dynamics-transport",
+      "status": "open; no closure by this review"
+    },
+    {
+      "id": "L1-fix-propagation",
+      "status": "open; no closure by this review"
+    }
+  ],
+  "dry_run": {
+    "exit_code": 0,
+    "stdout": {
+      "ok": true,
+      "paper": "L1",
+      "reviewer_version": "claims-reviewer-v2",
+      "sentences_in_run": 124,
+      "tombstoned_sentences": [],
+      "tombstoned_count": 0,
+      "rewrite_candidates": [],
+      "non_reproducing_auto_closed": 0,
+      "non_reproducing_candidates_for_supersession": 49
+    },
+    "stderr": ""
+  },
+  "canonical_files_unchanged_after_dry_run": true,
+  "human_state": "Existing prose_state sentences{} empty; no human fields added to candidate. Dry-run returned before lock/audit/write. Real ingest can mark tombstoned_at and reserialize prose despite stale docstring; it does not transfer human verification or confirm supersession. It does not install claims_review.json. No non-dry-run/reconcile/supersede/mark invoked.",
+  "necessary_note_patches": [
+    {
+      "id": "sentence:L1:formal-setup-and-result:9dbf0010",
+      "field": "agent_notes",
+      "old": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
+      "proposed_new": "Caption scalar content is unchanged: rounded endpoints, compatible finite interval, anchor and cited witnesses retain their prior bounded assessment. The historical precision-refresh receipt concerned the earlier PNG and render. The present presentation repair regenerated PNG SHA256 cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976, propagated identically to canonical/L1/D3/Paper25 consumers. Before/after x/y/fill, shapes and axis ranges agree; PNG bytes and drawing presentation changed. Current scoped figure/source acceptance is documented by /tmp/l1-repaired-figure-review-20261105-r1.md/.json and /tmp/l1-source-layout-final-review-20261105-r2.md/.json. This intake reviewer read those reports without repeating visual inspection. No whole Stage9, every-number mapping, physical BUILD, native/kernel or publication acceptance follows.",
+      "meta_instruction": "Preserve historical prior_assessment_id/run, add explicit current evidence-refresh run/scope and current report hashes; do not imply historical assessment observed regenerated PNG."
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:928d4e3e",
+      "field": "agent_notes",
+      "old": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
+      "proposed_new": "Caption scalar content is unchanged: rounded endpoints, compatible finite interval, anchor and cited witnesses retain their prior bounded assessment. The historical precision-refresh receipt concerned the earlier PNG and render. The present presentation repair regenerated PNG SHA256 cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976, propagated identically to canonical/L1/D3/Paper25 consumers. Before/after x/y/fill, shapes and axis ranges agree; PNG bytes and drawing presentation changed. Current scoped figure/source acceptance is documented by /tmp/l1-repaired-figure-review-20261105-r1.md/.json and /tmp/l1-source-layout-final-review-20261105-r2.md/.json. This intake reviewer read those reports without repeating visual inspection. No whole Stage9, every-number mapping, physical BUILD, native/kernel or publication acceptance follows.",
+      "meta_instruction": "Preserve historical prior_assessment_id/run, add explicit current evidence-refresh run/scope and current report hashes; do not imply historical assessment observed regenerated PNG."
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+      "field": "agent_notes",
+      "old": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
+      "proposed_new": "Caption scalar content is unchanged: rounded endpoints, compatible finite interval, anchor and cited witnesses retain their prior bounded assessment. The historical precision-refresh receipt concerned the earlier PNG and render. The present presentation repair regenerated PNG SHA256 cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976, propagated identically to canonical/L1/D3/Paper25 consumers. Before/after x/y/fill, shapes and axis ranges agree; PNG bytes and drawing presentation changed. Current scoped figure/source acceptance is documented by /tmp/l1-repaired-figure-review-20261105-r1.md/.json and /tmp/l1-source-layout-final-review-20261105-r2.md/.json. This intake reviewer read those reports without repeating visual inspection. No whole Stage9, every-number mapping, physical BUILD, native/kernel or publication acceptance follows.",
+      "meta_instruction": "Preserve historical prior_assessment_id/run, add explicit current evidence-refresh run/scope and current report hashes; do not imply historical assessment observed regenerated PNG."
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:c566aed6",
+      "field": "agent_notes",
+      "old": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
+      "proposed_new": "Caption scalar content is unchanged: rounded endpoints, compatible finite interval, anchor and cited witnesses retain their prior bounded assessment. The historical precision-refresh receipt concerned the earlier PNG and render. The present presentation repair regenerated PNG SHA256 cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976, propagated identically to canonical/L1/D3/Paper25 consumers. Before/after x/y/fill, shapes and axis ranges agree; PNG bytes and drawing presentation changed. Current scoped figure/source acceptance is documented by /tmp/l1-repaired-figure-review-20261105-r1.md/.json and /tmp/l1-source-layout-final-review-20261105-r2.md/.json. This intake reviewer read those reports without repeating visual inspection. No whole Stage9, every-number mapping, physical BUILD, native/kernel or publication acceptance follows.",
+      "meta_instruction": "Preserve historical prior_assessment_id/run, add explicit current evidence-refresh run/scope and current report hashes; do not imply historical assessment observed regenerated PNG."
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:2d57174c",
+      "field": "agent_notes",
+      "old": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
+      "proposed_new": "Caption scalar content is unchanged: rounded endpoints, compatible finite interval, anchor and cited witnesses retain their prior bounded assessment. The historical precision-refresh receipt concerned the earlier PNG and render. The present presentation repair regenerated PNG SHA256 cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976, propagated identically to canonical/L1/D3/Paper25 consumers. Before/after x/y/fill, shapes and axis ranges agree; PNG bytes and drawing presentation changed. Current scoped figure/source acceptance is documented by /tmp/l1-repaired-figure-review-20261105-r1.md/.json and /tmp/l1-source-layout-final-review-20261105-r2.md/.json. This intake reviewer read those reports without repeating visual inspection. No whole Stage9, every-number mapping, physical BUILD, native/kernel or publication acceptance follows.",
+      "meta_instruction": "Preserve historical prior_assessment_id/run, add explicit current evidence-refresh run/scope and current report hashes; do not imply historical assessment observed regenerated PNG."
+    }
+  ],
+  "additional_evidence_corrections": [
+    "Point review_evidence.source_evidence explicitly to r1/EVIDENCE.md and r2/DELTA.md/manifests; r2 has no EVIDENCE.md.",
+    "Keep original manifests immutable as dated input snapshots; supplement final exact-source/report hashes for current P25 TEX75a84e61 and L1 reviewa435df28, which supersede r2 inputsa5011e90 and160cd05b.",
+    "When incorporating the newly supplied final independent reviews, replace pending-only statements only within their exact figure/layout scope; retain original scientific/cross-consumer/numeric/physical holds."
+  ],
+  "acceptance_boundary": "Identity/schema/full current L1 coverage/lineage/dry-run accepted. Candidate artifact needs documentary corrections above; no finding closure, physical BUILD completion, human ratification, wholeStage9/10/13/main/kernel/publication acceptance. Original exhaustive numeric mapping remains open; physical normalization/derived window, mode/matter and transport remain full original requirements.",
+  "contradictions": [
+    "Five caption notes claim unchanged PNG/no rendered change although current PNG regeneratedcd3; only x/y/fill/shapes/ranges remain unchanged.",
+    "r2 source_evidence points to absent r2 EVIDENCE.md and its dated manifest predates final P25 layout/L1 review bytes.",
+    "sentence_state ingest docstring says no prose mutation while non-dry-run code can add tombstoned_at and atomically rewrite prose. Actual dry-run is side-effect-free."
+  ]
+}

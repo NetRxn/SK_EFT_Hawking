@@ -1,0 +1,75 @@
+{
+  "verdict": "ACCEPT complete DIRECT plus author FIXED110/153 controls; only ROOT may authorize next unrestricted pilot",
+  "review_scope": "stdlib receipt/AST/hash/Fraction only; no additional scientific run",
+  "words": {
+    "110": {
+      "actual_exit": 0,
+      "branches": 45,
+      "nonempty": 15,
+      "structural_empty": 30,
+      "computed_zero_nonempty_branches": 0,
+      "negative_weights": 6,
+      "coefficient_FIXED_ONLY": [
+        1901385366902249675,
+        8923232590303029767153123328
+      ],
+      "peak_rows_ordering_sensitive": 1368,
+      "cold_seconds": 6.357194541953504,
+      "whole45_warm_seconds": 0.18152845790609717,
+      "parent_seconds": 6.6000457080081105,
+      "stdout_sha256": "7e0131f1639ec3d7605d744e06d4211ba86559b023e7bb1ac6fcef15fa6a5980",
+      "exit_sha256": "058db7da26055cc1d3e41cb37f8307874fd160aba0b60c2ee1dd0cc55e4b9e62",
+      "driver_sha256": "91f727e17279b59bb6e7ca81926155af1406784e085adf8747963ce4745bbdcd"
+    },
+    "153": {
+      "actual_exit": 0,
+      "branches": 45,
+      "nonempty": 15,
+      "structural_empty": 30,
+      "computed_zero_nonempty_branches": 0,
+      "negative_weights": 6,
+      "coefficient_FIXED_ONLY": [
+        1901385366902249675,
+        8923232590303029767153123328
+      ],
+      "peak_rows_ordering_sensitive": 540,
+      "cold_seconds": 6.351920625078492,
+      "whole45_warm_seconds": 0.13454112503677607,
+      "parent_seconds": 6.586437791003846,
+      "stdout_sha256": "a0673750c1e260f17ebbb2d8173d6ed14688dcc2233764bac7fd0951b4157155",
+      "exit_sha256": "f93072b71de3d38d843c2018a640ef06b05a355989a04fd1b53bc792ad8ea0f7",
+      "driver_sha256": "d9727b68019008aaebecff2f01d81897ff10ccddcaa48fb2c2c32798b1e12239"
+    }
+  },
+  "all90_raw_weight_divisor_branch_and_weighted_final_equalities": true,
+  "XOR1_flat3i_plus_j_identity": true,
+  "XOR1_all45_raw_weight_divisor_coefficient_covariance": true,
+  "XOR1_source_action_forest_core_centerweight_and_explicit_sourcepolynomial_mask_covariance": true,
+  "peaks_preserved_not_forced_equal": {
+    "110": 1368,
+    "153": 540
+  },
+  "actual_fixed_restrictions_all15_action_centers": true,
+  "all16_Grassmann_sites_retained": true,
+  "source_sha256": "a30dacedacc857ae1cf8ce32db6b4b2a62ee2cdfc33e890bf601995bfd942a98",
+  "runner_sha256": "a9d52ce03c03ea2494a2ffad96d92faf5dea0fab2e2c97d70d6baf51aa8b7406",
+  "principal16_bindings_unchanged": true,
+  "files_sha256": {
+    "/tmp/l1-residual40-author-source-r1.py": "a30dacedacc857ae1cf8ce32db6b4b2a62ee2cdfc33e890bf601995bfd942a98",
+    "/tmp/l1-residual40-author-fixed-runner-r1.py": "a9d52ce03c03ea2494a2ffad96d92faf5dea0fab2e2c97d70d6baf51aa8b7406",
+    "/tmp/l1-residual40-author-fixed110-r1.out": "7e0131f1639ec3d7605d744e06d4211ba86559b023e7bb1ac6fcef15fa6a5980",
+    "/tmp/l1-residual40-author-fixed110-r1.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-residual40-author-fixed110-r1.exit.json": "058db7da26055cc1d3e41cb37f8307874fd160aba0b60c2ee1dd0cc55e4b9e62",
+    "/tmp/l1-residual40-author-fixed110-driver-r1.py": "91f727e17279b59bb6e7ca81926155af1406784e085adf8747963ce4745bbdcd",
+    "/tmp/l1-residual40-author-fixed153-r1.out": "a0673750c1e260f17ebbb2d8173d6ed14688dcc2233764bac7fd0951b4157155",
+    "/tmp/l1-residual40-author-fixed153-r1.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-residual40-author-fixed153-r1.exit.json": "f93072b71de3d38d843c2018a640ef06b05a355989a04fd1b53bc792ad8ea0f7",
+    "/tmp/l1-residual40-author-fixed153-driver-r1.py": "d9727b68019008aaebecff2f01d81897ff10ccddcaa48fb2c2c32798b1e12239"
+  },
+  "direct_controls_accepted_separately": true,
+  "independent_fixed_scalar_replay": "NOT RUN",
+  "unrestricted_coefficients": "NOT RUN",
+  "portable_scope": 232,
+  "family7981": "separate mathematical design only",
+  "full_k4_sourceaction_commonZ_B3_modes_transport": "OPEN"
+}

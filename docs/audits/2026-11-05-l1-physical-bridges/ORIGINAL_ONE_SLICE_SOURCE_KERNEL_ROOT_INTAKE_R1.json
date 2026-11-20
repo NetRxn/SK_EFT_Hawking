@@ -1,0 +1,40 @@
+{
+  "peer_commit": "6b86bd2204a7642bdb728006f7177011131ac96c",
+  "peer_parent": "fadff561ef34f420ee41cfefefcde93d8619c368",
+  "actual_result_sha256": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65",
+  "root_read_complete_result": true,
+  "root_read_complete_both_actual_reviews_and_acceptance": true,
+  "verified_archive_sha256": "a710893ae7c1a232d547b01752d7808691e742773bfecdc61e5af24b6ab3ba58",
+  "crc_ok": true,
+  "unique_members": 31,
+  "every_member_hash_matches": true,
+  "all_seven_canonical_copies_exact": true,
+  "current_accepted_inputs_exact": [
+    "ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+    "ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+    "ORIGINAL_BOUNDARY_ONLY_OPERATORS.md",
+    "ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+    "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md",
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md",
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md",
+    "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md",
+    "ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md",
+    "ORIGINAL_TRANSFER_OPERATOR.md"
+  ],
+  "published_owning_roadmap_exact": true,
+  "changed_paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_PROPOSAL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_PROSPECTIVE_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_RECONSTRUCTION_RESEARCH.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_one_slice_source_kernel_evidence.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_one_slice_source_kernel_manifest.json"
+  ],
+  "scope": "ROOT accepts scoped manual original-source temporal decomposition, diagnostic auxiliary single-slice transfer, bare-local mixed-defect breakdown and full-source pair C2 kernels; no physical positive representation/global no-go/native/publication closure"
+}

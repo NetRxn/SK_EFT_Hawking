@@ -1,0 +1,20 @@
+[
+  {
+    "command": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from build_graph import extract_paper_nodes; p=next(p for p in extract_paper_nodes() if p['id']=='paper:L1'); assert p['meta']['has_provenance_entry'] and p['meta']['formulas'], p['meta']\"",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import sys; sys.path.insert(0,'scripts'); from build_graph import extract_paper_nodes; p=next(p for p in extract_paper_nodes() if p['id']=='paper:L1'); assert p['meta']['has_provenance_entry'] and p['meta']['formulas'], p['meta']\n                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'topic': '', 'formulas': [], 'lean_modules': [], 'platforms': [], 'n_claims': 0, 'tex_path': 'papers/L1/paper_draft.tex', 'has_provenance_entry': False}\n"
+  },
+  {
+    "command": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes; expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in extract_formula_nodes()}\"",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes; expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in extract_formula_nodes()}\n                                                                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  },
+  {
+    "command": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from readiness_gates import GraphIndex,_eval_computation_correctness; p={'id':'paper:control','type':'Paper','meta':{'formulas':['missing_control']}}; r=_eval_computation_correctness(p,GraphIndex({'nodes':[p],'links':[]})); assert r.state!='passed', r.evidence\"",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import sys; sys.path.insert(0,'scripts'); from readiness_gates import GraphIndex,_eval_computation_correctness; p={'id':'paper:control','type':'Paper','meta':{'formulas':['missing_control']}}; r=_eval_computation_correctness(p,GraphIndex({'nodes':[p],'links':[]})); assert r.state!='passed', r.evidence\n                                                                                                                                                                                                                                                                                     ^^^^^^^^^^^^^^^^^\nAssertionError: ['1 formulas grounding paper claims (0 with golden/identity/roundtrip, 0 bounds-only, 0 no tests, 1 NOT IN GRAPH \u2014 not examined)', '\u26a0\ufe0f 1 named formula(s) absent from the graph, so this gate says NOTHING about their test coverage: formula:missing_control']\n"
+  }
+]

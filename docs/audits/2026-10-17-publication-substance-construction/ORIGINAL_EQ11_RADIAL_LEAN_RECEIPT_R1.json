@@ -1,0 +1,43 @@
+{
+  "commit": "d8ad3febc99aa1d4922b19caf119f1851da9bdc6",
+  "success": true,
+  "timed_out": false,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 92,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianIntegrable' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 93,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_eq_gamma' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 94,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_pos' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 95,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 96,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_even_ratio' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 97,
+      "column": 1
+    }
+  ]
+}

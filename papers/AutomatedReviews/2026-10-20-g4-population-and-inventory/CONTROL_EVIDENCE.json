@@ -1,0 +1,342 @@
+{
+  "schema": "publication-control-evidence-selection/v1",
+  "prepared_at": "2026-10-20T15:04:20.382723+00:00",
+  "source_checkpoint": "1550f5ff11ab6c350081abf607d4431e28e02ef1",
+  "scope": "ROOT-authored portable selection from actual frozen receipts, not a rerun, full raw publication or new independent acceptance. Machine paths and entire population payloads are intentionally omitted. original_stdout_sha256 and original_stderr_sha256 are SHA-256 over the UTF-8 encoding of the original captured TEXT stdout/stderr fields; decoding or newline processing may already have occurred during capture. These channel digests do not establish hashes of original operating-system pipe bytes. original_evidence_sha256 hashes the evidence file bytes; source file hashes likewise hash file bytes.",
+  "controls": [
+    {
+      "case": "producer-case-exclusion",
+      "production_artifact": "scripts/build_graph.py",
+      "original_evidence_sha256": "72de8ae612ae1efc20128b6d500cc9fe6e4448bcedd53e893ef210b541bf2057",
+      "before": {
+        "sha256": "173710e48b9ade0c93e95cb81c94178165616d7aa0d0c92c25e85bde3fc23dce",
+        "mode": 33188,
+        "mtime_ns": 1792494043072124854
+      },
+      "seeded": {
+        "sha256": "5c85449fa9453980b870ccb6111534c81f78168cbd728adace211022ce68ef97",
+        "mode": 33188,
+        "mtime_ns": 1792494970033039139
+      },
+      "restored": {
+        "sha256": "173710e48b9ade0c93e95cb81c94178165616d7aa0d0c92c25e85bde3fc23dce",
+        "mode": 33188,
+        "mtime_ns": 1792494043072124854
+      },
+      "journal_empty": true,
+      "ctime_restore_claimed": false,
+      "phases": {
+        "baseline": {
+          "start": "2026-10-20T11:15:52.512351+00:00",
+          "end": "2026-10-20T11:16:10.030326+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "afb7166864b9c97c67d824aebf2fdcbfb5471507f1fdc7f7efe80e1ee514baae",
+          "original_stderr_sha256": "42d9926e6c8636ed7a207ca73bb17b976e4e2b066344e018b0084c6b77a558ac",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "passed",
+            "measured": true
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": true,
+            "measured": true
+          },
+          "aggregate_passed": false
+        },
+        "red": {
+          "start": "2026-10-20T11:16:10.033522+00:00",
+          "end": "2026-10-20T11:16:27.946088+00:00",
+          "returncode": 1,
+          "original_stdout_sha256": "0d768ce8222bc37f1fc5107ef34e8f0dda43d21cd74425fa69fd868cb03516b8",
+          "original_stderr_sha256": "043dd1c126466a8cf1a88125a2d98a2eca3735b342ea7b2a2d39eb6a11f3e29c",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "blocked",
+            "measured": false
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": false,
+            "measured": false
+          },
+          "aggregate_passed": false
+        },
+        "green": {
+          "start": "2026-10-20T11:16:27.948315+00:00",
+          "end": "2026-10-20T11:16:45.082942+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "58a88337993f0d6ca3f1cfc09caae18e0a75212d99fadc74379d13aabc1f7d9e",
+          "original_stderr_sha256": "42d9926e6c8636ed7a207ca73bb17b976e4e2b066344e018b0084c6b77a558ac",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "passed",
+            "measured": true
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": true,
+            "measured": true
+          },
+          "aggregate_passed": false
+        }
+      }
+    },
+    {
+      "case": "canonical-definition-private-rename",
+      "production_artifact": "src/core/formulas.py",
+      "original_evidence_sha256": "72de8ae612ae1efc20128b6d500cc9fe6e4448bcedd53e893ef210b541bf2057",
+      "before": {
+        "sha256": "6a690b75684dfaab2207467c3eb1494544274871a3cdb9d08dfdb8707608f62c",
+        "mode": 33188,
+        "mtime_ns": 1792450304960425785
+      },
+      "seeded": {
+        "sha256": "66b93f597591259d2a895aedb4f41b0713c0d792a37daaba663744519207cac3",
+        "mode": 33188,
+        "mtime_ns": 1792495021592809431
+      },
+      "restored": {
+        "sha256": "6a690b75684dfaab2207467c3eb1494544274871a3cdb9d08dfdb8707608f62c",
+        "mode": 33188,
+        "mtime_ns": 1792450304960425785
+      },
+      "journal_empty": true,
+      "ctime_restore_claimed": false,
+      "phases": {
+        "baseline": {
+          "start": "2026-10-20T11:16:45.086910+00:00",
+          "end": "2026-10-20T11:17:01.587890+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "0409d840c424524196b4a09084312f71398b981abf7a535ef714f50214aa293b",
+          "original_stderr_sha256": "42d9926e6c8636ed7a207ca73bb17b976e4e2b066344e018b0084c6b77a558ac",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "passed",
+            "measured": true
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": true,
+            "measured": true
+          },
+          "aggregate_passed": false
+        },
+        "red": {
+          "start": "2026-10-20T11:17:01.593372+00:00",
+          "end": "2026-10-20T11:17:18.131843+00:00",
+          "returncode": 1,
+          "original_stdout_sha256": "07a57896679c0928d541393f7a099ea293a31bf3ced8828198ddab4567b56b84",
+          "original_stderr_sha256": "12df24d07ce30b533cb91232d90eaa081be12814e6dca25ba912c9f26f522a78",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "blocked",
+            "measured": false
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": false,
+            "measured": false
+          },
+          "aggregate_passed": false
+        },
+        "green": {
+          "start": "2026-10-20T11:17:18.134366+00:00",
+          "end": "2026-10-20T11:17:35.130685+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "d8d5fcdf0842b08cc2c68c88d310f7b580e248992b13f29069154323fecd45af",
+          "original_stderr_sha256": "42d9926e6c8636ed7a207ca73bb17b976e4e2b066344e018b0084c6b77a558ac",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "passed",
+            "measured": true
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": true,
+            "measured": true
+          },
+          "aggregate_passed": false
+        }
+      }
+    },
+    {
+      "case": "genuinely-absent-dependency",
+      "production_artifact": "src/core/provenance.py",
+      "original_evidence_sha256": "72de8ae612ae1efc20128b6d500cc9fe6e4448bcedd53e893ef210b541bf2057",
+      "before": {
+        "sha256": "1e929d8e3e0c4603e14e4df3e8bfc1108a71fbf9ace459b9171809f17d20766d",
+        "mode": 33188,
+        "mtime_ns": 1792450304960942454
+      },
+      "seeded": {
+        "sha256": "ae5a95419a3d341f509d73fd29b2ca19f01cb7c6c012808a89fec3ec6d17ca35",
+        "mode": 33188,
+        "mtime_ns": 1792495072888570043
+      },
+      "restored": {
+        "sha256": "1e929d8e3e0c4603e14e4df3e8bfc1108a71fbf9ace459b9171809f17d20766d",
+        "mode": 33188,
+        "mtime_ns": 1792450304960942454
+      },
+      "journal_empty": true,
+      "ctime_restore_claimed": false,
+      "phases": {
+        "baseline": {
+          "start": "2026-10-20T11:17:35.135759+00:00",
+          "end": "2026-10-20T11:17:52.883944+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "5a1425ef74804859b9846a878bd7e9236a8ce5927fa63ab0123c90e494e13748",
+          "original_stderr_sha256": "42d9926e6c8636ed7a207ca73bb17b976e4e2b066344e018b0084c6b77a558ac",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "passed",
+            "measured": true
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": true,
+            "measured": true
+          },
+          "aggregate_passed": false
+        },
+        "red": {
+          "start": "2026-10-20T11:17:52.888997+00:00",
+          "end": "2026-10-20T11:18:10.810310+00:00",
+          "returncode": 1,
+          "original_stdout_sha256": "d2d86b30a9baeb028309ebe818872c508b88172ac3d26a49f51714b9c8ea6438",
+          "original_stderr_sha256": "7884090e2352a5a0d0772e4900cc3d3eb13486642b566ae72a0e3e1e307842f8",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "blocked",
+            "measured": false
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": false,
+            "measured": false
+          },
+          "aggregate_passed": false
+        },
+        "green": {
+          "start": "2026-10-20T11:18:10.813138+00:00",
+          "end": "2026-10-20T11:18:28.752930+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "5095d5ef3b63815ac867b59fefc23bb46c94086b08fa090b9b7e61556df75add",
+          "original_stderr_sha256": "42d9926e6c8636ed7a207ca73bb17b976e4e2b066344e018b0084c6b77a558ac",
+          "paper40_gate": {
+            "paper": "paper40_higher_curvature",
+            "gate": "ComputationCorrectness",
+            "state": "passed",
+            "measured": true
+          },
+          "paper40_consumer": {
+            "name": "paper40_higher_curvature:ComputationCorrectness",
+            "passed": true,
+            "measured": true
+          },
+          "aggregate_passed": false
+        }
+      }
+    },
+    {
+      "case": "actual-old-physical-git-hooks",
+      "production_artifact": "scripts/architecture_inventory.py",
+      "original_evidence_sha256": "807e8b8cbfa468b90bfad7ed9044f4e91ccb2f06a29dbfa023a4e99fc7288ed3",
+      "before": {
+        "sha256": "93a72c15e4526199fa88d67efddad3f555757584a3e894bb6b5d9facfc6621f3",
+        "mode": 33188,
+        "mtime_ns": 1792500956667401403
+      },
+      "seeded": {
+        "sha256": "7e19b8f223b5194965e93efb16bfb143ac922587e7a2b2efe9443bdf25b84b61",
+        "mode": 33188,
+        "mtime_ns": 1792503776409650271
+      },
+      "restored": {
+        "sha256": "93a72c15e4526199fa88d67efddad3f555757584a3e894bb6b5d9facfc6621f3",
+        "mode": 33188,
+        "mtime_ns": 1792500956667401403
+      },
+      "journal_empty": true,
+      "ctime_restore_claimed": false,
+      "phases": {
+        "baseline": {
+          "start": "2026-10-20T13:42:55.615937+00:00",
+          "end": "2026-10-20T13:42:56.407175+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "e3ff3f4b6b66072a1895804f303858191318a89fc51c14ebae21290f5a178b37",
+          "original_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "start": "2026-10-20T13:42:56.409812+00:00",
+          "end": "2026-10-20T13:42:57.066152+00:00",
+          "returncode": 1,
+          "original_stdout_sha256": "c3655a94865ba052607f35cc1610974ffefe9e12434a467942812f2a86c9ae3d",
+          "original_stderr_sha256": "f15aa56252445b64ce57a9f07935eda3eca2fc36428ae54991aa952523ffcd5f"
+        },
+        "green": {
+          "start": "2026-10-20T13:42:57.068527+00:00",
+          "end": "2026-10-20T13:42:57.870692+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "e3ff3f4b6b66072a1895804f303858191318a89fc51c14ebae21290f5a178b37",
+          "original_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "case": "actual-canonical-known-row-removal",
+      "production_artifact": "docs/architecture/SURFACE_INVENTORY.md",
+      "original_evidence_sha256": "807e8b8cbfa468b90bfad7ed9044f4e91ccb2f06a29dbfa023a4e99fc7288ed3",
+      "before": {
+        "sha256": "7fa95df376ce1a80139cada721b27a5b29db5de70bf904773b741df1f42e27ca",
+        "mode": 33188,
+        "mtime_ns": 1792503775016316969
+      },
+      "seeded": {
+        "sha256": "d6ac5ca9d2ea75cd0b468a12e72a8897b428e90812ad52e78e378a494d5cae99",
+        "mode": 33188,
+        "mtime_ns": 1792503778671713123
+      },
+      "restored": {
+        "sha256": "7fa95df376ce1a80139cada721b27a5b29db5de70bf904773b741df1f42e27ca",
+        "mode": 33188,
+        "mtime_ns": 1792503775016316969
+      },
+      "journal_empty": true,
+      "ctime_restore_claimed": false,
+      "phases": {
+        "baseline": {
+          "start": "2026-10-20T13:42:57.876002+00:00",
+          "end": "2026-10-20T13:42:58.669000+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "e3ff3f4b6b66072a1895804f303858191318a89fc51c14ebae21290f5a178b37",
+          "original_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "start": "2026-10-20T13:42:58.671870+00:00",
+          "end": "2026-10-20T13:42:59.453734+00:00",
+          "returncode": 1,
+          "original_stdout_sha256": "b97df5a1653ecf33b99a41bbf30315c90b9b4e1b0e7804d134b5dd13eae501e3",
+          "original_stderr_sha256": "cae366bd213e05e896aa0fb4a6f95b6fa52cb48135b68e40cfb33cb335f7e9d2"
+        },
+        "green": {
+          "start": "2026-10-20T13:42:59.456179+00:00",
+          "end": "2026-10-20T13:43:00.260472+00:00",
+          "returncode": 0,
+          "original_stdout_sha256": "e3ff3f4b6b66072a1895804f303858191318a89fc51c14ebae21290f5a178b37",
+          "original_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "independent_whole_review_sha256": "b3185c2099fc2643707ae6f0c9d7e1e3b615af767a15da2c161d3cd93439b213"
+}

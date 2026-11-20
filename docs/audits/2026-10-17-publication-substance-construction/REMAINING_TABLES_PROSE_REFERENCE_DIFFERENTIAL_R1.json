@@ -1,0 +1,645 @@
+{
+  "D1": {
+    "before": {
+      "raw": {
+        "unique": 170,
+        "occurrences": 201,
+        "repeated_occurrences": 31
+      },
+      "resolved": {
+        "unique": 156,
+        "occurrences": 185,
+        "repeated_occurrences": 29
+      },
+      "checker_candidates": {
+        "unique": 157,
+        "occurrences": 186,
+        "repeated_occurrences": 29
+      }
+    },
+    "after": {
+      "raw": {
+        "unique": 145,
+        "occurrences": 155,
+        "repeated_occurrences": 10
+      },
+      "resolved": {
+        "unique": 133,
+        "occurrences": 141,
+        "repeated_occurrences": 8
+      },
+      "checker_candidates": {
+        "unique": 134,
+        "occurrences": 142,
+        "repeated_occurrences": 8
+      }
+    },
+    "lost_occurrences": {
+      "_mono_Gamma": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "_zero_iff": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "acousticMetric_det": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "acousticMetric_inv_correct": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "acoustic_metric_lorentzian": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "attenuation_eq_one_at_zero_decay": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "attenuation_ge_one": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "cgl_fdr_general": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "cgl_implies_secondOrderKMS": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "combined_positivity_constraint": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "dean_lowest_channel_above_four_omega_H": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "decoherence_nonneg": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "deltaDissFromTransport_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "deltaDissFromTransport_zero_iff": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diracFluidMetric_gtt_vanishes": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "diracFluidMetric_txBlock_lorentzian_at_horizon": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "diracFluidMetric_y_offdiag_zero": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "einstein_relation": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "fdt_consistency": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "firstOrder_KMS_optimal": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "firstOrder_altSign_uniqueness_test": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "firstOrder_count": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "firstOrder_uniqueness": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "fullSecondOrder_uniqueness": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "hawkingNoisePSD_greybody_mono": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "hawking_temp_from_surface_gravity": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "hawking_universality": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "noise_dominates_when_beta_small": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "noise_floor_eq_delta_diss": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "noise_floor_nonneg": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "occupation_reduces_to_beta_sq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "polariton_tier1_fails_tmds": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "quasi1D_validity_bound": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "secondOrder_count": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "secondOrder_count_with_parity": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "secondOrder_requires_parity_breaking": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "snr_independent_of_sigma_Q": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "snr_sigma_Q_cancels": {
+        "before": 3,
+        "after": 2,
+        "status": "OK"
+      },
+      "soundSpeed_lt_vF": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "standard_unitarity_recovered": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "thirdOrder_count": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "total_occupation_nonneg": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "transport_coefficient_count": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "turning_point_shift_eq_decoherence": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "turning_point_shift_pos_iff": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "unitarity_deficit_eq_decoherence": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      }
+    },
+    "lost_unique_resolved": [
+      "acousticMetric_det",
+      "cgl_fdr_general",
+      "cgl_implies_secondOrderKMS",
+      "combined_positivity_constraint",
+      "dean_lowest_channel_above_four_omega_H",
+      "deltaDissFromTransport_eq",
+      "deltaDissFromTransport_zero_iff",
+      "diracFluidMetric_y_offdiag_zero",
+      "einstein_relation",
+      "firstOrder_KMS_optimal",
+      "firstOrder_altSign_uniqueness_test",
+      "firstOrder_uniqueness",
+      "fullSecondOrder_uniqueness",
+      "hawking_temp_from_surface_gravity",
+      "hawking_universality",
+      "noise_dominates_when_beta_small",
+      "occupation_reduces_to_beta_sq",
+      "polariton_tier1_fails_tmds",
+      "quasi1D_validity_bound",
+      "secondOrder_count_with_parity",
+      "secondOrder_requires_parity_breaking",
+      "soundSpeed_lt_vF",
+      "transport_coefficient_count"
+    ]
+  },
+  "D2": {
+    "before": {
+      "raw": {
+        "unique": 133,
+        "occurrences": 165,
+        "repeated_occurrences": 32
+      },
+      "resolved": {
+        "unique": 110,
+        "occurrences": 132,
+        "repeated_occurrences": 22
+      },
+      "checker_candidates": {
+        "unique": 112,
+        "occurrences": 137,
+        "repeated_occurrences": 25
+      }
+    },
+    "after": {
+      "raw": {
+        "unique": 133,
+        "occurrences": 165,
+        "repeated_occurrences": 32
+      },
+      "resolved": {
+        "unique": 110,
+        "occurrences": 132,
+        "repeated_occurrences": 22
+      },
+      "checker_candidates": {
+        "unique": 112,
+        "occurrences": 137,
+        "repeated_occurrences": 25
+      }
+    },
+    "lost_occurrences": {},
+    "lost_unique_resolved": []
+  },
+  "D4": {
+    "before": {
+      "raw": {
+        "unique": 9,
+        "occurrences": 22,
+        "repeated_occurrences": 13
+      },
+      "resolved": {
+        "unique": 2,
+        "occurrences": 4,
+        "repeated_occurrences": 2
+      },
+      "checker_candidates": {
+        "unique": 3,
+        "occurrences": 14,
+        "repeated_occurrences": 11
+      }
+    },
+    "after": {
+      "raw": {
+        "unique": 9,
+        "occurrences": 21,
+        "repeated_occurrences": 12
+      },
+      "resolved": {
+        "unique": 2,
+        "occurrences": 4,
+        "repeated_occurrences": 2
+      },
+      "checker_candidates": {
+        "unique": 3,
+        "occurrences": 13,
+        "repeated_occurrences": 10
+      }
+    },
+    "lost_occurrences": {
+      "native_decide": {
+        "before": 10,
+        "after": 9,
+        "status": "ALLOWLIST"
+      }
+    },
+    "lost_unique_resolved": []
+  },
+  "D6": {
+    "before": {
+      "raw": {
+        "unique": 43,
+        "occurrences": 47,
+        "repeated_occurrences": 4
+      },
+      "resolved": {
+        "unique": 24,
+        "occurrences": 27,
+        "repeated_occurrences": 3
+      },
+      "checker_candidates": {
+        "unique": 26,
+        "occurrences": 29,
+        "repeated_occurrences": 3
+      }
+    },
+    "after": {
+      "raw": {
+        "unique": 34,
+        "occurrences": 38,
+        "repeated_occurrences": 4
+      },
+      "resolved": {
+        "unique": 22,
+        "occurrences": 25,
+        "repeated_occurrences": 3
+      },
+      "checker_candidates": {
+        "unique": 24,
+        "occurrences": 27,
+        "repeated_occurrences": 3
+      }
+    },
+    "lost_occurrences": {
+      "AGP/Threshold": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "Basic": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "ConcatenatedComposition": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "Concatenation": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "Counting": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "DoubleExp": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "MalignantUnionBound": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "StabilizerCode": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "SteaneCode": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      }
+    },
+    "lost_unique_resolved": [
+      "Basic",
+      "StabilizerCode"
+    ]
+  },
+  "D9": {
+    "before": {
+      "raw": {
+        "unique": 161,
+        "occurrences": 195,
+        "repeated_occurrences": 34
+      },
+      "resolved": {
+        "unique": 151,
+        "occurrences": 181,
+        "repeated_occurrences": 30
+      },
+      "checker_candidates": {
+        "unique": 153,
+        "occurrences": 184,
+        "repeated_occurrences": 31
+      }
+    },
+    "after": {
+      "raw": {
+        "unique": 153,
+        "occurrences": 183,
+        "repeated_occurrences": 30
+      },
+      "resolved": {
+        "unique": 144,
+        "occurrences": 170,
+        "repeated_occurrences": 26
+      },
+      "checker_candidates": {
+        "unique": 146,
+        "occurrences": 173,
+        "repeated_occurrences": 27
+      }
+    },
+    "lost_occurrences": {
+      "\\ldots_le": {
+        "before": 1,
+        "after": 0,
+        "status": "NOT_REPORTABLE"
+      },
+      "diamondDist_ampDamp_ge": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "diamondDist_dephasing_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diamondDist_depolarizing_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diamondDist_errorBasisKraus_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diamondDist_genAmpDamp_bracket": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "diamondDist_pauliKraus_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diamondDist_shiftLeakage_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diamondDist_spamBitFlip_eq": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "diamondDist_twoQubitPauliKraus_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      },
+      "diamondDist_unitaryKraus_le": {
+        "before": 3,
+        "after": 2,
+        "status": "OK"
+      },
+      "diamondDist_weylKraus_eq": {
+        "before": 1,
+        "after": 0,
+        "status": "OK"
+      }
+    },
+    "lost_unique_resolved": [
+      "diamondDist_dephasing_eq",
+      "diamondDist_depolarizing_eq",
+      "diamondDist_errorBasisKraus_eq",
+      "diamondDist_pauliKraus_eq",
+      "diamondDist_shiftLeakage_eq",
+      "diamondDist_twoQubitPauliKraus_eq",
+      "diamondDist_weylKraus_eq"
+    ]
+  },
+  "D10": {
+    "before": {
+      "raw": {
+        "unique": 78,
+        "occurrences": 97,
+        "repeated_occurrences": 19
+      },
+      "resolved": {
+        "unique": 65,
+        "occurrences": 74,
+        "repeated_occurrences": 9
+      },
+      "checker_candidates": {
+        "unique": 70,
+        "occurrences": 84,
+        "repeated_occurrences": 14
+      }
+    },
+    "after": {
+      "raw": {
+        "unique": 78,
+        "occurrences": 90,
+        "repeated_occurrences": 12
+      },
+      "resolved": {
+        "unique": 65,
+        "occurrences": 67,
+        "repeated_occurrences": 2
+      },
+      "checker_candidates": {
+        "unique": 70,
+        "occurrences": 77,
+        "repeated_occurrences": 7
+      }
+    },
+    "lost_occurrences": {
+      "conductance_quantization_falsifier": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "dampedTwoLevel_decay_envelope": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "hohenberg_kohn_variational": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "levyLieb_functional": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "molecularHamiltonian_essSelfAdjoint": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "traceDist_lindblad_monotone": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      },
+      "two_channel_no_three_quanta": {
+        "before": 2,
+        "after": 1,
+        "status": "OK"
+      }
+    },
+    "lost_unique_resolved": []
+  }
+}

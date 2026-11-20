@@ -1,0 +1,87 @@
+{
+  "source_commit": "353d5f1f77c0b62eeae2dfca54854b049e42dc7a",
+  "exact_source_and_public_axiom_replay": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.forward_digit' depends on axioms: [propext, Quot.sound]",
+        "line": 220,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.backward_digit' depends on axioms: [propext, Quot.sound]",
+        "line": 221,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.step_other_digit' depends on axioms: [propext, Quot.sound]",
+        "line": 222,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.backward_wrap_iff' depends on axioms: [propext, Quot.sound]",
+        "line": 223,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.wraps_at_unit_extent' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 224,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.backwardSign_eq_forwardSign' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 225,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.dirac_twistedLinks' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 226,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.assembledCoframe_eq_hopping' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 227,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.assembleDirac_eq_global' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 228,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.shiftedAssembly_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 229,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.assembledDet_eq_global' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 230,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.shiftedAssembly_det' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 231,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDiracExecutableAssembly.shiftedAssembly_rawJet' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 232,
+        "column": 1
+      }
+    ]
+  }
+}

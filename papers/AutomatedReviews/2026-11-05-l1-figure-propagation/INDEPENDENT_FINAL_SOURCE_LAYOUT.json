@@ -1,0 +1,27 @@
+{
+  "packet": "l1-source-layout-final-review-r2-20261105.json",
+  "packet_fresh": true,
+  "verdict": "PASS scoped findings1.1\u20131.5; no whole Stage9 or scientific/source-claims acceptance",
+  "independent_checks": [
+    "Viewed actual final source PDF renders pages1\u20135; former page3 cross-column display/name overlaps resolved; no visible clipping/overlap in reviewed pages.",
+    "Compared both changed display bodies to HEAD after removing only alignment wrappers, rowbreaks and spacing commands: exact remaining token equality.",
+    "All five long identifier strings preserved exactly from original verbatim to breakable path typesetting.",
+    "Retained1.4 four notation macros match existing paper23 definitions; Greek typesetting changes retain mathematical symbols.",
+    "Read actual SOURCE_LAYOUT_RED/GREEN receipts: same canonical assertion transitions exit1 sevenoverfull to exit0 zerooverfull/zeroerrors/zerounresolved/fivepages. Reviewer did not compile.",
+    "Independent previous r1 report remains immutable and accepts1.1\u20131.4 narrowly; actual current source figure remains readable in final page3."
+  ],
+  "residuals": [
+    "Source paper25 retains scientifically stale prose/claims, including susceptibility tolerance phrasing in abstract/discussion; no source scientific claim freshness acceptance.",
+    "Original B3 susceptibility/window, microscopic mode/matter and transport BUILD obligations remain open.",
+    "No complete Stage9 acceptance or new whole D3 review."
+  ],
+  "hashes": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/paper25_gravitational_waves/paper_draft.tex": "75a84e6136717a2db4158f9b35c51b9026563a1869b48c3243a01abcbbf27048",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/paper25_gravitational_waves/paper_draft.pdf": "32555ab77e65deaf66201ae752575dfeac545b4e754e8fa2088596a8a167578d",
+    "/tmp/l1-source-final-layout-20261105-1.png": "b4526a8c6b4d450c21ca11f437356d3ecea83e4d0eee1efb40479d903ad3ebec",
+    "/tmp/l1-source-final-layout-20261105-2.png": "5ccab947e6e3fdd809170a7708515b2a14d2f8a11e383acc01bcb0b1a0b02e1b",
+    "/tmp/l1-source-final-layout-20261105-3.png": "3dedfdfa174436a2a69a6a9b12b0ca31558859e0768af03865e17a54b614b79e",
+    "/tmp/l1-source-final-layout-20261105-4.png": "c53c2263244626c2a71640c6a3b0937658dd39010aaeed2a6696ad4ae49f332f",
+    "/tmp/l1-source-final-layout-20261105-5.png": "7d200f75353f6ddd591b4e3332a9f62a2a36209a4fc3d607e477eb733428b1a2"
+  }
+}

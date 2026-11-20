@@ -1,0 +1,20 @@
+{
+  "prior_records": 1259,
+  "prior_records_unchanged": true,
+  "current_records": 1260,
+  "new_record": {
+    "finding_id": "review:2026-11-05-l1-reader-notation:L1:1.1",
+    "status": "fixed",
+    "evidence": "The actual fixed-tau dispersion biconditional replaces undefined generic tolerance; independent exact-source and all-four-page reviews accept bounded scope; physical and whole-prose holds remain.",
+    "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-reader-notation/INDEPENDENT_INTEGRATED_REVIEW.md",
+    "date": "2026-11-05",
+    "commit": "5ae6085ca29cd4866d544ea87d8144dcfa0f378a",
+    "verified_by": {
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"papers/L1/paper_draft.tex\").read_text(); assert chr(92)+\"mathrm{tol}\" not in s, \"dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\"'",
+      "declared": "python3 -c 'from pathlib import Path; s=Path(\"papers/L1/paper_draft.tex\").read_text(); assert chr(92)+\"mathrm{tol}\" not in s, \"dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\"'",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-05"
+    }
+  }
+}

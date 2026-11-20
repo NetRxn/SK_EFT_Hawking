@@ -1,0 +1,70 @@
+{
+  "r2_sha256": "463f015a91ecb3b42d82afaca6af34f0b11596220efca0cba70be53e3e902fa2",
+  "r3_sha256": "d441e52371493e719d592ce2c79473705fee91510df65cbd2f14da53fab662b4",
+  "final_manifest_sha256": "08004761d0ad41794da16778e880fafe95fcdd205885b4eaf82db78ec55f8e66",
+  "sentence_metadata_changes": [
+    {
+      "index": 69,
+      "id": "sentence:L1:formal-setup-and-result:6b3a489b",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    },
+    {
+      "index": 70,
+      "id": "sentence:L1:formal-setup-and-result:9dbf0010",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    },
+    {
+      "index": 71,
+      "id": "sentence:L1:formal-setup-and-result:928d4e3e",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    },
+    {
+      "index": 72,
+      "id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    },
+    {
+      "index": 73,
+      "id": "sentence:L1:formal-setup-and-result:c566aed6",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    },
+    {
+      "index": 74,
+      "id": "sentence:L1:formal-setup-and-result:2d57174c",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    },
+    {
+      "index": 123,
+      "id": "sentence:L1:discussion:064e25cb",
+      "fields": [
+        "agent_notes",
+        "meta"
+      ]
+    }
+  ],
+  "all124_scientific_assessments_ids_quotes_spans_verdicts_unchanged": true,
+  "historical_assessment_origin_and_prior_runs_preserved": true,
+  "blocker_count": 4,
+  "automatic_closures": 0,
+  "final_source_P25_tex": "75a84e6136717a2db4158f9b35c51b9026563a1869b48c3243a01abcbbf27048",
+  "canonical_figure_findings": "a435df28966ac7ce9cc5349ee97ce2ec60b345e01d2a12f3009f240e3a0bd8a3",
+  "L1_tex": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2"
+}

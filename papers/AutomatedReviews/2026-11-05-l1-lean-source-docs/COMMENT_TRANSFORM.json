@@ -1,0 +1,112 @@
+{
+  "base_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+  "proposal_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "block_comment_only_bytes_changed": true,
+  "non_block_comment_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+  "operations": [
+    {
+      "old": "Phase 6a Wave 2. Formalizes gravitational-wave propagation speed and\nthe leading dispersion correction in terms of the vestigial-phase\nmetric-channel susceptibility `\u03c7_vest` and a dissipative coefficient\n`\u03b3`.",
+      "new": "Phase 6a Wave 2. Formalizes an assumed susceptibility-to-speed law and\nan illustrative real-product correction in terms of `\u03c7_vest` and `\u03b3`.\nPhysical mode, response normalization and transport matching are separate\nconstruction requirements."
+    },
+    {
+      "old": "\u26a0\ufe0f **Both are FREE PARAMETERS of this module \u2014 it has no project\ndependencies, by design.** `\u03c7_vest` is a free `\u211d` in `c_GW`; `\u03b3` is a\nfree `\u211d` in `dispersion_correction`. The prose counterparts\n`VestigialSusceptibility.chi_RPA` and `SecondOrderSK.GammaH` are the\nsubstrate's *models* for these quantities, not values it computes:\n`chi_RPA \u03c7\u2080 \u03b3\u22c6 = \u03c7\u2080 / (1 \u2212 \u03b3\u22c6 * \u03c7\u2080)` is a resummation of the bubble\nintegral `\u03c7\u2080` (the two are distinct), and neither `\u03c7\u2080` nor `\u03b3\u22c6` is\nevaluated anywhere in the project. So this module IMPORTS neither, and\nmust not be described as deriving `\u03c7_vest` from them. What it does is\nCONSTRAIN `\u03c7_vest` against a datum \u2014 see `Key Results` 4.",
+      "new": "**Both are FREE PARAMETERS of these definitions.** The project imports\n`Basic` and `LinearizedEFE` do not select their values. `\u03c7_vest` is a\nfree `\u211d` in `c_GW`; `\u03b3` is a free `\u211d` in `dispersion_correction`.\nThe RPA model `VestigialSusceptibility.chi_RPA \u03c7\u2080 \u03b3\u22c6 = \u03c7\u2080 / (1 \u2212 \u03b3\u22c6 * \u03c7\u2080)`\nis distinct from its bare bubble input. These GW definitions do not evaluate\nthose inputs or derive a microscopic normalization. The proposed relation to\n`SecondOrderSK.GammaH` also requires physical source, state and unit matching.\nThis module constrains the assumed speed law against the fixed cap; it does\nnot establish those physical identifications. See `Key Results` 4."
+    },
+    {
+      "old": "3. **GW170817 correctness-push.** Predicate `LigoSatisfied \u03b4 tol`\n   captures `|\u03b4| \u2264 tol`. Biconditional\n   `c_GW_match_iff_chi_close_to_one` characterises the\n   c_GW = c locus.",
+      "new": "3. **Fixed-tolerance compatibility.** Predicate `LigoSatisfied \u03b4`\n   means `|\u03b4| \u2264 tolGW170817`. For `\u03c7_vest \u2265 0`,\n   `c_GW_match_iff_chi_close_to_one` characterizes the finite compatible\n   interval, not only the exactly luminal point."
+    },
+    {
+      "old": "5. **Bundled tracked hypothesis.** `H_VestigialModeIsGraviton` records\n   the Volovik-Phase 5y H1 identification together with a\n   constraint that `\u03c7_vest` lies in a sub-window of the natural range\n   compatible with GW170817. The bundle is genuinely non-trivial:\n   it is satisfiable at `\u03c7_vest = 1` and each conjunct has an explicit\n   falsifier.",
+      "new": "5. **Bundled tracked hypothesis.** `H_VestigialModeIsGraviton` records\n   three scalar compatibility conditions for the proposed identification.\n   It is satisfiable at `\u03c7_vest = 1`, but its clauses are not independent:\n   P2 implies P3' at the fixed cap; on `\u03c7_vest \u2265 0`, the compatible interval\n   also implies P1. The counterexamples refute the conjunction nonexclusively.\n   The predicate does not construct a microscopic graviton mode."
+    },
+    {
+      "old": "6. **Dispersion correction.** `dispersion_correction \u03b3 \u03c9 = \u03b3 \u00b7 \u03c9`\n   captures the leading SK-EFT/\u0393_H dissipative correction; vanishes\n   when \u03b3 = 0.",
+      "new": "6. **Illustrative product correction.** `dispersion_correction \u03b3 \u03c9 = \u03b3 \u00b7 \u03c9`\n   vanishes when `\u03b3 = 0`. These real-product facts do not derive a leading\n   microscopic SK-EFT correction or identify a physical `\u0393_H`."
+    },
+    {
+      "old": "- `\u03c7_vest` is the dimensionless metric-channel susceptibility\n  (in units of inverse \u039b\u00b2); `\u03c7_vest = 1` is the natural anchor.",
+      "new": "- `\u03c7_vest` is a free real parameter for a normalized dimensionless response;\n  its physical normalization is not supplied by these definitions.\n  `\u03c7_vest = 1` is the exactly luminal anchor."
+    },
+    {
+      "old": "/-- Symmetric two-sided GW170817 cap (Abbott et al. ApJL 848, L13 (2017),\n    Eq. (5)): `|c_GW \u2212 c|/c \u2264 3 \u00d7 10\u207b\u00b9\u2075`. -/",
+      "new": "/-- Symmetric two-sided GW170817 cap adopted from Abbott et al.,\n    ApJL 848, L13 (2017), Eq. (1), section 4.1. That asymmetric bound is\n    `\u22123 \u00d7 10\u207b\u00b9\u2075 \u2264 \u0394v/v_EM \u2264 +7 \u00d7 10\u207b\u00b9\u2076` under the source's conservative\n    distance and emission-time assumptions. Here `tolGW170817 = 3 \u00d7 10\u207b\u00b9\u2075`\n    defines its conservative symmetric envelope; alternative emission histories\n    can weaken the inferred propagation bound. -/"
+    },
+    {
+      "old": "/-- **Correctness-push biconditional.** For `\u03c7_vest \u2208 (0, \u221e)`,",
+      "new": "/-- **Correctness-push biconditional.** For `\u03c7_vest \u2208 [0, \u221e)`,"
+    },
+    {
+      "old": "    The bundle is genuinely non-trivial: explicit falsifiers below\n    witness that each conjunct is independently necessary, and\n    `H_VestigialModeIsGraviton_at_one` witnesses that the bundle is\n    satisfiable. -/",
+      "new": "    These clauses are not independent. At the fixed tolerance, P2 implies P3';\n    on the nonnegative carrier, the compatible interval also guarantees P1.\n    The examples below refute the conjunction, without isolating a uniquely\n    failing clause. In particular, the quarter-point satisfies P1 and fails\n    both P2 and P3'. `H_VestigialModeIsGraviton_at_one` proves satisfiability\n    of these scalar conditions, not a microscopic mode construction. -/"
+    },
+    {
+      "old": "/-! ## 5. Dispersion correction from SK-EFT \u0393_H\n\n    Strengthening note (post-Wave-2 audit): the original three\n    dispersion-correction theorems (zero-at-no-dissipation,\n    linearity, abs-bound) were pure facts about multiplication \u2014\n    no Wave-2-specific physics. We retain them for Python\n    cross-checking but add the **LIGO-band consistency theorem**\n    `dispersion_within_ligo_iff`: a substantive biconditional\n    characterising when the dispersion correction at the GW170817\n    probe frequency stays inside the GW170817 cap. This connects\n    the SK-EFT \u0393_H bridge to the actual GW170817 datum.\n-/\n\n/-- Leading dissipative dispersion correction at frequency `\u03c9`:\n\n      `\u03b4\u03c9/\u03c9 = \u03b3 \u00b7 \u03c9`\n\n    where `\u03b3` is the dimensionless coefficient\n    `\u0393_H \u00b7 1/c_GW\u00b2` evaluated at the probe frequency.\n    Cross-link: `SecondOrderSK.GammaH = (\u03b3\u2081+\u03b3\u2082)(\u03ba/c_s)\u00b2`. -/\n",
+      "new": "/-! ## 5. Illustrative product correction and fixed-cap algebra\n\n    The magnitude, additivity and zero-coefficient statements concern real\n    multiplication. `dispersion_within_ligo_iff` characterizes when this\n    correction alone obeys the fixed cap. Neither it nor the literal-probe\n    bound supplies a microscopic derivative expansion, physical frequency\n    convention or matched dissipative coefficient.\n-/\n\n/-- Illustrative real-product ansatz `dispersion_correction \u03b3 \u03c9 = \u03b3 * \u03c9`.\n    Identifying `\u03b3 = \u0393_H / c_GW\u00b2` or interpreting the real probe `\u03c9` as a\n    physical frequency requires separate source/state/unit matching.\n    `SecondOrderSK.GammaH` is a proposed cross-link, not that identification. -/\n"
+    },
+    {
+      "old": "/-- **LIGO-band consistency biconditional.** For positive `\u03c9`, the\n    dispersion correction `|\u03b3\u00b7\u03c9|` lies inside the GW170817 cap iff\n    `|\u03b3| \u2264 tolGW170817 / \u03c9`. This is the substantive Wave 2 bridge\n    from SK-EFT \u0393_H to the GW170817 datum: the dimensionless\n    \u0393_H/c\u00b2 coefficient is bounded by `3e-15 / \u03c9_probe \u2248 3e-17`\n    at the GW170817 inspiral peak `\u03c9_probe = 100 Hz`. -/\n",
+      "new": "/-- **Correction-only cap biconditional.** For positive real `\u03c9`,\n    `|\u03b3 * \u03c9| \u2264 tolGW170817` iff `|\u03b3| \u2264 tolGW170817 / \u03c9`.\n    This bounds the product term, not a total deviation with an additional\n    susceptibility offset. It identifies no physical frequency or `\u0393_H`. -/\n"
+    },
+    {
+      "old": "/-- **Vestigial-regime dispersion is LIGO-compatible.** At the\n    Phase 6a Wave 2 vestigial-regime placeholder\n    `\u03b3 \u2264 1e-30` and probe frequency `\u03c9 = 100` Hz (GW170817 inspiral\n    peak), the dispersion correction\n    `|\u03b3\u00b7\u03c9| \u2264 1e-28`, well below `tolGW170817 = 3e-15`. This is the\n    quantitative check that the dispersion correction is sub-leading\n    to the \u03c7_vest deviation in the Wave 2 falsification. -/\n",
+      "new": "/-- **Conditional literal-probe bound.** If the illustrative placeholder\n    satisfies `|\u03b3| \u2264 1e-30`, then at the real probe `\u03c9 = 100` its product\n    magnitude is at most `1e-28`, below the fixed cap. The coefficient is\n    assumed, not derived or measured; the definition does not identify the\n    probe with a physical inspiral frequency or bound the total deviation. -/\n"
+    },
+    {
+      "old": "  -- Bundled hypothesis (3-conjunct, all independently load-bearing):",
+      "new": "  -- Bundled scalar conditions (dependent, not independent requirements):"
+    },
+    {
+      "old": "    _quarter: explicit falsifiers (1/4 passes P1 but fails P3' at\n    exactly |\u0394|=1/2, witnessing P3' independence from P1)",
+      "new": "    _quarter: nonexclusive falsifiers (1/4 passes P1 and fails both\n    P2 and P3' at exactly |\u0394|=1/2; P1 alone does not imply P3')"
+    },
+    {
+      "old": "  -- Dispersion bridge (post-strengthening: substantive LIGO-band):",
+      "new": "  -- Illustrative correction-only product bounds:"
+    },
+    {
+      "old": "  - dispersion_within_ligo_iff: substantive biconditional connecting\n    SK-EFT \u0393_H to GW170817 cap at probe frequency (|\u03b3\u00b7\u03c9| \u2264 tol \u2194\n    |\u03b3| \u2264 tol/\u03c9)\n  - vestigial_dispersion_below_ligo_at_inspiral_peak: quantitative\n    check that the vestigial-regime placeholder \u03b3 \u2264 1e-30 keeps the\n    dispersion correction below tolGW170817 at GW170817 \u03c9=100 Hz",
+      "new": "  - dispersion_within_ligo_iff: for positive real \u03c9, |\u03b3\u00b7\u03c9| \u2264 tol iff\n    |\u03b3| \u2264 tol/\u03c9, with no physical frequency or \u0393_H matching inferred\n  - vestigial_dispersion_below_ligo_at_inspiral_peak: the assumed\n    |\u03b3| \u2264 1e-30 gives a correction-only bound at the real probe \u03c9=100;\n    physical units and the actual coefficient remain to be matched"
+    },
+    {
+      "old": "  The physical content is therefore a fine-tuning statement: GW170817\n  admits the vestigial identification only at \u03c7_vest pinned to unity\n  to within ~3e-15. The actual vestigial graviton identification\n  awaits a derived-DOF mechanism (deep-research H1 negative finding;\n  natural follow-up work).",
+      "new": "  The result constrains the assumed normalized scalar law to the finite\n  interval [(1\u2212\u03c4)\u00b2,(1+\u03c4)\u00b2], with susceptibility offsets approximately \u00b12\u03c4;\n  \u03c4=3e-15 bounds the speed deviation, not the susceptibility offset.\n  It computes no physical susceptibility range or microscopic selection.\n  The actual mode, state, source normalization, matter reference and\n  controlled transport/frequency matching remain separate construction work."
+    },
+    {
+      "old": "VestigialSusceptibility.chi_RPA \u03c7\u2080 \u03b3\u22c6",
+      "new": "VestigialSusceptibility.W6Ext.chi_RPA \u03c7\u2080 \u03b3\u22c6"
+    },
+    {
+      "old": "/-! ## 3. Natural-range endpoints and the GW170817 constraint (LOAD-BEARING)\n\n    The vestigial-susceptibility \"natural range\" is `\u03c7_vest \u00b7 \u039b\u00b2 \u2208 [0.1, 10]`\n    (a half-decade window, matching `GRAV.ALPHA_ADW_LOWER/UPPER`). At\n    either END of this range the GW deviation `\u0394c/c` exceeds the GW170817\n    cap by 14+ orders of magnitude.\n\n    The GW170817-compatible window `[(1\u2212\u03c4)\u00b2, (1+\u03c4)\u00b2]`, `\u03c4 = tolGW170817`,\n    is **nested strictly inside** the natural range \u2014 not disjoint from it\n    (`ligo_window_subset_natural_range`), and it contains the natural\n    anchor `\u03c7_vest = 1`. So the Wave 2 result is a fine-tuning\n    CONSTRAINT, not an exclusion of the range: GW170817 pins `\u03c7_vest` to\n    within `~3e-15` of unity, a window narrower than the natural range by\n    more than 14 orders of magnitude\n    (`ligo_window_width_lt_natural_range_width_by_1e14`).\n-/",
+      "new": "/-! ## 3. Adopted comparison window and fixed-tolerance confinement\n\n    The normalized comparison window `\u03c7_vest \u2208 [0.1, 10]` is adopted,\n    one decade on each side of unity. Its use does not compute a physical\n    susceptibility or identify it with the separate ADW coefficient.\n    At either endpoint the assumed speed deviation exceeds the fixed cap\n    by more than fourteen orders of magnitude.\n\n    For `\u03c4 = tolGW170817`, the compatible interval `[(1\u2212\u03c4)\u00b2, (1+\u03c4)\u00b2]`\n    is strictly inside that comparison window and contains `\u03c7_vest = 1`.\n    The offsets from unity are exactly `\u22122\u03c4+\u03c4\u00b2` and `+2\u03c4+\u03c4\u00b2`, approximately\n    `\u00b12\u03c4`. The speed-deviation tolerance `\u03c4 = 3e-15` is not a bound on\n    those susceptibility offsets. The interval has width `4\u03c4` and is\n    narrower than the comparison window by more than fourteen orders\n    (`ligo_window_width_lt_natural_range_width_by_1e14`). This width\n    comparison supplies no probability without an assumed prior.\n-/"
+    },
+    {
+      "old": "/-- The dispersion correction is bounded by `|\u03b3| \u00b7 \u03c9` in magnitude:",
+      "new": "/-- The dispersion correction is bounded by `|\u03b3| \u00b7 |\u03c9|` in magnitude:"
+    },
+    {
+      "old": "  - chi_vest_natural_lower, chi_vest_natural_upper: half-decade\n    natural range bounds (matches GW.CHI_VEST_NATURAL_*)",
+      "new": "  - chi_vest_natural_lower, chi_vest_natural_upper: adopted normalized\n    comparison window [0.1, 10], one decade on each side of unity"
+    }
+  ],
+  "scope": "No declaration/import/statement/proof/value/API edits. Correct existing two findings and directly related scope/provenance propagation. Physical BUILD remains owed.",
+  "r1_proposal_sha256": "695e955a1e7d90db84969dd0677bdb8da3dccc327b4f4d4e90926571aeff3fba",
+  "r2_delta": [
+    {
+      "old": "VestigialSusceptibility.chi_RPA \u03c7\u2080 \u03b3\u22c6",
+      "new": "VestigialSusceptibility.W6Ext.chi_RPA \u03c7\u2080 \u03b3\u22c6"
+    },
+    {
+      "old": "/-! ## 3. Natural-range endpoints and the GW170817 constraint (LOAD-BEARING)\n\n    The vestigial-susceptibility \"natural range\" is `\u03c7_vest \u00b7 \u039b\u00b2 \u2208 [0.1, 10]`\n    (a half-decade window, matching `GRAV.ALPHA_ADW_LOWER/UPPER`). At\n    either END of this range the GW deviation `\u0394c/c` exceeds the GW170817\n    cap by 14+ orders of magnitude.\n\n    The GW170817-compatible window `[(1\u2212\u03c4)\u00b2, (1+\u03c4)\u00b2]`, `\u03c4 = tolGW170817`,\n    is **nested strictly inside** the natural range \u2014 not disjoint from it\n    (`ligo_window_subset_natural_range`), and it contains the natural\n    anchor `\u03c7_vest = 1`. So the Wave 2 result is a fine-tuning\n    CONSTRAINT, not an exclusion of the range: GW170817 pins `\u03c7_vest` to\n    within `~3e-15` of unity, a window narrower than the natural range by\n    more than 14 orders of magnitude\n    (`ligo_window_width_lt_natural_range_width_by_1e14`).\n-/",
+      "new": "/-! ## 3. Adopted comparison window and fixed-tolerance confinement\n\n    The normalized comparison window `\u03c7_vest \u2208 [0.1, 10]` is adopted,\n    one decade on each side of unity. Its use does not compute a physical\n    susceptibility or identify it with the separate ADW coefficient.\n    At either endpoint the assumed speed deviation exceeds the fixed cap\n    by more than fourteen orders of magnitude.\n\n    For `\u03c4 = tolGW170817`, the compatible interval `[(1\u2212\u03c4)\u00b2, (1+\u03c4)\u00b2]`\n    is strictly inside that comparison window and contains `\u03c7_vest = 1`.\n    The offsets from unity are exactly `\u22122\u03c4+\u03c4\u00b2` and `+2\u03c4+\u03c4\u00b2`, approximately\n    `\u00b12\u03c4`. The speed-deviation tolerance `\u03c4 = 3e-15` is not a bound on\n    those susceptibility offsets. The interval has width `4\u03c4` and is\n    narrower than the comparison window by more than fourteen orders\n    (`ligo_window_width_lt_natural_range_width_by_1e14`). This width\n    comparison supplies no probability without an assumed prior.\n-/"
+    },
+    {
+      "old": "/-- The dispersion correction is bounded by `|\u03b3| \u00b7 \u03c9` in magnitude:",
+      "new": "/-- The dispersion correction is bounded by `|\u03b3| \u00b7 |\u03c9|` in magnitude:"
+    },
+    {
+      "old": "  - chi_vest_natural_lower, chi_vest_natural_upper: half-decade\n    natural range bounds (matches GW.CHI_VEST_NATURAL_*)",
+      "new": "  - chi_vest_natural_lower, chi_vest_natural_upper: adopted normalized\n    comparison window [0.1, 10], one decade on each side of unity"
+    }
+  ]
+}

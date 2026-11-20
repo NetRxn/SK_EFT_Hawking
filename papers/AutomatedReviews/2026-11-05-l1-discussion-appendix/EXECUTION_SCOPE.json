@@ -1,0 +1,27 @@
+{
+  "manuscript_sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+  "pdf_sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a",
+  "r1_compile": {
+    "actual_session": 71734,
+    "terminal_chunk": "7d522e",
+    "exit_code": 0,
+    "pages": 5,
+    "overfull": 0,
+    "tex_errors": 0,
+    "unresolved_refs": 0,
+    "dropped_options": 0
+  },
+  "r2_compile": {
+    "actual_session": 96713,
+    "terminal_chunk": "56e1bb",
+    "exit_code": 0,
+    "pages": 5,
+    "overfull": 0,
+    "tex_errors": 0,
+    "unresolved_refs": 0,
+    "dropped_options": 0
+  },
+  "length": 3518,
+  "ceiling": 3750,
+  "scope": "ROOT record of actual canonical tool executions, not independent raw trace; full PDF including appendix and references measured. No scientific tests/Lean/native/full-project run for manuscript-only changes. R1 clean compile still had a visually detected empty reference, repaired and independently rerendered."
+}

@@ -1,0 +1,45 @@
+{
+  "verdict": "ACCEPT exact accepted-design-only composition and archive",
+  "archive_sha256": "8fb1a0b832e67893bebc45bcd854f61fb3097c7890bc91747fede83d3fa5a8cb",
+  "members": 79,
+  "CRC_exact_names_hashes_sizes_original_bytes": true,
+  "original_design_sha256": "b9ccad542317211e6da55cac2dba62d2e46495691103d3839dbc206510491ccd",
+  "independent_review_sha256": "61eea1082c0f4d2514e2d30a142cf4180d217674edf59a76006e19393559d6bd",
+  "original_review_JSON_bytes_equal": true,
+  "captured_current_public_source_inputs": 16,
+  "independent_commands_streams_bound": 11,
+  "root_intake_commands_streams_bound": 10,
+  "new_relative_links_resolve": [
+    "l1_k4_coupled_holonomy_161163_design.md",
+    "l1_k4_coupled_holonomy_161163_design_review.md",
+    "l1_k4_coupled_holonomy_161163_design.md",
+    "l1_k4_coupled_holonomy_161163_design_review.md",
+    "l1_k4_coupled_holonomy_161163_design_acceptance.json",
+    "l1_k4_coupled_holonomy_161163_design_evidence.zip",
+    "l1_k4_coupled_holonomy_161163_design_manifest.json"
+  ],
+  "only_documentation_artifacts_dirty": [
+    "docs/audits/2026-10-17-publication-substance-construction/L1_RETARDED_SPECTRAL_INTERFACE.md",
+    "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_design.md",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_design_acceptance.json",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_design_evidence.zip",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_design_manifest.json",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_design_review.json",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_design_review.md"
+  ],
+  "no_implementation_module": true,
+  "portable_words_unchanged": 236,
+  "original_submission_label_preserved_with_separate_acceptance": true,
+  "acceptance_boundaries": [
+    "No new coefficient/full joint materialization/prepared graph/runtime feasibility/portable increment",
+    "Nonidentity forest/source/action/spinor covariance and signed full-row XOR1 before fixed/pilot acceptance",
+    "Original resource caps and full physical/main/publication obligations remain open"
+  ],
+  "required_corrections": [],
+  "first_and_return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  }
+}

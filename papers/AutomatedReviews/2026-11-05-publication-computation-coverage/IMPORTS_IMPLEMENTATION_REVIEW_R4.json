@@ -1,0 +1,27 @@
+{
+  "verdict": "CHANGES REQUIRED",
+  "packet": "publication-imports-implementation-review-r4.json",
+  "packet_fresh": true,
+  "producer_sha256": "5e4cecafdfb4002e2d318f84a0bc7adebbf01d59a15094bfef7129005d0f3cd3",
+  "tests_sha256": "287ee38b1fc23133fceb88482c64fc08422d1e59891c05686885be37a9b1165e",
+  "resolved_findings": [
+    "I1",
+    "I2",
+    "I3"
+  ],
+  "findings": [
+    {
+      "id": "I4",
+      "priority": 2,
+      "surface": "Calls.resolve final type_params exclusion",
+      "title": "Honor explicit read-only global declaration over type-parameter spelling"
+    }
+  ],
+  "scoped_tests_passed": 48,
+  "independent_probes": 24,
+  "independent_probe_matches": 23,
+  "corpus_conservation_verified": true,
+  "source_sensitive_probes_finished": true,
+  "candidate_mutated": false,
+  "science_main_publication_acceptance": false
+}

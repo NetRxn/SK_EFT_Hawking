@@ -1,0 +1,402 @@
+{
+  "scope": "Accepted mathematical coupled161/163 design and bounded local controls only; no coefficient, feasibility, portable, physical or publication acceptance. Original submissions and receipts unchanged.",
+  "source_commit": "52ec2ba0a6acbbea468270587c2ba563d621cf61",
+  "archive_sha256": "8fb1a0b832e67893bebc45bcd854f61fb3097c7890bc91747fede83d3fa5a8cb",
+  "files": {
+    "l1-coupled-holonomy-r1-controls.json": {
+      "bytes": 1893,
+      "sha256": "1c5b458120f5703afb34a9f7305b6881ebc15d09ec4d71c8f93b90cc01dbc6c1",
+      "original": "/tmp/l1-coupled-holonomy-r1-controls.json"
+    },
+    "l1-coupled-holonomy-r1-controls.py": {
+      "bytes": 2615,
+      "sha256": "771a80ad14f88becb8afe6950a6480b4ae5e3cbbe2e54aff33ffdba1098b5e9b",
+      "original": "/tmp/l1-coupled-holonomy-r1-controls.py"
+    },
+    "l1-coupled-holonomy-r1-design.md": {
+      "bytes": 19440,
+      "sha256": "b9ccad542317211e6da55cac2dba62d2e46495691103d3839dbc206510491ccd",
+      "original": "/tmp/l1-coupled-holonomy-r1-design.md"
+    },
+    "l1-coupled-holonomy-r1-geometry-checks.json": {
+      "bytes": 868,
+      "sha256": "fd8add2be9e3d7a2d07852252cb88a06c42278fc1238dccbba875c2c4a44778d",
+      "original": "/tmp/l1-coupled-holonomy-r1-geometry-checks.json"
+    },
+    "l1-coupled-holonomy-r1-geometry.json": {
+      "bytes": 23197,
+      "sha256": "b9eca8741ae8758a2f546cfac022be9cb8968f37af0b8d226baf4987948ac795",
+      "original": "/tmp/l1-coupled-holonomy-r1-geometry.json"
+    },
+    "l1-coupled-holonomy-r1-geometry.py": {
+      "bytes": 860,
+      "sha256": "3e39c92b43beecc2bde235571fc986883a858d89586ccb7d9a0bec662988f3e5",
+      "original": "/tmp/l1-coupled-holonomy-r1-geometry.py"
+    },
+    "l1-coupled-holonomy-r1-moments.json": {
+      "bytes": 1865,
+      "sha256": "42612d2003342cfaf1bf5b24b4b8ce59fdbabe0390b4d207854f0f2ec2f20fbf",
+      "original": "/tmp/l1-coupled-holonomy-r1-moments.json"
+    },
+    "l1-coupled-holonomy-r1-moments.py": {
+      "bytes": 1250,
+      "sha256": "13da66944a44a397ee873596b1dddbb79d45e9094e489922423e5094ac163805",
+      "original": "/tmp/l1-coupled-holonomy-r1-moments.py"
+    },
+    "l1-coupled-holonomy-r1-structure.json": {
+      "bytes": 456,
+      "sha256": "c8db3aee236349e735280adf45b2a11656f185d021f8aebd084f68be1ffb8302",
+      "original": "/tmp/l1-coupled-holonomy-r1-structure.json"
+    },
+    "l1-coupled-holonomy-r1-structure.py": {
+      "bytes": 1248,
+      "sha256": "1c8da9e4bc9cc6f0176545723fb38cc2ff2daf103730afe25642bc7d28c0704b",
+      "original": "/tmp/l1-coupled-holonomy-r1-structure.py"
+    },
+    "l1-coupled-holonomy-independent-r1-canonical-moments.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-canonical-moments.err"
+    },
+    "l1-coupled-holonomy-independent-r1-canonical-moments.out": {
+      "bytes": 184,
+      "sha256": "d4a869d695f0564c52e763b51ea7dc4f50c4d7eb04068252f246666614d77b9b",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-canonical-moments.out"
+    },
+    "l1-coupled-holonomy-independent-r1-canonical-moments.py": {
+      "bytes": 1422,
+      "sha256": "51baf4a8d02c3e8f799a1809f8d957c87d359b75602b3be385a1ea84181c107b",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-canonical-moments.py"
+    },
+    "l1-coupled-holonomy-independent-r1-controls.json": {
+      "bytes": 15293,
+      "sha256": "cc1e3b582313daae2677dac3978a17742986adce27ed1f709e751a68bd3dc907",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-controls.json"
+    },
+    "l1-coupled-holonomy-independent-r1-driver.py": {
+      "bytes": 1825,
+      "sha256": "8b24666a8b81013b403ac4faf9f296b70b91a05d9b67af06a3af237f5287aa2f",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-driver.py"
+    },
+    "l1-coupled-holonomy-independent-r1-geometry-gamma.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-geometry-gamma.err"
+    },
+    "l1-coupled-holonomy-independent-r1-geometry-gamma.out": {
+      "bytes": 1503,
+      "sha256": "26581920d78aaeb7a5fbe2fd14103f719275b5648db28b431a75235da23d41ef",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-geometry-gamma.out"
+    },
+    "l1-coupled-holonomy-independent-r1-geometry-gamma.py": {
+      "bytes": 7921,
+      "sha256": "5fcc7fae18ee9b8af0a0f023240715c3b63df17a8af02cb6fe616d49c234b51d",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-geometry-gamma.py"
+    },
+    "l1-coupled-holonomy-independent-r1-math.py": {
+      "bytes": 6724,
+      "sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-math.py"
+    },
+    "l1-coupled-holonomy-independent-r1-moments.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-moments.err"
+    },
+    "l1-coupled-holonomy-independent-r1-moments.out": {
+      "bytes": 262,
+      "sha256": "28ece9122ca13a7277a3186db0d15f07eca704ab2b71a90044024381f4b85bdb",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-moments.out"
+    },
+    "l1-coupled-holonomy-independent-r1-review.json": {
+      "bytes": 18736,
+      "sha256": "d2046959311488106f88a535085de6f814d69366d49a61723750d7d235f6a3af",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-review.json"
+    },
+    "l1-coupled-holonomy-independent-r1-review.md": {
+      "bytes": 10970,
+      "sha256": "61eea1082c0f4d2514e2d30a142cf4180d217674edf59a76006e19393559d6bd",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-review.md"
+    },
+    "l1-coupled-holonomy-independent-r1-slice0.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice0.err"
+    },
+    "l1-coupled-holonomy-independent-r1-slice0.out": {
+      "bytes": 417,
+      "sha256": "79dd1cc2489536428092c32d943dfb400b01b97118c650216ba4bf319fe39b47",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice0.out"
+    },
+    "l1-coupled-holonomy-independent-r1-slice1.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice1.err"
+    },
+    "l1-coupled-holonomy-independent-r1-slice1.out": {
+      "bytes": 289,
+      "sha256": "41831c86d00ff58d5b920a9bb8b87a52d3801b53f68db8dd13f20869f3e0f30e",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice1.out"
+    },
+    "l1-coupled-holonomy-independent-r1-slice2.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice2.err"
+    },
+    "l1-coupled-holonomy-independent-r1-slice2.out": {
+      "bytes": 246,
+      "sha256": "e8008c21d90c3b5263085e337fad4b24188cf5701d50891c59f992f0e552f00a",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice2.out"
+    },
+    "l1-coupled-holonomy-independent-r1-slice3.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice3.err"
+    },
+    "l1-coupled-holonomy-independent-r1-slice3.out": {
+      "bytes": 402,
+      "sha256": "58d3dcc7fab96af6d5229287d1c8a7b9d335353340a942aea01bef08dd54061b",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice3.out"
+    },
+    "l1-coupled-holonomy-independent-r1-slice4.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice4.err"
+    },
+    "l1-coupled-holonomy-independent-r1-slice4.out": {
+      "bytes": 266,
+      "sha256": "761e8e0b4b802c6546fc84ee104b12b7777ca79fa1a2d594e1ada23ecd8019c1",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice4.out"
+    },
+    "l1-coupled-holonomy-independent-r1-slice5.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice5.err"
+    },
+    "l1-coupled-holonomy-independent-r1-slice5.out": {
+      "bytes": 246,
+      "sha256": "68dc4d717db33fd67b7b432e7e86ce9d969f348f03b2c945be3d86774c9ab058",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-slice5.out"
+    },
+    "l1-coupled-holonomy-independent-r1-support.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-support.err"
+    },
+    "l1-coupled-holonomy-independent-r1-support.out": {
+      "bytes": 544,
+      "sha256": "5f0061721bbed5cfde7c6b6d6132c808b65eee5b2aee17039a88a24a1ec3a4ad",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-support.out"
+    },
+    "l1-coupled-holonomy-independent-r1-vector.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-vector.err"
+    },
+    "l1-coupled-holonomy-independent-r1-vector.out": {
+      "bytes": 144,
+      "sha256": "daf556864595ec62c261fb9c463e0ae17ee2cb11fde90d3ca26a29b4f125548a",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-vector.out"
+    },
+    "l1-coupled-holonomy-independent-r1-vector.py": {
+      "bytes": 1578,
+      "sha256": "2f5e35037dd10554e9533bf0a70987e1ccb76d05ad0325a1d7d8714b3aa9e2ab",
+      "original": "/tmp/l1-coupled-holonomy-independent-r1-vector.py"
+    },
+    "l1-coupled-design-root-intake-r1-control0.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control0.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-control0.stdout": {
+      "bytes": 288,
+      "sha256": "46b8dcd59ddf6e3d1e47522d850bb200caa1db70cdf66fe910ab7624ecd92173",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control0.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-control1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control1.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-control1.stdout": {
+      "bytes": 161,
+      "sha256": "4c6c850b26bba6f8fb3fdad15f76b2d0c9d1ce7692727fa2b900d61c08c88f61",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control1.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-control2.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control2.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-control2.stdout": {
+      "bytes": 119,
+      "sha256": "985034347b8a25f085728a9473335bce6a8ccef3db82d380ce8be4d6d1db2d8b",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control2.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-control3.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control3.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-control3.stdout": {
+      "bytes": 275,
+      "sha256": "f35a6acdd41374c6b50eba0a2bb09c694e5ae4daa44a024d090e3555cbcd6d32",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control3.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-control4.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control4.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-control4.stdout": {
+      "bytes": 138,
+      "sha256": "0a989f55238c90145b07545af3088a52be2dd4f74157d5a91434863f2ec4ff85",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control4.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-control5.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control5.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-control5.stdout": {
+      "bytes": 119,
+      "sha256": "b689bfc0596909f91c012d483dd0ec9fade6ce6264b659c80f077c1fb3fd67d5",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-control5.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-geometry.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-geometry.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-geometry.stdout": {
+      "bytes": 23197,
+      "sha256": "b9eca8741ae8758a2f546cfac022be9cb8968f37af0b8d226baf4987948ac795",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-geometry.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-moments.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-moments.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-moments.stdout": {
+      "bytes": 1865,
+      "sha256": "42612d2003342cfaf1bf5b24b4b8ce59fdbabe0390b4d207854f0f2ec2f20fbf",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-moments.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-root-sixth.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-root-sixth.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-root-sixth.stdout": {
+      "bytes": 360,
+      "sha256": "920731867049aa698e6684ef4d2b6c9a94e40e61ed97a82bd2c7dd4e823216ae",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-root-sixth.stdout"
+    },
+    "l1-coupled-design-root-intake-r1-structure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-structure.stderr"
+    },
+    "l1-coupled-design-root-intake-r1-structure.stdout": {
+      "bytes": 456,
+      "sha256": "c8db3aee236349e735280adf45b2a11656f185d021f8aebd084f68be1ffb8302",
+      "original": "/tmp/l1-coupled-design-root-intake-r1-structure.stdout"
+    },
+    "l1-coupled-design-root-intake-r1.json": {
+      "bytes": 6330,
+      "sha256": "4962b11b1503b6b6dfe1436f6dd483277b66f6fe00c3e2279c47de08d33528ef",
+      "original": "/tmp/l1-coupled-design-root-intake-r1.json"
+    },
+    "l1-coupled-design-root-intake-r1.py": {
+      "bytes": 2291,
+      "sha256": "4c71533bdadfe8c7a48e53431f53fec856a277fc98783dd89c291bb763482b73",
+      "original": "/tmp/l1-coupled-design-root-intake-r1.py"
+    },
+    "l1-coupled-holonomy-root-sixth-check.py": {
+      "bytes": 1466,
+      "sha256": "ea00a44e1eebcacb6e2cbae6acb392eb4a9598d989aafa94b41b212d66fe791c",
+      "original": "/tmp/l1-coupled-holonomy-root-sixth-check.py"
+    },
+    "inputs/l1_direct_b_haar.py": {
+      "bytes": 5055,
+      "sha256": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_direct_b_haar.py"
+    },
+    "inputs/l1_extended_four_face_gauge_join.py": {
+      "bytes": 14903,
+      "sha256": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_four_face_gauge_join.py"
+    },
+    "inputs/l1_extended_mixed_center_gamma.py": {
+      "bytes": 12415,
+      "sha256": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_mixed_center_gamma.py"
+    },
+    "inputs/l1_extended_mixed_curvature_core.py": {
+      "bytes": 6272,
+      "sha256": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_mixed_curvature_core.py"
+    },
+    "inputs/l1_extended_mixed_frame_moment.py": {
+      "bytes": 7740,
+      "sha256": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_mixed_frame_moment.py"
+    },
+    "inputs/l1_extended_offset_square.py": {
+      "bytes": 5745,
+      "sha256": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_square.py"
+    },
+    "inputs/l1_extended_offset_witness.py": {
+      "bytes": 12763,
+      "sha256": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness.py"
+    },
+    "inputs/l1_extended_offset_witness_k2.py": {
+      "bytes": 18260,
+      "sha256": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k2.py"
+    },
+    "inputs/l1_extended_offset_witness_k3.py": {
+      "bytes": 15383,
+      "sha256": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k3.py"
+    },
+    "inputs/l1_extended_offset_witness_k4.py": {
+      "bytes": 3498,
+      "sha256": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4.py"
+    },
+    "inputs/l1_extended_offset_witness_k4_two_square.py": {
+      "bytes": 10814,
+      "sha256": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_two_square.py"
+    },
+    "inputs/l1_extended_opposed_source.py": {
+      "bytes": 10408,
+      "sha256": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_opposed_source.py"
+    },
+    "inputs/l1_extended_overlap_strip.py": {
+      "bytes": 6982,
+      "sha256": "13d41c0b8bdb2565a76bfc5bf45a472cf8292a18295dd67cb2e115b085ae3b3e",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_overlap_strip.py"
+    },
+    "inputs/l1_extended_two_mixed_centers.py": {
+      "bytes": 7807,
+      "sha256": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_two_mixed_centers.py"
+    },
+    "inputs/l1_normalization_uniform_mixed_edge.py": {
+      "bytes": 2457,
+      "sha256": "089d5bfd21e3bb2a25e2a914dadb261fab354888b9b7b1287a6b28b78e31768a",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_normalization_uniform_mixed_edge.py"
+    },
+    "inputs/l1_direct_a_haar.py": {
+      "bytes": 2641,
+      "sha256": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+      "original": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_direct_a_haar.py"
+    }
+  }
+}

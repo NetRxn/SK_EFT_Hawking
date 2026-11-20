@@ -1,0 +1,3 @@
+{"coefficient": [253615999622213025, 137438953472], "joined": 0, "peak_rows": 3264, "seconds": 19.509, "word": 37}
+{"coefficient": [20255649238809619245, 549755813888], "joined": 1, "peak_rows": 3952, "seconds": 17.897, "word": 2}
+{"coefficient": [834814503361393106337, 2199023255552], "joined": 2, "peak_rows": 3952, "seconds": 16.052, "word": 0}

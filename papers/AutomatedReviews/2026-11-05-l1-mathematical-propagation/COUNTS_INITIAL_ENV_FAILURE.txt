@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/update_counts.py", line 1097, in <module>
+    main()
+    ~~~~^^
+  File "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/update_counts.py", line 1024, in main
+    python_counts = count_python()
+  File "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/update_counts.py", line 389, in count_python
+    raise RuntimeError(
+    ...<2 lines>...
+        f"gone. stdout tail: {(result.stdout or result.stderr)[-400:]!r}")
+RuntimeError: pytest collection reported ZERO tests. The suite has >6000; a zero here means the collection errored or the regex stopped matching, not that the tests are gone. stdout tail: 'Using CPython 3.14.8\nCreating virtual environment at: .venv\n/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/.venv/bin/python: No module named pytest\n'

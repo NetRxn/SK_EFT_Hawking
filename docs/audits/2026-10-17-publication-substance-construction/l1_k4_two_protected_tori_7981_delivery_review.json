@@ -1,0 +1,197 @@
+{
+  "verdict": "ACCEPT whole selected-family scientific/portable/nativeCLI/classunion/archive/source composition; ROOT may promote234to236 after continuity reconciliation",
+  "installed_source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+  "archive_sha256": "f0b78dba2cf77f5577f330f1fb2c46f452cc691418cde87a7451558e531b811f",
+  "archive_members": 150,
+  "all_CRC_member_hash_sizes_and_original_bytes": true,
+  "all79_predecessor_pilot_members_unchanged": true,
+  "predecessor_failed_controls_archive_unchanged": true,
+  "r32_scientific_controls_and_r34_source_acceptance_bound": true,
+  "current_full17bindings": true,
+  "all900_fixed_full_native_branches_independent_fraction_weight_D_pilot_comparison": true,
+  "signed225transpose_and_cache_class_partitions_fixed_and_full": true,
+  "actual_cli": {
+    "census": {
+      "parent": 6.262136040953919,
+      "wrapper": 6.192542625009082,
+      "warm_entry_hooks": 0,
+      "native_count": 1,
+      "child_driver_exits": [
+        0,
+        0
+      ]
+    },
+    "fixed:79": {
+      "records": 225,
+      "fraction": [
+        10367035518435041776795,
+        7709672958021817718820298555392
+      ],
+      "representatives": 4,
+      "reuse": 21,
+      "computed_zeros": 0,
+      "structural_empty": 200,
+      "peak": 564,
+      "native_preparation": null,
+      "native_warm": null
+    },
+    "fixed:81": {
+      "records": 225,
+      "fraction": [
+        10367035518435041776795,
+        7709672958021817718820298555392
+      ],
+      "representatives": 4,
+      "reuse": 21,
+      "computed_zeros": 0,
+      "structural_empty": 200,
+      "peak": 564,
+      "native_preparation": null,
+      "native_warm": null
+    },
+    "fixed": {
+      "parent": 7.595887458068319,
+      "wrapper": 7.510848750011064,
+      "warm_entry_hooks": 0,
+      "native_count": 452,
+      "child_driver_exits": [
+        0,
+        0
+      ]
+    },
+    "79:79": {
+      "records": 225,
+      "fraction": [
+        1165710661495982585955,
+        35184372088832
+      ],
+      "representatives": 154,
+      "reuse": 71,
+      "computed_zeros": 144,
+      "structural_empty": 0,
+      "peak": 5632,
+      "native_preparation": 84.01887254195753,
+      "native_warm": 44.075346041005105
+    },
+    "79": {
+      "parent": 141.37239029200282,
+      "wrapper": 141.2756324580405,
+      "warm_entry_hooks": 1,
+      "native_count": 226,
+      "child_driver_exits": [
+        0,
+        0
+      ]
+    },
+    "81:81": {
+      "records": 225,
+      "fraction": [
+        1165710661495982585955,
+        35184372088832
+      ],
+      "representatives": 154,
+      "reuse": 71,
+      "computed_zeros": 144,
+      "structural_empty": 0,
+      "peak": 5632,
+      "native_preparation": 84.03505941608455,
+      "native_warm": 43.77051495795604
+    },
+    "81": {
+      "parent": 141.17497754190117,
+      "wrapper": 141.0388962920988,
+      "warm_entry_hooks": 1,
+      "native_count": 226,
+      "child_driver_exits": [
+        0,
+        0
+      ]
+    }
+  },
+  "existing_population_sizes": {
+    "l1_k4_core42_receipts.jsonl": 42,
+    "l1_k4_remaining48_receipts.jsonl": 48,
+    "l1_k4_peeled86_receipts.jsonl": 86,
+    "l1_k4_single_square6_receipts.jsonl": 6,
+    "l1_k4_free_torus30_receipts.jsonl": 30,
+    "l1_k4_two_square8_receipts.jsonl": 8,
+    "l1_extended_offset_witness_k4_both_source_square_free_torus.py": 2,
+    "l1_extended_offset_witness_k4_two_square_protected_torus.py": 4,
+    "l1_extended_offset_witness_k4_two_protected_tori.py": 4,
+    "l1_extended_offset_witness_k4_connected_source_square_torus.py": 2,
+    "l1_extended_offset_witness_k4_shared_square_protected_free_tori.py": 2
+  },
+  "old234_disjoint_once": true,
+  "new_words": [
+    79,
+    81
+  ],
+  "accepted_union_total": 236,
+  "same": 142,
+  "mixed": 94,
+  "remaining": [
+    21,
+    22,
+    24,
+    26,
+    29,
+    60,
+    61,
+    64,
+    66,
+    71,
+    95,
+    102,
+    103,
+    105,
+    109,
+    134,
+    141,
+    144,
+    145,
+    152,
+    161,
+    163,
+    179,
+    184,
+    195,
+    196,
+    225,
+    226,
+    229,
+    232,
+    242,
+    244,
+    255,
+    258,
+    260,
+    271
+  ],
+  "remaining_same": 22,
+  "remaining_mixed": 14,
+  "coefficient_each": [
+    1165710661495982585955,
+    35184372088832
+  ],
+  "two_word_sameaxis_subtotal": [
+    1165710661495982585955,
+    17592186044416
+  ],
+  "required_corrections": [],
+  "limits": [
+    "Selected regulated family only; not fullk4/complete derivative-normalized source-action ensemble/commonZ/physicalB3/modes/transport/main/human/publication",
+    "Global broad qualification remains RED7167pass29fail at01d72",
+    "No scientific imports/preparations/contractions/newtests/writer/candidate/source/Git/notebook mutation performed"
+  ],
+  "artifact_hashes": {
+    "l1_k4_two_protected_tori_7981_delivery.md": "34874734b2b777f9f4ab6469bc86787613b184f73f8a7c87fcc3a6c06e90dd2c",
+    "l1_k4_two_protected_tori_7981_delivery_manifest.json": "1963057bd1e13f17ab7942e50d6932a631c80d3d082d670a232c7f7d0881590d",
+    "l1_k4_two_protected_tori_7981_delivery_verification.json": "6a68532f3c01ad3a6918da88e908ce9a85a3c4eff9ea78cd62f82e0bdbed0781",
+    "l1_k4_two_protected_tori_7981_packaging_note.md": "ad07dab92e92d4edd90d0cec90f0bd64f9575718cad1f27daa9d6520cded7ed3"
+  },
+  "return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  }
+}

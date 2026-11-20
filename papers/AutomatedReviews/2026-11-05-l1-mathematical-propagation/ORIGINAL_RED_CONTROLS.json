@@ -1,0 +1,16 @@
+[
+  {
+    "section": "1.1",
+    "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/paper25_gravitational_waves/paper_draft.tex\").read_text()); bad=[r\"\\chivest = 1 \\pm 3\\times 10^{-15}\",\"sits exactly at unity\",\"exponentially small measure in any\",\"the fourth isolates P3'\"'\"'\",r\"\\sim 7\\times 10^{14}$ at the\",\"the natural range fails by\",r\"locating the $\\cGW = c$ window\"]; assert not any(x in s for x in bad), \"source retains false finite-tolerance, endpoint, prior or independence statements\"'",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/paper25_gravitational_waves/paper_draft.tex\").read_text()); bad=[r\"\\chivest = 1 \\pm 3\\times 10^{-15}\",\"sits exactly at unity\",\"exponentially small measure in any\",\"the fourth isolates P3'\",r\"\\sim 7\\times 10^{14}$ at the\",\"the natural range fails by\",r\"locating the $\\cGW = c$ window\"]; assert not any(x in s for x in bad), \"source retains false finite-tolerance, endpoint, prior or independence statements\"\n                                                                                                                                                                                                                                                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: source retains false finite-tolerance, endpoint, prior or independence statements\n"
+  },
+  {
+    "section": "1.2",
+    "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.provenance import PARAMETER_PROVENANCE as P; from src.core.formulas import c_GW_deviation_from_c; assert all(\"Eq. (1)\" in P[k][\"source\"] for k in [\"GW.C_GW_DEVIATION_UPPER_BOUND\",\"GW.C_GW_DEVIATION_LOWER_BOUND\"]), \"GW170817 primary bound is Eq. (1)\"; assert \"Eq. (1)\" in c_GW_deviation_from_c.__doc__, \"formula source locator is stale\"'",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from src.core.provenance import PARAMETER_PROVENANCE as P; from src.core.formulas import c_GW_deviation_from_c; assert all(\"Eq. (1)\" in P[k][\"source\"] for k in [\"GW.C_GW_DEVIATION_UPPER_BOUND\",\"GW.C_GW_DEVIATION_LOWER_BOUND\"]), \"GW170817 primary bound is Eq. (1)\"; assert \"Eq. (1)\" in c_GW_deviation_from_c.__doc__, \"formula source locator is stale\"\n                                                                                                                           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: GW170817 primary bound is Eq. (1)\n"
+  }
+]

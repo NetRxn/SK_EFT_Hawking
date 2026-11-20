@@ -1,0 +1,67 @@
+{
+  "source_commit": "58c3b7c7c265ef02febb10b72322eef06f2de28f",
+  "archive_sha256": "4953e50ca436c18d19a9f8a354a28cff8023f2c7f70356d8dcd16e340e0bdcc1",
+  "all20_hashes_crc_unique": true,
+  "seven_canonical_copies_exact": true,
+  "current_accepted_inputs": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "docs/audits/2026-11-05-l1-physical-bridges/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md",
+    "accepted/N16_SATURATION_STATE_OBSTRUCTION.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_SATURATION_STATE_OBSTRUCTION.md",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+    "accepted/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md",
+    "accepted/PUBLICATION_SATURATION_INTAKE.md": "docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_SATURATION_INTAKE.md"
+  },
+  "parent_members_hashes_crc_verified": 20,
+  "actual_held_primary_pins": [
+    {
+      "held_corpus_path": "Phase-6a/primary-sources/BravyiCliffordSymbols2004-arXiv0404180v2.pdf",
+      "version": "quant-ph/0404180v2",
+      "url": "https://arxiv.org/pdf/quant-ph/0404180v2",
+      "bytes": 266465,
+      "sha256": "d59b7c1543c7e6f0ecbc76716e3ac95ffe917151ec14f0e8a7cac9643783a968"
+    },
+    {
+      "held_corpus_path": "Phase-6a/primary-sources/LiuSLDAnticommutators2016-arXiv1501.04290v2.pdf",
+      "version": "1501.04290v2",
+      "url": "https://arxiv.org/pdf/1501.04290v2",
+      "bytes": 170929,
+      "sha256": "888be9ba3382ffe05fc156403752c5226287231ffab53fdde9fc08aa47a73402"
+    },
+    {
+      "held_corpus_path": "Phase-6a/primary-sources/ParisQuantumEstimation2009-arXiv0804.2981v3.pdf",
+      "version": "0804.2981v3",
+      "url": "https://arxiv.org/pdf/0804.2981v3",
+      "bytes": 348405,
+      "sha256": "e92b22fb0bdd89cd1c2761298ab58945175b515baccbcb4db0eaa6b153119eb9"
+    }
+  ],
+  "root_full_reads": [
+    "complete actual result244ed2e",
+    "both complete actual result reviews",
+    "acceptance and manifest",
+    "BravyiII/IVorderedbasis,linear-onlysymbol,ordinarytrace15",
+    "LiuSLDdefinitionandfull-rankLyapunov",
+    "Parissection2parameter-vs-observable"
+  ],
+  "root_manual_cross_checks": [
+    "Clifford inversion/trace-dual signs",
+    "actualcoframe/action/topconjugation",
+    "degree-selectionandpositive-lambdaBerezin/sourcepowers",
+    "finitecoefficientnormboundandlambda^-4tail",
+    "signedrhoSylvesterinverse",
+    "nestedJordanorder/commutatorandnormalizationcontacts"
+  ],
+  "accepted_scope": "Conditional static reduced-boundary state/all-test Jordan source-response construction",
+  "not_established": [
+    "actual original nonzeroZ at g2!=0",
+    "integrated metric jet/nontriviality",
+    "physical CAR/ordering and microscopicmetricidentity",
+    "positive causal/multitimeoriginalevolution",
+    "B3/fullphysicalBUILD/publicationacceptance"
+  ],
+  "next_deeper_commission": "Executor prospectively specify and construct an actual original nonzeroZ certificate and viable integratedmetric nontriviality using full original measure/action/links; acceptance reply/independentreviews required",
+  "ordinary_L1_owner": "ROOT"
+}

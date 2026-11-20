@@ -1,0 +1,10 @@
+{
+  "old_audit_preserved": true,
+  "appended_events": 1,
+  "human_state_unchanged": true,
+  "catalog_sha256": "8e53db0cdcddc0240dab137892980cd71167938683355fb57ec17285d813291c",
+  "units": 123,
+  "automatic_closures": 0,
+  "writer_receipt": "CANONICAL_INGEST.json",
+  "catalog_promotion": "accepted proposal installed after writer state/audit intake; writer not rerun"
+}

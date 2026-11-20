@@ -1,0 +1,86 @@
+{
+  "commit": "fc087cfb99afe4740522b50d8c9644edf6716d14",
+  "file": "lean/SKEFTHawking/ADW/QuaternionSU2HaarPolynomial.lean",
+  "names": [
+    "anchoredMoment",
+    "contract",
+    "contract_monomial",
+    "coeff_contract",
+    "integral_eval_eq_contract",
+    "integral_eval_mul_eq_contract",
+    "contractSymbolic",
+    "integral_specialize_eq_contractSymbolic",
+    "contract_residual_collision_cancel",
+    "contract_shared_left_square",
+    "contract_left_first"
+  ],
+  "accepted": true,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.anchoredMoment' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 276,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contract' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 277,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contract_monomial' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 278,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.coeff_contract' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 279,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_eval_eq_contract' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 280,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_eval_mul_eq_contract' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 281,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contractSymbolic' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 282,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_specialize_eq_contractSymbolic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 283,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contract_residual_collision_cancel' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 284,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contract_shared_left_square' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 285,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contract_left_first' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 286,
+      "column": 1
+    }
+  ]
+}

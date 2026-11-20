@@ -1,0 +1,47 @@
+{
+  "verdict": "ACCEPT portable source/design; actual scientific CLI/archive acceptance pending",
+  "review_scope": "stdlib AST/source/hash inspection and inert helper/argparse tests only; no scientific imports or full coefficient",
+  "portable_sha256": "1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9",
+  "original_sha256": "d5244fb68dbb9f10fd098a1b0e7f94679bfed53c43e0eb2271aed0031b64f68f",
+  "five_scientific_ASTs_equal": [
+    "geometry",
+    "data",
+    "prepare",
+    "contraction",
+    "solve"
+  ],
+  "sixteen_named_sibling_bindings_match": true,
+  "sibling_path_guards_verified": true,
+  "original_caps": {
+    "row": 120000,
+    "pair": 3000000
+  },
+  "prepared_table_identity_retained": true,
+  "prepare_calls_per15": 15,
+  "contract_prepared_prepare_calls": 0,
+  "all15_emit_branch_records_and_exact_weighted_arithmetic": true,
+  "None_table_zero_branch_verified": true,
+  "divisor_mismatch_refused": true,
+  "main_default_census": [
+    78,
+    80
+  ],
+  "main_unrestricted_word_modes": [
+    78,
+    80
+  ],
+  "main_controls_only_fixed_modes": [
+    78,
+    80
+  ],
+  "main_prepares_once_reuses_exact_tables": true,
+  "CLI_refusals": {
+    "--word 77": 2,
+    "--word 81": 2,
+    "--word 78 --controls-only": 2,
+    "--word notint": 2,
+    "--unknown": 2
+  },
+  "no_original_receipt_or_typo_annotation_modified": true,
+  "portable_scope": 230
+}

@@ -1,0 +1,21 @@
+{
+  "archive": "n16_saturation_obstruction_evidence.zip",
+  "bytes": 50763,
+  "members": 10,
+  "sha256": "c4d854b9d8e16ecbc3ac3627cbf82e472f2958f2f19a73585608673ab1ac54cf",
+  "accepted_source_sha256": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+  "parent_scientific_checkpoint": "4aca534a28d05233b2394fdd7b210ea68c43a3e4",
+  "files": {
+    "construction/l1-n16-saturation-state-obstruction-r1.md": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+    "review/l1-n16-saturation-math-review-r1.md": "48a9c06b9f70b8323a49f050759ee49aa20fb369bbca0a69ed64f385c749330a",
+    "review/l1-n16-saturation-physics-review-r1.md": "f06d50b5b0447b225676ca1a1ad908e2e96007861dff0b9c83cf3721d6490e92",
+    "review/l1-n16-saturation-source-intake-r1.md": "54f62a000c5143899aa9bc1251c6332c75ababd560b14c64b2e7e1090b2ef504",
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "source/N16_PHYSICAL_IMAGE_CERTIFICATE_CONTRACT.md": "78861d229e02055c5274a1d3e16fab933d2cac961441816a47a4b739db6e9d26",
+    "source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "source/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+    "source/l1_full_action_reference.py": "0ad0fd402e18c7d13cc84f9d92d4820bfc7b2726033dc42aa7d79fb0bf5327b6",
+    "source/leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10"
+  },
+  "scope": "Independently accepted manual raw full-action zero-norm/nonzero-overlap incompatibility for fixed periodicN16 action/theta/fullhalfA+ and realg2nonzero; no fullZ/nonempty normalizedpoint/global model/publication/admission claim"
+}

@@ -1,0 +1,96 @@
+{
+  "success": true,
+  "timed_out": false,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceWeightHaarPolynomial_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 369,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertionDensity_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 370,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertionDensity_integrable' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 371,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertion_fixed_link' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 372,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertionValue_integrable' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 373,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertion_eq11' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 374,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertion_iterated' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 375,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertion_eq11_adjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 376,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertion_mixed_adjointWeight' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 377,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertionValue_eq_nilExp' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 378,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertionValue_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 379,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertionDensity_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 380,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceInsertion_eq11_zero_eq10' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 381,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.printed_sourceInsertion_eq11' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 382,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.closed_sourceInsertion_eq11' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 383,
+      "column": 1
+    }
+  ]
+}

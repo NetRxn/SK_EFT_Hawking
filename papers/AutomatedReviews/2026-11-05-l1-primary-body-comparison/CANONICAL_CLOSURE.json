@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "scripts/close_finding.py",
+    "--doc",
+    "papers/AutomatedReviews/2026-11-05-l1-primary-body-comparison/L1.md",
+    "--section",
+    "1.1",
+    "--status",
+    "fixed",
+    "--commit",
+    "9bdd7e2b4537526d334f5933114508df0d1784ef",
+    "--evidence",
+    "Independent actual four-body/source and integrated125-unit/rendered reviews accept factual comparison repair, source-qualified registry and exactly4validated custody records;152domain tests and exact declared RED-to-GREEN control pass. Original physical BUILD/four blockers remain; allsource versions/assumptions and prior history preserved in primary-body-comparison/.",
+    "--artifact",
+    "Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.pdf",
+    "--artifact",
+    "Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.pdf",
+    "--artifact",
+    "Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.pdf",
+    "--artifact",
+    "Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.pdf"
+  ],
+  "returncode": 0,
+  "stdout": "\u2713 wrote 1 record(s): review:2026-11-05-l1-primary-body-comparison:L1:1.1\n",
+  "stderr": ""
+}

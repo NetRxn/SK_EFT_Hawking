@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "scripts/close_finding.py",
+    "--doc",
+    "papers/AutomatedReviews/2026-11-05-l1-reader-notation/L1.md",
+    "--section",
+    "1.1",
+    "--status",
+    "fixed",
+    "--evidence",
+    "The actual fixed-tau dispersion biconditional replaces undefined generic tolerance; independent exact-source and all-four-page reviews accept bounded scope; physical and whole-prose holds remain.",
+    "--commit",
+    "5ae6085ca29cd4866d544ea87d8144dcfa0f378a",
+    "--verify",
+    "python3 -c 'from pathlib import Path; s=Path(\"papers/L1/paper_draft.tex\").read_text(); assert chr(92)+\"mathrm{tol}\" not in s, \"dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\"'",
+    "--superseded-by",
+    "papers/AutomatedReviews/2026-11-05-l1-reader-notation/INDEPENDENT_INTEGRATED_REVIEW.md"
+  ],
+  "returncode": 0,
+  "stdout": "\u2713 wrote 1 record(s): review:2026-11-05-l1-reader-notation:L1:1.1\n",
+  "stderr": ""
+}

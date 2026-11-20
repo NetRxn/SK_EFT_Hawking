@@ -1,0 +1,16 @@
+{
+  "checkpoint": "c4c848d794e56ca5637edd6043972ce1b2830203",
+  "archive_sha256": "36ede0c5ad2a3acf0c94fb6a25a0c8ce213e328ec60f0ba75dfccdb639ffac55",
+  "all_members_verified": 22,
+  "canonical_copies_equal": true,
+  "nested_parent_crc_ok": true,
+  "scientific_acceptance": "ACCEPT scoped manual original-action kinematic boundary/gauge/source construction",
+  "actual_held_primary_hashes_verified": 4,
+  "normal_merge_anchor": "5e39c331d3a263fc754808ded7d085ddaf14bafe",
+  "source_sha256": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+  "kernel_or_native_acceptance": false,
+  "physical_positive_state": false,
+  "original_BUILD_closed": false,
+  "main_publication_human_acceptance": false,
+  "direct_primary_body_scope": "Diakonov V equations20-26; four actual held PDF custody hashes checked; other source contracts reused from accepted parent intake"
+}

@@ -1,0 +1,102 @@
+{
+  "before_path": "/tmp/l1-figure-before-0f254-20261105.json",
+  "before_sha256": "0d6295b1826ec0abd7770d1988788c65fd2bb82f23e6f005e865f10274248045",
+  "after_path": "/tmp/l1-figure-repair-candidate-20261105-r2.json",
+  "after_sha256": "7c86fce45c3acf3444fbcfe2102d298e48fa18096538342b3384c53bd6d9e048",
+  "checks": [
+    {
+      "trace": 0,
+      "field": "x",
+      "equal": true
+    },
+    {
+      "trace": 0,
+      "field": "y",
+      "equal": true
+    },
+    {
+      "trace": 0,
+      "field": "fill",
+      "equal": true
+    },
+    {
+      "trace": 0,
+      "field": "fillcolor",
+      "equal": true
+    },
+    {
+      "trace": 0,
+      "field": "type",
+      "equal": true
+    },
+    {
+      "trace": 1,
+      "field": "x",
+      "equal": true
+    },
+    {
+      "trace": 1,
+      "field": "y",
+      "equal": true
+    },
+    {
+      "trace": 1,
+      "field": "fill",
+      "equal": true
+    },
+    {
+      "trace": 1,
+      "field": "fillcolor",
+      "equal": true
+    },
+    {
+      "trace": 1,
+      "field": "type",
+      "equal": true
+    },
+    {
+      "trace": 2,
+      "field": "x",
+      "equal": true
+    },
+    {
+      "trace": 2,
+      "field": "y",
+      "equal": true
+    },
+    {
+      "trace": 2,
+      "field": "fill",
+      "equal": true
+    },
+    {
+      "trace": 2,
+      "field": "fillcolor",
+      "equal": true
+    },
+    {
+      "trace": 2,
+      "field": "type",
+      "equal": true
+    },
+    {
+      "field": "layout.shapes",
+      "equal": true
+    }
+  ],
+  "axis_ranges_equal": true,
+  "intentional_mode_delta": [
+    {
+      "trace": 1,
+      "before": null,
+      "after": "lines"
+    }
+  ],
+  "current_png_hashes": {
+    "figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/D3/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976"
+  },
+  "visual_acceptance": false
+}

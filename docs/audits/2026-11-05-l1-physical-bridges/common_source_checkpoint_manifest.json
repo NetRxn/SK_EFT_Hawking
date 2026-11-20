@@ -1,0 +1,38 @@
+{
+  "acceptance": "Independent manual mathematics and scoped physics construction only; no Lean, physical matching, B3 closure, main or publication readiness",
+  "members": {
+    "COMMON_SOURCE_ACCEPTANCE.md": {
+      "bytes": 2875,
+      "sha256": "a802f370553c7595b57e9ea4ef47335ef491d1c83f7445f35359f6397b2ce0bc"
+    },
+    "COMMON_SOURCE_MATH_REVIEW_R1.md": {
+      "bytes": 10992,
+      "sha256": "f434d549bea245f5bbff9b9e0dbcc5d2206fad2271ddb4002d790ae4637e83a7"
+    },
+    "COMMON_SOURCE_MATH_REVIEW_R2.md": {
+      "bytes": 7279,
+      "sha256": "68148f5d9b4a6e83adebc74c5dcf1a06df04313ea6620b98a907d7fdbd101140"
+    },
+    "COMMON_SOURCE_MATTER_INTERFACE.md": {
+      "bytes": 16882,
+      "sha256": "f8aa1040d6ac359dd767910303aa335c9841c7168294be9043b1db9de46d8fbf"
+    },
+    "COMMON_SOURCE_PHYSICS_REVIEW_R1.md": {
+      "bytes": 8178,
+      "sha256": "2f28edaf63184d33f1c6ab34dc0d77d430178223ad912677f34c63dd87f93e15"
+    },
+    "COMMON_SOURCE_PHYSICS_REVIEW_R2.md": {
+      "bytes": 3880,
+      "sha256": "a68b3588ef3c14c3468419d1b869935ece57a16159efce26c6617833cd622a3c"
+    },
+    "common_source_review_r1_evidence.zip": {
+      "bytes": 15192,
+      "sha256": "98f209daaae139646a1fa232a587b3f788340639ee1a31f192478f5b8a7ff989"
+    },
+    "common_source_scalar_path_check_r1.json": {
+      "bytes": 441,
+      "sha256": "c01439194663aff68cc8a01cc92039fd519bb1dfc6321af25adaad75d1c10e4a"
+    }
+  },
+  "publication_parent": "425324077b03d7de1db9f4a342f5a760bf7af001"
+}

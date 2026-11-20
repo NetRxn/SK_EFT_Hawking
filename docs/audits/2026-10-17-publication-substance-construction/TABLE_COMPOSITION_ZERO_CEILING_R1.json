@@ -1,0 +1,24 @@
+{
+  "elapsed_seconds": 0.03,
+  "checks": {
+    "bundle_tables_use_pipeline": {
+      "passed": true,
+      "measured": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "0 hand-written tabular(s) across 0 of 21 bundle draft(s) (ceiling 0)",
+          "warning": false,
+          "measured": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "measured": 1
+  }
+}

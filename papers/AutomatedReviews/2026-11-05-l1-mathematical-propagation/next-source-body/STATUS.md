@@ -1,0 +1,5 @@
+# Next L1 source-body revision
+
+These are preserved author source-verification and proposed replacement records. ROOT directly read the relevant four primary-body sections and agrees with the diagnosed comparison issues. No proposed manuscript replacement, citation-path/sidecar promotion or claim-WARN closure has yet been installed. Full texts remain solely in the workspace research corpus; version-specific public URLs, identities and hashes let a remote agent recover the same sources. Existing abstracts are conserved. Follow the existing primary-source/canonical writer and independent review process before acceptance.
+
+Next: separate Sakstein–Jain cluster/dwarf constraints from the GW+M87 quartic-galileon inference at representative matter coupling; scope Ezquiaga–Zumalacarregui's affected families and Horava sectors; bound the comparison to the inspected four analyses. Preserve journal identity separately from held arXiv-version identity. Apply an independently reviewed factual revision, then update affected sentence IDs through the existing writer and recompile/review. Original physical BUILD obligations remain unchanged.

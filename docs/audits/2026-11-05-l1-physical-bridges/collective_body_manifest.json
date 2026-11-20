@@ -1,0 +1,34 @@
+{
+  "files": {
+    "COLLECTIVE_BODY_ACCEPTANCE.md": {
+      "bytes": 2760,
+      "sha256": "d267a96b119f01ad85fb8293617800660de80a9d1001582fb833ebecf75ea6d4"
+    },
+    "COLLECTIVE_BODY_MATH_REVIEW_R1.md": {
+      "bytes": 10695,
+      "sha256": "b22fdf498d3583b3191ae930c169388bb0a911aee61e5cf200c56142cce546e2"
+    },
+    "COLLECTIVE_BODY_PARITY.md": {
+      "bytes": 7872,
+      "sha256": "f6e624715ddbf95866064f10feb0cacd373530afd1204083808441c71690becb"
+    },
+    "COLLECTIVE_BODY_PHYSICS_REVIEW_R1.md": {
+      "bytes": 6966,
+      "sha256": "03cf272ef8c750c5b47aa86838a831d6251cb3cd84df1df2b42f5037332059ea"
+    },
+    "collective_body_source_pins.json": {
+      "bytes": 327,
+      "sha256": "ece1a6d01833ec3bec5efd9a0f026c063e8da5d397b0399e5479588c699dbaca"
+    },
+    "pin_matrix_control.py": {
+      "bytes": 2174,
+      "sha256": "cf691c530216a7b523f3d384f7db5234fd65b003cd7832581a5c3e7fdb2233a1"
+    },
+    "pin_matrix_control_result.json": {
+      "bytes": 290,
+      "sha256": "3778d06513e14d7999a9096890908481e8c7bfe7284317fd6c5e96680f0ce8d8"
+    }
+  },
+  "parent": "e79d6aa8c638032486eddb6d9f7c766f4c415df5",
+  "scope": "Independently accepted manual finite pure-g2 collective G/B diagnostic; no full sixteen-site normalization, state, thermodynamic, finite-lambda, Lean or publication closure"
+}

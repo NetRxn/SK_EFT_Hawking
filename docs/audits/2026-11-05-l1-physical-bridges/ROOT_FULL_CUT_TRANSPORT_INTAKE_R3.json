@@ -1,0 +1,39 @@
+{
+  "executor_head": "2156bf262407f789f799a01b44069df70d13e9c4",
+  "parent": "acb34ee7d99d55703a19dc2f7cbdeaa666e717cc",
+  "target_head_before": "31e15354c531749da22e141492d48b65a9ce7b4f",
+  "result_sha256": "b9bc1e82ab2f1eef802fa07738b93babe79dcf2d820759d09c040142f7153a1f",
+  "paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROPOSAL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R3.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R3.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/p0_numerical_full_cut_transport_evidence_r3.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/p0_numerical_full_cut_transport_manifest_r3.json",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md",
+    "docs/roadmaps/Phase6a_Roadmap.md"
+  ],
+  "archive_members": 33,
+  "archive_sha256": "a91a45dd69c15ae32b6677891a5fa0fced7e27c9078c3c5b40f65a984887b685",
+  "exact_copies": 12,
+  "accepted_inputs_exact": 7,
+  "pdf_custody_exact": 3,
+  "original_objective_exact_prefix": true,
+  "reference_reconciliation": "Both reviewed packets retain29of30bound files exact; only original objective now has inspected post-review status append; original reviewed bytes exact and archived. No self-refresh or scientific objective change.",
+  "root_full_read": [
+    "complete result all10sections plus8a",
+    "complete actual mathematical R3 review",
+    "complete actual source R3 review"
+  ],
+  "acceptance_boundary": "Additional MANUAL Task3 coordinate/cut/source/control BUILD accepted after ROOT intake; actual exact numerical implementation and execution still required; no positive physics or publication completion",
+  "runtime_granted": false
+}

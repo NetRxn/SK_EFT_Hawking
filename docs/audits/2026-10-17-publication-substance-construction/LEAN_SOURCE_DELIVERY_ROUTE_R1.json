@@ -1,0 +1,175 @@
+{
+  "task": "publication-lean-delivery-route-r1",
+  "time_utc": "2026-11-06T22:17:06.808879+00:00",
+  "verdict": "ACCEPTED_SOURCE_CUTSET_IDENTIFIED_NOT_MERGE_QUALIFIED",
+  "main_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+  "primary_checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "live_main": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+  "live_main_evidence": "GitHub connector fetch_commit NetRxn/SK_EFT_Hawking main",
+  "local_origin_main": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+  "local_main_stale": "90e39dc7d627c0f31d495a3111ca52b0e04da710",
+  "main420": "42037383847cc7fa5a3e3761032456fe3050f653",
+  "primary450": "450710b86adfec7a9adf7c43178d26e421bbbd18",
+  "source_cutset": [
+    {
+      "module": "SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary",
+      "path": "lean/SKEFTHawking/ADW/FiniteGrassmannSourceAuxiliary.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "f4086dd595d0bceec1d1e6ccca1f69b21f3132897895b5a0de055271bb6dfa18",
+      "commit": "57f6c2a9340cb1947919f607e59b3d740ca4fb16",
+      "lines": 550,
+      "project_imports": [
+        "SKEFTHawking.ADW.FiniteGrassmannCoframe"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.FiniteGrassmannCoframe",
+      "path": "lean/SKEFTHawking/ADW/FiniteGrassmannCoframe.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "4d9ae0f635b648a88dbd7cdf07ccd2248553057aa12f3633c92ea7657dc35261",
+      "commit": "a16af66d15d6184c19defcad1f2110515777b6c1",
+      "lines": 527,
+      "project_imports": [
+        "SKEFTHawking.PauliMatrices"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.GaussianGrassmannAuxiliary",
+      "path": "lean/SKEFTHawking/ADW/GaussianGrassmannAuxiliary.lean",
+      "source_checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+      "sha256": "84c7aa0ecef730f1f29c3ade0ec61eabb107d92b1bbe4b6d9d032609cd675d50",
+      "commit": "b392a1e0c92f8e2ba07644090316e50aec55f65c",
+      "lines": 839,
+      "project_imports": [
+        "SKEFTHawking.ADW.FiniteGrassmannEvaluation"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.FiniteGrassmannEvaluation",
+      "path": "lean/SKEFTHawking/ADW/FiniteGrassmannEvaluation.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "5f8f6d3b844d7b286a2b00606b50dd0b779999f2cbb5cd98f80c3fc7e51f60ee",
+      "commit": "4c4a7baa90c9164963ad71a3d30f85455bb4ab23",
+      "lines": 603,
+      "project_imports": [
+        "SKEFTHawking.ADW.GaussianAuxiliaryCompensation",
+        "SKEFTHawking.ADW.FiniteGrassmannCoframe"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.GaussianAuxiliaryCompensation",
+      "path": "lean/SKEFTHawking/ADW/GaussianAuxiliaryCompensation.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "99a40ad1f4304547b2701845e14f168fd3cfcaf2a7526b07eed4eaa7aaead2b6",
+      "commit": "996fa93a38fbd663a42837cc6b9db6bc8f74d480",
+      "lines": 702,
+      "project_imports": [
+        "SKEFTHawking.ADW.GaussianAuxiliaryComplex"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.GaussianAuxiliaryComplex",
+      "path": "lean/SKEFTHawking/ADW/GaussianAuxiliaryComplex.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "91b9884a4194980538b2889f8b57f6c09cf995dfdfa1db71241c00723472375f",
+      "commit": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+      "lines": 624,
+      "project_imports": [
+        "SKEFTHawking.ADW.GaussianPolynomialAffine"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.GaussianPolynomialAffine",
+      "path": "lean/SKEFTHawking/ADW/GaussianPolynomialAffine.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "3e6a5a5671a518595571395a2584f3d8794f157aadd3b0d552677dec69b47676",
+      "commit": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1",
+      "lines": 218,
+      "project_imports": [
+        "SKEFTHawking.ADW.GaussianPolynomialHermite",
+        "SKEFTHawking.Detection.GaussianThreshold"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "path": "lean/SKEFTHawking/ADW/GaussianPolynomialHermite.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "2d4f1dee5432252a28aca49038f870ecdb98ea06122eafa1cfa121d1f27c5893",
+      "commit": "d4e4494b88e15892785adac7d687459c71eb04ae",
+      "lines": 135,
+      "project_imports": [
+        "SKEFTHawking.ADW.GaussianPolynomialIBP"
+      ]
+    },
+    {
+      "module": "SKEFTHawking.ADW.GaussianPolynomialIBP",
+      "path": "lean/SKEFTHawking/ADW/GaussianPolynomialIBP.lean",
+      "source_checkout": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+      "sha256": "ffb651c528b22d256b05e8a5ea5118ff3d6fb5bf917d00cd9544b25daccfb396",
+      "commit": "8ad1411526b8b8d5b49e9f3b9993b8083ec887d9",
+      "lines": 70,
+      "project_imports": []
+    }
+  ],
+  "unchanged_recursive_project_imports": [
+    "lean/SKEFTHawking/PauliMatrices.lean",
+    "lean/SKEFTHawking/Detection/GaussianThreshold.lean",
+    "lean/SKEFTHawking/QuantumNetwork/ReadoutRelaxationBound.lean",
+    "lean/SKEFTHawking/QuantumNetwork/CoherenceFidelity.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GateFidelity.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GaussianComplexTensor.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GaussianComplexMoment.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GaussianSphere.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GaussianPolar.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GaussianWick.lean",
+    "lean/SKEFTHawking/QuantumNetwork/GaussianMoments.lean",
+    "lean/SKEFTHawking/QuantumNetwork/CPTPChannel.lean",
+    "lean/SKEFTHawking/QuantumNetwork/MixedState.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondBudget.lean",
+    "lean/SKEFTHawking/QuantumNetwork/NamedChannelDiamondExact.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNormDual.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNormChoiUpper.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNormChoi.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNormSup.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNorm.lean",
+    "lean/SKEFTHawking/QuantumNetwork/TraceNormCauchySchwarz.lean",
+    "lean/SKEFTHawking/QuantumNetwork/FidelityBounds.lean",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNormAttainment.lean",
+    "lean/SKEFTHawking/QuantumNetwork/NamedChannels.lean",
+    "lean/SKEFTHawking/QuantumNetwork/HaarPauli.lean",
+    "lean/SKEFTHawking/QuantumNetwork/Teleportation.lean",
+    "lean/SKEFTHawking/QuantumNetwork/RepeaterChain.lean",
+    "lean/SKEFTHawking/QuantumNetwork/Envelope.lean",
+    "lean/SKEFTHawking/QuantumNetwork/EndToEnd.lean",
+    "lean/SKEFTHawking/QuantumNetwork/Swapping.lean",
+    "lean/SKEFTHawking/QuantumNetwork/Basic.lean",
+    "lean/SKEFTHawking/QuantumNetwork/NumericalBounds.lean",
+    "lean/SKEFTHawking/QuantumNetwork/Channels.lean"
+  ],
+  "aggregate": "Preserve ce194 aggregate; add exactly the nine listed module imports. C2 accepted aggregate commit450710b86 contributes one import only.",
+  "pins": "MAIN420 lean-toolchain, lakefile.toml and lake-manifest.json byte-identical ce194. PRIMARY450 toolchain/manifest identical; lakefile only adds unrelated NavierStokes library stanza. No pin change necessary.",
+  "qualification": "Not run; ROOT owns active native tests/builds. Existing accepted source reviews do not qualify the unconstructed exact-base candidate.",
+  "canonical_writers": {
+    "lean/lean_deps.json and lean/lean_deps.json.hash": "scripts/extract_lean_deps.py; exact aggregate and all Lean sources hash",
+    "docs/counts.json and docs/counts.tex": "scripts/update_counts.py",
+    "lean/atlas_view.json": "scripts/atlas_view.py --write",
+    "docs/ATLAS_HEATMAP.md": "scripts/atlas_heatmap.py --write",
+    "papers/*/tables/*.tex": "scripts/render_paper_tables.py if staleness inputs require; any actual papers/ delta means paper wave s13 applies"
+  },
+  "merge_requirements": [
+    "uv run python -m pytest -m \"\" -q exit0 (both testpaths)",
+    "uv run python scripts/validate.py --ci --no-memo output contains \u2713 SUBSTRATE: clean; implementation does not enforce comment readiness-only failure condition",
+    "uv run python scripts/validate.py --check counts_fresh --check tables_fresh --check claim_clusters_fresh --check notebook_exec --no-memo exit0",
+    "lake build SKEFTHawking.ExtractDeps exit0 in lean/; structural changes also require clean baseline per pipeline/ADR008 controller authority",
+    "No new git status porcelain entries caused by gate; code compares status sets, not file-content before/after"
+  ],
+  "no_exception": true,
+  "source_wave_closure_is_merge_authority": false,
+  "publication_approval": "Final human publication approval preserved; submission scope-blind strict gate and GREEN/readiness/human parameter provenance remain separate",
+  "discrepancies": [
+    "wave-close SKILL step1 hardcodes s13 while topology tier2 explicitly supplies s13-lean for untouched papers",
+    "verify_scope CI expected-substring accepts substrate clean regardless return code and does not verify readiness is sole paper failure",
+    "verify_scope argparse help still says two agreeing runs but actual step list runs one",
+    "Historical ce194 finite-memory owner exception applies only that increment; no general L1 exception found"
+  ]
+}

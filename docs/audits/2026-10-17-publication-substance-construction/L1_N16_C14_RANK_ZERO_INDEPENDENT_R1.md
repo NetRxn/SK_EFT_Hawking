@@ -1,0 +1,25 @@
+# Independent review of the rank-zero and rank-eight c14 closure
+
+The frozen object is the periodic closed source_C zero-centered (01,01,23,23) row at clean primary 27012c18fa374e8341e124b510abbedeedb18d29. The author and input manifests verify. The accepted result is a factored open tensor. The external divisor 512 stays outside it.
+
+## Complete declared local factorization
+
+I independently derived each new edge owner from every original row occurrence. Exact re-extraction of raw signed coframe quarter increments, full exterior four-position signs and separate S3 coordinate moments reproduces each complete 14,208-row new edge table at denominator 768. Each uses 240 coordinate assignments and drops exactly 3,584 zero rows after signed accumulation.
+
+A separate pair-assignment recursion reproduces all 2,520 rank-zero and 240 rank-eight site partitions with their exterior signs. Full traversal of the partition-pair domain reproduces 100 mask bridge keys and 73,440 compatible signed partition pairs. The gross sum of unfiltered seven-edge row products is exactly 36,474,951,220,875,755,520. This count bounds the stated unfactored schedule before trace filtering. It says nothing about a lower bound for exact contraction. The six open endpoints are distinct. Moving a two-generator site block across another whole pair adds even sign, so the global wedge sign is the product of the rank-zero and rank-eight partition signs.
+
+I re-extracted both complete original signed trace tables from the raw ordered factors. Each is 1,536 nonzero rows in 32 bins of 48 at denominator 4. The two 01 trace occurrences take their distinct axis-2/3 seam values at (0,2)/(0,3) and their corresponding axis-0/1 coframe components, retaining the actual residual coordinates at (2,3)/(1,2). The two 23 occurrences take their own prior seam pair, their own new axis-1 leg at (0,1), and their own axis-2/3 coframe components, retaining the actual (4,0) coordinates. The shared edge joins the two masks and occurs once as a coefficient factor. The tile and bridge are Boolean conditions on these same labels. All remaining action and exterior labels stay open. The common denominator is 280,159,925,619,463,815,168 before the external exponential factor.
+
+## Exact restricted cancellations
+
+For each declared restriction I independently multiplied every compatible component-labelled term, obtaining the full literal wedge sign across the 128 available positions and checking its reversal under the rank-zero transposition. The restrictions fix both local partitions, the earlier tile, all three new q-pair slots and the stated boundary labels. Each of the three has exactly 16 nonzero contributions and signed sum zero. Reversing the sign of the identified single path gives exactly +386,547,056,640, -386,547,056,640 and -386,547,056,640 numerator units.
+
+There is a concrete candidate pairing for these three restrictions. XOR 2 on all four internal plane-23 coframe component slots maps their exact 16-path supports onto themselves with opposite signed numerator. XOR 3 also works on these three sets. A universal symmetry is unresolved. At either new edge separately the XOR-2 map loses 3,328 of the 14,208 supported rows and has mixed sign effects on the others, so the restricted involution cannot be extended by assuming factorwise row invariance. Any broader proof must account for the actual joined domains and complete exterior/trace labels.
+
+## Capacity and next edge
+
+The frozen refusal logs independently show the initial 100,001-row refusal, four 4,000,001-work refusals, and one 300,001-row search refusal. The 120,000-row successful edge admission retains the 64 MiB accounted byte cap, since 120,000 times 512 bytes is 61,440,000 bytes. I verified the resulting edge totals of 575,896 charged operations, 113,328 insertions and 1,108,056 serialized bytes. I verified the composition totals of 176,762 charged operations, 118,010 insertions and 36,268 serialized bytes. Reported sampled peak process RSS is 116,228,096 and 124,993,536 bytes, respectively. RSS is polled and accounting excludes secondary or source/readback allocations according to the reported meter scopes.
+
+Independent full-roster incidence gives exactly two S4 coframe occurrences at rank 12 and the two 23 trace slots at original anchor (4,0) for the residual unoriented edge between ranks 4 and 12. That permits a complete degree-four Haar edge tensor conditioned on the two still-open 23 q labels, retaining both site exterior masks and the two S4 axis-0 component slots. Contracting the edge alone cannot close either next site's eight generators. A conditional cost admission and exact signed check are still needed.
+
+**Frozen verdict** Accept the exact declared factored interface and the three restricted signed controls. The unrestricted fixed-boundary value refused within the tested budget and remains unevaluated. The restricted zeros do not establish any unrestricted boundary, representative, c14, c0, full denominator or normalized value. Terminal continuity is fresh and the primary checkout is clean.

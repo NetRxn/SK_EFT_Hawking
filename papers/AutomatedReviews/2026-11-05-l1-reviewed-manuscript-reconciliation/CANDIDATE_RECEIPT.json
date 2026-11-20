@@ -1,0 +1,22 @@
+{
+  "base": "d7a8f8a991c8ba2ec19b775239ee3f6ccc977a89",
+  "historical_source_commits": [
+    "2e33bf664b30ed77f08793168028128ae88307f7",
+    "90be7b1ac15f4be87b5ad4e0c3c431eb5b61bc61",
+    "bd7172edbebcb97b04cebf451374937d1889b46d"
+  ],
+  "candidate_sha256": {
+    "papers/L1/paper_draft.tex": "7fdce46421f188f4143d23a3ff8a21ae1eb3c31ef6536b7635c6573f414f1297",
+    "papers/L1/paper_draft.pdf": "500dd008b97a74b4d116e055b2786b618508ac508a6b57ced29975265775ef5b",
+    "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md": "d6ced0001545352f7b7036d0702b04e36c5d6ee256a57c886c410f86db0a61d7",
+    "docs/audits/2026-10-17-publication-substance-construction/l1_k4_coupled_holonomy_161163_preparation_checkpoint.md": "a9d7464e1663bf22034c6004bcb3a9f911c4b02b09e37874896244bba1187825"
+  },
+  "scope": "Manuscript reconciliation and user-directed role clarification only. No scientific construction, fresh kernel verification, canonical closure, stage green, gate transition, main or publication acceptance.",
+  "remaining": [
+    "Physical B3 susceptibility normalization and derived window",
+    "Microscopic action, propagator and matter coupling",
+    "Physical frequency/transport normalization and controlled errors",
+    "Six overfull boxes and full independent rendered review",
+    "Current integrated claims catalog and canonical stage reevaluation"
+  ]
+}

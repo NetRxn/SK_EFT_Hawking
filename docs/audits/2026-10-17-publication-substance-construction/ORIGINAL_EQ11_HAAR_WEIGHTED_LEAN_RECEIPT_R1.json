@@ -1,0 +1,53 @@
+{
+  "source_commit": "7e1cd960c0f3842358803d8b0c6ce8fb06639138",
+  "source_sha256": "55fb2ad2c04e2855e1761a84bdafc88d9cc32c03acc6e768aee14d4307a0e64c",
+  "slot": 1,
+  "exact_file_diagnostics": {
+    "success": true,
+    "timed_out": false,
+    "items": [],
+    "failed_dependencies": []
+  },
+  "exact_source_axioms": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.haarGaussianWeightAdjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 118,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.integral_haar_eval_weight_pderiv' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 119,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.haar_eval_weight_pderiv_integrable' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 120,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.integral_haar_eval_weight_pderiv_pderiv' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 121,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.haar_eval_weight_pderiv_pderiv_integrable' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 122,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.haarGaussianWeightAdjoint_comp' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 123,
+        "column": 1
+      }
+    ]
+  }
+}

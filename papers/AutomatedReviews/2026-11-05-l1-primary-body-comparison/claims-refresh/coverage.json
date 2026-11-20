@@ -1,0 +1,1252 @@
+[
+  {
+    "review_unit": 0,
+    "id": "sentence:L1:abstract:9a3de8fb",
+    "line_start": 33,
+    "line_end": 34,
+    "char_start": 834,
+    "char_end_exclusive": 912,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 1,
+    "id": "sentence:L1:abstract:275ad002",
+    "line_start": 34,
+    "line_end": 36,
+    "char_start": 913,
+    "char_end_exclusive": 1067,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 2,
+    "id": "sentence:L1:abstract:600cc132",
+    "line_start": 37,
+    "line_end": 38,
+    "char_start": 1068,
+    "char_end_exclusive": 1188,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 3,
+    "id": "sentence:L1:abstract:7597e1a0",
+    "line_start": 39,
+    "line_end": 41,
+    "char_start": 1189,
+    "char_end_exclusive": 1333,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 4,
+    "id": "sentence:L1:introduction:62514176",
+    "line_start": 50,
+    "line_end": 51,
+    "char_start": 1472,
+    "char_end_exclusive": 1587,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 5,
+    "id": "sentence:L1:introduction:5f9fdcc4",
+    "line_start": 52,
+    "line_end": 53,
+    "char_start": 1588,
+    "char_end_exclusive": 1708,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 6,
+    "id": "sentence:L1:introduction:0240691b",
+    "line_start": 54,
+    "line_end": 57,
+    "char_start": 1709,
+    "char_end_exclusive": 1909,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 7,
+    "id": "sentence:L1:introduction:648f68d1",
+    "line_start": 58,
+    "line_end": 59,
+    "char_start": 1910,
+    "char_end_exclusive": 2032,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 8,
+    "id": "sentence:L1:introduction:8b4bfa65",
+    "line_start": 62,
+    "line_end": 63,
+    "char_start": 2080,
+    "char_end_exclusive": 2181,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 9,
+    "id": "sentence:L1:introduction:3aa1767b",
+    "line_start": 64,
+    "line_end": 65,
+    "char_start": 2182,
+    "char_end_exclusive": 2309,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 10,
+    "id": "sentence:L1:introduction:f764373d",
+    "line_start": 66,
+    "line_end": 67,
+    "char_start": 2310,
+    "char_end_exclusive": 2441,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 11,
+    "id": "sentence:L1:introduction:67b7c8dd",
+    "line_start": 68,
+    "line_end": 69,
+    "char_start": 2442,
+    "char_end_exclusive": 2546,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 12,
+    "id": "sentence:L1:introduction:d6013bba",
+    "line_start": 70,
+    "line_end": 78,
+    "char_start": 2547,
+    "char_end_exclusive": 2899,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 13,
+    "id": "sentence:L1:introduction:7b7e770d",
+    "line_start": 79,
+    "line_end": 79,
+    "char_start": 2900,
+    "char_end_exclusive": 2943,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 14,
+    "id": "sentence:L1:introduction:36969d20",
+    "line_start": 80,
+    "line_end": 82,
+    "char_start": 2944,
+    "char_end_exclusive": 3128,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 15,
+    "id": "sentence:L1:introduction:64da36f6",
+    "line_start": 83,
+    "line_end": 85,
+    "char_start": 3129,
+    "char_end_exclusive": 3238,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 16,
+    "id": "sentence:L1:introduction:0ef96618",
+    "line_start": 85,
+    "line_end": 86,
+    "char_start": 3239,
+    "char_end_exclusive": 3286,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 17,
+    "id": "sentence:L1:introduction:162806f2",
+    "line_start": 86,
+    "line_end": 86,
+    "char_start": 3287,
+    "char_end_exclusive": 3356,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 18,
+    "id": "sentence:L1:introduction:5de5ca35",
+    "line_start": 87,
+    "line_end": 89,
+    "char_start": 3357,
+    "char_end_exclusive": 3512,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 19,
+    "id": "sentence:L1:introduction:4c437fe8",
+    "line_start": 89,
+    "line_end": 90,
+    "char_start": 3513,
+    "char_end_exclusive": 3615,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 20,
+    "id": "sentence:L1:introduction:555a000d",
+    "line_start": 92,
+    "line_end": 97,
+    "char_start": 3617,
+    "char_end_exclusive": 3954,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 21,
+    "id": "sentence:L1:introduction:11fe3464",
+    "line_start": 98,
+    "line_end": 99,
+    "char_start": 3955,
+    "char_end_exclusive": 4034,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 22,
+    "id": "sentence:L1:introduction:2da8b694",
+    "line_start": 101,
+    "line_end": 102,
+    "char_start": 4036,
+    "char_end_exclusive": 4143,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 23,
+    "id": "sentence:L1:introduction:cd2d9076",
+    "line_start": 102,
+    "line_end": 105,
+    "char_start": 4144,
+    "char_end_exclusive": 4350,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 24,
+    "id": "sentence:L1:introduction:3f462fe0",
+    "line_start": 105,
+    "line_end": 108,
+    "char_start": 4351,
+    "char_end_exclusive": 4533,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 25,
+    "id": "sentence:L1:introduction:ec137388",
+    "line_start": 109,
+    "line_end": 110,
+    "char_start": 4534,
+    "char_end_exclusive": 4654,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 26,
+    "id": "sentence:L1:introduction:d6933ae4",
+    "line_start": 110,
+    "line_end": 113,
+    "char_start": 4655,
+    "char_end_exclusive": 4855,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 27,
+    "id": "sentence:L1:introduction:92468fa1",
+    "line_start": 115,
+    "line_end": 116,
+    "char_start": 4908,
+    "char_end_exclusive": 4963,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 28,
+    "id": "sentence:L1:introduction:b7a2d94a",
+    "line_start": 116,
+    "line_end": 118,
+    "char_start": 4964,
+    "char_end_exclusive": 5089,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 29,
+    "id": "sentence:L1:introduction:92b08bc8",
+    "line_start": 118,
+    "line_end": 120,
+    "char_start": 5090,
+    "char_end_exclusive": 5254,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 30,
+    "id": "sentence:L1:introduction:e41111f6",
+    "line_start": 120,
+    "line_end": 124,
+    "char_start": 5255,
+    "char_end_exclusive": 5492,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 31,
+    "id": "sentence:L1:introduction:57841ed5",
+    "line_start": 124,
+    "line_end": 129,
+    "char_start": 5493,
+    "char_end_exclusive": 5804,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 32,
+    "id": "sentence:L1:introduction:fed0c478",
+    "line_start": 129,
+    "line_end": 133,
+    "char_start": 5805,
+    "char_end_exclusive": 6063,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 33,
+    "id": "sentence:L1:introduction:d76ed428",
+    "line_start": 135,
+    "line_end": 136,
+    "char_start": 6065,
+    "char_end_exclusive": 6201,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 34,
+    "id": "sentence:L1:introduction:ab187a1d",
+    "line_start": 137,
+    "line_end": 138,
+    "char_start": 6202,
+    "char_end_exclusive": 6295,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 35,
+    "id": "sentence:L1:introduction:83a31c23",
+    "line_start": 138,
+    "line_end": 139,
+    "char_start": 6296,
+    "char_end_exclusive": 6389,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 36,
+    "id": "sentence:L1:introduction:d6f8d95d",
+    "line_start": 139,
+    "line_end": 141,
+    "char_start": 6390,
+    "char_end_exclusive": 6542,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 37,
+    "id": "sentence:L1:introduction:e17de389",
+    "line_start": 142,
+    "line_end": 144,
+    "char_start": 6543,
+    "char_end_exclusive": 6689,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 38,
+    "id": "sentence:L1:introduction:fcbc3c66",
+    "line_start": 144,
+    "line_end": 145,
+    "char_start": 6690,
+    "char_end_exclusive": 6821,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 39,
+    "id": "sentence:L1:introduction:f191f615",
+    "line_start": 145,
+    "line_end": 148,
+    "char_start": 6822,
+    "char_end_exclusive": 7021,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 40,
+    "id": "sentence:L1:introduction:89456771",
+    "line_start": 150,
+    "line_end": 151,
+    "char_start": 7023,
+    "char_end_exclusive": 7145,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 41,
+    "id": "sentence:L1:introduction:29595c5a",
+    "line_start": 151,
+    "line_end": 153,
+    "char_start": 7146,
+    "char_end_exclusive": 7283,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 42,
+    "id": "sentence:L1:introduction:1079fe28",
+    "line_start": 153,
+    "line_end": 154,
+    "char_start": 7284,
+    "char_end_exclusive": 7347,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 43,
+    "id": "sentence:L1:introduction:1277ae3f",
+    "line_start": 155,
+    "line_end": 158,
+    "char_start": 7348,
+    "char_end_exclusive": 7526,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 44,
+    "id": "sentence:L1:introduction:5bda7b0e",
+    "line_start": 158,
+    "line_end": 160,
+    "char_start": 7527,
+    "char_end_exclusive": 7650,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 45,
+    "id": "sentence:L1:formal-setup-and-result:06a02fb4",
+    "line_start": 167,
+    "line_end": 170,
+    "char_start": 7826,
+    "char_end_exclusive": 8020,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 46,
+    "id": "sentence:L1:formal-setup-and-result:98b2e23b",
+    "line_start": 170,
+    "line_end": 171,
+    "char_start": 8021,
+    "char_end_exclusive": 8133,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 47,
+    "id": "sentence:L1:formal-setup-and-result:c1c2c986",
+    "line_start": 172,
+    "line_end": 175,
+    "char_start": 8134,
+    "char_end_exclusive": 8387,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 48,
+    "id": "sentence:L1:formal-setup-and-result:7cde98b1",
+    "line_start": 175,
+    "line_end": 180,
+    "char_start": 8388,
+    "char_end_exclusive": 8671,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 49,
+    "id": "sentence:L1:formal-setup-and-result:fe4a081e",
+    "line_start": 180,
+    "line_end": 185,
+    "char_start": 8672,
+    "char_end_exclusive": 8970,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 50,
+    "id": "sentence:L1:formal-setup-and-result:e189cdda",
+    "line_start": 185,
+    "line_end": 189,
+    "char_start": 8971,
+    "char_end_exclusive": 9201,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 51,
+    "id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+    "line_start": 191,
+    "line_end": 196,
+    "char_start": 9241,
+    "char_end_exclusive": 9502,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 52,
+    "id": "sentence:L1:formal-setup-and-result:3cd70eb8",
+    "line_start": 198,
+    "line_end": 200,
+    "char_start": 9547,
+    "char_end_exclusive": 9670,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 53,
+    "id": "sentence:L1:formal-setup-and-result:c694dfa5",
+    "line_start": 200,
+    "line_end": 201,
+    "char_start": 9671,
+    "char_end_exclusive": 9708,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 54,
+    "id": "sentence:L1:formal-setup-and-result:6bb21996",
+    "line_start": 203,
+    "line_end": 209,
+    "char_start": 9710,
+    "char_end_exclusive": 9944,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 55,
+    "id": "sentence:L1:formal-setup-and-result:a48e702c",
+    "line_start": 211,
+    "line_end": 214,
+    "char_start": 9946,
+    "char_end_exclusive": 10121,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 56,
+    "id": "sentence:L1:formal-setup-and-result:b63f73a8",
+    "line_start": 214,
+    "line_end": 215,
+    "char_start": 10122,
+    "char_end_exclusive": 10199,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 57,
+    "id": "sentence:L1:formal-setup-and-result:aa870922",
+    "line_start": 217,
+    "line_end": 222,
+    "char_start": 10240,
+    "char_end_exclusive": 10539,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 58,
+    "id": "sentence:L1:formal-setup-and-result:ed33e4c6",
+    "line_start": 223,
+    "line_end": 225,
+    "char_start": 10540,
+    "char_end_exclusive": 10720,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 59,
+    "id": "sentence:L1:formal-setup-and-result:bb17ffb5",
+    "line_start": 226,
+    "line_end": 226,
+    "char_start": 10721,
+    "char_end_exclusive": 10791,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 60,
+    "id": "sentence:L1:formal-setup-and-result:207942fe",
+    "line_start": 228,
+    "line_end": 233,
+    "char_start": 10793,
+    "char_end_exclusive": 11047,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 61,
+    "id": "sentence:L1:formal-setup-and-result:0b2b6094",
+    "line_start": 235,
+    "line_end": 240,
+    "char_start": 11049,
+    "char_end_exclusive": 11301,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 62,
+    "id": "sentence:L1:formal-setup-and-result:929692a7",
+    "line_start": 242,
+    "line_end": 244,
+    "char_start": 11303,
+    "char_end_exclusive": 11474,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 63,
+    "id": "sentence:L1:formal-setup-and-result:675ab7d2",
+    "line_start": 244,
+    "line_end": 246,
+    "char_start": 11475,
+    "char_end_exclusive": 11554,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 64,
+    "id": "sentence:L1:formal-setup-and-result:d8b52fd1",
+    "line_start": 246,
+    "line_end": 248,
+    "char_start": 11555,
+    "char_end_exclusive": 11686,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 65,
+    "id": "sentence:L1:formal-setup-and-result:3868a57b",
+    "line_start": 250,
+    "line_end": 257,
+    "char_start": 11688,
+    "char_end_exclusive": 12074,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 66,
+    "id": "sentence:L1:formal-setup-and-result:6cfe0344",
+    "line_start": 257,
+    "line_end": 258,
+    "char_start": 12075,
+    "char_end_exclusive": 12147,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 67,
+    "id": "sentence:L1:formal-setup-and-result:67680096",
+    "line_start": 258,
+    "line_end": 260,
+    "char_start": 12148,
+    "char_end_exclusive": 12264,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 68,
+    "id": "sentence:L1:formal-setup-and-result:e18ae283",
+    "line_start": 261,
+    "line_end": 262,
+    "char_start": 12265,
+    "char_end_exclusive": 12344,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 69,
+    "id": "sentence:L1:formal-setup-and-result:e8ff11e9",
+    "line_start": 262,
+    "line_end": 265,
+    "char_start": 12345,
+    "char_end_exclusive": 12548,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 70,
+    "id": "sentence:L1:formal-setup-and-result:6b3a489b",
+    "line_start": 270,
+    "line_end": 275,
+    "char_start": 12676,
+    "char_end_exclusive": 13038,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 71,
+    "id": "sentence:L1:formal-setup-and-result:9dbf0010",
+    "line_start": 275,
+    "line_end": 278,
+    "char_start": 13039,
+    "char_end_exclusive": 13218,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 72,
+    "id": "sentence:L1:formal-setup-and-result:928d4e3e",
+    "line_start": 278,
+    "line_end": 280,
+    "char_start": 13219,
+    "char_end_exclusive": 13367,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 73,
+    "id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+    "line_start": 280,
+    "line_end": 282,
+    "char_start": 13368,
+    "char_end_exclusive": 13495,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 74,
+    "id": "sentence:L1:formal-setup-and-result:c566aed6",
+    "line_start": 282,
+    "line_end": 283,
+    "char_start": 13496,
+    "char_end_exclusive": 13599,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 75,
+    "id": "sentence:L1:formal-setup-and-result:2d57174c",
+    "line_start": 283,
+    "line_end": 286,
+    "char_start": 13600,
+    "char_end_exclusive": 13780,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 76,
+    "id": "sentence:L1:formal-setup-and-result:bbf37c66",
+    "line_start": 290,
+    "line_end": 303,
+    "char_start": 13853,
+    "char_end_exclusive": 14402,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 77,
+    "id": "sentence:L1:formal-setup-and-result:41d63d4f",
+    "line_start": 303,
+    "line_end": 307,
+    "char_start": 14403,
+    "char_end_exclusive": 14643,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 78,
+    "id": "sentence:L1:formal-setup-and-result:0f3f4a6d",
+    "line_start": 307,
+    "line_end": 308,
+    "char_start": 14644,
+    "char_end_exclusive": 14737,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 79,
+    "id": "sentence:L1:formal-setup-and-result:152de090",
+    "line_start": 310,
+    "line_end": 311,
+    "char_start": 14739,
+    "char_end_exclusive": 14826,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 80,
+    "id": "sentence:L1:formal-setup-and-result:a43e84f3",
+    "line_start": 311,
+    "line_end": 315,
+    "char_start": 14827,
+    "char_end_exclusive": 15084,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 81,
+    "id": "sentence:L1:formal-setup-and-result:ea26e7aa",
+    "line_start": 315,
+    "line_end": 316,
+    "char_start": 15085,
+    "char_end_exclusive": 15161,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 82,
+    "id": "sentence:L1:formal-setup-and-result:03a02b34",
+    "line_start": 317,
+    "line_end": 318,
+    "char_start": 15162,
+    "char_end_exclusive": 15268,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 83,
+    "id": "sentence:L1:formal-setup-and-result:41403f4b",
+    "line_start": 318,
+    "line_end": 319,
+    "char_start": 15269,
+    "char_end_exclusive": 15360,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 84,
+    "id": "sentence:L1:formal-setup-and-result:90db9920",
+    "line_start": 320,
+    "line_end": 322,
+    "char_start": 15361,
+    "char_end_exclusive": 15522,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 85,
+    "id": "sentence:L1:formal-setup-and-result:8a067e2e",
+    "line_start": 322,
+    "line_end": 323,
+    "char_start": 15523,
+    "char_end_exclusive": 15620,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 86,
+    "id": "sentence:L1:formal-setup-and-result:cb1ca595",
+    "line_start": 326,
+    "line_end": 327,
+    "char_start": 15686,
+    "char_end_exclusive": 15810,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 87,
+    "id": "sentence:L1:formal-setup-and-result:de4a9473",
+    "line_start": 328,
+    "line_end": 331,
+    "char_start": 15811,
+    "char_end_exclusive": 16007,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 88,
+    "id": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "line_start": 331,
+    "line_end": 334,
+    "char_start": 16008,
+    "char_end_exclusive": 16155,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 89,
+    "id": "sentence:L1:formal-setup-and-result:2cf63785",
+    "line_start": 334,
+    "line_end": 335,
+    "char_start": 16156,
+    "char_end_exclusive": 16209,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 90,
+    "id": "sentence:L1:formal-setup-and-result:f7fc4a81",
+    "line_start": 335,
+    "line_end": 337,
+    "char_start": 16210,
+    "char_end_exclusive": 16374,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 91,
+    "id": "sentence:L1:discussion:c7c68df6",
+    "line_start": 343,
+    "line_end": 345,
+    "char_start": 16523,
+    "char_end_exclusive": 16645,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 92,
+    "id": "sentence:L1:discussion:d3026983",
+    "line_start": 346,
+    "line_end": 349,
+    "char_start": 16646,
+    "char_end_exclusive": 16844,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 93,
+    "id": "sentence:L1:discussion:443b79a2",
+    "line_start": 349,
+    "line_end": 351,
+    "char_start": 16845,
+    "char_end_exclusive": 16956,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 94,
+    "id": "sentence:L1:discussion:49c6a59c",
+    "line_start": 351,
+    "line_end": 353,
+    "char_start": 16957,
+    "char_end_exclusive": 17124,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 95,
+    "id": "sentence:L1:discussion:5ca36fd5",
+    "line_start": 355,
+    "line_end": 356,
+    "char_start": 17167,
+    "char_end_exclusive": 17199,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 96,
+    "id": "sentence:L1:discussion:6a138e73",
+    "line_start": 358,
+    "line_end": 361,
+    "char_start": 17224,
+    "char_end_exclusive": 17464,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 97,
+    "id": "sentence:L1:discussion:175a78b5",
+    "line_start": 361,
+    "line_end": 362,
+    "char_start": 17465,
+    "char_end_exclusive": 17543,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 98,
+    "id": "sentence:L1:discussion:8e4393e7",
+    "line_start": 362,
+    "line_end": 363,
+    "char_start": 17544,
+    "char_end_exclusive": 17663,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 99,
+    "id": "sentence:L1:discussion:285b31f4",
+    "line_start": 364,
+    "line_end": 365,
+    "char_start": 17664,
+    "char_end_exclusive": 17750,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 100,
+    "id": "sentence:L1:discussion:1f291b86",
+    "line_start": 366,
+    "line_end": 368,
+    "char_start": 17757,
+    "char_end_exclusive": 17934,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 101,
+    "id": "sentence:L1:discussion:287db35b",
+    "line_start": 369,
+    "line_end": 370,
+    "char_start": 17935,
+    "char_end_exclusive": 18042,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 102,
+    "id": "sentence:L1:discussion:ee8c0180",
+    "line_start": 370,
+    "line_end": 372,
+    "char_start": 18043,
+    "char_end_exclusive": 18143,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 103,
+    "id": "sentence:L1:discussion:bc5f96cb",
+    "line_start": 372,
+    "line_end": 373,
+    "char_start": 18144,
+    "char_end_exclusive": 18230,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 104,
+    "id": "sentence:L1:discussion:a1b7cfc8",
+    "line_start": 374,
+    "line_end": 375,
+    "char_start": 18237,
+    "char_end_exclusive": 18352,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 105,
+    "id": "sentence:L1:discussion:5799c0b5",
+    "line_start": 376,
+    "line_end": 377,
+    "char_start": 18353,
+    "char_end_exclusive": 18477,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 106,
+    "id": "sentence:L1:discussion:9c6744da",
+    "line_start": 378,
+    "line_end": 380,
+    "char_start": 18478,
+    "char_end_exclusive": 18637,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 107,
+    "id": "sentence:L1:discussion:4b211e50",
+    "line_start": 381,
+    "line_end": 384,
+    "char_start": 18638,
+    "char_end_exclusive": 18847,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 108,
+    "id": "sentence:L1:discussion:a19165ab",
+    "line_start": 385,
+    "line_end": 388,
+    "char_start": 18848,
+    "char_end_exclusive": 19029,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 109,
+    "id": "sentence:L1:discussion:8b6e85b5",
+    "line_start": 389,
+    "line_end": 390,
+    "char_start": 19030,
+    "char_end_exclusive": 19150,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 110,
+    "id": "sentence:L1:discussion:4fc7e3f3",
+    "line_start": 391,
+    "line_end": 394,
+    "char_start": 19151,
+    "char_end_exclusive": 19353,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 111,
+    "id": "sentence:L1:discussion:e1ed18a0",
+    "line_start": 395,
+    "line_end": 396,
+    "char_start": 19354,
+    "char_end_exclusive": 19473,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 112,
+    "id": "sentence:L1:discussion:e63a56f8",
+    "line_start": 397,
+    "line_end": 398,
+    "char_start": 19474,
+    "char_end_exclusive": 19598,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 113,
+    "id": "sentence:L1:discussion:d0e426a2",
+    "line_start": 399,
+    "line_end": 399,
+    "char_start": 19599,
+    "char_end_exclusive": 19662,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 114,
+    "id": "sentence:L1:discussion:e1a97170",
+    "line_start": 400,
+    "line_end": 402,
+    "char_start": 19663,
+    "char_end_exclusive": 19800,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 115,
+    "id": "sentence:L1:discussion:67db304d",
+    "line_start": 403,
+    "line_end": 407,
+    "char_start": 19801,
+    "char_end_exclusive": 20037,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 116,
+    "id": "sentence:L1:discussion:27f33f68",
+    "line_start": 408,
+    "line_end": 409,
+    "char_start": 20038,
+    "char_end_exclusive": 20134,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 117,
+    "id": "sentence:L1:discussion:7caeb5ce",
+    "line_start": 412,
+    "line_end": 419,
+    "char_start": 20203,
+    "char_end_exclusive": 20614,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 118,
+    "id": "sentence:L1:discussion:b68e17fa",
+    "line_start": 419,
+    "line_end": 424,
+    "char_start": 20615,
+    "char_end_exclusive": 20899,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 119,
+    "id": "sentence:L1:discussion:c987e539",
+    "line_start": 424,
+    "line_end": 425,
+    "char_start": 20900,
+    "char_end_exclusive": 20980,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 120,
+    "id": "sentence:L1:discussion:0c438d3f",
+    "line_start": 425,
+    "line_end": 427,
+    "char_start": 20981,
+    "char_end_exclusive": 21137,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 121,
+    "id": "sentence:L1:discussion:40e3f093",
+    "line_start": 429,
+    "line_end": 430,
+    "char_start": 21168,
+    "char_end_exclusive": 21209,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 122,
+    "id": "sentence:L1:discussion:556783ed",
+    "line_start": 430,
+    "line_end": 433,
+    "char_start": 21210,
+    "char_end_exclusive": 21392,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 123,
+    "id": "sentence:L1:discussion:09269d60",
+    "line_start": 433,
+    "line_end": 435,
+    "char_start": 21393,
+    "char_end_exclusive": 21549,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  },
+  {
+    "review_unit": 124,
+    "id": "sentence:L1:discussion:064e25cb",
+    "line_start": 435,
+    "line_end": 437,
+    "char_start": 21550,
+    "char_end_exclusive": 21683,
+    "quote_normalized_matches_actual_excerpt": true,
+    "exact_quote_unique_with_labels_masked": true
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "candidate_head": "5eb636bed42aa668d2cfb070d0c9383275e17107",
+  "scope": "Targeted source extraction and absent-target evaluator control; not a full graph/native/gate snapshot. Physics helper and test changes were present separately.",
+  "source_sha256": {
+    "scripts/build_graph.py": "872d7dc205a2971487f8cedde2112142bee58c82c89212ba6eb5c6ecb46f7a81",
+    "scripts/readiness_gates.py": "f7cf8d0cd8860ef186b956b01f1f2d3e3b201df9af8c1587a600abea48d94966",
+    "src/core/provenance.py": "1e929d8e3e0c4603e14e4df3e8bfc1108a71fbf9ace459b9171809f17d20766d"
+  }
+}

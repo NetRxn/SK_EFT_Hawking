@@ -1,0 +1,225 @@
+{
+  "scope": "disposable local file:// Git LFS transport only; no actual GitHub/CI/cloud/connector/archive-setting/slot acceptance",
+  "artifact_bytes": 105862394,
+  "artifact_sha256": "3f07674e5885cb1dde3dd8d12004cd0f87f8f245402e11818abffbabee67523a",
+  "exact_parsed_records": 54298,
+  "pointer": "version https://git-lfs.github.com/spec/v1\noid sha256:3f07674e5885cb1dde3dd8d12004cd0f87f8f245402e11818abffbabee67523a\nsize 105862394",
+  "normal_clone_exact": true,
+  "linked_worktree_exact": true,
+  "skip_smudge_pointer_rejected_by_json": true,
+  "explicit_pull_exact": true,
+  "local_git_archive_kind": "materialized_exact_JSON",
+  "local_git_archive_bytes": 105862394,
+  "local_git_archive_skip_smudge_kind": "pointer",
+  "offline_cached_worktree_exact": true,
+  "seconds": 4.4663331671617925,
+  "operations": [
+    {
+      "args": [
+        "init",
+        "-b",
+        "main"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "init",
+        "--bare",
+        "-b",
+        "main"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.name",
+        "Disposable Publication Pilot"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.email",
+        "pilot@example.invalid"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "lfs",
+        "install",
+        "--local"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "add",
+        "--",
+        ".gitattributes",
+        "lean/lean_deps.json",
+        "lean/lean_deps.json.hash"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "commit",
+        "-m",
+        "Pilot exact registry through standard Git LFS"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "show",
+        "HEAD:lean/lean_deps.json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "remote",
+        "add",
+        "origin",
+        "file:///var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/remote.git"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "push",
+        "origin",
+        "main"
+      ],
+      "exit_code": 0,
+      "stderr": "To file:///var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/remote.git\n * [new branch]      main -> main\n"
+    },
+    {
+      "args": [
+        "clone",
+        "-c",
+        "filter.lfs.process=git-lfs filter-process",
+        "-c",
+        "filter.lfs.required=true",
+        "-c",
+        "filter.lfs.clean=git-lfs clean -- %f",
+        "-c",
+        "filter.lfs.smudge=git-lfs smudge -- %f",
+        "file:///var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/remote.git",
+        "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/clone"
+      ],
+      "exit_code": 0,
+      "stderr": "Cloning into '/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/clone'...\n"
+    },
+    {
+      "args": [
+        "lfs",
+        "fsck"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "worktree",
+        "add",
+        "--detach",
+        "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/linked",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stderr": "Preparing worktree (detached HEAD b405f9c)\n"
+    },
+    {
+      "args": [
+        "clone",
+        "-c",
+        "filter.lfs.process=git-lfs filter-process",
+        "-c",
+        "filter.lfs.required=true",
+        "-c",
+        "filter.lfs.clean=git-lfs clean -- %f",
+        "-c",
+        "filter.lfs.smudge=git-lfs smudge -- %f",
+        "file:///var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/remote.git",
+        "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/skip"
+      ],
+      "exit_code": 0,
+      "stderr": "Cloning into '/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/skip'...\n"
+    },
+    {
+      "args": [
+        "lfs",
+        "pull",
+        "--include",
+        "lean/lean_deps.json",
+        "--exclude",
+        ""
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "archive",
+        "--format=tar",
+        "HEAD",
+        "lean/lean_deps.json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "archive",
+        "--format=tar",
+        "HEAD",
+        "lean/lean_deps.json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "remote",
+        "remove",
+        "origin"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "worktree",
+        "remove",
+        "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/linked"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "worktree",
+        "add",
+        "--detach",
+        "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/publication-lfs-file-pilot-ileesnal/linked",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stderr": "Preparing worktree (detached HEAD b405f9c)\n"
+    }
+  ]
+}

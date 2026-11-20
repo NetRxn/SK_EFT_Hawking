@@ -1,0 +1,115 @@
+{
+  "peer_commit": "7fc890876d66611044d9d0d49b1090074f9de97e",
+  "result_sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+  "root_personal_full_reads": [
+    "complete actual result",
+    "both complete ACTUAL reports",
+    "acceptance",
+    "both prospective reviews and proposal"
+  ],
+  "manual_root_checks": [
+    "antisymmetric curvature inverse/reality and Pin signs",
+    "anchored inverse holonomy/basepoint coframe transport",
+    "complete chiral q minor and unique-center coefficient2i/-2i/-4i timesg2",
+    "cut transpose versus coefficient adjoint and reverse sidedness",
+    "raw versus normalized reflected functional and full mixed contact product law"
+  ],
+  "archive_sha256": "7ec8a540849cce60188d7e98d53a425874a8cdbe855d105a86d39345f8ef24a0",
+  "archive_members_verified": 28,
+  "canonical_copies_verified": 6,
+  "current_accepted_inputs_verified": [
+    {
+      "member": "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md",
+      "path": "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+      "sha256": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8"
+    },
+    {
+      "member": "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+      "sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49"
+    },
+    {
+      "member": "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+      "sha256": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832"
+    },
+    {
+      "member": "accepted/ORIGINAL_BOUNDARY_ONLY_OPERATORS.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_ONLY_OPERATORS.md",
+      "sha256": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303"
+    },
+    {
+      "member": "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+      "sha256": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c"
+    },
+    {
+      "member": "accepted/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md",
+      "sha256": "50bb6c95b3c135c0956fb8b56a14c4ee443894d0abfe7455dbd08f4a59bbe019"
+    },
+    {
+      "member": "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md",
+      "sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38"
+    },
+    {
+      "member": "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md",
+      "sha256": "eaaf8f0f129f00c916f824dcd35af38b1fd7c08f5dbe025d941c35d242bbe969"
+    },
+    {
+      "member": "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md",
+      "sha256": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65"
+    },
+    {
+      "member": "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ACCEPTANCE.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ACCEPTANCE.md",
+      "sha256": "7775d7c6e671c459ade262c187a2264bc51e7cfc6b07a9d3a4a4c2ba87ddbec6"
+    },
+    {
+      "member": "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_MATH_REVIEW_R1.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_MATH_REVIEW_R1.md",
+      "sha256": "95f0d62f25c6e7d02622e6414cf12501d9df28ec71c845833d6a915647892f3a"
+    },
+    {
+      "member": "accepted/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_SOURCE_REVIEW_R1.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_SOURCE_REVIEW_R1.md",
+      "sha256": "ddf7353250c16bfe7d920cdd485058ea54e0b2e46057887ac3b76ff97e3aee6d"
+    },
+    {
+      "member": "accepted/ORIGINAL_TRANSFER_OPERATOR.md",
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md",
+      "sha256": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66"
+    }
+  ],
+  "parent_archive_members_verified": 31,
+  "held_pdf_pins_verified": [
+    {
+      "name": "Diakonov2011.pdf",
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "bytes": 270355
+    },
+    {
+      "name": "Volovik2024.pdf",
+      "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+      "bytes": 140946
+    },
+    {
+      "name": "Vergeles2025.pdf",
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "bytes": 1756894
+    }
+  ],
+  "published_roadmap_object_verified": {
+    "commit": "e856d37d8962e80c676d7956a1d8c903faec318f",
+    "path": "docs/roadmaps/Phase6a_Roadmap.md",
+    "sha256": "6b3b0fd13ab528319d6a488c9de2c2827114a22b42871c60199163a58a5b14bf",
+    "bytes": 103766,
+    "scope": "Published cumulative physical-roadmap ownership and accepted one-slice intake; primary source workingtree separate. Not acceptance of proposed EHC result."
+  },
+  "static_gamma_excerpt_verified": true,
+  "acceptance": "ACCEPT_SCOPED_MANUAL_ORIGINAL_ACTION_CUT_SOURCE_DATUM",
+  "not_accepted": "physical positive domain/product/adjoint, source maps30-31/calibration, causal dynamics, controlled limit, B3/N4/matter/transport, native or publication acceptance; a14 and K/K_R uncomputed"
+}

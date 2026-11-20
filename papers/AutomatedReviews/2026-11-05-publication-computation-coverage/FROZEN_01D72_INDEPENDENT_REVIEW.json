@@ -1,0 +1,101 @@
+{
+  "verdict": "ACCEPT raw frozen RED evidence; summary wording correction required before checkpoint",
+  "JUnit_current_counts": {
+    "skipped": 8,
+    "passed": 7167,
+    "failed": 29
+  },
+  "old_testcases": 7196,
+  "current_testcases": 7204,
+  "all_old_ids_and_statuses_preserved": true,
+  "same_29_failed_IDs": true,
+  "new_8_cases_all_pass": [
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_absolute_script_foreign_cwd_uses_active_checkout_and_workspace",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_actual_inprep_identity_and_curated_bearing_both_directions",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_conflicting_identity_refuses_before_register_write",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_consistent_internal_overlay_and_writer_check_idempotence",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_declared_cache_content_and_missing_bytes",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_full_body_does_not_suppress_header_or_dangling_path_diagnostics",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_real_source_tiers_and_companion_routes",
+    "tests.test_d5_citations.TestSourceAcquisitionRegister::test_strongest_canonical_discovery_and_declared_alias"
+  ],
+  "failure_message_attribute_differences": {
+    "total": 9,
+    "address_only": 7,
+    "truncated_dictionary_display": "tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+    "material_unattributed": {
+      "old": 58,
+      "new": 57,
+      "ceiling": 44
+    },
+    "truncated_dictionary_ordering_only_proven": false
+  },
+  "actual_canonical_command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "--junitxml=/tmp/l1-01d72-fast.xml"
+  ],
+  "exit": 1,
+  "frozen_source": "01d72af223c38b9fc91d7eff685fe65e4aabf230",
+  "clean_before_after": true,
+  "pytest_reported_seconds": 658.14,
+  "JUnit_seconds": 658.065,
+  "parent_seconds": 660.5356171249878,
+  "archive_CRC_hash_size_original_bytes": true,
+  "installed_raw_artifacts_all_match_originals": true,
+  "graph": {
+    "sha256": "c0d74debecfa4dee53b29a892f8409b24c36bbe1fe6b4dfd062c6b9f76617aa2",
+    "nodes": 51067,
+    "edges": 18756,
+    "canonical_bundles": [
+      "F",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "D10",
+      "D11",
+      "D12",
+      "L1",
+      "L2",
+      "L3",
+      "I1",
+      "I2",
+      "I3",
+      "E1",
+      "E2"
+    ],
+    "full_payloads_match_actual_graph": 231,
+    "states": {
+      "passed": 159,
+      "open": 28,
+      "blocked": 25,
+      "needs-recheck": 19
+    },
+    "changed_states": 0,
+    "limited_source_hash": "f05067d944cb41f5",
+    "limited_hash_not_full_source_binding": true
+  },
+  "required_corrections": [
+    "Qualify truncated dictionary display difference: hidden population equality or ordering-only cause cannot be established from truncated JUnit diagnostics; align summary and verification interpretation without rewriting raw evidence"
+  ],
+  "limits": [
+    "Failure identity equality is not cause equality or waiver;29failures remain open",
+    "No suites/scientific imports/builds/writers/seeds/candidate/source/Git/notebook mutations",
+    "No new green bundle/full-project/native/security/main/human/publication acceptance"
+  ],
+  "return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  }
+}

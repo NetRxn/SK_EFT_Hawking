@@ -1,0 +1,298 @@
+{
+  "verdict": "ACCEPT_SOURCE_ONLY",
+  "required_corrections": [],
+  "source_sha256": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+  "candidate_head": "531f89f59136c7a23b24ad036e11f77fc2593c62",
+  "candidate_clean": true,
+  "continuity_initial_native": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-coupled-source-review",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "continuity_final_native": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-coupled-source-review",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "references_sha256": {
+    "l1_k4_coupled_holonomy_161163_design.md": "b9ccad542317211e6da55cac2dba62d2e46495691103d3839dbc206510491ccd",
+    "l1_k4_coupled_holonomy_161163_design_review.md": "61eea1082c0f4d2514e2d30a142cf4180d217674edf59a76006e19393559d6bd",
+    "l1-coupled-evaluator-r2-source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7"
+  },
+  "executed_receipts": "/tmp/l1-coupled-source-review-r1-receipts.json",
+  "final_receipts": "/tmp/l1-coupled-source-review-r1-final-receipts.json",
+  "local_results": {
+    "fourth_entries_checked": 1296,
+    "geometry": [
+      {
+        "H": [
+          5,
+          2
+        ],
+        "branch_weights": [
+          "1/256",
+          "-1/559872",
+          "1/139968",
+          "1/279936",
+          "1/279936",
+          "1/139968",
+          "1/279936",
+          "1/139968",
+          "-1/559872",
+          "1/139968",
+          "1/279936",
+          "1/279936",
+          "1/139968",
+          "1/279936",
+          "1/139968"
+        ],
+        "centers": 15,
+        "edges": 20,
+        "forest": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            7,
+            2
+          ]
+        ],
+        "routing": [
+          {
+            "anchor_flag": 1,
+            "center_flag": 0,
+            "edge": [
+              1,
+              3,
+              1
+            ],
+            "label": [
+              1,
+              1
+            ]
+          },
+          {
+            "anchor_flag": 1,
+            "center_flag": 0,
+            "edge": [
+              3,
+              7,
+              2
+            ],
+            "label": [
+              3,
+              2
+            ]
+          },
+          {
+            "anchor_flag": 1,
+            "center_flag": 0,
+            "edge": [
+              5,
+              7,
+              1
+            ],
+            "label": [
+              5,
+              1
+            ]
+          }
+        ],
+        "scalar_incidence": {
+          "H": 3,
+          "J": 2,
+          "K": 1,
+          "L": 2,
+          "M": 2,
+          "N": 2
+        },
+        "sources": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "word": 161
+      },
+      {
+        "H": [
+          4,
+          2
+        ],
+        "branch_weights": [
+          "1/256",
+          "-1/559872",
+          "1/139968",
+          "1/279936",
+          "1/279936",
+          "1/139968",
+          "1/279936",
+          "1/139968",
+          "-1/559872",
+          "1/139968",
+          "1/279936",
+          "1/279936",
+          "1/139968",
+          "1/279936",
+          "1/139968"
+        ],
+        "centers": 15,
+        "edges": 20,
+        "forest": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            6,
+            2
+          ]
+        ],
+        "routing": [
+          {
+            "anchor_flag": 1,
+            "center_flag": 0,
+            "edge": [
+              0,
+              2,
+              1
+            ],
+            "label": [
+              0,
+              1
+            ]
+          },
+          {
+            "anchor_flag": 1,
+            "center_flag": 0,
+            "edge": [
+              2,
+              6,
+              2
+            ],
+            "label": [
+              2,
+              2
+            ]
+          },
+          {
+            "anchor_flag": 1,
+            "center_flag": 0,
+            "edge": [
+              4,
+              6,
+              1
+            ],
+            "label": [
+              4,
+              1
+            ]
+          }
+        ],
+        "scalar_incidence": {
+          "H": 3,
+          "J": 2,
+          "K": 1,
+          "L": 2,
+          "M": 2,
+          "N": 2
+        },
+        "sources": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "word": 163
+      }
+    ],
+    "no_prepare_or_curvature_factors_called": true,
+    "sha256": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+    "sixth_entries_checked": 46656,
+    "sixth_histogram": {
+      "1": 168,
+      "2": 1008,
+      "3": 144,
+      "6": 192,
+      "15": 8
+    },
+    "source_hashes": {
+      "evaluator": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+      "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+      "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+      "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+      "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+      "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+      "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+      "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+      "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+      "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+      "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+      "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+      "l1_extended_overlap_strip.py": "13d41c0b8bdb2565a76bfc5bf45a472cf8292a18295dd67cb2e115b085ae3b3e",
+      "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2",
+      "l1_normalization_uniform_mixed_edge.py": "089d5bfd21e3bb2a25e2a914dadb261fab354888b9b7b1287a6b28b78e31768a"
+    }
+  },
+  "scope": "Full frozen source plus canonical helper source audit, bounded geometry/branch/domain/moment checks. No prepare(), curvature_factors(), elimination, full scalar or action contraction invoked.",
+  "open_gates": [
+    "Actual nonidentity forest source/action/spinor covariance",
+    "Complete all15branch prepared tables and induced signed XOR1 comparison",
+    "Independent implicit tensor selected-slice equality and bounded fixed contraction acceptance",
+    "Separate runtime admission and complete cold600/warm60whole/parent665 bounded contraction",
+    "Independent reconstruction/replay and portable CLI acceptance",
+    "Full k4 population, full derivative-normalized ensemble/common partition/physical B3/window/modes/matter/transport/main/publication"
+  ],
+  "coverage": 236,
+  "coverage_denominator": 272,
+  "artifact_hashes": {
+    "l1-coupled-source-review-r1-check.py": "f04265a8680cf7d7e28f5392e4cf17a31fb7c6a9d863be8b3b81658590d47664",
+    "l1-coupled-source-review-r1-run.py": "f92903191e04e2c81f7aaa1c935763734664fba8b6ccbda347d5073ca6f06b43",
+    "l1-coupled-source-review-r1-receipts.json": "709b0b15290a5897fcb5234a82cbb6d8bedec96863fa86d1d9a9858ff17bb8b6",
+    "l1-coupled-source-review-r1-final-receipts.json": "02561da7d98c32830ca960d2f5764966a781028cbd415a0b85fce7d920872c6b"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "reason": "Preserve exact raw pytest whitespace in archive; no raw evidence normalized",
+  "archive_sha256": "246211dc3fc344c01f9bcfbc40be67a4cedc9c81adcaf441209a8eb0f449bd6f",
+  "members": {
+    "BROAD_DEFAULT.stdout": "e01644400e41f1c41b14e41f5dedff3be8d25d76e5f247ca0b866297fba7b1db",
+    "BROAD_DEFAULT.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

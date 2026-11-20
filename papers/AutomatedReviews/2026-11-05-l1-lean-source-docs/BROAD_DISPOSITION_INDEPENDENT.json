@@ -1,0 +1,157 @@
+{
+  "verdict": "ACCEPT_BOUNDED_DISPOSITION",
+  "reviewed_at_utc": "2026-11-06T00:04:29.403816+00:00",
+  "broad_run": {
+    "passed": 8214,
+    "failed": 19,
+    "skipped": 7,
+    "deselected": 95,
+    "warnings": 7,
+    "seconds": 1757.04
+  },
+  "terminal_exit": 1,
+  "broad_status": "RED; all19failures retained, no literal baseline rerun claimed",
+  "failure_analysis": [
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+      "actual_cause_and_dependencies": "Registered-but-uncited module population178 versus147; draft/append logs plus unchanged typed declaration/module records.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+      "actual_cause_and_dependencies": "D10/D6/D8 metadata stage10 redrafted vocabulary absent from enum; metadata and enum unchanged.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+      "actual_cause_and_dependencies": "23 sentences>100words versus18 ceiling; manuscript input closures/constants unchanged.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+      "actual_cause_and_dependencies": "Same23versus18 exact-ratchet assertion.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+      "actual_cause_and_dependencies": "Current required-blocking/per-bundle and unattributed finding populations violate frozen ceilings; review/ledger/mapping/metadata unchanged.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+      "actual_cause_and_dependencies": "Seeded new critical is detected; failure is final restored-corpus green assertion against already-red population, not failure to detect seed.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+      "actual_cause_and_dependencies": "Per-bundle actual required counts differ from frozen dictionary; same review/mapping/ledger inputs.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+      "actual_cause_and_dependencies": "Unattributed55versus44; same graph finding attribution inputs.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+      "actual_cause_and_dependencies": "Mutation is never reached: initial live module-coverage green precondition fails on178versus147.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom",
+      "actual_cause_and_dependencies": "76undeclared references versus77 exact-ratchet ceiling leaves1slack.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+      "actual_cause_and_dependencies": "Removing one declaration raises76to77, stillwithin77; the seeded registry reached imports but green check reflects slack, not comment physics.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+      "actual_cause_and_dependencies": "15handwritten bundle tabulars versus1 ceiling.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+      "actual_cause_and_dependencies": "56malformed Verify controls in unchanged primary review corpus.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+      "actual_cause_and_dependencies": "Mutation never reached: initial chain resolver green precondition fails; existing111unresolved versus109.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+      "actual_cause_and_dependencies": "Same111versus109 exact-ratchet assertion.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+      "actual_cause_and_dependencies": "Seeded dangling blocked-by is detected and restored; final live severity-green assertion fails on unchanged review corpus.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+      "actual_cause_and_dependencies": "148inline numerical literals versus117 ceiling.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+      "actual_cause_and_dependencies": "15handwritten tables versus1 ceiling, duplicate generic-ratchet coverage.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    },
+    {
+      "test": "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population",
+      "actual_cause_and_dependencies": "13unit-literal+135times-ten literals=148>117; source same manuscript parser/corpus.",
+      "comment_repair_causal_attribution": "Independent at inspected assertion/input boundary"
+    }
+  ],
+  "input_conservation": {
+    "actual_diff_prefixes_empty": true,
+    "lean_deps_records_exact": true,
+    "docs_ledger_mapping_exact": true,
+    "source_nonblock_bytes_exact": true,
+    "generated_json_only_pytest_cases_and_timestamp": true,
+    "generated_lean_source_hash_matches": "33b837762ddf6a4f"
+  },
+  "targeted_baseline_repro_required_for_this_narrow_disposition": false,
+  "targeted_repro_reason": "Direct assertion dependency conservation explains all19; mutable seed tests actual failures occur at baseline/postrestore/slack assertions. No comment-sensitive raw-source dependency reaches these failed assertions. Not a claim fullsuite would produce identical trace on37.",
+  "safe_generated_commit_boundary": [
+    "Only ROOT-owned docs/counts.json,docs/counts.tex,lean/lean_deps.json.hash after all writers terminal",
+    "Preserve producer-generated8140 collected tests scoped to tests/, not broad passed count8214",
+    "Normal primary hook sync--fast can regenerate/restage census/atlas/tables; inspect complete resulting index and commit, no hook bypass; stop/review unexpected scientific content",
+    "Do not include .lean source in generated-only commit; actual hook raw incremental build is conditional on staged .lean",
+    "Generated follow-up commit changes commit-bound epoch identity; do not claim1028epoch matches newHEAD orR3"
+  ],
+  "supported_individual_closures": [
+    "apex-propagation1.2",
+    "reader-results1.2",
+    "lean-source-docs1.1",
+    "lean-source-docs1.2",
+    "originalstage13:3.3",
+    "originalstage13:3.4",
+    "originalstage13:4.2",
+    "originalstage13:5.3"
+  ],
+  "unsupported_closures": [
+    "lean-source-docs1.3 (R3eabproposalonly, currentd928stillfails)",
+    "any full-wave,whole-project,publication,main,human or original physical BUILD acceptance"
+  ],
+  "remaining_required_work": [
+    "ROOT preserves terminal broadRED and targeted5PASS/5warnings scope in qualification evidence",
+    "Reconcile/checkpoint only reviewed generated outputs and actual hook restages, then fresh normal admission/build provenance for nextR3nativewindow",
+    "ROOT uses existing individual closure writer on actual repaired source/unchanged exact Verifies and scoped accepted review; do not close whole NarrativeGrounding gate while1.3OPEN",
+    "R3needs actual controlled application, exact native/project qualification and independent actual-file review before1.3closure",
+    "Keep all19broadreds and fullwave/main/stage/publication holds"
+  ],
+  "initial_packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_packet_check": {
+    "fresh": true,
+    "changed": []
+  }
+}

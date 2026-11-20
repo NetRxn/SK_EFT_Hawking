@@ -1,0 +1,75 @@
+{
+  "L2": {
+    "before": {
+      "blockers_open": 2,
+      "open_findings": 44,
+      "critical_open": 1,
+      "blocked_p1_gates": [
+        "FixPropagation"
+      ]
+    },
+    "after": {
+      "blockers_open": 2,
+      "open_findings": 41,
+      "critical_open": 1,
+      "blocked_p1_gates": [
+        "FixPropagation"
+      ]
+    },
+    "readiness": "RED",
+    "changed_keys": [
+      "advisories_open",
+      "open_findings",
+      "readiness_last_computed"
+    ]
+  },
+  "D8": {
+    "before": {
+      "blockers_open": 1,
+      "open_findings": 16,
+      "critical_open": 0,
+      "blocked_p1_gates": [
+        "FixPropagation",
+        "LeanProofSubstance",
+        "NarrativeGrounding"
+      ]
+    },
+    "after": {
+      "blockers_open": 0,
+      "open_findings": 7,
+      "critical_open": 0,
+      "blocked_p1_gates": [
+        "LeanProofSubstance",
+        "NarrativeGrounding"
+      ]
+    },
+    "readiness": "YELLOW",
+    "changed_keys": [
+      "advisories_open",
+      "blocked_p1_gates",
+      "blockers_open",
+      "open_findings",
+      "readiness"
+    ]
+  },
+  "D11": {
+    "before": {
+      "blockers_open": 0,
+      "open_findings": 63,
+      "critical_open": 0,
+      "blocked_p1_gates": []
+    },
+    "after": {
+      "blockers_open": 0,
+      "open_findings": 49,
+      "critical_open": 0,
+      "blocked_p1_gates": []
+    },
+    "readiness": "YELLOW",
+    "changed_keys": [
+      "advisories_open",
+      "open_findings",
+      "readiness_last_computed"
+    ]
+  }
+}

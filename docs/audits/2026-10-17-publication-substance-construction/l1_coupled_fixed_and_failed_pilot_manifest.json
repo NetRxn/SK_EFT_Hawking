@@ -1,0 +1,210 @@
+{
+  "files": {
+    "fixed-checkpoint-evidence.zip": {
+      "bytes": 397876,
+      "sha256": "0f7c6efab851f2f0989283c102b6ee0cc01468772a5110bc92d72cb5f8a680d5"
+    },
+    "fixed-checkpoint-manifest.json": {
+      "bytes": 22334,
+      "sha256": "b382a7fa8eef8365d69b959a43467db932066fd92d0521fee0a0ffd90e0f1acd"
+    },
+    "pilot.py": {
+      "bytes": 5803,
+      "sha256": "66ce604d161eb1dfe958b24c7f940e48db8ba7214436c43bcc82da567781a51d"
+    },
+    "reviews/l1-executor-fixed-source-review-r1-erratum.md": {
+      "bytes": 866,
+      "sha256": "617b5f7d98612e3ce74b1ff4ad843fff471da81f37ddcd88ce1df3e875b3d131"
+    },
+    "reviews/l1-executor-unrestricted161-failure-review-r1.md": {
+      "bytes": 4793,
+      "sha256": "0dc620f8bd1255ca8078390e6de7cb26a9efce2d49edf4c63e36f09da7255358"
+    },
+    "reviews/l1-executor-unrestricted161-source-review-r1.md": {
+      "bytes": 7740,
+      "sha256": "b7c00d633461b8b12ae8c8687c6bac497e14ef95152d8f8de3535b4e01d5e9d5"
+    },
+    "run_unrestricted.py": {
+      "bytes": 3195,
+      "sha256": "fbc73961288efe5e78e942508e734589d92ab4d463c13bee38c058441a8bf06a"
+    },
+    "source-binding.json": {
+      "bytes": 3947,
+      "sha256": "f6af1c8d238f8e3a685fbd969555799dc69d051e7a125ef39eeb6b0393b7edfb"
+    },
+    "unrestricted-word-161/consumed/pilot.py": {
+      "bytes": 5803,
+      "sha256": "66ce604d161eb1dfe958b24c7f940e48db8ba7214436c43bcc82da567781a51d"
+    },
+    "unrestricted-word-161/consumed/run_unrestricted.py": {
+      "bytes": 3195,
+      "sha256": "fbc73961288efe5e78e942508e734589d92ab4d463c13bee38c058441a8bf06a"
+    },
+    "unrestricted-word-161/consumed/science/coupled.py": {
+      "bytes": 8829,
+      "sha256": "e9fda2261a1e1f7bd158c951f2472e9562c085cbd69d4e64347dc7ce16b91af2"
+    },
+    "unrestricted-word-161/consumed/science/l1_direct_a_haar.py": {
+      "bytes": 2641,
+      "sha256": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588"
+    },
+    "unrestricted-word-161/consumed/science/l1_direct_b_haar.py": {
+      "bytes": 5055,
+      "sha256": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_anchor_census.py": {
+      "bytes": 2098,
+      "sha256": "3ab424e4b4808a426e9d84a05b6af925d1a3ebbbd71b56fe1639c4c928195b42"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_four_face_gauge_join.py": {
+      "bytes": 14903,
+      "sha256": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_mixed_center_census.py": {
+      "bytes": 14921,
+      "sha256": "7411dcdccf6b9d2481236c5df9f1f86c37e426c70503afe92220f295216e8c7f"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_mixed_center_gamma.py": {
+      "bytes": 12415,
+      "sha256": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_mixed_curvature_core.py": {
+      "bytes": 6272,
+      "sha256": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_mixed_frame_join.py": {
+      "bytes": 11883,
+      "sha256": "e4422bfab8672295c8deb70a4a5ac58ff9f1cd09f5491d5297c243ca4bcdb0a1"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_mixed_frame_moment.py": {
+      "bytes": 7740,
+      "sha256": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_mixed_plane.py": {
+      "bytes": 6171,
+      "sha256": "49800b7780786ecc273d93e2274fcd5f40fe86ec0406cf2bd6bbfa3034780e0c"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_pair_census.py": {
+      "bytes": 4107,
+      "sha256": "ef8cfcf6ba6a1e88a582376f45cda510bf53e59d361d9d8f4abdbf25d291522a"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_square.py": {
+      "bytes": 5745,
+      "sha256": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_witness.py": {
+      "bytes": 12763,
+      "sha256": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_witness_k2.py": {
+      "bytes": 18260,
+      "sha256": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_witness_k3.py": {
+      "bytes": 15383,
+      "sha256": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_witness_k4.py": {
+      "bytes": 3498,
+      "sha256": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_offset_witness_k4_two_square.py": {
+      "bytes": 10814,
+      "sha256": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_one_face_gauge_join.py": {
+      "bytes": 29520,
+      "sha256": "dd79285aaddc2093ce803b3599fa51d9e6be14480494d4681effbbbdf1094da1"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_opposed.py": {
+      "bytes": 3809,
+      "sha256": "7ca46909f41ac43675d5de4bb37213439ed3426215a410c107053b33f923b198"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_opposed_source.py": {
+      "bytes": 10408,
+      "sha256": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_overlap_strip.py": {
+      "bytes": 6982,
+      "sha256": "13d41c0b8bdb2565a76bfc5bf45a472cf8292a18295dd67cb2e115b085ae3b3e"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_protected_center.py": {
+      "bytes": 5068,
+      "sha256": "3c9f78b73babc9ca59b08c287a0cd06ffb2c38937383dbac432fa03fa3aebb96"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_two_face_gamma_join.py": {
+      "bytes": 24883,
+      "sha256": "3d97c72c9d6983b607022f1142f991b0c66838e6c94474b2e0b4046e4b13a59d"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_two_face_tree.py": {
+      "bytes": 28464,
+      "sha256": "87fe886bb2a41d589248d669945c93234ad017e61f712f54fef8818bb7236a9d"
+    },
+    "unrestricted-word-161/consumed/science/l1_extended_two_mixed_centers.py": {
+      "bytes": 7807,
+      "sha256": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+    },
+    "unrestricted-word-161/consumed/science/l1_full_action_reference.py": {
+      "bytes": 7861,
+      "sha256": "0ad0fd402e18c7d13cc84f9d92d4820bfc7b2726033dc42aa7d79fb0bf5327b6"
+    },
+    "unrestricted-word-161/consumed/science/l1_interacting_support.py": {
+      "bytes": 3705,
+      "sha256": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388"
+    },
+    "unrestricted-word-161/consumed/science/l1_normalization_disjoint_sector.py": {
+      "bytes": 2393,
+      "sha256": "5bb44725a1895eb2dfc2801aadc8b51946475893746dd7ec6790ba186b0f1300"
+    },
+    "unrestricted-word-161/consumed/science/l1_normalization_opposed_fourth.py": {
+      "bytes": 4071,
+      "sha256": "e4df718d0ae922a477319b4efd902710c586d1bb73e50252f261c2cbf9941e69"
+    },
+    "unrestricted-word-161/consumed/science/l1_normalization_shared_transport.py": {
+      "bytes": 13730,
+      "sha256": "b519e523f71d993c6bd641b3cbbf471ce316ddee4d8455cf1448729153b827d7"
+    },
+    "unrestricted-word-161/consumed/science/l1_normalization_support.py": {
+      "bytes": 5632,
+      "sha256": "858ac3a6b7232910e39541927b171e7e4b21b1f3f2b34e3357503fd929493f93"
+    },
+    "unrestricted-word-161/consumed/science/l1_normalization_uniform_mixed_edge.py": {
+      "bytes": 2457,
+      "sha256": "089d5bfd21e3bb2a25e2a914dadb261fab354888b9b7b1287a6b28b78e31768a"
+    },
+    "unrestricted-word-161/consumed/science/l1_reduced_wedge_reference.py": {
+      "bytes": 4000,
+      "sha256": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a"
+    },
+    "unrestricted-word-161/consumed/science/l1_two_face_remote_components.py": {
+      "bytes": 5610,
+      "sha256": "13aeb1ad2b50f6df28f4662e999451eab97cd72a8821369bc0fdad02cd4dee68"
+    },
+    "unrestricted-word-161/consumed/science/l1_ward_witness.py": {
+      "bytes": 6597,
+      "sha256": "6d979d4fb299a1f952882974780f993521dbc53faa3d3aea877a8683612aa0ea"
+    },
+    "unrestricted-word-161/consumed/source-binding.json": {
+      "bytes": 3947,
+      "sha256": "f6af1c8d238f8e3a685fbd969555799dc69d051e7a125ef39eeb6b0393b7edfb"
+    },
+    "unrestricted-word-161/exit.json": {
+      "bytes": 4964,
+      "sha256": "3f4115e963cbd879bed465a6ca050214236f224f65029d504fd96b94b37f4797"
+    },
+    "unrestricted-word-161/stderr": {
+      "bytes": 1481,
+      "sha256": "b2acd8daa259f15257c728f76155a9760f5c938055b8f6fbbc153dec0ec7dfab"
+    },
+    "unrestricted-word-161/stdout": {
+      "bytes": 5721,
+      "sha256": "c1d34cb2d17fb9cefd7d35aba619374afaafc7440c897b51221a627d972f379b"
+    },
+    "unrestricted161-failure-readback-r1.json": {
+      "bytes": 5442,
+      "sha256": "b7ec076411fccd46d6da9d9de5618f1bdb89960a92ac6452e35ff1334d03077f"
+    }
+  },
+  "schema": "l1-executor-evidence-handback-r1",
+  "scope": "Accepted fixed-gamma controls for both words; independently accepted evidence of the single failed unrestricted161 attempt. No unrestricted coefficient, physical bridge, coverage increment, Lean or publication acceptance."
+}

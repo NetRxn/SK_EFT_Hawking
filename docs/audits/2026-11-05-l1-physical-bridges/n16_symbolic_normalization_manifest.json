@@ -1,0 +1,26 @@
+{
+  "archive": "n16_symbolic_normalization_evidence.zip",
+  "bytes": 120248,
+  "members": 15,
+  "sha256": "b0c3468068c060dd4275111f92bc0150b4b0d64f490da84f4511262ededfcb4b",
+  "accepted_source_sha256": "8544ece0ae2dfce3b3e054cd81c17153467e9b9afb9959be0372ab406e046487",
+  "parent_physical_image_checkpoint": "8440c44fe9263d0070002895b5186bca32f4f1a9",
+  "files": {
+    "construction/l1-n16-symbolic-normalization-r1.md": "8544ece0ae2dfce3b3e054cd81c17153467e9b9afb9959be0372ab406e046487",
+    "reconciliation/l1-original-convention-intake-r1.md": "1a616c1dc6fd10f298364c05774ea40e7c5b9d91f533f931f08864ccd072d3f9",
+    "reconciliation/l1-publication-convention-body.tex": "ba39d45207c8c100f85a4a0712b33d9490d6c7b268e7534a82ecbf0bac958c4f",
+    "reconciliation/l1-publication-convention-pin.json": "179e00fcedd679bcb819cd359089c7734a4e5291b498805e521677f24c4d1b6c",
+    "reconciliation/l1-symbolic-normalization-source-pins-r1.json": "19ee737183337de5cda00ce39d85dd9570fc25dfffa4d44f7826275310687674",
+    "review/l1-n16-symbolic-normalization-math-review-r1.md": "f8659649587d1501af190cb91411667ff4d42cb3f0bb404b58d8160d6c77ee99",
+    "review/l1-n16-symbolic-normalization-physics-review-r1.md": "80446ad5c0367e054f6dd2149acf09db30d2c506050c690ee3e8e3e8f5fb1571",
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "source/COLLECTIVE_BODY_PARITY.md": "f6e624715ddbf95866064f10feb0cacd373530afd1204083808441c71690becb",
+    "source/N16_PHYSICAL_IMAGE_CERTIFICATE_CONTRACT.md": "78861d229e02055c5274a1d3e16fab933d2cac961441816a47a4b739db6e9d26",
+    "source/Phase6a_Roadmap.md": "f37c9e1606b640408c58887c2607ad75caf1036278d3731d5fe6ad53d60c014e",
+    "source/SKDoubling.lean": "affa669b497d3c5d46921f59c7c5a62bd7c3c00237691421ea5a0db00d225921",
+    "source/SecondOrderSK.lean": "393179be9e2a27660e5c0e5ad53ffe9089633f5f397e85c35bd7ae55048f8bb4",
+    "source/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
+    "source/paper_draft.tex": "75a84e6136717a2db4158f9b35c51b9026563a1869b48c3243a01abcbbf27048"
+  },
+  "scope": "Independently accepted manual whole-partition/physical-image denominator and height bounds, conditional nonzero-neighborhood theorem and original-convention diligence; no coefficient/residue/evaluation/nonvanishing/state/physical-domain/admission"
+}

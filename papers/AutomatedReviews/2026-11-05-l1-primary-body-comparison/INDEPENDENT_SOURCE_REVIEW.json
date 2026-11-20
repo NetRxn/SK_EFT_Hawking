@@ -1,0 +1,68 @@
+{
+  "verdict": "ACCEPT",
+  "scope": "four primary-body attributions, bounded registry and custody proposals only",
+  "registry_changes": {
+    "BakerBellini2017": [
+      "primary_source_path",
+      "provides",
+      "notes"
+    ],
+    "CreminelliVernizzi2017": [
+      "primary_source_path",
+      "notes"
+    ],
+    "SaksteinJain2017": [
+      "primary_source_path",
+      "provides",
+      "notes"
+    ],
+    "EzquiagaZumalacarregui2017": [
+      "primary_source_path",
+      "provides",
+      "notes"
+    ]
+  },
+  "source_readback": {
+    "BakerBellini2017": {
+      "sha256": "8db10502fed0af2ce62871daef14d28a2d3f449740156865b0d602cd903ba08c",
+      "bytes": 156600,
+      "abstract_sha256": "912787c2ea79edcab47766854ac60a06a2995ecee428fd0ba8fcee18ce52da91",
+      "independent_extract_matches": true
+    },
+    "CreminelliVernizzi2017": {
+      "sha256": "75068cfe7b5039b29e43fccae6276d1f572ac6aa9eef28cb61650f54cb211650",
+      "bytes": 130147,
+      "abstract_sha256": "37fa3b4dc452b7761c7b4aef7338ca309d884d896decace42b1e7f7bd1ca3811",
+      "independent_extract_matches": true
+    },
+    "SaksteinJain2017": {
+      "sha256": "1538e145aa626598e04184dfc15ef34b1b6118e796f1d5c60e9d4a135da28adf",
+      "bytes": 1016046,
+      "abstract_sha256": "9c945c268505c652c46ec7f69b38813389c55c3b841a0686d6148e9a77ddff5b",
+      "independent_extract_matches": true
+    },
+    "EzquiagaZumalacarregui2017": {
+      "sha256": "d60c659f707b1d5822ed5cd2b957081a77a3b9082221152163f346d5b2f5781d",
+      "bytes": 884307,
+      "abstract_sha256": "00908ff7f9d734ca01982f8022602bdd7f8348b760f28744118c7a47fdcafd6a",
+      "independent_extract_matches": true
+    }
+  },
+  "only_four_sidecar_records_change": true,
+  "existing_writer_reproduced": true,
+  "other_sidecar_top_level_changes": [
+    "generated_at"
+  ],
+  "all_other_bibliographic_verification_human_fields_preserved": true,
+  "proposal_sha256": {
+    "citations.py": "8fefe95dfe535168509cf1dbc4607ff40fa82bc1eda7a70b0ac01a7db6a2a3bd",
+    "SOURCE_PINS.json": "a70aa408963c9c8d78b28b786865bab916f9ec07a770e09d3bfec164c34576f8",
+    "CITATION_DATA_DIFF.json": "1bba9bb25acca15d7147e4bd0a694d46e387be537e06b98a849abc61e4db74f9",
+    "primary_sources_state.json": "4ac41ae39e0d37b4f53df6e377ed77a3ef998e81556d613385193177268ac849",
+    "paper_draft.tex": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
+    "CUSTODY_DIFF.json": "77e5020bed9a4b7a2eb26f4a5e325c7d3c97aab36a27c7cd54acec393cdcfc02"
+  },
+  "contradictions_between_brief_and_sources": [
+    "None for bounded proposed correction. Held CV body is arXiv v3 June 2018, not itself 2017 journal version; proposed notes disclose this explicitly."
+  ]
+}

@@ -1,0 +1,2366 @@
+{
+  "proposal_sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951",
+  "tex_sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+  "records": [
+    {
+      "index": 0,
+      "id": "sentence:L1:abstract:02c7d4f7",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 1,
+      "id": "sentence:L1:abstract:87f9f7a9",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 2,
+      "id": "sentence:L1:abstract:837d4855",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 3,
+      "id": "sentence:L1:abstract:aaf6ef98",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 4,
+      "id": "sentence:L1:introduction:62514176",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 5,
+      "id": "sentence:L1:introduction:5f9fdcc4",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 6,
+      "id": "sentence:L1:introduction:0240691b",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 7,
+      "id": "sentence:L1:introduction:648f68d1",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 8,
+      "id": "sentence:L1:introduction:8b4bfa65",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 9,
+      "id": "sentence:L1:introduction:3aa1767b",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 10,
+      "id": "sentence:L1:introduction:6c6bdfda",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 11,
+      "id": "sentence:L1:introduction:67b7c8dd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 12,
+      "id": "sentence:L1:introduction:d6013bba",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 13,
+      "id": "sentence:L1:introduction:7b7e770d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 14,
+      "id": "sentence:L1:introduction:c71f012d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 15,
+      "id": "sentence:L1:introduction:64da36f6",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 16,
+      "id": "sentence:L1:introduction:82677384",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 17,
+      "id": "sentence:L1:introduction:5de5ca35",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 18,
+      "id": "sentence:L1:introduction:4c437fe8",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 19,
+      "id": "sentence:L1:introduction:73005b59",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 20,
+      "id": "sentence:L1:introduction:ece88384",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 21,
+      "id": "sentence:L1:introduction:d6d55f75",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 22,
+      "id": "sentence:L1:introduction:c671b5eb",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 23,
+      "id": "sentence:L1:introduction:9f09b12d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 24,
+      "id": "sentence:L1:introduction:3f462fe0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 25,
+      "id": "sentence:L1:introduction:ec137388",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 26,
+      "id": "sentence:L1:introduction:735fd63f",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 27,
+      "id": "sentence:L1:introduction:5d97241e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 28,
+      "id": "sentence:L1:introduction:92468fa1",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 29,
+      "id": "sentence:L1:introduction:b7a2d94a",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 30,
+      "id": "sentence:L1:introduction:92b08bc8",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 31,
+      "id": "sentence:L1:introduction:e41111f6",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 32,
+      "id": "sentence:L1:introduction:57841ed5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 33,
+      "id": "sentence:L1:introduction:fed0c478",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 34,
+      "id": "sentence:L1:introduction:8d85d0bd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 35,
+      "id": "sentence:L1:introduction:284999a5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 36,
+      "id": "sentence:L1:introduction:a83fcc62",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 37,
+      "id": "sentence:L1:introduction:24232761",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 38,
+      "id": "sentence:L1:introduction:4e12edc3",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 39,
+      "id": "sentence:L1:introduction:aef7bbd2",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 40,
+      "id": "sentence:L1:formal-setup-and-result:06a02fb4",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 41,
+      "id": "sentence:L1:formal-setup-and-result:89678d2f",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 42,
+      "id": "sentence:L1:formal-setup-and-result:7e269f6c",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 43,
+      "id": "sentence:L1:formal-setup-and-result:b81984d5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 44,
+      "id": "sentence:L1:formal-setup-and-result:26d8a4ef",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 45,
+      "id": "sentence:L1:formal-setup-and-result:2ee376fa",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 46,
+      "id": "sentence:L1:formal-setup-and-result:9ba3d666",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 47,
+      "id": "sentence:L1:formal-setup-and-result:413ce978",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 48,
+      "id": "sentence:L1:formal-setup-and-result:9f0aa030",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 49,
+      "id": "sentence:L1:formal-setup-and-result:dd7c3d55",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 50,
+      "id": "sentence:L1:formal-setup-and-result:2954bd97",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 51,
+      "id": "sentence:L1:formal-setup-and-result:c333ca56",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 52,
+      "id": "sentence:L1:formal-setup-and-result:610427d6",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 53,
+      "id": "sentence:L1:formal-setup-and-result:a7e3dde9",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 54,
+      "id": "sentence:L1:formal-setup-and-result:4e645ef8",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 55,
+      "id": "sentence:L1:formal-setup-and-result:6903a86f",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 56,
+      "id": "sentence:L1:formal-setup-and-result:5c9df18d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 57,
+      "id": "sentence:L1:formal-setup-and-result:78102830",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 58,
+      "id": "sentence:L1:formal-setup-and-result:3c494760",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 59,
+      "id": "sentence:L1:formal-setup-and-result:0ad2c240",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 60,
+      "id": "sentence:L1:formal-setup-and-result:d74afc95",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 61,
+      "id": "sentence:L1:formal-setup-and-result:d29e3d58",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 62,
+      "id": "sentence:L1:formal-setup-and-result:f0508a9e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 63,
+      "id": "sentence:L1:formal-setup-and-result:98b3a2d2",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 64,
+      "id": "sentence:L1:formal-setup-and-result:6525347d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 65,
+      "id": "sentence:L1:formal-setup-and-result:6837979e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 66,
+      "id": "sentence:L1:formal-setup-and-result:e891bf26",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 67,
+      "id": "sentence:L1:formal-setup-and-result:280d79f5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 68,
+      "id": "sentence:L1:formal-setup-and-result:76b8753f",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 69,
+      "id": "sentence:L1:formal-setup-and-result:724b602c",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 70,
+      "id": "sentence:L1:formal-setup-and-result:b6f6c9cd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 71,
+      "id": "sentence:L1:formal-setup-and-result:9dbf0010",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 72,
+      "id": "sentence:L1:formal-setup-and-result:928d4e3e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 73,
+      "id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 74,
+      "id": "sentence:L1:formal-setup-and-result:c566aed6",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 75,
+      "id": "sentence:L1:formal-setup-and-result:162cb1e0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 76,
+      "id": "sentence:L1:formal-setup-and-result:83325799",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 77,
+      "id": "sentence:L1:formal-setup-and-result:9e054bac",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 78,
+      "id": "sentence:L1:discussion:4fb737e7",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 79,
+      "id": "sentence:L1:discussion:b516afc0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 80,
+      "id": "sentence:L1:discussion:e9566cda",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 81,
+      "id": "sentence:L1:discussion:bdb0d427",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 82,
+      "id": "sentence:L1:discussion:74b99fd1",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 83,
+      "id": "sentence:L1:discussion:cf819418",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 84,
+      "id": "sentence:L1:discussion:be549b64",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 85,
+      "id": "sentence:L1:discussion:b96789f0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 86,
+      "id": "sentence:L1:discussion:b7b822df",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 87,
+      "id": "sentence:L1:discussion:d67c9a75",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 88,
+      "id": "sentence:L1:discussion:f8d0203f",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 89,
+      "id": "sentence:L1:discussion:a3ad09cd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 90,
+      "id": "sentence:L1:discussion:605e0ec0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 91,
+      "id": "sentence:L1:discussion:d0f5558e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 92,
+      "id": "sentence:L1:discussion:64deb543",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 93,
+      "id": "sentence:L1:discussion:a4461d49",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 94,
+      "id": "sentence:L1:discussion:281f6ab5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 95,
+      "id": "sentence:L1:discussion:92d00c07",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 96,
+      "id": "sentence:L1:discussion:155ec3a2",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 97,
+      "id": "sentence:L1:discussion:51a26a56",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 98,
+      "id": "sentence:L1:discussion:0037af96",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 99,
+      "id": "sentence:L1:discussion:7d4577c6",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 100,
+      "id": "sentence:L1:discussion:b9cc2a42",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 101,
+      "id": "sentence:L1:discussion:d8f9b63c",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 102,
+      "id": "sentence:L1:discussion:3fce5cbd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 103,
+      "id": "sentence:L1:discussion:c0453e1e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 104,
+      "id": "sentence:L1:discussion:54d7ebd6",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 105,
+      "id": "sentence:L1:discussion:6b1024af",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 106,
+      "id": "sentence:L1:discussion:2eee7145",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 107,
+      "id": "sentence:L1:discussion:36123ac0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 108,
+      "id": "sentence:L1:discussion:6c3647c7",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 109,
+      "id": "sentence:L1:discussion:1fb55a84",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 110,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:fb35e6ca",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 111,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:6748f67f",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 112,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:ea78a04b",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 113,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:fb832458",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 114,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:89d91fb8",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 115,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:400713c7",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 116,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:8cb5069d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 117,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:3c7bc2ae",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 118,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:9b38846d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 119,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:0ace8576",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 120,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d4af581b",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 121,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:05e85cbd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 122,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:7eec1d53",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 123,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:50947714",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 124,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:3d479f29",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 125,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:58d04173",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 126,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:5799c0b5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 127,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:9c6744da",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 128,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:a7da6cfe",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 129,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:a37fc2d0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 130,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:56ff1fe7",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 131,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:7e56289b",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 132,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:e4029b42",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 133,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:8b6e85b5",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 134,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:4fc7e3f3",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 135,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:e1ed18a0",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 136,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:e63a56f8",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 137,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d0e426a2",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 138,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:27f33f68",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 139,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:6409d539",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 140,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:67db304d",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 141,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d73fee2e",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 142,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:c4b4c5fb",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 143,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d2f28025",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 144,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d3bd12fd",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 145,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d95244d8",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 146,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:7980c119",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 147,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:40e3f093",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 148,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:556783ed",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 149,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:09269d60",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    },
+    {
+      "index": 150,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:064e25cb",
+      "checks": {
+        "occurrence": true,
+        "id": true,
+        "normalized": true,
+        "section": true,
+        "span": true,
+        "ordinal": true,
+        "order": true
+      }
+    }
+  ],
+  "failures": [],
+  "whole_body_nonstructural_residue": "",
+  "old_accounting": {
+    "unchanged": 79,
+    "moved": 32,
+    "rewritten": 23,
+    "rewritten_indices": [
+      14,
+      39,
+      40,
+      43,
+      52,
+      53,
+      63,
+      64,
+      69,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+    ],
+    "unexpected_deltas": []
+  },
+  "blocking_issues_exactly_preserved": true,
+  "non_blocking_followups_exactly_preserved": true,
+  "non_reproducing_prior_findings_exactly_preserved": true,
+  "reproducing_prior_findings_exactly_preserved": true,
+  "cross_bundle_findings_exactly_preserved": true,
+  "full134_records_preserved": true,
+  "verdict": "ACCEPT",
+  "scope": "Independent exact-source catalog/lineage and source-scoped semantic acceptance only; physical/title/publication BLOCK remains.",
+  "pdf_sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a",
+  "predecessor_sha256": "4fd35e9a46a87bb40e53dcf92a9083f625f22c55dfae529da98941a411274c61",
+  "lineage_all134_active_successors_valid": true,
+  "all_old_scope_evidence_subkeys_and_prior_summary_preserved": true,
+  "canonical_catalog_human_and_audit_unchanged": true,
+  "r1_archive_records_lineage_assessments_exact": true,
+  "r2_changed_quote_indices": [
+    95,
+    145,
+    146
+  ],
+  "r2_other148_identical_except_spans": true,
+  "r2_all_types_verdicts_unchanged": true,
+  "schema_validation": {
+    "ok": true,
+    "sentences": 151
+  },
+  "dry_run": {
+    "ok": true,
+    "sentences": 151,
+    "tombstones": 0,
+    "automatic_closures": 0,
+    "supersession_candidates": 54
+  },
+  "independent_reassessments": [
+    {
+      "index": 14,
+      "id": "sentence:L1:introduction:c71f012d",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Free-input RPA algebra does not evaluate its inputs or select susceptibility."
+    },
+    {
+      "index": 39,
+      "id": "sentence:L1:introduction:aef7bbd2",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Forward reference and failure of scalar interval result to derive mechanisms are appropriately INFO."
+    },
+    {
+      "index": 42,
+      "id": "sentence:L1:formal-setup-and-result:7e269f6c",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual RPA identity has nonzero denominator and sign-stability requires positive bare input and subcritical product; no physical normalization asserted."
+    },
+    {
+      "index": 51,
+      "id": "sentence:L1:formal-setup-and-result:c333ca56",
+      "type": "parameter",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Fixed numerical tolerance definition, not an inferred source-independent physical bound."
+    },
+    {
+      "index": 52,
+      "id": "sentence:L1:formal-setup-and-result:610427d6",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Absolute-cap display is the existing predicate unfolded; nonnegative chi retained."
+    },
+    {
+      "index": 62,
+      "id": "sentence:L1:formal-setup-and-result:f0508a9e",
+      "type": "numeric",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Lower endpoint numerical deviation and cap factor retain adopted-law scope."
+    },
+    {
+      "index": 63,
+      "id": "sentence:L1:formal-setup-and-result:98b3a2d2",
+      "type": "numeric",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Upper endpoint numerical deviation and cap factor retain adopted-law scope."
+    },
+    {
+      "index": 68,
+      "id": "sentence:L1:formal-setup-and-result:76b8753f",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual relative-deviation identity and endpoint theorem quantify over every real nonzero c; positive c is a genuine subset."
+    },
+    {
+      "index": 78,
+      "id": "sentence:L1:discussion:4fb737e7",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Same fixed-tolerance scalar interval, conditional on assumed law."
+    },
+    {
+      "index": 79,
+      "id": "sentence:L1:discussion:b516afc0",
+      "type": "numeric",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Expanding squared endpoints gives offsets plus/minus2tau+tau\u00b2; approximations distinguish susceptibility from speed tolerance."
+    },
+    {
+      "index": 80,
+      "id": "sentence:L1:discussion:e9566cda",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Finite interval contains unity and has positive width; no exact-fixed-point inference."
+    },
+    {
+      "index": 81,
+      "id": "sentence:L1:discussion:bdb0d427",
+      "type": "transition",
+      "agent_verdict": "TRANSITION",
+      "independent_disposition": "ACCEPT",
+      "reason": "Three proposals exist in actual following prose; transition creates no exhaustive mechanism theorem."
+    },
+    {
+      "index": 82,
+      "id": "sentence:L1:discussion:74b99fd1",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Symmetry/RG mechanism is explicitly hypothetical; INFO correct."
+    },
+    {
+      "index": 83,
+      "id": "sentence:L1:discussion:cf819418",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Unity membership is established but ADW realization is expressly unproved; INFO avoids physical promotion."
+    },
+    {
+      "index": 84,
+      "id": "sentence:L1:discussion:be549b64",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Different metric-channel proposal is hypothetical; no model construction or likelihood claim."
+    },
+    {
+      "index": 85,
+      "id": "sentence:L1:discussion:b96789f0",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Nonlinear action remains proposed research, with no necessity or existence proof."
+    },
+    {
+      "index": 86,
+      "id": "sentence:L1:discussion:b7b822df",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Missing dynamics cannot by itself favor the proposal; interpretive INFO appropriate."
+    },
+    {
+      "index": 87,
+      "id": "sentence:L1:discussion:d67c9a75",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual scalar carrier proves interval only, with no quantified microscopic mechanism in this statement; scope PASS is bounded to inspected theorem."
+    },
+    {
+      "index": 88,
+      "id": "sentence:L1:discussion:f8d0203f",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Frequency dependence is expressly a possible modification, not derived dispersion."
+    },
+    {
+      "index": 89,
+      "id": "sentence:L1:discussion:a3ad09cd",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual dispersion definition is real multiplication; INFO correctly distinguishes ansatz from matched expansion."
+    },
+    {
+      "index": 90,
+      "id": "sentence:L1:discussion:605e0ec0",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Literal real100 is untyped with respect to physical frequency; units/convention gap is retained."
+    },
+    {
+      "index": 91,
+      "id": "sentence:L1:discussion:d0f5558e",
+      "type": "qualitative",
+      "agent_verdict": "WARN",
+      "independent_disposition": "ACCEPT",
+      "reason": "No identification of acoustic damping with metric-channel gamma is supplied; WARN correctly retains open transport issue."
+    },
+    {
+      "index": 92,
+      "id": "sentence:L1:discussion:64deb543",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Assumed absolute gamma<=1e-30 at real100 implies product<=1e-28<tau, without measurement or derived coefficient."
+    },
+    {
+      "index": 93,
+      "id": "sentence:L1:discussion:a4461d49",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "The product bound alone does not control delta0+product; PASS correctly limits inference."
+    },
+    {
+      "index": 94,
+      "id": "sentence:L1:discussion:281f6ab5",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Choosing opposite sign product restores sufficiently near-cap exterior values in the stated additive model; full appendix bound prevents generic restoration claim."
+    },
+    {
+      "index": 95,
+      "id": "sentence:L1:discussion:92d00c07",
+      "type": "transition",
+      "agent_verdict": "TRANSITION",
+      "independent_disposition": "ACCEPT",
+      "reason": "Named hyperlink routes to actual same-file additive criterion and witnesses; TRANSITION correct."
+    },
+    {
+      "index": 96,
+      "id": "sentence:L1:discussion:155ec3a2",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "No microscopic damping or normalization derivation is presented; INFO and original BUILD remain."
+    },
+    {
+      "index": 106,
+      "id": "sentence:L1:discussion:2eee7145",
+      "type": "formal-claim",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Finite non-singleton interpretation follows scalar biconditional under explicit source and law assumptions."
+    },
+    {
+      "index": 107,
+      "id": "sentence:L1:discussion:36123ac0",
+      "type": "qualitative",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Adopted domain and width ratio alone determine no probability; scalar comparison does not supply physical prior."
+    },
+    {
+      "index": 108,
+      "id": "sentence:L1:discussion:6c3647c7",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual physical response/domain/state/tensor/reference/transport/frequency/error requirements remain open."
+    },
+    {
+      "index": 109,
+      "id": "sentence:L1:discussion:1fb55a84",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Conditional mathematical result is separated from unconstructed microscopic realization."
+    },
+    {
+      "index": 110,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:fb35e6ca",
+      "type": "transition",
+      "agent_verdict": "TRANSITION",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual appendix contains the described auxiliary material; transition only."
+    },
+    {
+      "index": 111,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:6748f67f",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Inspected predicates/products are scalar algebra and do not supply physical normalization/mode/matching."
+    },
+    {
+      "index": 112,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:ea78a04b",
+      "type": "parameter",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual LigoSatisfied definition is absdelta<=fixedtau; positive fixed tolerance unchanged."
+    },
+    {
+      "index": 125,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:58d04173",
+      "type": "qualitative",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Source expressly labels law assumed and frequency independent; INFO correct."
+    },
+    {
+      "index": 142,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:c4b4c5fb",
+      "type": "theorem-ref",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Named actual scalar declarations correspond to interval and two endpoints; theorem-ref PASS is source inspection only."
+    },
+    {
+      "index": 143,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d2f28025",
+      "type": "theorem-ref",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Actual endpoint declaration binds real c!=0 and chi equal one of two endpoints; stronger scope preserved."
+    },
+    {
+      "index": 144,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d3bd12fd",
+      "type": "methodology",
+      "agent_verdict": "PASS",
+      "independent_disposition": "ACCEPT",
+      "reason": "Named RPA source and free-input bodies support provenance and normalization caveat; no kernel/run assertion."
+    },
+    {
+      "index": 145,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:d95244d8",
+      "type": "methodology",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Following historical software/proof inventory supports reproducibility of algebra; INFO correctly avoids new execution claim."
+    },
+    {
+      "index": 146,
+      "id": "sentence:L1:supporting-formal-results-and-reproducibility:7980c119",
+      "type": "methodology",
+      "agent_verdict": "INFO",
+      "independent_disposition": "ACCEPT",
+      "reason": "Recorded algebraic checks do not establish microscopic normalization/mode/state; INFO correctly preserves physical block."
+    }
+  ],
+  "scientific_execution": false,
+  "lean_lsp_available": false,
+  "proof_absence_inferred": false,
+  "publication_acceptance": false,
+  "official_final_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-discussion-catalog-independent",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "archive": "original_metric_sewing_result_evidence.zip",
+  "sha256": "891935c2b58fe2f4cd4ce1f2e685ded8da6a6bc367ce27ba7fed6df91eb5a8ae",
+  "bytes": 2078044,
+  "members": 24,
+  "actual_result_sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+  "approved_proposal_sha256": "f03bae88035a0236399fa52a6ce5e166738feb6dbc8a5df896b20461a3c9df14",
+  "parent_checkpoint": "3457a34826db6a54f1cf22aab86c4436a5548860",
+  "canonical_copies": {
+    "l1-original-metric-sewing-result-r1.md": "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md",
+    "l1-original-metric-sewing-math-result-r1.md": "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_MATH_REVIEW_R1.md",
+    "l1-original-metric-sewing-source-result-r1.md": "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_SOURCE_REVIEW_R1.md"
+  },
+  "files": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "accepted/N16_SATURATION_STATE_OBSTRUCTION.md": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "accepted/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md": "50bb6c95b3c135c0956fb8b56a14c4ee443894d0abfe7455dbd08f4a59bbe019",
+    "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_PROPOSAL.md": "f03bae88035a0236399fa52a6ce5e166738feb6dbc8a5df896b20461a3c9df14",
+    "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_PROPOSAL_ACCEPTANCE.md": "5319943440511dec24293ebe7a3672942f15e049787f66d60e117c1f524e4e08",
+    "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_PROPOSAL_MATH_REVIEW_R2.md": "ef740a5d1ce807aac11dd43c4ae1fde3d2c86a971a065e17c1515b4c348793a1",
+    "accepted/ORIGINAL_METRIC_SEWING_DOMAIN_PROPOSAL_SOURCE_REVIEW_R2.md": "ff3e5cfc639ad4dd5828ba5b292f5a321a63f8bf2f7661276964bc7f4506cc0f",
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": "563aeda483e743933580139c7edc8c8ca32f9522ddd74128f091bf736b1062b2",
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_ACCEPTANCE.md": "4d065b6ae758cd8f0a9a95351bb9c5b506809a9731a03ff016ce33285b6585c1",
+    "accepted/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "charter/L1_Physical_Bridges-historical.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "charter/Phase6a_Roadmap-a4eca6909.md": "f64e6ee3740f0ef05906fab4ffc5b45575f3eb1287d517bccda4148ff0126c36",
+    "charter/source-origin.json": "8ff4e2cab239877b1d3787f2668f93339cfb1e68429816b847ca935b979b85dc",
+    "parent/original_metric_sewing_proposal_evidence.zip": "c75c5b7e3b212387aa52ee148c37857d79c2c43eb6e296a66ab88213ead3874e",
+    "parent/original_metric_sewing_proposal_manifest.json": "6eb9acda027209fbcc623dbb7811fb66211ac7c9c44921756265f2c38ab17d24",
+    "result/l1-original-metric-sewing-math-result-r1.md": "33c205632f1812bce8b04d43d200a41e56346d060f9960bedce344132493f619",
+    "result/l1-original-metric-sewing-result-r1.md": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+    "result/l1-original-metric-sewing-source-result-r1.md": "a2ef5e1cb17478ab99b89e61792c6ad1f6d323f19a2437327def4b7a1f9f28c8",
+    "source/original-primary-custody.json": "45925260b68e68bcf1adb2d6175775e777308305c327b57c8795ebac3df6f137"
+  },
+  "outcome": "BOTH independent ACTUAL ACCEPT: complete original metric-only F60/G52 zero-diagonal and nonzero g2^4 coefficient, separate literal temporal mixed contact",
+  "scope": "Fixed original geometric metric sewing/domain/adjoint route fails for realg2 nonzero; normalized scope requiresZ nonzero. No global original-model no-go, physical closure or runtime admission. a14 and K/K_R remain uncomputed.",
+  "exact_constants": {
+    "mu": "1125/4",
+    "raw_cross": "(3645/2)*mu^6*g2^4",
+    "raw_temporal_contact": "(6075/2)*mu^6",
+    "raw_diagonal": "0"
+  }
+}

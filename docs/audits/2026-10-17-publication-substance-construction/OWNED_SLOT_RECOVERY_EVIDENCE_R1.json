@@ -1,0 +1,52 @@
+{
+  "archive_sha256": "377f1b163580baf7bdc02e9a766cb6c2fe74c693982cc75764ee7450510ab19c",
+  "members": [
+    {
+      "name": "OWNED_SLOT_RECOVERY_R1.json",
+      "sha256": "8dae757c077084f9b72cf425672011d60092c07018da4201a3a2736672846eb2",
+      "bytes": 3423
+    },
+    {
+      "name": "native-admission.json",
+      "sha256": "acfc29c0ff8529ad41958060f263117f5390942e986781f1a8f567d553b9ad07",
+      "bytes": 5418
+    },
+    {
+      "name": "doctor-final.json",
+      "sha256": "ffbdcb71ef46b700330b04494c260d174458715767170b7fde932821f61061ed",
+      "bytes": 2877
+    },
+    {
+      "name": "wt2-lease-original.json",
+      "sha256": "eb10f9234561359f23bc5da58b87bec6244fc3c3970fc7098e899c42568fd62e",
+      "bytes": 850
+    },
+    {
+      "name": "wt2-lease-retired.json",
+      "sha256": "eb10f9234561359f23bc5da58b87bec6244fc3c3970fc7098e899c42568fd62e",
+      "bytes": 850
+    },
+    {
+      "name": "wt3-lease-original.json",
+      "sha256": "22ef46e95d8252ea4f60df60f4fa9adbf8e8d5bafb34cfab633e510de0d2edf5",
+      "bytes": 948
+    },
+    {
+      "name": "wt3-lease-retired.json",
+      "sha256": "22ef46e95d8252ea4f60df60f4fa9adbf8e8d5bafb34cfab633e510de0d2edf5",
+      "bytes": 948
+    },
+    {
+      "name": "publication-owned-slot-recovery-r1.py",
+      "sha256": "7310ac0ed9064d06d0a9411daceee962c78e9bc0e8a03241db41f50c81a54b5b",
+      "bytes": 5332
+    },
+    {
+      "name": "publication-recovered-slot-admission-r1.py",
+      "sha256": "1632612254ef20ddb16c3a870d4c4683ea27a7eb1e9b5ed05bc1d152618aa232",
+      "bytes": 2974
+    }
+  ],
+  "local_raw_manual_receipt_sha256": "2507b996943a6b8a96fc9cf695196291a65faee4f425b7ecc102234bb3bf91dd",
+  "global_private_context_included": false
+}

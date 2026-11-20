@@ -1,0 +1,116 @@
+{
+  "schema": "publication-auxiliary-compensation-design/v1",
+  "task": "publication-auxiliary-compensation-design-r1",
+  "parent": "publication-remediation",
+  "status": "PROPOSED_FOR_INDEPENDENT_PROSPECTIVE_REVIEW",
+  "report": "/tmp/publication-auxiliary-compensation-design-r1.md",
+  "report_sha256": "7bc83d3141f2533f6c9112bfa53b321b7307a62908433f6fd4952b4a1824c9e0",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-auxiliary-compensation-design-r1.json",
+  "source_head": "7fc0d2c0b720989cf3f9003ce87a6654895a11bc",
+  "authority": "Design only; no lease, dispatch, build, implementation or completion authority",
+  "first_continuity_check": {
+    "returncode": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "final_same_packet_check": {
+    "returncode": 0,
+    "result": {
+      "fresh": true,
+      "changed": [],
+      "task": "publication-auxiliary-compensation-design-r1",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    },
+    "stderr": ""
+  },
+  "formal_claims_verified_this_turn": false,
+  "lsp_calls": 0,
+  "build_commands": 0,
+  "source_mutations": [],
+  "owned_outputs": [
+    "/tmp/publication-auxiliary-compensation-design-r1.md",
+    "/tmp/publication-auxiliary-compensation-design-r1.json"
+  ],
+  "required_source_read": {
+    "original_complete_98_line_identity": true,
+    "installed_lean4_skill": true,
+    "frozen_unit_notebook": true,
+    "accepted_complex_module_source": true,
+    "pinned_mathlib_signatures": "static source inspection only"
+  },
+  "deterministic_algorithm": {
+    "definition": "P=truncTotal(M+1)(e(S)*e(-Q))",
+    "finite_formula": "truncTotal(M+1)(sum(k=0..M,S^k/k!)*sum(l=0..M,(-Q)^l/l!))",
+    "coefficient_cutoff": "totalDegree <= M",
+    "scope": "any finite coordinate type, complex finite S, S.constantCoeff=0, M>=0",
+    "empty_and_M_zero": true
+  },
+  "proof_dag": [
+    "formal_exp_finite_coefficient_agreement",
+    "total_degree_truncation_locality",
+    "formal_exp_Q_inverse_cancellation",
+    "all_retained_auxiliary_integral_coefficients",
+    "actual_8V_exterior_algebra_and_even_subalgebra",
+    "actual_quarter_coframes_and_degree_two",
+    "global_joint_nilpotence_after_4V_factors",
+    "conditional_finite_eval_hom_with_actual_discharge",
+    "finite_multinomial_integrability",
+    "original_G_valued_Eq7"
+  ],
+  "actual_coframe_obligations": [
+    "8V independent complex psi/barpsi generators",
+    "actual finite four torus and fixed boundary signs",
+    "SU2 times SU2 block diagonal Dirac links",
+    "fixed source gamma convention",
+    "all four original quarter hopping terms",
+    "degree two membership",
+    "cross-site commutation",
+    "global4V joint nilpotence",
+    "original Eq2 cosmological plus EHC polynomial and normalization"
+  ],
+  "discriminating_controls": [
+    "nonreal S=iX at M=3",
+    "mixed cX0X1 with c=1+i, raw beta22=4i",
+    "degree7 source and raw5040i",
+    "exact M and M+1 fences",
+    "M0 and empty finite type",
+    "sigma2 and sigma1/2 cancellation",
+    "Grassmann odd signs and non-squarezero sum of bilinears",
+    "top exterior degree4V sharpness and global multi-site bound",
+    "actual quarter coframe signs/links",
+    "eight-fermion cosmological degree",
+    "actual G-valued integrability and equality"
+  ],
+  "suggested_ownership": {
+    "A": "ordinary compensation module",
+    "B": "finite Grassmann/coframes/source action module",
+    "C": "evaluation and actual Eq7 integration module after A and B",
+    "ROOT": "admission, lease, integration, builds, notebook, acceptance",
+    "independent_reviewer": "prospective design then separately implemented-source/kernel assessment"
+  },
+  "live_lsp_required_before_proof": true,
+  "static_misses_are_absence_evidence": false,
+  "remaining_open": [
+    "source matrix Eq9",
+    "Berezin orientation and determinant",
+    "Haar integration and continuity",
+    "finite Fubini proofs",
+    "insertions and derivative-of-W Eq11",
+    "Z nonzero for normalized observables",
+    "sampling phase and positivity",
+    "physical source/Legendre/state/domain/B3/transport",
+    "continuum and thermodynamic control",
+    "simulation and publication"
+  ],
+  "commands_actually_run": [
+    "python3 scripts/codex_continuity.py check SAME_PACKET (first and final)",
+    "cat/sed reads of assigned authorities, notebook, original complete identity, skill, source and receipts",
+    "rg/rg --files source and pinned Mathlib discovery by names, statements, types, imports and dependency inventory",
+    "write only the two assigned /tmp design artifacts; Python JSON serialization/hash"
+  ],
+  "memory_use": {
+    "file": "MEMORY.md",
+    "lines": "1144-1150",
+    "purpose": "discovery discipline only; current claims verified from sources"
+  }
+}

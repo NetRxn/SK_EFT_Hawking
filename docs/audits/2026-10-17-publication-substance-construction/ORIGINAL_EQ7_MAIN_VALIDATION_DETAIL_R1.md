@@ -1,0 +1,15 @@
+# Terminal focused main validation and repair intake
+
+Candidate a56e6a644e2520a1891e70c607dbc98d13615062. The full merge profile is terminal FAIL: 7035 passed, 37 failed, 14 skipped; independent native 10843 passed. The validation-only detail follow-up completed 2026-11-07 00:08:02 UTC, both legs exit1, unchanged clean candidate. It did not restart pytest/native. The old qualification lock is no longer a reason to hold work.
+
+[Complete independent reconciliation](ORIGINAL_EQ7_MAIN_FAILURE_RECONCILIATION_R1.md) maps all 37 actual failed test bodies to existing defects, accepted source reuse, and remaining evidence gaps. ROOT read the complete report and terminal detail. All25 previously measured main failures reproduce;12 are unbaselined, not established new regressions. Its earlier pending wording is explicitly superseded by its final terminal intake section.
+
+CI has one substrate red, architecture_inventory_fresh (tracked hooks7/derived6 and a dangling schema-delta document reference), plus20 paper-corpus reds. The84/85 coverage result comes from actual manuscript PDFs:9stale(F,D1,D3,D8,D9,L1,L3,I2,E1),12missing(D2,D4,D5,D6,D7,D10,D11,D12,L2,I1,I3,E2). This is not a body_max metadata failure. Use the existing compiler and current inputs; do not invent compiled acceptance.
+
+Explicit counts_fresh, tables_fresh and claim_clusters_fresh pass. notebook_exec fails because Phase5b_Synthesis_Technical.ipynb lacks actual data/vestigial_mc;90 previously vetted notebooks were skipped, not rerun. Missing scientific data requires actual accepted computation, not placeholder output.
+
+Other open measured defects: required-open overages D1(13>2),D2(10>3),D3(14>1),D4(13>4),D8(6>0),E1(7>1),L3(5>0);57 unattributed occurrences(35 unresolved declared/22 undeclared);4 missing-severity and5 bad-lane review documents, zero dangling Blocked-by;111 unresolved backing links across56targets/24papers;33 numeral-chain gaps;15 handwritten tables;149 inline numerical literals. These aggregate counts do not identify distinct missing scientific obligations. Preserve canonical findings, individual source diagnosis and all exposed genuine L2 debt during accepted record reuse. No ceiling increase or closure is granted.
+
+The next exact MAIN composition reuses existing accepted repairs on7paths: canonical D3/L2 JSON serialization with parsed values conserved; D6/D8/D10 stage10 status pending-redo only; D7 actual source-backed theorem regression and three phantom negatives; tmp_path scratch isolation without hiding the real citation failure. Actual68 scoped tests pass/1skip. The adverse extractor still fails on10 genuine stubs and leaves no repository scratch. A different complete composition reviewer is active; no commit/main/gate credit yet.
+
+[Raw detail, complete mapping, current seven-path composition and bounded receipts](ORIGINAL_EQ7_MAIN_VALIDATION_DETAIL_R1_EVIDENCE.zip) include byte manifests and the canonical PRIMARY Task2 findings. Current Task2 source/reviews are separately frozen. Existing paper-population gate snapshots retain their exact source labels; no current same-source gate transition or newly green bundle has been measured.

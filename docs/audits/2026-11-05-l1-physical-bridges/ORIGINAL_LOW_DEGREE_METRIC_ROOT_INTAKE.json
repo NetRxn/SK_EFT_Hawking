@@ -1,0 +1,17 @@
+{
+  "reviewed_commit": "171c980a261251b8fd625e6d4a0dc999af245039",
+  "root_personally_read": [
+    "full R2 proposal",
+    "full R2 mathematics review",
+    "full R2 original-source review",
+    "acceptance summary"
+  ],
+  "outer_crc_and_all18_member_hashes": true,
+  "three_canonical_copies_exact": true,
+  "eight_current_accepted_inputs_exact": true,
+  "nested_parent_crc_and_all_member_hashes": true,
+  "four_actual_held_PDF_pins": true,
+  "root_disposition": "Accept bounded physical-readiness breakdown; do not commission more auxiliary component algebra without a concrete physical use. Commission source-grounded physical-prescription research toward actual P1/P2, followed by independent prospective review and substantive construction. No physical BUILD or publication closure.",
+  "original_requirements_open": true,
+  "main_package_retained_by_ROOT": true
+}

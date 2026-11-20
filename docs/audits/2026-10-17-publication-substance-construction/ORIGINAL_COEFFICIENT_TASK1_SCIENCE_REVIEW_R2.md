@@ -1,0 +1,65 @@
+# Independent original-coefficient Task1 science review R2
+
+**Verdict: ACCEPT_TASK1_SOURCE_AND_BOUNDED_TESTS.** No mandatory correction remains in the complete frozen Task1 candidate reviewed here. The four R1 source defects are repaired and covered by discriminating adverse tests. This accepts the original Task1 numerical/algebra foundation at its stated source and bounded-test boundary. ROOT owns independent algebra-review intake, canonical finding closure, broader gates and integration. It does not accept Tasks2–4, scientific coefficient execution, physical certificate transport, main or publication.
+
+## Identity, authority and conservation
+
+Task `publication-original-coefficient-task1-science-review-r2`, parent `publication-remediation`; independent science reviewer, different from the implementer. PRIMARY is `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking`, baseline `056ccb9f08454238934977de4bb6548d18c6275e` plus the frozen three-path candidate. The first tool action executed the exact assigned continuity check from PRIMARY, before reading any other source. It returned exit0, fresh=true, changed=[]. Final SAME packet check also returned exit0, fresh=true, changed=[]. No packet refresh occurred.
+
+Read the complete domain source (746 lines), complete tests (519 lines), entire appended canonical formulas, assigned notebook, original Task1 R2 requirements and construction/convention/support sections, both R1 reviews, actual R2 implementation report and structured evidence, canonical L1 finding, prospective physics/cost reviews, governing scientific/wave/continuity guidance and relevant slot restrictions, and roadmap's original B3 BUILD boundary. Directly inspected actual original auxiliary/composite coframe/action definitions and actual current Lean coframe, gamma, hopping and C3 source/word definitions. Truncated combined document displays were followed by narrower relevant reads; the complete source and tests were displayed without truncation. The original prefix was conserved, not re-reviewed as new physics.
+
+Independent current SHA256:
+
+| Path | SHA256 |
+|---|---|
+| src/core/formulas.py | d027e9c502eef1a11d76974dcc12615f580eb3b13ba05f4d4897febf53a5c6b8 |
+| src/vestigial/original_coefficients.py | e0246533578e91ad4c71b4b97624e69d9114bf51cff8a0a6f92fb71a1c0425d2 |
+| tests/test_original_coefficients.py | 15d64a3899ad078015864ae4354156c62bbe1bb6a4e8db3c5a398833865d885d |
+
+The original **500606-byte** formulas prefix has SHA256 `7a1fff54dcdcd0d52ade2ef1cab136d66f2f1697b67bec8b278007d3a857a990`, matches the accepted baseline digest and is independently byte-identical to the frozen R1 archive prefix. The packet checker also conserves all bound authorities/references and source/index/status fingerprints. Freshness is conservation evidence, not scientific correctness.
+
+## R1 mandatory findings reassessed
+
+1. **SCIENCE1/ALG1, repaired** (`original_coefficients.py:613`). `vanishes_above(d)` now means d strictly greater than the inclusive maximum. The original test was corrected, retained and strengthened. Actual periodic original coframes with valid unit links diag(i sigma3,i sigma3), not arbitrary exterior surrogates, give V1 T^4=24 Theta and T^5=0; N16 T^8=(315/2) Theta_x Theta_y and T^9=0. Both last powers are explicitly nonzero and both certificates retain them. For N16 the two 4x4 off-diagonal hopping blocks are -i gamma3 diag(sigma3,sigma3)/2; determinant of the supported 8x8 block is 1/256 and 8!/256=315/2, consistent with the declared top orientation. The minimal-center-generator argument is valid for all supplied centered homogeneous bilinears and their still-centered combinations; noncentered/out-of-carrier/nonbilinear support is refused. Global4V/default64 and production_authorized=False remain intact.
+
+2. **ALG2, repaired** (`original_coefficients.py:503`). SparseMatrix validates exact integer size/coordinates, coerces supported exact coefficients, adds duplicate slots, removes exact zeros and freezes canonical entries. Access and exterior conversion now consume the same sum. Tests distinguish 1+2 from last-write2, verify cancellation, reject invalid domains and retain values after caller mutation. Symbol and public factor/support records copy nested labels; BlockIncrement copies/validates its matrix. No blanket guarantee about arbitrary unsupported opaque Python object graphs is inferred.
+
+3. **ALG3, repaired** (`original_coefficients.py:227`, formulas coframe/plaquette boundaries). Every dense row is validated before arithmetic; ragged rows cannot truncate silently. Rectangular multiply/dagger work correctly. Empty0x0 and refusal of unrepresentable nonempty zero-width rows are intentional. Supplied coframe and plaquette links are exact4x4. Tests cover longer/shorter later rows and valid rectangles, plus malformed4x5/5x4/3x4/4x3 links.
+
+4. **ALG4, repaired** (`formulas.py:13048`). Each quaternion coordinate must equal its actual polynomial conjugate. Imaginary scalars and complex J polynomials refuse on either chirality. Rational real q/h and self-conjugate J+Jbar combinations remain valid. This does not impose sphere reduction or normalize arbitrary ambient real polynomials: actual SU2 evaluation still requires the declared sphere domain. Group-valid fixtures meet it.
+
+## Complete Task1 scientific assessment
+
+**Original geometry and incidence.** Four independent bars and four psi/site, site/top order, paired real reversed-boundary signs and all independent L/R anchored links are retained. The four original coframe matrices are gamma U_f dagger, U_f gamma, gamma U_b, U_b dagger gamma, with +,-,-,+ quarters, respectively. Assembly adds coincident matrix slots; on L2 both distinct anchors survive, and on L1 all four terms produce the specified anticommutator. No mass, kinetic, Majorana/Pfaffian or absolute-determinant replacement occurs. Independent extra checks on valid unit links, all components of an L3xL1xL1xL1 carrier and paired signs confirmed anti-Hermiticity of each full coframe matrix, unitarity and unit chiral determinants.
+
+**Gamma, sources and order.** Canonical C upper gamma blocks are (-i sigma_x,-i sigma_y,-i sigma_z,I); lower blocks are their adjoints, gamma5=diag(I,-I), ordered C product=+gamma5. They match actual FiniteGrassmannCoframe definitions. Printed A B Cdag Ddag and closed Ddag Cdag B A preserve actual forward anchors and multiplication order. Raw S4 has24 ordered epsilon terms/site and no extra factorial. Raw S2 has24 world permutations times16 internal pairs/site with the original quarter and ordered trace U gamma_C gamma_D gamma5. Scalar/diagonal trace contributions survive until actual sum cancellation; there is no selected coefficient prefilter. Arbitrary couplings remain external inputs and the exponent is +S. Actual C3 source definitions, including einsteinCartan_ordered and coframe_source_evaluation, ground this construction; these are real declarations, not invented theorem labels.
+
+**Complete numerical convention dictionary.** M in this API is Euclidean M_N. Under pi=(3,0,1,2), world and internal axes, sites/extents/paired signs, independent anchors, h/J labels, metric unordered pairs, frame ordered pairs and phase labels map explicitly; spinor/chiral labels and variance stay fixed. Gamma5 stays fixed, so M's ordered gamma product is -gamma5. Two odd epsilon transports cancel for S4; one world epsilon reverses S2. Thus g1_C=g1_M and unsquared g2_C=-g2_M. Tests exercise both words on noncommuting links, nonzero raw g1 and unsquared g2, plus actual C3 compact-link coefficient -2. This is substantive pre-Haar discrimination, not inference from an even g2 result. Extra inverse-dictionary checks also passed.
+
+**Cuts and physical boundary.** temporal_axis is independent metadata and does not alter the unreflected coframe/source polynomial. Reflection maps use the explicit cut, reverse temporal-anchor endpoints and square to identity in the extra finite-carrier controls. Mapping source_C cut0 numerically to M cut1 is only axis metadata transport. Source_C with WORLDcut P0 is not identified with its C3/N0 physical source/reflection/kernel datum by these checks. Entrywise gamma agreement, including any Executor S rotation, supplies no full physical antilinear/source/state map. No physical metric certificate cross-consumption is authorized.
+
+**Exterior, support and cost.** Wedge inversion signs, overlap zeros and exact coefficients are correct; the independent permutation-matrix top test fixes the Berezin orientation. N16 construction reproduces256 components,1024 increments,8192 writes,4096 coframe slots,16384 quaternion-coordinate terms and512 Dirac entries. Factor support retains8 links for each raw S2 and20 in the site action union; these are conservative incidence envelopes, not independent Haar factors. The four16x16 directed determinant support blocks retain row/column signs and reproduce53137 reachable masks/200076 transitions per block. These unsigned supports certify neither nonzero determinant coefficients nor factorized integrated products. Shared links remain shared.
+
+ScalarCost charges every expanded Polynomial coefficient product, including sign/scalar products, and refuses before exceeding the limit. Nested tiny counter tests have separate counters; their outer teardown number is not aggregate CPU work. General raw QComplex use is not a process-wide counter. The counter and recursive object-graph utility do not enforce universal RSS/time/height budgets on arbitrary inputs. They are appropriate bounded Task1 construction instrumentation; no W/jet/quaternion polynomial is priced as one scalar record. Larger-carrier reachability remains separately resource-admitted work.
+
+## Independent bounded execution
+
+Ran in PRIMARY's existing .venv with PYTHONDONTWRITEBYTECODE=1, single-thread numerical-library environment, no cacheprovider:
+
+`.venv/bin/python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py -q -rP -p no:cacheprovider`
+
+Exit0; **52 passed in9.32s**, comprising47 Task1 cases and5 dependency checks. Maximum reported expanded scalar products/test **70016**, under1million. This independently executes all actual last-nonzero/first-zero and adverse controls described above. Imports were independently checked to resolve to PRIMARY, not this chat's different worktree.
+
+A separate1million-product construction scope independently measured the actual symbolic N16 Dirac fixture:512 entries,32768 scalar coefficient slots, **9496710 unique graph bytes**, **70016 products**; well below512MiB. This is the supplied object graph, not process RSS, allocator slack, simultaneous resize or future scientific capacity. Additional pure Task1 unit-link/coframe/boundary/cut/inverse-dictionary controls consumed **1704 products**. No coefficient integration, Haar/Gaussian/W evaluator or full scientific partition run occurred.
+
+Raw independent log: `/tmp/publication-original-coefficient-task1-science-review-r2-tests.log`; bounded structured receipt: `/tmp/publication-original-coefficient-task1-science-review-r2-bounded-receipt.json`. No source/Git/index/controller/Lean/LSP/build/cache/dependency/notebook/registry/roadmap mutation, broad pytest/validator/extractor, process intervention, GPU or campaign occurred. Only assigned reports and bounded receipts were written. A memory-registry query supplied no relevant original-coefficient evidence; no memory-derived assertion is used.
+
+## Remaining original acceptance
+
+Full quaternion parametrization, M/C transport, local8 and Eq9 matrix-bilinear/Eq10 Berezin-determinant kernel bridges retain their stated Stage2/3 obligations; real definition/provenance grounding is not a claim those entire bridges are kernel-proved.
+
+Task2 still owes exact family-graded source jets/minors/Hermite W/Gaussian/Haar/contact/refusal APIs and separately admitted COMPLETE original V1 direct-vs-W4 functional:3876 quartics/740 compatible slots,4029 raw W terms/23504 queries, both words, variances2/3, full interacting denominator and literal-T/ten-H/frame contacts. No generic odd metric or derivative-order pruning is licensed.
+
+Task3 still owes all36-entry direct/minor invariant tensors, complete24-minor roster/projectors, both chirality loops and actual F60/G52/temporal-spatial contact/exclusion/anchor calculations under its separate reviewed allocation. Task4 still owes the complete split-factor denominator/source frontier, viable independently accepted full allocation, actual full coefficients and certified nonzero normalization.
+
+Physical P0/C3/N0 full-cut transport, source/projector/calibration/state/adjoint/domain, B3 normalization and window, stable modes/matter/transport/limits, full-tree/native/main/publication gates remain OPEN. The live MAIN merge qualification and authoritative build lock were left untouched. ROOT alone reconciles this independent recommendation with the algebra review and performs canonical closure/intake.

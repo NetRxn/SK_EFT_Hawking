@@ -1,0 +1,87 @@
+{
+  "commit": "02dffda6133710a940d5944883f59fcec12d3c35",
+  "file": "lean/SKEFTHawking/ADW/QuaternionSU2HaarAssembly.lean",
+  "names": [
+    "anchoredCoordinate_unit",
+    "quaternionLinks_anchoredCoordinate",
+    "transportedShiftedDet",
+    "specialize_symbolicDet",
+    "integral_transportedShiftedDet",
+    "contract_pderiv",
+    "pderiv_transportedShiftedDet",
+    "integral_transportedShiftedDet_first",
+    "integral_transportedShiftedDet_second",
+    "integral_shiftedAssembly_rawJet",
+    "integral_shiftedDet_periodic"
+  ],
+  "success": true,
+  "accepted": true,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.anchoredCoordinate_unit' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 219,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionLinks_anchoredCoordinate' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 220,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.transportedShiftedDet' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 221,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.specialize_symbolicDet' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 222,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_transportedShiftedDet' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 223,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.contract_pderiv' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 224,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.pderiv_transportedShiftedDet' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 225,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_transportedShiftedDet_first' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 226,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_transportedShiftedDet_second' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 227,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_shiftedAssembly_rawJet' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 228,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.integral_shiftedDet_periodic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 229,
+      "column": 1
+    }
+  ]
+}

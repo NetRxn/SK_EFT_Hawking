@@ -1,0 +1,84 @@
+{
+  "verdict": "ACCEPT complete110/153 portable CLI and canonical original-evidence archive",
+  "archive_sha256": "c2f32c64be701b859d4847192dba8aa1c2977348e3b7aad879c48ca1fb9d5af2",
+  "manifest_sha256": "3d0eeca7ed886eeef237e9f74a63502787c6e76e1a30a4cce9a05eac1186060b",
+  "all94_unique_members_CRC_size_hash_originbytes_match": true,
+  "author43_complete": true,
+  "two_prior_readonly_inputs_preserved_labeled": true,
+  "installed_portable_sha256": "0cf1a5ad661240a518c1f03d66f53b71ca7d25b26dca687614ad82b7c33f73a1",
+  "six_original_scientific_ASTs_equal_a30": true,
+  "principal16_and_allCLI17_bindings_match": true,
+  "full90_branch_exact_arithmetic_and_domain_sourcecovariance": true,
+  "fixed90_branch_exact_arithmetic": true,
+  "direct98_Cartesian14_nineface_originals_preserved": true,
+  "independent_replay45_complete_verified": true,
+  "failed_replay_r1_and_successful_r2_originals_preserved": true,
+  "original_author110_wrongcounter_preserved_annotated": true,
+  "correct153_counter_and_staticmock_preserved": true,
+  "actual_peaks_not_forced_equal": {
+    "unrestricted110": 5632,
+    "unrestricted153": 3024,
+    "fixed110": 1368,
+    "fixed153": 540
+  },
+  "actual_CLI": {
+    "census": {
+      "exit_code": 0,
+      "reason": "terminal",
+      "command": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_shared_square_protected_free_tori.py"
+      ],
+      "actual_parent_wall_seconds": 5.86734095797874,
+      "whole_process_limit_seconds": 30,
+      "source_sha256": "0cf1a5ad661240a518c1f03d66f53b71ca7d25b26dca687614ad82b7c33f73a1"
+    },
+    "fixed": {
+      "exit_code": 0,
+      "reason": "terminal",
+      "command": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_shared_square_protected_free_tori.py",
+        "--controls-only"
+      ],
+      "actual_parent_wall_seconds": 6.83315016690176,
+      "whole_process_limit_seconds": 60,
+      "source_sha256": "0cf1a5ad661240a518c1f03d66f53b71ca7d25b26dca687614ad82b7c33f73a1"
+    },
+    "110": {
+      "exit_code": 0,
+      "reason": "terminal",
+      "command": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_shared_square_protected_free_tori.py",
+        "--word",
+        "110"
+      ],
+      "actual_parent_wall_seconds": 35.7166210829746,
+      "whole_process_limit_seconds": 60,
+      "source_sha256": "0cf1a5ad661240a518c1f03d66f53b71ca7d25b26dca687614ad82b7c33f73a1"
+    }
+  },
+  "actual_CLI110_cold": 19.363070916966535,
+  "actual_CLI110_whole45_warm": 10.380316416034475,
+  "coefficient_each": [
+    461966234549968960425,
+    140737488355328
+  ],
+  "sameaxis_subtotal": [
+    461966234549968960425,
+    70368744177664
+  ],
+  "portable_scope_after_ROOT_acceptance": 234,
+  "same_after_ROOT_acceptance": 140,
+  "mixed_after_ROOT_acceptance": 94,
+  "remaining": 38,
+  "remaining_same": 24,
+  "remaining_mixed": 14,
+  "canonical_review_copies_identical": true,
+  "no_additional_scientific_compute": true,
+  "full_k4_sourceaction_commonZ_B3_modes_transport_main_publication": "OPEN"
+}

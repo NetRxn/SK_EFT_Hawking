@@ -1,0 +1,134 @@
+{
+  "source_commit": "f95335ad8653fa1e9786d7f1648433b5e27ddb82",
+  "exact_source_replay": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": []
+  },
+  "public_axiom_audit": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.appendInversions_orderEmb' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 376,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetDP_eq_prefixMinor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 377,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetDP_eq_zero_of_card_ne' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 378,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetDP_zero_empty' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 379,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetDP_succ_eq_sparse' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 380,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetPush_eq_sum' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 381,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetDP_succ_eq_push' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 382,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.rowSubsetDP_eq_det' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 383,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.testBit_columnMask' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 384,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.columnMask_insert' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 385,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.columnMask_highBitCount' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 386,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.columnMask_empty' depends on axioms: [propext, Quot.sound]",
+        "line": 387,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.columnMask_univ' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 388,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.columnMask_injective' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 389,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.columnMask_shift_and_one_eq_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 390,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.maskScatter_eq_subsetPush' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 391,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.maskSubsetDP_eq_rowSubsetDP' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 392,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.maskSubsetDP_eq_det' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 393,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.maskSubsetDP_eq_zero_of_row_eq' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 394,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantSubsetDP.maskSubsetDP_eq_zero_of_not_encoded' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 395,
+        "column": 1
+      }
+    ]
+  }
+}

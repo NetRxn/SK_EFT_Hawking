@@ -1,0 +1,31 @@
+{
+  "absorb_exit_code": 0,
+  "epoch": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "8955bcbcc77b3721d246e4243bc61caf29f7b62dc79ead26523d9b7bbb0e5e66",
+    "fingerprint": {
+      "commit_sha": "4672e9fecad14dc2223704548786bdf4a5ccdca8",
+      "digest": "6a7e0c399f16cd38a0d7cf868c49e96e2fcda75dde5b3f37422d22b9b70a1cd1",
+      "files": {
+        "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+        "lean/lakefile.toml": "7008b3d79ac294f4e822e8c867a326c316e94ff9047c4fd110e66b9cab84e5fe",
+        "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e"
+      },
+      "repo_role": "public",
+      "schema_version": 1
+    },
+    "published_at": "2026-11-07T01:44:51Z",
+    "repo_role": "public",
+    "schema_version": 1
+  },
+  "integrated_head": "4672e9fecad14dc2223704548786bdf4a5ccdca8",
+  "module_sha256": "9271cfe04cc3c1853ab26d0190b85d8b134da48560b2d2fef307ca9a780f4889",
+  "native_module_artifact": "lean/.lake/build/lib/lean/SKEFTHawking/ADW/FiniteGrassmannDiracBerezin.olean",
+  "native_module_bytes": 1823808,
+  "full_scientific_execution": false,
+  "main_or_publication_acceptance": false
+}

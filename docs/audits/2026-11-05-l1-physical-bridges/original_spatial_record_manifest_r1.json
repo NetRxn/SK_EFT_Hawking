@@ -1,0 +1,236 @@
+{
+  "schema": "l1-spatial-record-evidence/v1",
+  "parent": "2156bf262407f789f799a01b44069df70d13e9c4",
+  "candidate_sha256": "7bd54eedcc36fae5fd9340301f44189d6ee12bdce06572042125d0266ac52993",
+  "scope": "scoped manual ACTUAL math/source ACCEPT; restricted spatial-record failure; no physicalpositivity/globalnoGo; ROOT intake pending",
+  "archive": {
+    "path": "docs/audits/2026-11-05-l1-physical-bridges/original_spatial_record_evidence_r1.zip",
+    "bytes": 185055,
+    "sha256": "786663c993c04a567feef25a29aafaec50222b16f28eccb4a546a8628343a54d",
+    "members": {
+      "accepted-inputs/N16_TEMPORAL_BOUNDARY_IDENTITY.md": {
+        "bytes": 17461,
+        "sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49"
+      },
+      "accepted-inputs/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": {
+        "bytes": 24144,
+        "sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab"
+      },
+      "accepted-inputs/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": {
+        "bytes": 30710,
+        "sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38"
+      },
+      "accepted-inputs/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": {
+        "bytes": 29427,
+        "sha256": "563aeda483e743933580139c7edc8c8ca32f9522ddd74128f091bf736b1062b2"
+      },
+      "accepted-inputs/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": {
+        "bytes": 22289,
+        "sha256": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468"
+      },
+      "accepted-inputs/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": {
+        "bytes": 23504,
+        "sha256": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65"
+      },
+      "accepted-inputs/ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION.md": {
+        "bytes": 25465,
+        "sha256": "d4e59e8d68ab4b6babc4f3daf374372bb1dddfbd4840e763b16a8eaafef248fd"
+      },
+      "accepted-inputs/P0_NUMERICAL_FULL_CUT_TRANSPORT.md": {
+        "bytes": 28755,
+        "sha256": "b9bc1e82ab2f1eef802fa07738b93babe79dcf2d820759d09c040142f7153a1f"
+      },
+      "authority/own-branch-Phase6a-before-result.md": {
+        "bytes": 95050,
+        "sha256": "976df3772bb17c9ac636136f36db61f12f8b7563c35322a8ccc946324004b14d"
+      },
+      "authority/primary-custody.json": {
+        "bytes": 888,
+        "sha256": "a3bbe6e57b39301b90a97555a8d4991dd14a53edcdec62ed27ee6d8efec3ce5a"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION.md": {
+        "bytes": 24492,
+        "sha256": "7bd54eedcc36fae5fd9340301f44189d6ee12bdce06572042125d0266ac52993"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_ACCEPTANCE.md": {
+        "bytes": 5170,
+        "sha256": "b6ab816190d761c2bbb47e41c400cd2095dce24d8f111ffc755706f0ccc46f24"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_MATH_REVIEW_R1.md": {
+        "bytes": 6159,
+        "sha256": "be0a570f3518485947f4450ea264220623c0bfda4ef25251a384afbd5f87dbb6"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL.md": {
+        "bytes": 22141,
+        "sha256": "4b284ed956527619ef3b5f59b0088f4b5f69fd5540857d1541b3235078bc4608"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL_R1.md": {
+        "bytes": 19282,
+        "sha256": "3066abec26f1271e9ead4abb9c99be6611ef55ce44b1097dc96918e9befbe593"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R1.md": {
+        "bytes": 6801,
+        "sha256": "a30a81ba12c0684d9c965ca9cb09df7a11c2018eacf6f530d748abb2744fe0ca"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R2.md": {
+        "bytes": 5043,
+        "sha256": "10c074e430bcd5b64ce11c14b58c7c3969419afc5a64ce34809ded042544aa45"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_SOURCE_REVIEW_R2.md": {
+        "bytes": 9601,
+        "sha256": "f0cc9ceda726e092171fdad3ebe369cbea29da72cb6e851736feecf41a22544b"
+      },
+      "canonical/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_SOURCE_REVIEW_R1.md": {
+        "bytes": 11898,
+        "sha256": "4c5daa97fb35257dcc28d88eb2ef4421c27b5ca17963509765ec228bca5e712a"
+      },
+      "continuity/l1-spatial-record-actual-math-r1.json": {
+        "bytes": 11991,
+        "sha256": "46e16a190647b993c9aa55b4b156e2c534f39aa69d2073d16a2cd6497219f5c9"
+      },
+      "continuity/l1-spatial-record-actual-source-r1.json": {
+        "bytes": 11984,
+        "sha256": "38ccb4ec936a354f919429e78ac02f641b1eafdd8502b169aeff704e8060eba8"
+      },
+      "continuity/l1-spatial-record-prospective-design-r1.json": {
+        "bytes": 9878,
+        "sha256": "36cced4ced926d6bf7efe3b82c1d3feaab61211617419805d70d0d41386b69f1"
+      },
+      "continuity/l1-spatial-record-prospective-math-r1.json": {
+        "bytes": 9612,
+        "sha256": "af2b1d539ef4535eb162960a5564002fad23486e5764180d1d4c29fde5b6e05b"
+      },
+      "continuity/l1-spatial-record-prospective-math-r2.json": {
+        "bytes": 10164,
+        "sha256": "6d97535248707e5ece0a1056a10a80c3bdf021784aa1e608c5f4f8adfa4ad111"
+      },
+      "continuity/l1-spatial-record-prospective-source-r2.json": {
+        "bytes": 10157,
+        "sha256": "8f210ea3b9d03730b452c16dce1b0110eb19ac19f514aba54d1bebb74f23e365"
+      }
+    }
+  },
+  "exact_copies": {
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL_R1.md": {
+      "source": "/private/tmp/l1-spatial-record-prospective-design-r1.md",
+      "sha256": "3066abec26f1271e9ead4abb9c99be6611ef55ce44b1097dc96918e9befbe593"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL.md": {
+      "source": "/private/tmp/l1-spatial-record-prospective-design-r2.md",
+      "sha256": "4b284ed956527619ef3b5f59b0088f4b5f69fd5540857d1541b3235078bc4608"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-spatial-record-prospective-math-r1.md",
+      "sha256": "a30a81ba12c0684d9c965ca9cb09df7a11c2018eacf6f530d748abb2744fe0ca"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R2.md": {
+      "source": "/private/tmp/l1-spatial-record-prospective-math-r2.md",
+      "sha256": "10c074e430bcd5b64ce11c14b58c7c3969419afc5a64ce34809ded042544aa45"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_SOURCE_REVIEW_R2.md": {
+      "source": "/private/tmp/l1-spatial-record-prospective-source-r2.md",
+      "sha256": "f0cc9ceda726e092171fdad3ebe369cbea29da72cb6e851736feecf41a22544b"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION.md": {
+      "source": "/private/tmp/l1-spatial-record-result-r1.md",
+      "sha256": "7bd54eedcc36fae5fd9340301f44189d6ee12bdce06572042125d0266ac52993"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_MATH_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-spatial-record-actual-math-r1.md",
+      "sha256": "be0a570f3518485947f4450ea264220623c0bfda4ef25251a384afbd5f87dbb6"
+    },
+    "ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_SOURCE_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-spatial-record-actual-source-r1.md",
+      "sha256": "4c5daa97fb35257dcc28d88eb2ef4421c27b5ca17963509765ec228bca5e712a"
+    }
+  },
+  "accepted_inputs": {
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION.md": "d4e59e8d68ab4b6babc4f3daf374372bb1dddfbd4840e763b16a8eaafef248fd",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": "563aeda483e743933580139c7edc8c8ca32f9522ddd74128f091bf736b1062b2",
+    "ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65",
+    "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+    "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+    "N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT.md": "b9bc1e82ab2f1eef802fa07738b93babe79dcf2d820759d09c040142f7153a1f"
+  },
+  "primary_custody": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Diakonov2011.pdf",
+      "bytes": 270355,
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf",
+      "bytes": 140946,
+      "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf",
+      "bytes": 1756894,
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "full_text_copied": false
+    }
+  ],
+  "paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_spatial_record_evidence_r1.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_spatial_record_manifest_r1.json",
+    "docs/roadmaps/Phase6a_Roadmap.md"
+  ],
+  "prepack_snapshot_checks": {
+    "l1-spatial-record-prospective-design-r1.json": {
+      "fresh": false,
+      "changed": [
+        "notebook",
+        "source"
+      ],
+      "task": "l1-spatial-record-prospective-design-r1",
+      "meaning": "Reconciliation required; lead must inspect current inputs and explicitly issue a new revision."
+    },
+    "l1-spatial-record-prospective-math-r1.json": {
+      "fresh": false,
+      "changed": [
+        "notebook",
+        "source"
+      ],
+      "task": "l1-spatial-record-prospective-math-r1",
+      "meaning": "Reconciliation required; lead must inspect current inputs and explicitly issue a new revision."
+    },
+    "l1-spatial-record-prospective-math-r2.json": {
+      "fresh": true,
+      "changed": [],
+      "task": "l1-spatial-record-prospective-math-r2",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    },
+    "l1-spatial-record-prospective-source-r2.json": {
+      "fresh": true,
+      "changed": [],
+      "task": "l1-spatial-record-prospective-source-r2",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    },
+    "l1-spatial-record-actual-math-r1.json": {
+      "fresh": true,
+      "changed": [],
+      "task": "l1-spatial-record-actual-math-r1",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    },
+    "l1-spatial-record-actual-source-r1.json": {
+      "fresh": true,
+      "changed": [],
+      "task": "l1-spatial-record-actual-source-r1",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    }
+  },
+  "historical_reconciliation": "R1 design/math snapshots intentionally stale source+notebook after full-cut2156 checkpoint; R2 design/review assignment explicitly reconciled unchanged spatial scientific inputs. R2 prospective and both ACTUAL final packets fresh before repository mutation; no old packet refreshed."
+}

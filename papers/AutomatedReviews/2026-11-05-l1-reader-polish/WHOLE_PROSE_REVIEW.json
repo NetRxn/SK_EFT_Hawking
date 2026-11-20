@@ -1,0 +1,47 @@
+{
+  "role": "independent whole-paper prose and rendered review; no authoring",
+  "checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+  "head": "0d45d43d395fc2b1ef524e7ba7baeeba85e08f23",
+  "manuscript_sha256": "ba39d45207c8c100f85a4a0712b33d9490d6c7b268e7534a82ecbf0bac958c4f",
+  "pdf_sha256": "41860cc1bff35d7bfc23ab53def3677b08bf80b26049c272f55fc32861da200c",
+  "prior_prose_review_sha256": "707b31f3f1481931006f1a94bcaebc63f4475998b8d4e41a1ad9c64b919e5927",
+  "initial_continuity": {"fresh": true, "changed": []},
+  "final_continuity": {"fresh": true, "changed": []},
+  "complete_source_read": {"in_order": true, "start": 1, "enddocument": 539, "before_old_prose_review": true},
+  "verdicts": {
+    "whole_manuscript": "BLOCK",
+    "ordinary_reader_polish": "LANDED",
+    "result_first_abstract": "YES",
+    "connected_section_argument": "NO",
+    "symbol_definitions": "YES within stated mathematical-reader scope; physical matching remains open",
+    "all_sentences_literature_facing": "NO",
+    "declared_instrument_length": "YES",
+    "rendered_layout": "PASS",
+    "original_physical_build": "OPEN"
+  },
+  "reader_stop": {"lines": [84, 87], "reason": "Explicitly absent mode, propagator and matter coupling leave no physical bridge from assumed response law to advertised graviton constraint; disclosure must remain."},
+  "secondary_structure_stop": {"lines": [337, 361], "reason": "Third possible mechanism becomes extended unmatched placeholder-coefficient calculation; formal catalog still ends Discussion."},
+  "length": {"word_equivalents": 3281, "ceiling": 3750, "headroom": 469, "pages": 4, "existing_receipt": "/tmp/l1-reader-polish-length-r2-20261105.json", "scope": "existing rendered text plus one figure at300; not freshly verified publisher accounting", "abstract_count_from_root": 596, "abstract_count_includes_environment_delimiters": true, "abstract_guidance_source_verified": false},
+  "individual_views": [
+    {"page": 1, "path": "/tmp/l1-reader-polish-page-1.png", "viewed": true, "layout": "PASS"},
+    {"page": 2, "path": "/tmp/l1-reader-polish-page-2.png", "viewed": true, "layout": "PASS", "minor": "Stretched spacing before long nonzero-c witness label; no clipping."},
+    {"page": 3, "path": "/tmp/l1-reader-polish-page-3.png", "viewed": true, "layout": "PASS"},
+    {"page": 4, "path": "/tmp/l1-reader-polish-page-4.png", "viewed": true, "layout": "PASS", "minor": "Distracting wrapped monospaced inventory; readable and inside margins."}
+  ],
+  "ordered_instruction": [
+    "Retain new result-first abstract, definitions and scientific boundaries.",
+    "Retain result sequence and strongest c-nonzero endpoint beside checks; move implementation labels to supporting provenance.",
+    "Condense Introduction141-146 while preserving exact four-source comparison.",
+    "Keep all conditional mechanisms; shorten main-text placeholder extension and preserve full additive/non-restoration/cancellation/units qualifications in support.",
+    "Move full dependent-conjunction/four-counterexample/product-witness/reproducibility inventory to existing accessible supporting material without deleting scientific content.",
+    "Complete original normalized B3 window, source/state/tensor/matter/transport chain before final physical spine/title and fresh canonical acceptance."
+  ],
+  "contradictions": [
+    "No current pin or receipt mismatch.",
+    "Prior abstract/definition/Phase-navigation findings are repaired, not current defects.",
+    "Title natural-range implication still outruns adopted, physically unnormalized window.",
+    "R2 source ACCEPT repairs exactly r1 two objections; neither accepts whole prose or physical completion."
+  ],
+  "execution_limits": {"tracked_writes": false, "git_mutations": false, "notebook_writes": false, "compile_run": false, "test_run": false, "lean_or_native_run": false, "scientific_run": false, "publisher_policy_verified": false, "source_lsp_available": false, "absent_proof_claim": false},
+  "report": "/tmp/l1-reader-polish-whole-prose-independent-20261105.md"
+}

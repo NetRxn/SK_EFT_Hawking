@@ -1,0 +1,3 @@
+✗ REFUSED — verify command failed (exit 127): python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py
+/bin/sh: python: command not found
+

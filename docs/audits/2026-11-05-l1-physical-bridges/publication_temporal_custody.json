@@ -1,0 +1,31 @@
+{
+  "incoming": "7f8cf17b443e23fd253ab59be3047bb23c69c60e",
+  "files": {
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_ACCEPTANCE.md": {
+      "sha256": "3e23795d4d7c07877bb591a27d955acfbec64531835909e47f4364c421b9265b",
+      "bytes": 4000
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md": {
+      "sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+      "bytes": 17461
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_MATH_REVIEW_R1.md": {
+      "sha256": "ad74c8588114b319bd2e9cfdb5774fd08e30e6b12789bf96e401c83441bc806d",
+      "bytes": 12314
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_PHYSICS_REVIEW_R1.md": {
+      "sha256": "156f924b78bb5dc852aa3224c906ce080ee2390652e8048672fd31935e2a3ff2",
+      "bytes": 8673
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_evidence.zip": {
+      "sha256": "c5f3b50b59155b96115853d6697a051ee34ba03303d7e7d812cc42331f17a53a",
+      "bytes": 46069
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_manifest.json": {
+      "sha256": "ac07ab1deeb2916adcd2976a62eb9a071b047208e84c088741d46fb8dfaf307f",
+      "bytes": 1744
+    }
+  },
+  "all_member_pins_crc_safe_paths": true,
+  "scope": "read-only archive custody/source assessment, no scientific evaluation"
+}

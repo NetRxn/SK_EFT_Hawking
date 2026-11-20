@@ -1,0 +1,34 @@
+{
+  "archive": "original_boundary_only_operators_evidence.zip",
+  "sha256": "0ac81f80b9255fbb113a673885298549aac7a0f712eecc373a897490b494d3e6",
+  "bytes": 913864,
+  "members": 16,
+  "manual_result_sha256": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+  "approved_brief_sha256": "dccf0c2b745b67d03762dc8feb6d7ff3c772aaf3b3b8d912708b88f1f6e8e82c",
+  "parent_checkpoint": "b922030349649b6e2c9c0778422ff86ff6627227",
+  "canonical_copies": {
+    "l1-original-boundary-only-operators-r1.md": "ORIGINAL_BOUNDARY_ONLY_OPERATORS.md",
+    "l1-boundary-only-operator-math-result-review-r1.md": "ORIGINAL_BOUNDARY_ONLY_OPERATORS_MATH_REVIEW_R1.md",
+    "l1-boundary-only-operator-source-result-review-r1.md": "ORIGINAL_BOUNDARY_ONLY_OPERATORS_SOURCE_REVIEW_R1.md"
+  },
+  "files": {
+    "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "d0cb41c784f36beed3f41e613c4a59e620b71540f373bb0871e4d1e383ad9f91",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_MATH_REVIEW_R1.md": "5377b70d6bd2c2c1d7eeecc5e36444069756a3aadb0b2f91d519b8d78c7c12fb",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_SOURCE_REVIEW_R1.md": "ade2488983aa40fae7b91fbf8644c0981072b84ff861ad295df728d9a9058b05",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "candidate/l1-original-boundary-only-operators-r1.md": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_boundary_operator_proposal_evidence.zip": "7b50304872a57f217e064c6792d0e7deda99184692838c72ba91c98bee23e928",
+    "parent/original_boundary_operator_proposal_manifest.json": "f2fb2579dec58f25d3d9bdada8c41a05f20bea4e10774b69ae90be0595e544e1",
+    "prework/ORIGINAL_BOUNDARY_OPERATOR_BRIEF.md": "dccf0c2b745b67d03762dc8feb6d7ff3c772aaf3b3b8d912708b88f1f6e8e82c",
+    "prework/ORIGINAL_BOUNDARY_OPERATOR_MATH_REVIEW_R1.md": "4ba0574bebc8f3cb432d53f8d089b730f762e7626f4fae1dc63f45756c7098c2",
+    "prework/ORIGINAL_BOUNDARY_OPERATOR_SOURCE_REVIEW_R1.md": "166d4bea62a17b4863d4b6f61bdb076bc197e088faa38c52ff57d3f6b0837f16",
+    "review/l1-boundary-only-operator-math-result-review-r1.md": "3ef2b2fc751969ff1738b4c6a8d63ab4656282980e8529cdd9a80aada23b6d58",
+    "review/l1-boundary-only-operator-source-result-review-r1.md": "10fd98f01869dfdba019c12640cf38434f1172bb80cbd672e531704a743e2213",
+    "source/manual-operator-custody-r1.json": "0058817e35f93bc4dbb3537f642d8d857dbc45745ac7f68b3b1074c93fbaffd1"
+  },
+  "outcome": "Independent mathematical and original-source ACCEPT of actual commissioned manual O1-O4 test-operator/kernel/two-duality/source construction",
+  "scope": "No physical constraint/quantization/domain/product/adjoint/quotient/positive-state/Q1 completion, runtime or slot authority"
+}

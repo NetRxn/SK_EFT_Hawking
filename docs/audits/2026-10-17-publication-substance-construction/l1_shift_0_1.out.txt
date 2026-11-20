@@ -1,0 +1,640 @@
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 1 1 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 1 1 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 1 1 17 136 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 1 1 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 1 2 3 192 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 0 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 3 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 0 18 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 0 33 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 2 17 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 3 33 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 0 0 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 0 0 68 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 0 0 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 0 0 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 0 0 192 3 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 1 1 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 1 136 18 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 0 3 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 1 33 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 1 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 1 34 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 1 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 1 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 1 68 18 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 1 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 1 33 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 1 18 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 1 18 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 1 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 0 18 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 3 18 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 0 0 3 192 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 0 3 3 192 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 2 2 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 0 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 3 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 2 2 34 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 2 68 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 0 0 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 0 0 34 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 2 33 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 3 34 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 3 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 0 0 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 0 3 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 3 3 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 0 17 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 0 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 0 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 0 0 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 3 3 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 0 136 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 0 3 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 0 136 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 0 68 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 0 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 2 136 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 0 68 18 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 0 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 0 136 18 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 3 0 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 0 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 3 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 1 1 68 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 2 136 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 1 2 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 3 136 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 7 7 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 1 1 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 3 68 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 3 136 18 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 1 68 18 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 0 68 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 6 6 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 2 68 18 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 2 68 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 2 1 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 1 68 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 2 2 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 2 2 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 5 5 34 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 3 68 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 1 136 18 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 1 2 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 7 7 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 2 136 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 6 6 17 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 1 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 2 2 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 1 136 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 2 1 192 3 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 3 0 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 3 68 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 3 136 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 1 68 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 4 4 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 2 68 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 4 4 3 192 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 4 4 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 2 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 4 4 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 5 34 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 7 17 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 2 1 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 7 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 7 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 5 34 72 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 4 7 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 7 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 4 72 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 2 1 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 2 136 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 1 18 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 2 2 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 5 17 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 7 68 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 2 18 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 6 17 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 2 2 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 0 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 4 7 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 4 4 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 4 4 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 3 3 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 5 72 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 7 17 72 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 0 0 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 5 132 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 6 132 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 6 132 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 2 33 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 3 3 136 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 2 33 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 7 68 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 5 72 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 4 7 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 3 136 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 2 136 18 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 0 33 136 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 3 0 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 0 136 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 5 132 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 5 68 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 4 17 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 4 34 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 4 17 72 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 7 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 4 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 5 5 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 5 132 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 7 4 48 12 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 7 4 3 192 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 7 7 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 0 18 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 6 72 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 4 17 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 2 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 4 34 136 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 3 3 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 3 33 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 7 34 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 7 17 132 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 6 34 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 5 6 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 7 34 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 6 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 1 18 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 5 5 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 5 5 34 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 5 5 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 2 1 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 4 34 132 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 0 0 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 2 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 6 5 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 2 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 4 4 136 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 5 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 6 6 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 4 4 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 5 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 2 2 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 5 5 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 1 1 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 6 6 34 136 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 5 6 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 6 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 3 18 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 7 7 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 5 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 7 72 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 7 17 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 2 2 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 5 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 6 6 34 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 6 6 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 7 132 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 6 34 72 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 6 34 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 6 5 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 7 34 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 5 6 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 5 34 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 7 34 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 7 7 3 192 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 7 7 68 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 5 17 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 4 72 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8626176 matched 1654784 exact slice 5 6 48 12 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 6 17 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 7 7 34 68 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 1 1 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 2 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 4 132 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 3 0 3 192 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 1 1 136 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 3 3 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 5 5 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 7 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 4 7 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 4 17 72 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 5 5 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 3 17 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 6 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 3 3 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 6 17 132 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 5 34 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 5 136 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 4 132 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 6 6 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 4 72 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 4 132 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 4 72 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 6 34 72 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 4 132 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 1 136 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 4 68 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 7 4 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 6 6 136 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 7 7 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 4 4 34 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 3 68 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 7 72 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 3 2 18 136 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 5 5 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 4 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 7 72 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 6 68 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 1 136 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 5 72 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 3 136 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 3 34 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 6 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 4 34 72 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 6 34 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 7 7 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 1 68 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 3 3 34 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 4 17 68 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 3 68 18 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 2 18 136 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 6 5 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 7 132 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 4 4 136 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 7 132 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 7 72 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 7 7 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 5 5 3 192 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 1 3 18 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 5 5 136 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 5 68 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 7 7 68 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 6 5 12 48 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 4 17 132 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 6 6 68 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 7 5 17 72 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 6 6 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 4 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 6 6 136 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3981312 matched 688128 exact slice 5 5 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 6 72 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 1 1 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 2 18 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 3 18 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 4 4 17 68 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 6 5 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 6 34 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 1 1 136 17 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 1 2 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 0 2 33 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 5 6 17 136 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 5 7 132 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 6 132 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 5 72 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 5 17 132 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 6 72 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 4 6 17 132 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 7 17 72 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 3 3 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 3 3 192 3 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 3 3 12 48 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 2 136 33 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 3 3 68 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 1 0 68 33 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 4 136 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 3317760 matched 655360 exact slice 7 4 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 0 3 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 2 2 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 3 0 68 34 scaled Gaussian (0,0)/5308416
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 6 6 48 12 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7962624 matched 1640448 exact slice 2 2 136 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 5308416 candidate right keys 8957952 matched 1671168 exact slice 2 2 192 3 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 2 0 18 136 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 4 4 68 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 5 132 34 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 7 6 132 17 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/5760 20/4992 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 2949120 matched 651264 exact slice 4 6 72 34 scaled Gaussian (0,0)/5308416
+Gaussian action support 20/4992 20/5760 16/24576 dual extra 0
+left pairs 4644864 candidate right keys 3538944 matched 663552 exact slice 7 7 136 17 scaled Gaussian (0,0)/5308416
+left pairs 4644864 candidate right keys 7667712 matched 1634304 exact slice 6 4 34 132 scaled Gaussian (0,0)/5308416

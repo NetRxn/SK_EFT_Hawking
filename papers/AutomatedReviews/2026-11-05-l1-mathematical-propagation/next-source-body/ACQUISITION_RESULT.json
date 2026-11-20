@@ -1,0 +1,52 @@
+{
+  "counts": {
+    "success": 4
+  },
+  "canonical_sidecar_untouched": true,
+  "sources": {
+    "BakerBellini2017": {
+      "bibkey": "BakerBellini2017",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-05T18:14:26+00:00",
+      "size_bytes": 156600,
+      "url_used": "https://arxiv.org/pdf/1710.06394",
+      "note": null
+    },
+    "CreminelliVernizzi2017": {
+      "bibkey": "CreminelliVernizzi2017",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-05T18:14:27+00:00",
+      "size_bytes": 130147,
+      "url_used": "https://arxiv.org/pdf/1710.05877",
+      "note": null
+    },
+    "EzquiagaZumalacarregui2017": {
+      "bibkey": "EzquiagaZumalacarregui2017",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-05T18:14:30+00:00",
+      "size_bytes": 884307,
+      "url_used": "https://arxiv.org/pdf/1710.05901",
+      "note": null
+    },
+    "SaksteinJain2017": {
+      "bibkey": "SaksteinJain2017",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-05T18:14:29+00:00",
+      "size_bytes": 1016046,
+      "url_used": "https://arxiv.org/pdf/1710.05893",
+      "note": null
+    }
+  }
+}

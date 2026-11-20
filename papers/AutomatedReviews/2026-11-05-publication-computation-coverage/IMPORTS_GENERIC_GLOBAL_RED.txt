@@ -1,0 +1,67 @@
+....................................F...                                 [100%]
+=================================== FAILURES ===================================
+_ TestDirectFormulaImports.test_actual_producer_binding_contract[def caller[Target]():\n global Target\n return Target()\n-expected36] _
+
+self = <tests.test_build_graph.TestDirectFormulaImports object at 0x107880780>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10785d5c0>
+tmp_path = PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-609/test_actual_producer_binding_c36')
+body = 'def caller[Target]():\n global Target\n return Target()\n'
+expected = {('caller', 'Target')}
+
+    @pytest.mark.parametrize("body,expected", [
+        ("def MixedCaller():\n return Target()\n", {("MixedCaller", "Target")}),
+        ("def β():\n return Target()\n", {("β", "Target")}),
+        ("def decorate(f):\n return f\n@decorate\nasync def MixedCaller(\n):\n return Target()\n", {("MixedCaller", "Target")}),
+        ("def caller():\n from src.core.formulas import Target as local\n return local()\n", {("caller", "Target")}),
+        ("def caller():\n from .formulas import Target\n return Target()\n", {("caller", "Target")}),
+        ("from src.core.formulas import Target as Alias\ndef caller():\n return Alias()\n", {("caller", "Target")}),
+        ("def caller():\n return all(Target(x) for x in items)\n", {("caller", "Target")}),
+        ("def caller():\n return [0 for data[Target()] in items]\n", {("caller", "Target")}),
+        ("def caller():\n return [Target() for data[Target] in items]\n", {("caller", "Target")}),
+        ("def caller():\n [x for Target in Target() for x in Target()]\n", {("caller", "Target")}),
+        ("def caller():\n [x for Target in items for x in items]\n return Target()\n", {("caller", "Target")}),
+        ("def caller():\n [x for Target in items for x in others]\n return [Target() for x in items]\n", {("caller", "Target")}),
+        ("def caller():\n Target: object\n [x for Target in items for x in others]\n return [Target() for x in items]\n", set()),
+        ("def caller():\n Target=other\n [x for Target in items for x in others]\n return [Target() for x in items]\n", set()),
+        ("def caller():\n def nested(x=Target()):\n  return 0\n return 0\n", {("caller", "Target")}),
+        ("def caller():\n hook=lambda x=Target(): 0\n return hook\n", {("caller", "Target")}),
+        ("def caller():\n class Nested(Target()):\n  pass\n return Nested\n", {("caller", "Target")}),
+        ("def caller():\n from src.core.formulas import Target\n Target: object\n return Target()\n", {("caller", "Target")}),
+        ("def caller(Target):\n return Target()\n", set()),
+        ("def caller():\n Target=other\n return Target()\n", set()),
+        ("def caller():\n import foreign as Target\n return Target()\n", set()),
+        ("def caller():\n from foreign import Target\n return Target()\n", set()),
+        ("def caller():\n from src.core.formulas import Target\n Target=other\n return Target()\n", set()),
+        ("def caller():\n from src.core.formulas import Target\n from foreign import Target\n return Target()\n", set()),
+        ("def caller():\n global Target\n Target=other\n return Target()\n", set()),
+        ("def caller():\n global Target\n del Target\n return Target()\n", set()),
+        ("def caller():\n def Target():\n  return 0\n return Target()\n", set()),
+        ("def caller():\n class Target:\n  pass\n return Target()\n", set()),
+        ("def caller():\n # Target()\n text='Target()'\n obj.Target()\n return text\n", set()),
+        ("def caller():\n def nested():\n  return Target()\n hook=lambda: Target()\n class Nested:\n  value=Target()\n return hook\n", set()),
+        ("def caller():\n value: Target()\n type Alias = Target()\n return 0\n", set()),
+        ("def caller(value=Target()) -> Target():\n return value\n", set()),
+        ("Target=foreign\ndef caller():\n return Target()\n", set()),
+        ("def caller():\n return Target()\ncaller=foreign\n", set()),
+        ("def caller():\n [(Target:=f) for f in items]\n return Target()\n", set()),
+        ("def caller[Target]():\n return Target()\n", set()),
+        ("def caller[Target]():\n global Target\n return Target()\n", {("caller", "Target")}),
+        ("def caller[Target]():\n global Target\n Target=other\n return Target()\n", set()),
+        ("def caller[Target]():\n [0 for Target in items]\n return [Target() for x in items]\n", set()),
+        ("def caller[Target]():\n from src.core.formulas import Target\n [0 for Target in items]\n return [Target() for x in items]\n", {("caller", "Target")}),
+    ])
+    def test_actual_producer_binding_contract(self, monkeypatch, tmp_path, body, expected):
+        edges = self._edges(monkeypatch, tmp_path, "def Target(*args):\n return 1\n" + body)
+        assert {tuple(sorted(e)) for e in edges} <= {("source", "target", "type")}
+>       assert {(e["source"].removeprefix("formula:"), e["target"].removeprefix("formula:"))
+                for e in edges} == expected
+E       AssertionError: assert set() == {('caller', 'Target')}
+E         
+E         Extra items in the right set:
+E         ('caller', 'Target')
+E         Use -v to get more diff
+
+tests/test_build_graph.py:1689: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_build_graph.py::TestDirectFormulaImports::test_actual_producer_binding_contract[def caller[Target]():\n global Target\n return Target()\n-expected36]
+1 failed, 39 passed, 11 deselected in 0.12s

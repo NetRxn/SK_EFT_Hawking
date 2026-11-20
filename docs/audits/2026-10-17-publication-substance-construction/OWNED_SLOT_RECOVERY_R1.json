@@ -1,0 +1,80 @@
+{
+  "reset_owner": "ROOT, the current publication team orchestrator; explicitly name a successor on handoff",
+  "authorization": "Operator clarification and standing team delegation on 2026-11-06: preserve work, then orchestration may manually reset the saved worktrees; do not repeatedly request routine permission.",
+  "base_ref": "codex/publication-primary-custody-20261105",
+  "base_sha": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+  "manual_finished_at": "2026-11-06T15:35:32.555988+00:00",
+  "native_finished_at": "2026-11-06T15:39:15.218770+00:00",
+  "controller_or_inventory_source_change": false,
+  "manual_cache_change": false,
+  "old_record_archive": "Exact originals retained locally in the existing primary continuity archive; public lease originals included. Global process observations remain local to avoid copying other-repository context.",
+  "slots": [
+    {
+      "slot": 2,
+      "old_head": "8187fc8312d3a9a070239adea5a4f04c48266822",
+      "preserved_local_and_remote_ref": "codex/preserve-wt2-bp-20261106",
+      "old_lease_state": "READY_TO_ABSORB",
+      "old_lease_sha256": "eb10f9234561359f23bc5da58b87bec6244fc3c3970fc7098e899c42568fd62e",
+      "new_head": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+      "dirty": [],
+      "lease_retired": true,
+      "actions": [
+        "existing guarded stop confirmed quiescence and retired stopped process records",
+        "saved clean worktree branch reset to authoritative primary; ignored files protected",
+        "exact old lease archived atomically under explicit operator authority; no owner-ended claim or forged state"
+      ]
+    },
+    {
+      "slot": 3,
+      "old_head": "3505b2f8afa4b47ef34b02771983dc8083a1c7fa",
+      "preserved_local_and_remote_ref": "codex/preserve-wt3-frontier-20261106",
+      "old_lease_state": "QUARANTINED",
+      "old_lease_sha256": "22ef46e95d8252ea4f60df60f4fa9adbf8e8d5bafb34cfab633e510de0d2edf5",
+      "new_head": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+      "dirty": [],
+      "lease_retired": true,
+      "actions": [
+        "existing guarded stop confirmed quiescence and retired stopped process records",
+        "saved clean worktree branch reset to authoritative primary; ignored files protected",
+        "exact old lease archived atomically under explicit operator authority; no owner-ended claim or forged state"
+      ]
+    }
+  ],
+  "final_native_readback": {
+    "capacity_complete": true,
+    "capacity_errors": [],
+    "capacity_conflicts": [],
+    "global_running_backends": 0,
+    "slots": [
+      {
+        "slot": 1,
+        "head": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+        "lease": null,
+        "dirty": [],
+        "backend": "down",
+        "proxy": "running",
+        "resource_reserved": false
+      },
+      {
+        "slot": 2,
+        "head": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+        "lease": null,
+        "dirty": [],
+        "backend": "down",
+        "proxy": "running",
+        "resource_reserved": false
+      },
+      {
+        "slot": 3,
+        "head": "2fbbfd95a396cadfd89961dea226d84c4f281675",
+        "lease": null,
+        "dirty": [],
+        "backend": "down",
+        "proxy": "running",
+        "resource_reserved": false
+      }
+    ]
+  },
+  "doctor_passed": true,
+  "validation_scope": "Sequential existing acquire/prepare/native Codex MCP probe/release for wt2 and wt3; not a scientific task grant or publication acceptance."
+}

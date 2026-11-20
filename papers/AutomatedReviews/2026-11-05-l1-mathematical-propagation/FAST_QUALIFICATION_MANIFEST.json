@@ -1,0 +1,26 @@
+{
+  "archive_sha256": "159a7878d5619f69c5f5ec324bff7252a97c4d03c3a1d369d96b410ef686a128",
+  "archive_bytes": 423715,
+  "members": {
+    "l1-math-numeric-fast-20261105-r1.txt": {
+      "sha256": "03a49aecae7d3287f0ecf25837206c58795755d2d859ba6baa7b6e5a83a6e04f",
+      "bytes": 153415
+    },
+    "l1-math-numeric-fast-20261105-r1.xml": {
+      "sha256": "32b35b35c2b65d8d752e93dae5b6f439929fb9a06f075360c084adf88eb5b174",
+      "bytes": 1012566
+    },
+    "l1-math-numeric-fast-midrun-source-pins-20261105-r1.json": {
+      "sha256": "071e5b59dda7def416e2526de5b6d715d307a7c0cb5623006ec44b9328b39a36",
+      "bytes": 725972
+    },
+    "l1-math-numeric-six-env-rerun-20261105-r1.txt": {
+      "sha256": "1f75ffa53d8015f0f5e7d5aaf5b9161242661998aaa2f7ff4ae591fbc7564462",
+      "bytes": 98
+    },
+    "l1-math-numeric-six-env-rerun-20261105-r1.xml": {
+      "sha256": "bd8bc49e4e946268ad072d0633e98e5575975b89a8ab0732e53ee8044985c557",
+      "bytes": 980
+    }
+  }
+}

@@ -1,0 +1,30 @@
+F....                                                                    [100%]
+=================================== FAILURES ===================================
+__________________ test_every_third_party_import_is_declared ___________________
+
+    def test_every_third_party_import_is_declared():
+        """The invariant. An undeclared import works only by accident -- it is present because
+        something else pulled it in, and it leaves the moment that something else stops."""
+        declared = _declared()
+        offenders = {
+            m: sorted(files)
+            for m, files in third_party_imports().items()
+            if m not in UNDECLARABLE
+            and _dist_for(m) not in declared
+            and _norm(m) not in declared
+        }
+>       assert not offenders, (
+            "third-party module imported but NOT declared in pyproject.toml. It is in the "
+            "environment only because some other package depends on it, so `uv lock --upgrade` "
+            "can remove it without warning. Declare it (main deps, or an optional extra if the "
+            "consumer is optional):\n  "
+            + "\n  ".join(f"{m} <- {', '.join(f[:3])}" for m, f in sorted(offenders.items()))
+        )
+E       AssertionError: third-party module imported but NOT declared in pyproject.toml. It is in the environment only because some other package depends on it, so `uv lock --upgrade` can remove it without warning. Declare it (main deps, or an optional extra if the consumer is optional):
+E           papers <- tests/test_gravitational_waves.py
+E       assert not {'papers': ['tests/test_gravitational_waves.py']}
+
+tests/test_dependency_declaration.py:179: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dependency_declaration.py::test_every_third_party_import_is_declared
+1 failed, 4 passed in 2.85s

@@ -1,0 +1,33 @@
+{
+  "source_commit": "a16af66d15d6184c19defcad1f2110515777b6c1",
+  "artifact_commit": "4c6c5149a92a1c3bdedab49fd2864487c280292c",
+  "native": {
+    "returncode": 0,
+    "jobs": 10840
+  },
+  "catalog": {
+    "previous": 41126,
+    "current": 41294,
+    "all_old_rows_deep_exact": true,
+    "new_records": 168,
+    "reviewed_authored_exports": 88,
+    "additional_eligible_structure_projection": "SKEFTHawking.ADW.FiniteGrassmannCoframe.Torus.positive",
+    "published_theorems": 23008,
+    "modules": 2053,
+    "sorry": 0
+  },
+  "artifact_review": "ACCEPT_GENERATED_ARTIFACTS_ONLY",
+  "freshness": "fourexistingchecksPASS",
+  "gate_source_hash": "2954acb360d07c3e",
+  "gates": {
+    "passed": 160,
+    "open": 28,
+    "blocked": 25,
+    "needs-recheck": 18
+  },
+  "gate_state_transitions": 0,
+  "newly_green_bundles": 0,
+  "full_profile": "Olderb21FAILED7174pass27fail14skip+notebookmissingdata; no newfullprofilepass",
+  "evidence_archive": "AUXILIARY_COFRAME_NATIVE_R1_EVIDENCE.zip",
+  "original_C_and_physical_obligations": "OPEN"
+}

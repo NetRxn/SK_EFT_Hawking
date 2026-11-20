@@ -1,0 +1,9 @@
+# D8 independent canonical table review
+
+**ACCEPT** the six-path table migration at base 0eaa36f7a93b3c1385c26567155bcf3822fc0a51, frozen patch SHA-256 402237ba6a089094604b3d76abd9f06aab7b2236cb76b5323c1e5b361c851dbe. Intake and terminal continuity both SAME.
+
+- Recreated baseline and candidate from the pinned Git archive in scratch and applied the exact patch. Both clean re-renders through the tracked `scripts/render_paper_tables.py --paper D8` produced all four frozen output hashes.
+- An independent comparison confirmed the same column formats, heading cells and all 29 data rows. Captions, labels, wrappers and every byte outside the four substituted table bodies match. The displayed 3.97 is computed from the same logarithmic expression as the Lean and Python bounds. Conditionality, precision conventions, and ancilla cells retain the baseline semantics.
+- Both versions independently passed `scripts/compile_bundle_pdf.py D8 --force --keep-artifacts` with 13 pages, four overfull boxes of the same widths, no TeX errors, no unresolved rendered references and no dropped class options. Raster comparison differs on pages 2, 5, 8 and 12 only. Reviewed each changed page. Canonical top and bottom rules and heading-rule replacement change table and subsequent vertical placement on those pages. Cells and caption readability are preserved. The baseline overfull warnings remain.
+- Ran the tracked `check_bundle_tables_use_pipeline` over each complete archived 21-bundle paper tree. Baseline 15 tables across seven bundles and candidate 11 across six. Both fail against the unchanged ceiling of one. The remaining table work is D1, D2, D4, D6, D9 and D10.
+- The verdict covers this D8 migration and its exact scoped evidence. Portfolio table closure, separate D8 findings, comprehensive gates and publication readiness require their own evidence.

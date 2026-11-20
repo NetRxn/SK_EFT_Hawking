@@ -1,0 +1,2 @@
+✓ wrote 1 record(s): review:2026-11-05-publication-metadata-serialization:D3:1.1
+✓ wrote 1 record(s): review:2026-11-05-publication-metadata-serialization:L2:1.1

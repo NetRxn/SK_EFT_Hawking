@@ -1,0 +1,36 @@
+{
+  "task": "l1-reader-polish-source",
+  "head": "0d45d43d395fc2b1ef524e7ba7baeeba85e08f23",
+  "base_sha256": "e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f",
+  "proposal_sha256": "2ee7ecf68385daf395e45dd98c5dcffc87abd66e62bc7b0d46e2f239a33c4137",
+  "verdict": "BLOCK",
+  "scope": "independent source and scientific-preservation proposal review only",
+  "required_corrections": [
+    {
+      "lines": [
+        374,
+        375
+      ],
+      "issue": "unqualified rounded span",
+      "repair": "span approximately [0.40,1.27] or identify rounded endpoints"
+    },
+    {
+      "lines": [
+        331,
+        332
+      ],
+      "issue": "unsupported necessity of full nonlinear action",
+      "repair": "retain full-action research route without exclusive necessity claim"
+    }
+  ],
+  "preservation_otherwise": "PASS",
+  "text_receipt": "/tmp/l1-reader-polish-source-textchecks-20261105.json",
+  "report": "/tmp/l1-reader-polish-source-independent-20261105.md",
+  "initial_continuity_fresh": true,
+  "final_continuity_fresh": true,
+  "tracked_writes": false,
+  "science_execution": false,
+  "original_build_open": true,
+  "whole_prose_or_render_acceptance": false,
+  "root_full_l1_ownership_retained": true
+}

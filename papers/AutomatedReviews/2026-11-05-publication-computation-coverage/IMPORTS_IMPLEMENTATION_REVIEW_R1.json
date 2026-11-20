@@ -1,0 +1,26 @@
+{
+  "verdict": "CHANGES REQUIRED",
+  "packet": "publication-imports-implementation-review-r1.json",
+  "packet_fresh": true,
+  "producer_sha256": "3b5d486626f157d43341d7d1bc8bed92d987b13e6e9ce3e2531ad0eab6938a62",
+  "tests_sha256": "aa01470acd6094c05888151f7aa8237de0f7d8e751b28e03bb1f0e5ad3d03733",
+  "findings": [
+    {
+      "id": "I1",
+      "priority": 2,
+      "path": "scripts/build_graph.py",
+      "line": 4853,
+      "title": "Preserve evaluated comprehension targets and shadow only bound names",
+      "required_change": "Visit generator target expressions and collect only Store-binding names; add both failing real-producer cases."
+    }
+  ],
+  "scoped_tests": {
+    "passed": 41,
+    "deselected": 1,
+    "production_seed_excluded": true
+  },
+  "corpus_conservation_verified": true,
+  "candidate_mutated": false,
+  "source_sensitive_probes_finished": true,
+  "science_main_publication_acceptance": false
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "ROOT direct source-qualification intake; physical candidate NOT YET QUALIFIED",
+  "source_commit": "26bf5596231b96f3389a78cd9b38ad2a6028aa29",
+  "normal_merge_anchor": "19ff5b809a8c79dd73c3719c0dfa86e3c1ce1e52",
+  "readback_sha256": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+  "archive_sha256": "ebaeacb2cd538d121ecba425cf9932c974c24490444462e7ae586f3eb2562463",
+  "archive_bytes": 539473,
+  "archive_unique_members": 18,
+  "crc_and_all_member_hashes_verified": true,
+  "canonical_copies_verified": 7,
+  "actual_held_pdf_pins_verified": 4,
+  "independent_result_reviews": "Both ACCEPT, qualification only",
+  "physical_build_closed": false,
+  "canonical_finding_closures": 0,
+  "main_integration": false,
+  "human_approval": false,
+  "next_step": "Executor to propose concrete original-model construction brief with renewed independent source/architecture approval before construction; ROOT retains entire L1 readiness"
+}

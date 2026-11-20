@@ -1,0 +1,104 @@
+{
+  "writer_returncode": 0,
+  "changed_bundles": {
+    "D1": {
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation",
+          "LeanProofSubstance"
+        ],
+        "after": [
+          "FixPropagation",
+          "LeanProofSubstance"
+        ]
+      },
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      }
+    },
+    "D3": {
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation"
+        ]
+      },
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      }
+    },
+    "D4": {
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation"
+        ]
+      },
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      }
+    },
+    "D10": {
+      "readiness_last_computed": {
+        "before": "2026-08-17",
+        "after": "2026-11-05"
+      },
+      "open_findings": {
+        "before": 9,
+        "after": 3
+      }
+    },
+    "L1": {
+      "blocked_p1_gates": {
+        "before": [
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation",
+          "ParameterProvenance"
+        ]
+      },
+      "advisories_open": {
+        "before": 6,
+        "after": 7
+      },
+      "open_findings": {
+        "before": 7,
+        "after": 8
+      },
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      }
+    },
+    "E1": {
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation"
+        ]
+      },
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      }
+    }
+  },
+  "all_changes_are_existing_writer_derived_fields": true,
+  "review_dates_stage_flags_human_states_all_unchanged": true,
+  "no_backfilled_review_date": true,
+  "note": "Initial ROOT unchanged-metadata assertion was too strict: existing CLI also synchronizes derived counts/gates, as its write_metadata_counts contract specifies. Actual CLI succeeded; no rerun or revert. These six expected derived updates are separately reviewed."
+}

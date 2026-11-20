@@ -1,0 +1,35 @@
+{
+  "both_fixed_sources": [
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "full_k4_closed": false,
+  "hashes": {
+    "l1_extended_offset_witness_k4_both_source_square_free_torus.py": "830c65bd9746feae2ba1aea1b3bc491d7666fced4d38782ce073c23f394b1526",
+    "l1_k4_both_source2_port_verification.json": "82c1c67346f597d5b78462af4232e3abde201d00d6c2fe1dfb214e5daf791804",
+    "l1_k4_both_source2_portable_control.json": "5d7937d09903aef97b19f473583ababdb6de73e3d9a123e322f0d7abe26feae8",
+    "l1_k4_both_source2_portable_exit.json": "f5b23a3916959517d93792824b318a031acbcc7a7711da150f3429b44fd9ce5d",
+    "l1_k4_both_source2_receipts.jsonl": "e706dc7f4ad41a8ff87436814c1e55e957aa6b33b872e074b0ced35aa833796d",
+    "l1_k4_both_source2_review.md": "5be0151385288cee96c295b445a3a1d793aadb3a5ebaad69d751d34dff0bdc27",
+    "l1_k4_both_source2_verification.json": "2f5104906daa4586f5ef93e4c344031518d9da7a23f2632442433a03e26a95f4"
+  },
+  "indices": [
+    106,
+    142
+  ],
+  "parent_manifest_words": 272,
+  "physical_B3_closed": false,
+  "portable_accepted_selected_k4": 222,
+  "residual_words": 50,
+  "same_axis_subtotal": [
+    57744679168632405825,
+    8796093022208
+  ],
+  "status": "PASS-portable-archived106-142"
+}

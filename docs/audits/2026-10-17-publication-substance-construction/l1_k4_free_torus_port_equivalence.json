@@ -1,0 +1,1290 @@
+{
+  "all30_dependency_files_bound_to_audit_directory": true,
+  "all30_geometry_and_branch_equivalence": true,
+  "changed_manifest_refused": true,
+  "default_cli_receipt": {
+    "kind": "free-torus-census",
+    "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+    "origins": [
+      0,
+      1
+    ],
+    "pair_cap": 3000000,
+    "row_cap": 120000,
+    "source_sha256": {
+      "evaluator": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+      "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+      "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+      "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+      "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+      "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+      "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0"
+    },
+    "valid_words": [
+      1,
+      14,
+      17,
+      23,
+      40,
+      53,
+      56,
+      65,
+      84,
+      88,
+      96,
+      123,
+      127,
+      135,
+      164,
+      178,
+      187,
+      192,
+      204,
+      217,
+      223,
+      233,
+      246,
+      249,
+      251,
+      254,
+      259,
+      261,
+      264,
+      266
+    ],
+    "words": [
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            4,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            6,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 1,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            6,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 14,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            10,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 17,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            6,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 23,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            7,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 40,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            7,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 53,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            11,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 56,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            7,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 65,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            2,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 84,
+        "omitted": 4,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            14,
+            [
+              0,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 88,
+        "omitted": 4,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            2,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 96,
+        "omitted": 4,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            3,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 123,
+        "omitted": 5,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            15,
+            [
+              0,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 127,
+        "omitted": 5,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            3,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            4,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 135,
+        "omitted": 5,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            4,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            6,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 164,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            6,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 178,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            10,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 187,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            6,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 192,
+        "omitted": 0,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            11,
+            [
+              0,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 204,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            11,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 217,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            7,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 223,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            9,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            11,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 233,
+        "omitted": 1,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            2,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 246,
+        "omitted": 4,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            14,
+            [
+              0,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 249,
+        "omitted": 4,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            2,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 251,
+        "omitted": 4,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            3,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            13,
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 254,
+        "omitted": 5,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            2,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 259,
+        "omitted": 8,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            3,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 261,
+        "omitted": 9,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            15,
+            [
+              0,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 264,
+        "omitted": 9,
+        "supported_geometry": false
+      },
+      {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            3,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 266,
+        "omitted": 9,
+        "supported_geometry": false
+      }
+    ]
+  },
+  "default_cli_stderr_empty": true,
+  "fixed_label_controls": [
+    {
+      "coefficient": [
+        325970404063475,
+        1530046740449765049237504
+      ],
+      "peak_rows": 84,
+      "word": 23
+    },
+    {
+      "coefficient": [
+        1706651964445631005,
+        743602715858585813929426944
+      ],
+      "peak_rows": 84,
+      "word": 1
+    }
+  ],
+  "full_word_reruns": 0,
+  "interpreter": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+  "invalid_word_refused": true,
+  "kind": "free-torus-port-equivalence",
+  "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+  "missing_source_binding_refused": true,
+  "original_source_sha256": "8086eafa7b4ebf4575e254a6cdbe2a473067d1d53044a84e21fd1b3c8c71c23c",
+  "portable_sha256": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+  "preserved_harness_failures": [
+    "/tmp/l1_k4_free_torus_portable_notes_failure.json",
+    "/tmp/l1_k4_free_torus_portable_notes_cli.out",
+    "/tmp/l1_k4_free_torus_portable_notes_cli.err"
+  ]
+}

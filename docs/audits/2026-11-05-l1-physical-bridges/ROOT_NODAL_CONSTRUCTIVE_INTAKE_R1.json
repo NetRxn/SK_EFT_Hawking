@@ -1,0 +1,16 @@
+{
+  "source_commit": "53765e44ee86bbc3e77d0dc208b7521346d34a1d",
+  "archive_sha256": "d960fe37fc0dbff044146ed56f83931f84ddd638c474555a412293a09c9f10c1",
+  "archive_bytes": 130763,
+  "archive_members": 29,
+  "artifact_copies": 18,
+  "accepted_current_input_copies": 7,
+  "all_pins_exact": true,
+  "root_read_complete_19_text_paths_and_all_final_review_pairs": true,
+  "accepted_scope": "exact fixed-direction subtotal/local moments; full parity/occupation; corrected signed structural projector and cross-edge seam/conditional finite-feature feasibility only",
+  "P0_evaluated": false,
+  "sigma_Q_evaluated": false,
+  "positive_grouping_constructed": false,
+  "physical_or_publication_acceptance": false,
+  "integrated_commit": "7b7b425242cfa370dfd2b34f6770d6436a4bd3dd"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate": "a56e6a644e2520a1891e70c607dbc98d13615062",
+  "full_pytest": {
+    "tests": 7086,
+    "failed": 37,
+    "passed": 7035,
+    "skipped": 14,
+    "errors": 0
+  },
+  "native_extractdeps_jobs": 10843,
+  "native_pass": true,
+  "merge_profile_pass": false,
+  "prior_measured_main_cohort_failures": 25,
+  "known_baseline_failures_reproduced": 25,
+  "additional_failures_not_previously_baselined": [
+    "tests.test_architecture_inventory.TestTheFreshnessCheck.test_the_live_tree_is_fresh",
+    "tests.test_bundle_json_serializer.TestCorpusIsCanonical.test_blob_is_byte_stable_through_the_serializer[papers/D3/bundle_metadata.json]",
+    "tests.test_bundle_json_serializer.TestCorpusIsCanonical.test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]",
+    "tests.test_bundle_json_serializer.TestCorpusIsCanonical.test_no_blob_carries_escaped_unicode",
+    "tests.test_ci_mode.TestCoverageFloor.test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES",
+    "tests.test_d5_citations.TestExemptionIsClaimedNotInferred.test_seeding_AWAY_a_declaration_turns_the_check_RED",
+    "tests.test_d5_citations.TestExemptionIsClaimedNotInferred.test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt",
+    "tests.test_d5_citations.TestExemptionIsClaimedNotInferred.test_the_undeclared_ceiling_has_ZERO_headroom",
+    "tests.test_d5_reviews.TestReviewVerifyIsOneCommand.test_the_live_corpus_is_clean",
+    "tests.test_phase6i_wave1.test_extract_missing_bibkeys_emits_no_orphans",
+    "tests.test_phase6i_wave1.test_no_missing_from_registry",
+    "tests.test_validate_public_surface.TestTexQuoteReferencesAreExtracted.test_d7_no_longer_cites_a_nonexistent_theorem"
+  ],
+  "prior_baseline_failures_not_current": [],
+  "ci_detail": "84/85 measured; bundle_manuscript_length unmeasured per actual full-suite failure",
+  "four_freshness_checks": "FAIL; detailed rerun justified because existing driver discarded full subprocess output",
+  "dirty_path": "docs/.test_missing_stubs.json",
+  "dirty_cause": "test_phase6i_wave1.py writes scratch file then asserts before cleanup; actual failed assertion leaves it",
+  "dirty_file_sha256": "0891b617824dd9865905de2f87d2dc8cb1952186de1da69ffba423d872daae6c",
+  "scope": "37 test failures, not bundles/gates;12 additional unbaselined failures are not classified as regressions without evidence"
+}

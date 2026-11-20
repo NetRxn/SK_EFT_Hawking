@@ -1,0 +1,17 @@
+Counts written to /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/counts.json
+LaTeX macros written to /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/counts.tex
+
+==================================================
+PROJECT COUNTS (from Lean environment)
+==================================================
+  Theorems: 22851 (22825 substantive + 26 placeholder)
+  Axioms: 0
+  Sorry: 0 (0 theorems + 0 defs)
+  Modules: 2047
+  Definitions: 12900
+  Python modules: 138
+  Test files: 205
+  Figures: 170
+  Notebooks: 91
+  Papers: 42
+  Aristotle-proved: 313

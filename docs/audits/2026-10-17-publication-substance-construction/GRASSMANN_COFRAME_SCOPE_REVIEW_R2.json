@@ -1,0 +1,29 @@
+{
+  "verdict": "ACCEPT_FOR_ADMITTED_DISCOVERY_AND_IMPLEMENTATION",
+  "initial_continuity": {
+    "exit_code": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "r1_revision_resolved": true,
+  "scope_sha256": "27b888762c13607cc0fa2c417c517ea74288ee83a03a1c62f85fc3624c3b6075",
+  "exact_scope_delta": "Only zero-link wording replaced by zero-coframe actual-model and separately labeled generic-zero-matrix controls",
+  "all_prior_authority_hashes_unchanged": true,
+  "zero_coframe_one_site_identity_valid": true,
+  "zero_matrix_actual_group_link_forbidden": true,
+  "source_math_scope_other_checks_reused_from_r1": true,
+  "B2_and_C_explicit_ROOT_owned": true,
+  "printed_closed_equivalence_assumed": false,
+  "live_LSP_still_required": true,
+  "actual_slot2_admission": false,
+  "implemented_kernel_acceptance": false,
+  "physical_publication_acceptance": false,
+  "repository_mutations": 0,
+  "final_continuity": {
+    "chunk_id": "459a21",
+    "wall_time_seconds": 0.151040917,
+    "exit_code": 0,
+    "original_token_count": 42,
+    "output": "{\n  \"fresh\": true,\n  \"changed\": [],\n  \"task\": \"publication-grassmann-scope-review-r2\",\n  \"meaning\": \"Input snapshot matches; no execution or completion authority.\"\n}\n"
+  }
+}

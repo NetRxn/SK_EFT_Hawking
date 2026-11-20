@@ -1,0 +1,49 @@
+{
+  "scope": "Targeted real producer/edge/evaluator readback; no full graph/native extraction/runtime correctness or portfolio acceptance.",
+  "formula_count": 436,
+  "rows": [
+    {
+      "paper": "L1",
+      "formulas": [],
+      "state": "open",
+      "measured": false,
+      "evidence": [
+        "0 declared formulas: 0 supported, 0 valid but insufficient, 0 no valid test, 0 absent, 0 wrong type"
+      ],
+      "blockers": []
+    },
+    {
+      "paper": "paper25_gravitational_waves",
+      "formulas": [
+        "c_GW_from_chi_vest",
+        "c_GW_deviation_from_c",
+        "dispersion_correction_from_GammaH",
+        "ligo_constraint_check",
+        "c_GW_natural_range"
+      ],
+      "state": "passed",
+      "measured": true,
+      "evidence": [
+        "5 declared formulas: 5 supported, 0 valid but insufficient, 0 no valid test, 0 absent, 0 wrong type",
+        "supported: formula:c_GW_deviation_from_c",
+        "supported: formula:c_GW_from_chi_vest",
+        "supported: formula:c_GW_natural_range",
+        "supported: formula:dispersion_correction_from_GammaH",
+        "supported: formula:ligo_constraint_check"
+      ],
+      "blockers": []
+    }
+  ],
+  "absent_control": {
+    "state": "blocked",
+    "measured": false,
+    "blockers": [
+      "absent Formula: formula:missing_control"
+    ]
+  },
+  "source_sha256": {
+    "scripts/build_graph.py": "173710e48b9ade0c93e95cb81c94178165616d7aa0d0c92c25e85bde3fc23dce",
+    "scripts/readiness_gates.py": "d082f32093aa66ed5cf19e5ccd896de2671f4f11503f4a3769a7582c233177d0",
+    "scripts/validation/checks/bundles_readiness.py": "482447311c72e570378dfb3de728a8780e20789d085099950670e7d42df57dd5"
+  }
+}

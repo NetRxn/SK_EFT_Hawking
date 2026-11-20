@@ -147,14 +147,38 @@ def test_strict_is_passed_only_by_the_submission_gate():
         f"VALIDATION_GATE_TOPOLOGY's flag table and its Invariant-#12 note are now wrong")
 
 
-def test_the_submission_gate_ignores_p2_advisories():
-    """READINESS_GATES' 'human policy vs mechanized rule' split rests on this."""
+def test_the_submission_gate_ignores_p2_advisories(monkeypatch):
+    """Bind owner policy to real classification and actual returned details."""
     _claim("VALIDATION_GATE_TOPOLOGY.md",
-           "which counts only P1-not-passed\nand P2-`blocked`")
-    src = (ROOT / "scripts" / "validation" / "checks" / "bundles_readiness.py").read_text()
-    assert "p1_blocked" in src and "p2_blocked" in src, (
-        "the submission gate no longer partitions blockers into p1/p2 — re-verify the "
-        "policy-vs-mechanism split documented in READINESS_GATES.md")
+           "A P1 G4 `open`/`measured=False` is YELLOW, not evidence that all P1 passed.")
+    from types import SimpleNamespace
+    import readiness_gates as rg
+    from validation.checks import bundles_readiness as br
+    g4 = rg.GateResult(gate="ComputationCorrectness", paper="unit", priority=1,
+                       state="open", measured=False).to_node_payload()
+    classified = br.classify_readiness([g4])
+    assert set(classified["unit"]) == {
+        "p1_blocked", "p2_blocked", "p2_advisory", "passed", "open"}
+    assert classified["unit"]["open"] == [("ComputationCorrectness", "open", "")]
+    assert br.partition_readiness(classified) == ([], ["unit"], [])
+    monkeypatch.setitem(sys.modules, "build_graph",
+                        SimpleNamespace(build_graph_json=lambda: {"nodes": [g4], "links": []}))
+    result = br.check_readiness_submission_gate()
+    assert result.passed is True
+    assert next(d for d in result.details if d.name == "unit").warning
+    detail = next(d for d in result.details if d.name == "unit:ComputationCorrectness")
+    assert detail.measured is False and "state=open" in detail.message
+    assert "all P1 passed" not in " ".join(d.message for d in result.details)
+    for priority in (1, 2):
+        blocked = rg.GateResult(gate="probe", paper="unit", priority=priority,
+                                state="blocked").to_node_payload()
+        assert br.partition_readiness(br.classify_readiness([blocked])) == ([], [], ["unit"])
+    advisory = rg.GateResult(gate="probe", paper="unit", priority=2,
+                             state="needs-recheck").to_node_payload()
+    assert br.partition_readiness(br.classify_readiness([advisory])) == ([], ["unit"], [])
+    passed = rg.GateResult(gate="probe", paper="unit", priority=1,
+                           state="passed").to_node_payload()
+    assert br.partition_readiness(br.classify_readiness([passed])) == (["unit"], [], [])
 
 
 # ── CHECK_AUTHORING_GUIDE.md ──────────────────────────────────────────────────────────
@@ -562,3 +586,21 @@ def test_the_operator_guide_is_client_neutral_and_carries_the_persistence_recipe
     assert "LEAN_SLOT_SKIP_HOST_LIMITS" in text
     assert not Path("docs/dev-loops/CODEX_LEAN_SLOTS.md").exists(), (
         "promotion must delete the original in the same commit")
+
+
+def test_adr012_logical_repository_prefix_denotes_active_checkout(tmp_path, monkeypatch):
+    sentence = ("A logical `SK_EFT_Hawking/` target prefix denotes the active checkout, "
+                "irrespective of its physical directory name.")
+    text = (ROOT / "docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md").read_text()
+    assert sentence in " ".join(text.split())
+    import orchestrate
+    canonical = tmp_path / "SK_EFT_Hawking"
+    active = tmp_path / ".codex-python-worktrees" / "publication-portability"
+    for root in (canonical, active):
+        (root / "src").mkdir(parents=True)
+        (root / "src/target.py").write_text(str(root))
+    monkeypatch.setattr(orchestrate, "PROJECT_ROOT", active)
+    assert orchestrate.target_files("SK_EFT_Hawking/src/target.py") == ["src/target.py"]
+    files = orchestrate.target_files("SK_EFT_Hawking/src/target.py, src/target.py:1-2")
+    assert files == ["src/target.py"]
+    assert (active / files[0]).read_text() == str(active)

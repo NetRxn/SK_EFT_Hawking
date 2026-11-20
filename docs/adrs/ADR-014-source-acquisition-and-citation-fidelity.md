@@ -127,6 +127,16 @@ HEAD every run, `--check` exiting 1 on drift so a stale register fails rather th
 Scope is the **21 submission bundles**; legacy `paperNN` drafts are excluded because they are
 not the submission surface and a gap there is not a budget item.
 
+The register reads cache holdings through the canonical workspace resolver and the citation
+check's shared strongest-tier discovery/classification. It compares a declared cache with
+discovered nonempty caches; metadata or an abstract remains an acquisition gap, and a
+stronger held body is not hidden by a weaker declaration. `none` and `missing` remain
+distinct. Internal routing follows the registry's actual `inprep` identity rather than a
+citation-key prefix. Curated bearing and external acquisition routes survive regeneration;
+inconsistent internal identity is refused. These are derived acquisition states, not evidence
+that a source body has been read or its scientific claims accepted. The existing header-first
+discovery contract remains separate from strongest-held-tier selection.
+
 ### 3. The load-bearing signal is a FLOOR, and the register says so in its own output
 
 The automated signal fires when a source supplies a registered `PARAMETER_PROVENANCE` value or

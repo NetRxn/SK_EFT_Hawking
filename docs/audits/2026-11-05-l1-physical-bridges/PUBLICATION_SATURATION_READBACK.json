@@ -1,0 +1,69 @@
+{
+  "reviewed_at": "2026-11-06T00:04:41.923377+00:00",
+  "candidate": "6905caf8ad86d769472c1adb6c83d7529c975d35",
+  "parent": "4aca534a28d05233b2394fdd7b210ea68c43a3e4",
+  "source_sha256": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+  "archive_sha256": "c4d854b9d8e16ecbc3ac3627cbf82e472f2958f2f19a73585608673ab1ac54cf",
+  "archive_bytes": 50763,
+  "archive_members": 10,
+  "crc_all_member_hashes_verified": true,
+  "root_read_entire_derivation_and_both_reviews": true,
+  "root_reconciled_actual_source_gamma_frames_action": true,
+  "manual_checks": [
+    "Half-degree support excludes every full-action contribution to degree62 diagonal and all but S2 squared over2 in degree62/58 mixed entry",
+    "Both independent temporal links give integralDE minus2 identity; both Grassmann crossing minus signs cancel to deltaAC Bx over4",
+    "Full four-world-order action quarter and exponential factorial yield complete W6 Bx times sum L_A squared over8",
+    "Actual compact point Hstar=-gamma2 gamma3 gives trace coefficients minus4/plus4 and noncancelling magnitude2 monomial",
+    "Gauge-equivariant conjugate dual remains in original degree160 actual image, with full auxiliary norm strictly positive",
+    "Zero norm/nonzero overlap obstructs every nonzero scalar normalization without assuming Z nonzero or evaluating a normalized point"
+  ],
+  "verdict": "ACCEPT scoped manual adopted-form incompatibility; canonical publication intake/merge not yet recorded",
+  "unestablished": [
+    "fullZ or c0 nonvanishing",
+    "any certified normalized parameter point",
+    "kernel or native proof",
+    "physical adjoint/algebra/state correspondence",
+    "all Lorentzian/continuum or original L1 scientific objective impossibility",
+    "operator-approved premise change or scope reduction"
+  ],
+  "next_substantive_direction": "Derive which reflection/algebra/boundary/state premises follow from the intended original physical theory; no selected quotient or zero-coupling escape. Original normalization and N4 tensor assignments remain open.",
+  "merge_commit": "69355f1db52d2fcde38c2ea0bed41ebd2dbe7cb3",
+  "canonical_intake_record": "docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_SATURATION_INTAKE.md",
+  "publication_conservation": [
+    {
+      "path": "papers/L1/paper_draft.tex",
+      "unchanged": true,
+      "sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2"
+    },
+    {
+      "path": "papers/L1/paper_draft.pdf",
+      "unchanged": true,
+      "sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a"
+    },
+    {
+      "path": "papers/L1/bundle_metadata.json",
+      "unchanged": true,
+      "sha256": "57b0a4e30446196a6cfbac62e9499e5fb96dcb99359f30c8b6484be82433f16b"
+    },
+    {
+      "path": "papers/L1/claims_review.json",
+      "unchanged": true,
+      "sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951"
+    },
+    {
+      "path": "papers/L1/prose_state.json",
+      "unchanged": true,
+      "sha256": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627"
+    },
+    {
+      "path": "papers/L1/audit_log.jsonl",
+      "unchanged": true,
+      "sha256": "447676b4f073f130aa0290d569d5a29bfd2d1ef39a53d3ff89e83299e92824ed"
+    },
+    {
+      "path": "docs/review_finding_supersessions.json",
+      "unchanged": true,
+      "sha256": "259fbccb61e14d9add9a341964de6bb05a5e3763d3c0b6deeb39e6752755d7ab"
+    }
+  ]
+}

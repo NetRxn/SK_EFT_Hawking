@@ -1,0 +1,17 @@
+{
+  "source_commit": "fc5bf408ab22f31f11c5ece471f679be9a674052",
+  "archive_sha256": "0fd991e315ff7d616755a8f42722f61cd47b6ba464e8f7431fadcea6084d4ff2",
+  "unique_members": 12,
+  "all_hashes_exact": true,
+  "canonical_copies_exact": 3,
+  "accepted_source_copies_exact": 5,
+  "parent_artifacts_exact": 2,
+  "independent_source_review": "ACCEPT breakdown only",
+  "independent_architecture_review": "ACCEPT breakdown only",
+  "root_read_entire_design_and_both_reports": true,
+  "original_build_open": true,
+  "construction_implementation_approved": false,
+  "next_assignment": "Bounded unchanged-model nonregular boundary-constraint/quantization research design, renewed prospective reviews before physical implementation",
+  "actual_held_pdf_pins_checked": 4,
+  "normal_merge_commit": "06b78c0312f50f04d6174b28ac91923baa11e39b"
+}

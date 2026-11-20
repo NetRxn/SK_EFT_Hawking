@@ -1,0 +1,500 @@
+{
+  "axis_subtotals": {
+    "(2, 2)": [
+      13408159967615306205,
+      2199023255552
+    ],
+    "(2, 3)": [
+      288435790010965434291,
+      140737488355328
+    ]
+  },
+  "covariance_pairs": [
+    [
+      28,
+      63,
+      "xor1"
+    ],
+    [
+      114,
+      149,
+      "xor1"
+    ],
+    [
+      194,
+      219,
+      "xor1+transverse23"
+    ],
+    [
+      253,
+      268,
+      "xor1+transverse23"
+    ]
+  ],
+  "evidence_sha256": {
+    "/tmp/l1-two-square-author-batch.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-batch.exit.json": "69c0c5c814dbd94ba07322a904e423bd0ad9d14d76590213abcf403f0ae07869",
+    "/tmp/l1-two-square-author-batch.out": "d672527fda0cbbdd764fd41e5c3ad7f52f6b095872adb6b4e2470633c7b194f4",
+    "/tmp/l1-two-square-author-pilot.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-pilot.exit.json": "9ca9476204bf2d09547aac78c83ece80e54475fe021975ea91fc40cb6ed68066",
+    "/tmp/l1-two-square-author-pilot.out": "851cc07726eac6fb9cddc96ce4b999e67ecfb81980bc43fafb762f69c3b404c7",
+    "/tmp/l1-two-square-author-r1.py": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+    "/tmp/l1-two-square-author-word114.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word114.exit.json": "581301105beb8cd8e785de072ec692449a1e915fe5c9325375fdc7db26be0f19",
+    "/tmp/l1-two-square-author-word114.out": "85eb704f64b1c582c6e82c6f3d965b7a4775d5187748acb565833395eb706451",
+    "/tmp/l1-two-square-author-word149.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word149.exit.json": "e42a3f28ce262e3ef033998465253b01ae60d5491275d8be7239cde24bbd097a",
+    "/tmp/l1-two-square-author-word149.out": "78ba192810bbe17562a67a4b65b978c5f89fc16942184a64725429baebc3af96",
+    "/tmp/l1-two-square-author-word194.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word194.exit.json": "6602a83fb8b7b11c420cf972a64efef1c88e54b913d269a89533b195da49c97a",
+    "/tmp/l1-two-square-author-word194.out": "25370a2a6c7a94bed164d1a5cb9809f6333c876c7b39c34c4925caa53eca243c",
+    "/tmp/l1-two-square-author-word219.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word219.exit.json": "0164009176d06ef4a5879a9cc94a067912107707811c139bb2a520488021ceaf",
+    "/tmp/l1-two-square-author-word219.out": "361346f4fc57ed0421b8032631c95db04acf1546f1313c908d0520e2fa98af63",
+    "/tmp/l1-two-square-author-word253.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word253.exit.json": "a153bd47f0d86dfbf220637b530b72d06eb6475841a96324c8e5a90616951bf0",
+    "/tmp/l1-two-square-author-word253.out": "17e400fc5a5e383c6ae7f7f8d3653d404dbd018a7b30e3c980d6da7e09519174",
+    "/tmp/l1-two-square-author-word268.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word268.exit.json": "b39a8be6fe96402c21e01f5728b6f3164874b0aec49dfc9300b760f11c71c4c3",
+    "/tmp/l1-two-square-author-word268.out": "43189790c18808cb318238f61939d710bce1242a6ec070f5ce7d19b483457d19",
+    "/tmp/l1-two-square-author-word63.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-two-square-author-word63.exit.json": "458696b158f7beb560127a2c7846cd721edf1196680e6076ae47b7ff4f44ebda",
+    "/tmp/l1-two-square-author-word63.out": "702de588efc090c4e567f87f2fd82961c1c8e9b4c79dde6c11641b3bf517553b",
+    "/tmp/l1-two-square-review-replay.exit.json": "9df435e84f96b5a4609879e45074ed171472f204e57416f33e4b7aaa8265c848",
+    "/tmp/l1-two-square-review-replay.stdout": "06c174691ba47cda7cc49db8e600bdc03c5ab8fd8bcc647a487ca06f6d87d6f5"
+  },
+  "independent_word28_exact_match": true,
+  "indices": [
+    28,
+    63,
+    114,
+    149,
+    194,
+    219,
+    253,
+    268
+  ],
+  "maximum_peak_rows": 16448,
+  "principal_binding_match": true,
+  "records": {
+    "28": {
+      "coefficient": [
+        13408159967615306205,
+        8796093022208
+      ],
+      "contraction_seconds": 0.6899896670365706,
+      "divisor": 448725507581488582870448065320067369013728266731878669558120284859479417813752316210247362121632857799844372623275527876928865263122596979166866739922702031790536654848,
+      "full_seconds": 67.70883524999954,
+      "kind": "exact-word",
+      "peak_rows": 16448,
+      "phase": "warm-contraction",
+      "preparation_seconds": 67.01864624989685,
+      "raw_numerator": 684006339179401697523163439308742879879283734974574739746279874442480396487693008920627240793682762514663372482318731704215642122910837016337223671149672883598895473995284480,
+      "word": {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            4,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            6,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            9,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            15,
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 28,
+        "omitted": 0,
+        "supported_geometry": false
+      }
+    },
+    "63": {
+      "coefficient": [
+        13408159967615306205,
+        8796093022208
+      ],
+      "divisor": 448725507581488582870448065320067369013728266731878669558120284859479417813752316210247362121632857799844372623275527876928865263122596979166866739922702031790536654848,
+      "kind": "exact-word",
+      "peak_rows": 16448,
+      "raw_numerator": 684006339179401697523163439308742879879283734974574739746279874442480396487693008920627240793682762514663372482318731704215642122910837016337223671149672883598895473995284480,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 0.6772026249673218,
+      "word": {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            7,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            8,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            14,
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 63,
+        "omitted": 1,
+        "supported_geometry": false
+      }
+    },
+    "114": {
+      "coefficient": [
+        13408159967615306205,
+        8796093022208
+      ],
+      "divisor": 448725507581488582870448065320067369013728266731878669558120284859479417813752316210247362121632857799844372623275527876928865263122596979166866739922702031790536654848,
+      "kind": "exact-word",
+      "peak_rows": 4768,
+      "raw_numerator": 684006339179401697523163439308742879879283734974574739746279874442480396487693008920627240793682762514663372482318731704215642122910837016337223671149672883598895473995284480,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 0.4183791249524802,
+      "word": {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            2,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            11,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            13,
+            [
+              0,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 114,
+        "omitted": 4,
+        "supported_geometry": false
+      }
+    },
+    "149": {
+      "coefficient": [
+        13408159967615306205,
+        8796093022208
+      ],
+      "divisor": 448725507581488582870448065320067369013728266731878669558120284859479417813752316210247362121632857799844372623275527876928865263122596979166866739922702031790536654848,
+      "kind": "exact-word",
+      "peak_rows": 4768,
+      "raw_numerator": 684006339179401697523163439308742879879283734974574739746279874442480396487693008920627240793682762514663372482318731704215642122910837016337223671149672883598895473995284480,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 0.41324366710614413,
+      "word": {
+        "axes": [
+          2,
+          2
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            3,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            10,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              0,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 149,
+        "omitted": 5,
+        "supported_geometry": false
+      }
+    },
+    "194": {
+      "coefficient": [
+        127108190607950701611,
+        281474976710656
+      ],
+      "divisor": 86155297455645807911126028541452934850635827212520704555159094693020048220240444712367493527353508697570119543668901352370342130519538620000038414065158790103783037730816,
+      "kind": "exact-word",
+      "peak_rows": 16448,
+      "raw_numerator": 38905923712480179191911071336819908253348512111512664321950994500701168133135643046814539513537641680050648055518980319899207132103592775894074132435658507313813427658944413696,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 1.5687283329898492,
+      "word": {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            6,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            8,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            9,
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            15,
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 194,
+        "omitted": 0,
+        "supported_geometry": false
+      }
+    },
+    "219": {
+      "coefficient": [
+        127108190607950701611,
+        281474976710656
+      ],
+      "divisor": 86155297455645807911126028541452934850635827212520704555159094693020048220240444712367493527353508697570119543668901352370342130519538620000038414065158790103783037730816,
+      "kind": "exact-word",
+      "peak_rows": 16448,
+      "raw_numerator": 38905923712480179191911071336819908253348512111512664321950994500701168133135643046814539513537641680050648055518980319899207132103592775894074132435658507313813427658944413696,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 1.1579506249399856,
+      "word": {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            4,
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            5,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            11,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            14,
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 219,
+        "omitted": 1,
+        "supported_geometry": false
+      }
+    },
+    "253": {
+      "coefficient": [
+        20165949925376841585,
+        35184372088832
+      ],
+      "divisor": 448725507581488582870448065320067369013728266731878669558120284859479417813752316210247362121632857799844372623275527876928865263122596979166866739922702031790536654848,
+      "kind": "exact-word",
+      "peak_rows": 16448,
+      "raw_numerator": 257187369815244581179502066612085149010702553599629194942486363671235122267472090445961206741181990162496401240883533056852878004862526448046135794566415074357904986802749440,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 0.6102439999813214,
+      "word": {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            0,
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            2,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            11,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            13,
+            [
+              0,
+              3
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 253,
+        "omitted": 4,
+        "supported_geometry": false
+      }
+    },
+    "268": {
+      "coefficient": [
+        20165949925376841585,
+        35184372088832
+      ],
+      "divisor": 448725507581488582870448065320067369013728266731878669558120284859479417813752316210247362121632857799844372623275527876928865263122596979166866739922702031790536654848,
+      "kind": "exact-word",
+      "peak_rows": 16448,
+      "raw_numerator": 257187369815244581179502066612085149010702553599629194942486363671235122267472090445961206741181990162496401240883533056852878004862526448046135794566415074357904986802749440,
+      "source_sha256": "408973d994e789463329cf88ba67ce85d1f956a42264b342943f4fc95a582e33",
+      "warm_contraction_seconds": 0.611454667057842,
+      "word": {
+        "axes": [
+          2,
+          3
+        ],
+        "changes": [
+          [
+            1,
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            3,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            6,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            12,
+            [
+              0,
+              2
+            ]
+          ]
+        ],
+        "geometry_diagnostic": "ValueError: not enough values to unpack (expected 1, got 0)",
+        "index": 268,
+        "omitted": 9,
+        "supported_geometry": false
+      }
+    }
+  },
+  "status": "PASS-selected-eight"
+}

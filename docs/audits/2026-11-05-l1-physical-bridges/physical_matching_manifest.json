@@ -1,0 +1,19 @@
+{
+  "files": {
+    "PHYSICAL_MATCHING_DECOMPOSITION.md": {
+      "bytes": 10882,
+      "sha256": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef"
+    },
+    "PHYSICAL_MATCHING_MATH_REVIEW_R1.md": {
+      "bytes": 9431,
+      "sha256": "3c3aeab28d4717976f1ab88cdf9b9f13a4f53fa0bc8963b7e9f7bc51580f4617"
+    },
+    "PHYSICAL_MATCHING_PHYSICS_REVIEW_R1.md": {
+      "bytes": 7980,
+      "sha256": "cf09d475b37b6047da8fb0fdb72cf126001dcbf5f98edf74f1a6b139d8b330fa"
+    }
+  },
+  "parent_commit": "b804fb426d722d3597b06f821e91d22b67c8d6f7",
+  "physical_acceptance": "No physical metric/body/source/state/normalization/window/tensor/transport/Lean/main closure",
+  "status": "Independently accepted bounded manual/source decomposition; scratch handback pending ancestry-confirmed integration transition"
+}

@@ -1,0 +1,111 @@
+tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red
+--- 4a0d
+
++++ 01d72
+
+@@ -3,3 +3,3 @@
+
+  +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='636 declared apex claim(s) scored (fl...'claim_numeral_absent', passed=True, message='… and 13 more', warning=True, measured=True)], error=None, measured=True).passed
+- +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='636 declared apex claim(s) scored (fl...'claim_numeral_absent', passed=True, message='… and 13 more', warning=True, measured=True)], error=None, measured=True) = <function check_apex_theorem_claims_grounded at 0x10dbe6350>()
+- +      where <function check_apex_theorem_claims_grounded at 0x10dbe6350> = bru.check_apex_theorem_claims_grounded
++ +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='636 declared apex claim(s) scored (fl...'claim_numeral_absent', passed=True, message='… and 13 more', warning=True, measured=True)], error=None, measured=True) = <function check_apex_theorem_claims_grounded at 0x10d41e400>()
++ +      where <function check_apex_theorem_claims_grounded at 0x10d41e400> = bru.check_apex_theorem_claims_grounded
+
+tests.test_d5_bundles_readiness.TestApexTheoremClaimsGrounded::test_live_state_passes
+--- 4a0d
+
++++ 01d72
+
+@@ -2,3 +2,3 @@
+
+  +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='636 declared apex claim(s) scored (fl...'claim_numeral_absent', passed=True, message='… and 13 more', warning=True, measured=True)], error=None, measured=True).passed
+- +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='636 declared apex claim(s) scored (fl...'claim_numeral_absent', passed=True, message='… and 13 more', warning=True, measured=True)], error=None, measured=True) = <function check_apex_theorem_claims_grounded at 0x10dbe6350>()
+- +      where <function check_apex_theorem_claims_grounded at 0x10dbe6350> = bru.check_apex_theorem_claims_grounded
++ +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='636 declared apex claim(s) scored (fl...'claim_numeral_absent', passed=True, message='… and 13 more', warning=True, measured=True)], error=None, measured=True) = <function check_apex_theorem_claims_grounded at 0x10d41e400>()
++ +      where <function check_apex_theorem_claims_grounded at 0x10d41e400> = bru.check_apex_theorem_claims_grounded
+
+tests.test_d5_bundles_readiness.TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red
+--- 4a0d
+
++++ 01d72
+
+@@ -3,3 +3,3 @@
+
+  +  where False = CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='185 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True).passed
+- +    where CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='185 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True) = <function check_bundle_lean_module_coverage at 0x10dbe4a90>()
+- +      where <function check_bundle_lean_module_coverage at 0x10dbe4a90> = bru.check_bundle_lean_module_coverage
++ +    where CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='185 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True) = <function check_bundle_lean_module_coverage at 0x10d41cb40>()
++ +      where <function check_bundle_lean_module_coverage at 0x10d41cb40> = bru.check_bundle_lean_module_coverage
+
+tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED
+--- 4a0d
+
++++ 01d72
+
+@@ -2,3 +2,3 @@
+
+  +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True).passed
+- +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x10dbab3d0>()
+- +      where <function check_bundle_stage13_claim_consistent at 0x10dbab3d0> = <module 'validation.checks.bundles_readiness' from '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/validation/checks/bundles_readiness.py'>.check_bundle_stage13_claim_consistent
++ +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x10d3df480>()
++ +      where <function check_bundle_stage13_claim_consistent at 0x10d3df480> = <module 'validation.checks.bundles_readiness' from '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/validation/checks/bundles_readiness.py'>.check_bundle_stage13_claim_consistent
+
+tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings
+--- 4a0d
+
++++ 01d72
+
+@@ -2,2 +2,2 @@
+
+  +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True).passed
+- +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x10dbab3d0>()
++ +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x10d3df480>()
+
+tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom
+--- 4a0d
+
++++ 01d72
+
+@@ -6,4 +6,4 @@
+
+   {'E1': 7} != {'E1': 1}
+-  {'D4': 13} != {'D4': 4}
+   {'D1': 13} != {'D1': 2}
++  {'D2': 10} != {'D2': 3}
+   {'D3': 14} != {'D3': 1}...
+
+tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom
+--- 4a0d
+
++++ 01d72
+
+@@ -1 +1 @@
+
+-assert 58 == 44
++assert 57 == 44
+
+tests.test_d5_prose_lean_refs.TestProseTheoremReferenceCoverage::test_the_live_legacy_ceiling_has_ZERO_headroom
+--- 4a0d
+
++++ 01d72
+
+@@ -3,3 +3,3 @@
+
+  +  where 94 = int('94')
+- +    where '94' = <built-in method group of re.Match object at 0x12e3ce170>(1)
+- +      where <built-in method group of re.Match object at 0x12e3ce170> = <re.Match object; span=(0, 13), match='94 unresolved'>.group
++ +    where '94' = <built-in method group of re.Match object at 0x124e0b370>(1)
++ +      where <built-in method group of re.Match object at 0x124e0b370> = <re.Match object; span=(0, 13), match='94 unresolved'>.group
+
+tests.test_d5_reviews.TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red
+--- 4a0d
+
++++ 01d72
+
+@@ -2,3 +2,3 @@
+
+  +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='62 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True).passed
+- +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='62 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True) = <function check_review_severity_declared at 0x10dba9590>()
+- +      where <function check_review_severity_declared at 0x10dba9590> = rv.check_review_severity_declared
++ +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='62 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True) = <function check_review_severity_declared at 0x10d3dd640>()
++ +      where <function check_review_severity_declared at 0x10d3dd640> = rv.check_review_severity_declared

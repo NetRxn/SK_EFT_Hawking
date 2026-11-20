@@ -1,0 +1,72 @@
+{
+  "success": true,
+  "timed_out": false,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.symbolicSourceTranslation_specialize' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 268,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.symbolicSourceTranslation_pderiv' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 269,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.integrateSymbolicSource_coeff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 270,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.integrateSymbolicSource_pderiv' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 271,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.integrateSymbolicSource_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 272,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceGenerating_eq11' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 273,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceGenerating_constantCoeff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 274,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceGenerating_coeff_one' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 275,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.sourceGenerating_coeff_one_one' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 276,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.printed_sourceGenerating_eq11' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 277,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.closed_sourceGenerating_eq11' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 278,
+      "column": 1
+    }
+  ]
+}

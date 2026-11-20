@@ -1,0 +1,12 @@
+wt1: FREE proxy=running backend=down reserved=False
+  proxy: phase=running identity=managed process=present endpoint=present
+  backend: phase=missing identity=none process=unavailable endpoint=absent
+  backend: observation={"diagnostic_text": "no authoritative recorded PID", "errno": null, "error_class": null, "observed_at": "2026-11-05T19:57:12Z", "observed_identity": null, "operation": "identity-unresolved", "returncode": null, "state": "unavailable", "target": "backend wt1"}
+wt2: READY_TO_ABSORB codex session=9f04d93e2881 proxy=down backend=down reserved=False
+  proxy: phase=running identity=managed process=absent endpoint=absent
+  backend: phase=running identity=managed process=absent endpoint=absent
+wt3: QUARANTINED codex session=9f04d93e2881 proxy=down backend=down reserved=False
+  proxy: phase=running identity=managed process=absent endpoint=absent
+  backend: phase=missing identity=none process=unavailable endpoint=absent
+  backend: observation={"diagnostic_text": "no authoritative recorded PID", "errno": null, "error_class": null, "observed_at": "2026-11-05T19:57:14Z", "observed_identity": null, "operation": "identity-unresolved", "returncode": null, "state": "unavailable", "target": "backend wt3"}
+capacity_complete=True reserved=[] conflicts=[]

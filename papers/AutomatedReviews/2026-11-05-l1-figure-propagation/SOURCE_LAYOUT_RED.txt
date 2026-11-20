@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok, report, pages = compile_one(Path("papers/paper25_gravitational_waves"), force=True); print(report); assert ok and "overfull=0 " in report
+                                                                                                                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+paper25_gravitational_waves: OK  pages=5 overfull=7 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0

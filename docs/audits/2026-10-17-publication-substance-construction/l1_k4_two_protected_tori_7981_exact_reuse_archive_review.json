@@ -1,0 +1,21 @@
+{
+  "verdict": "ACCEPT",
+  "scope": "Archive conservation/completeness for paired pilot/fixed controls/source acceptance only; no new scientific or portable acceptance",
+  "archive_sha256": "85dfa728bebb08c5a5c525389d1dad2e6391589c2685f5b8ede870db544a17a6",
+  "archive_bytes": 273785,
+  "members": 79,
+  "CRC_hash_size_member_set_and_original_bytes": true,
+  "source16_current_candidate_bindings": true,
+  "r12_evaluator_included_and_bound": true,
+  "r11_rejection_r12_fix_r13_accept_preserved": true,
+  "fixed450_r15_fresh79_r17_r18_fresh81_r20_pairedr22_complete_receipts_included": true,
+  "portable_coverage_unchanged": 234,
+  "required_corrections": [],
+  "not_performed": [
+    "scientific imports",
+    "scientific arithmetic re-review",
+    "tests",
+    "writer/runtime",
+    "candidate/Git/notebook mutations"
+  ]
+}

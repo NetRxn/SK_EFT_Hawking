@@ -1,0 +1,48 @@
+{
+  "old_id": "sentence:L1:discussion:ac7de9a4",
+  "new_id": "sentence:L1:discussion:09269d60",
+  "rewrite_of": "sentence:L1:discussion:ac7de9a4",
+  "source_sha256": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
+  "prior_catalog_sha256": "d441e52371493e719d592ce2c79473705fee91510df65cbd2f14da53fab662b4",
+  "unit_count": 124,
+  "changed_sentence_indices": [
+    69,
+    122
+  ],
+  "changed_quote_indices": [
+    122
+  ],
+  "changed_verdicts": [
+    {
+      "unit": 122,
+      "prior": "WARN",
+      "current": "PASS"
+    }
+  ],
+  "by_verdict": {
+    "PASS": 81,
+    "INFO": 26,
+    "TRANSITION": 4,
+    "WARN": 12,
+    "UNGROUNDED": 1
+  },
+  "prior49candidates_unchanged": true,
+  "four_blocker_ids": [
+    "L1-H1-endpoint-attribution",
+    "L1-B3-physical-normalization",
+    "L1-physical-dynamics-transport",
+    "L1-fix-propagation"
+  ],
+  "sourcepins": {
+    "papers/L1/paper_draft.tex": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
+    "tests/test_gravitational_waves.py": "d7ea13b44e41d36327fa99699b02e96290fa40985c4a1b6aafb9a85729d9d38d",
+    "src/core/provenance.py": "eba5b4ed81cd21fba3ce78d281d3af60224a94c035dc36afadfb348087dc31ae",
+    "src/core/formulas.py": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9",
+    "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INDEPENDENT_PROPOSAL_REVIEW.md": "56ec8106025b91e0fa1a7f0c9363c69cc02876877b8bae8e365e38f67d8a7b85",
+    "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INTEGRATED_TESTS.txt": "b3266baca7c3b99701602fff4fb0fb7b95c05d0da211c9763fd297479e263e41",
+    "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/REPORT.md": "dfa918063abc8f0b4b8b318ff941efcfeeecb0027e69a6074845248e6e832ee2"
+  },
+  "schema_errors": [],
+  "original_top_level_run": "claims-reviewer-v2:2026-11-05:l1-current-documentary-r3",
+  "original_review_date": "2026-11-05T17:36:12.038875+00:00"
+}

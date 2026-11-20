@@ -1,0 +1,8 @@
+{
+  "accepted_source_pin_manifest": "bbcee9540ca6a28afc5527f8c330905e3d1fc3e8a32f4ad6b9b108bf71edd3a5",
+  "archive": "leading_metric_order_source_r1.zip",
+  "bytes": 53721,
+  "members": 21,
+  "scope": "Changed ranking only; controls/full target execution and DATA acceptance remain pending",
+  "sha256": "d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48"
+}

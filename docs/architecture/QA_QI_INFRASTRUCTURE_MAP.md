@@ -289,10 +289,26 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `docs/PERMANENT_TRACKED_HYPOTHESES.md` | `render_tracked_hypotheses.py` | content compare, **hard-fail, never auto-written** | no |
 | `papers/cluster_bundle_index.json` | `bundle_clusters.py` | **none** | **no** |
 | `docs/BUNDLE_READINESS_HEATMAP.md` | `bundle_readiness.py` | **none** | **no** |
+| `docs/SOURCE_ACQUISITION_REGISTER.md` | `source_acquisition_register.py` using canonical citation cache fidelity/discovery, registry identity and the curated overlay | **content compare** via the writer's `--check` against current bundle citations, registry, overlay, bearing inputs and held caches | no — explicit existing writer |
 | `docs/QI_REGISTER.md` | `qi_register.py` | **none** — *re-parses its own Closed Items* | **no** |
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 | `Lit-Search/Phase-*/primary-sources/<bibkey>.{pdf,abstract.txt,json}` | `back_fill_primary_sources.py` (`.pdf`/`.tex`/`.abstract.txt`) + `convert_inprep_citations.py` (self-deposit `.json` stubs) | **none** — additive; a cached source is never re-fetched. Per-bibkey fetch verdicts in the `docs/primary_sources_state.json` sidecar | **no** — an explicit acquisition run |
+
+**Git-hook inventory repair — whole measured architecture checkpoint accepted.** The existing surface
+inventory writer/check pair remains the sole owner. Its [accepted design](../superpowers/specs/2026-10-20-architecture-inventory-worktree-design.md)
+replaces checkout-local administrative-path guessing with Git's own anchored path
+query and preserves metadata membership, deterministic public logical locators and
+explicit refusal of unreadable or foreign context. Plugin registrations and Git
+file metadata are configuration/catalog observations; neither proves that a hook is
+loaded or running. No private hook contents or machine paths enter the census.
+Independent whole architecture design/intent and source reviews accepted their
+bounded scopes. ROOT established the reviewed corrected baseline through the
+existing canonical writer. Both actual production-reader fault controls passed
+red/restore-green, and the full inventory module passed. Independent whole
+implementation/evidence review accepted this bounded checkpoint. Current complete
+delivery qualification still precedes shipping/closure; catalog fidelity does not
+establish runtime activation.
 
 ⚠️ **`counts.json`'s key is a hybrid because an mtime-max is blind in one direction, and it
 shipped that way.** Deleting a file leaves every surviving file's mtime untouched, so the
@@ -307,6 +323,29 @@ proxy because it costs a pytest collection, and it needs no more: a deleted file
 **The generalisable rule for this table: an mtime is a proxy for "did the answer change", and it
 only works in one direction. Where the answer is cheap to recompute, recompute it** — which is
 why the rows above split into *mtime* and *content compare* at all, and why this row is now both.
+
+### Static Formula call relationships
+
+`scripts/build_graph.py::extract_imports_edges` derives Formula-to-Formula
+`IMPORTS` edges from evaluated direct calls in the public definitions selected
+by the existing Formula producer. Python AST structure and compiler symbol
+tables determine caller scope and binding identity. Literal imports from the
+canonical formulas module can resolve to those definitions; conflicting
+bindings, arbitrary aliases and attribute calls do not establish an edge.
+Comprehension bindings shadow only their own scope, while evaluated target
+expressions, eager nested defaults, decorators and ordinary class headers
+retain their enclosing execution context. Deferred annotations, type-alias
+right-hand sides and nested callable/class bodies are excluded. Unsupported
+generic class headers and invalid binding analysis raise a diagnostic rather
+than silently returning an empty call population.
+
+This is static declaration-reference coverage. It does not establish runtime
+dispatch or computation correctness. The emitted relationships participate in
+`scripts/last_modified.py` freshness propagation and the graph's existing
+dashboard consumers. G4 retains its registered Formula and test-evidence
+contract; an `IMPORTS` edge does not supply a missing test or physical derivation.
+The bounded scope and its controls are specified in
+[`ADR-009`](../adrs/ADR-009-validation-suite-modularization.md).
 
 ### 2.1 The module census — one derived answer, with no hand-written half
 

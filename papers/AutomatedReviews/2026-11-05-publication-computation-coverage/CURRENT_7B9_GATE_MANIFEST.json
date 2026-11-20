@@ -1,0 +1,22 @@
+{
+  "archive_sha256": "1222cf51fe5c6cb0d61d649ef2e905e5a22c06d69af190cf0d63f1963f0eb540",
+  "archive_bytes": 5487006,
+  "members": {
+    "l1-7b9-current-graph-20261105.json": {
+      "sha256": "deb75e116a3d13cd73080ab209c387d8585afe2aa5a35d06506cd369dbc15337",
+      "bytes": 87655601
+    },
+    "l1-7b9-current-graph-20261105.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "l1-7b9-current-graph-20261105.stderr": {
+      "sha256": "68fbfe7ea6bbb53e413f5575ce19f7ccda7bc854ccc1e6bafc3d11dd0da85b35",
+      "bytes": 13032
+    },
+    "l1-7b9-current-gate-readback-20261105.json": {
+      "sha256": "f1654d46966bd991a13da05dab60e1563356f19438d7a27cc4c562a53b69188c",
+      "bytes": 404701
+    }
+  }
+}

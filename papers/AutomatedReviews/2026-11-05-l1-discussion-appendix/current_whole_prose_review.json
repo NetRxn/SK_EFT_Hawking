@@ -1,0 +1,47 @@
+{
+  "task": "l1-discussion-prose",
+  "revision": "r2",
+  "review_scope": "R1 complete fresh-context source reading plus bounded R2 exact-delta and all-page follow-up; no new fresh-context whole read claimed",
+  "packet": "l1-discussion-prose-r2.json",
+  "initial_packet_fresh": true,
+  "final_packet_fresh": true,
+  "manuscript_sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+  "pdf_sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a",
+  "exact_two_replacements_reproduce_entire_source": true,
+  "r1_report_preserved": true,
+  "individual_final_pages_viewed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "ordinary_restructuring": "ACCEPT_AT_PROSE_RENDER_SCOPE",
+  "whole_paper_acceptance": "BLOCK",
+  "questions": {
+    "1": "YES",
+    "2": "YES",
+    "3": "YES_AT_READER_SCOPE",
+    "4": "YES",
+    "5": "YES_DECLARED_REPOSITORY_INSTRUMENT"
+  },
+  "r1_bounded_findings": {
+    "332_empty_reference": "REPAIRED_VISIBLE_NAMED_LINK",
+    "469_471_process_framing": "REPAIRED_READER_SCOPE"
+  },
+  "current_bounded_prose_defects": [],
+  "visual": "PASS",
+  "length": {
+    "compiled_pages": 5,
+    "word_equivalents": 3518,
+    "declared_ceiling": 3750,
+    "whole_pdf_includes_appendix_and_references": true,
+    "fresh_publisher_policy_verified": false
+  },
+  "original_scientific_construction": "OPEN_FULL_STRENGTH",
+  "title_natural_range_tension": "OPEN",
+  "recharter_approved": false,
+  "native_or_compile_execution_performed": false,
+  "tracked_mutations": false,
+  "report": "/tmp/l1-discussion-prose-r2-independent-20261105.md"
+}

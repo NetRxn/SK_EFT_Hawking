@@ -1,0 +1,107 @@
+{
+  "status": "accepted mathematical design and scratch evaluator source only; direct/fixed/scientific runtime UNRUN at archive",
+  "source_checkpoint": "cdc75df665dd68f783a49d1ce90969dcff91b7cb",
+  "archive_sha256": "f90b03f72751f4d0b4cb494504a197074810a9f90271ffef619ccc4844eb24b7",
+  "files": [
+    {
+      "name": "l1-7981-actual-source-review-verification.json",
+      "bytes": 11430,
+      "sha256": "2015707a831929b9a52373919cea5458b0d341b4b4b90ccffe5bb4475551cf02"
+    },
+    {
+      "name": "l1-7981-actual-source-review.md",
+      "bytes": 3482,
+      "sha256": "1d8f3fa0060aaa5f2137a0b92527464e241d82732c0e3c8c7d9f3fe6136231c5"
+    },
+    {
+      "name": "l1-7981-actual-source-review.py",
+      "bytes": 13477,
+      "sha256": "4b81f25b37ec1e2d32f71ddd769a7fc5b5722b82f2c144fd0874689e5d667aa4"
+    },
+    {
+      "name": "l1-7981-build-draft.py",
+      "bytes": 7336,
+      "sha256": "118907c71b66ab0a33f1ada88f630a1d804536d3b73c72f689d22653c043a2c5"
+    },
+    {
+      "name": "l1-7981-evaluator-ast-probe.py",
+      "bytes": 8269,
+      "sha256": "bf4781407ff9aef8f3d9d48f925aaf83fe1df550655d6aa93161fe092bf7144f"
+    },
+    {
+      "name": "l1-7981-evaluator-draft-r1.py",
+      "bytes": 14048,
+      "sha256": "e4a228c1194e303001edb65ecdb416d3f9067eb90990bb45726bba91613f39e7"
+    },
+    {
+      "name": "l1-7981-evaluator-draft-report.md",
+      "bytes": 4940,
+      "sha256": "2140fd3bbd284735c809af5b3ba4dc28180b81473380edb587d27f7c50c35abf"
+    },
+    {
+      "name": "l1-7981-evaluator-draft-verification.json",
+      "bytes": 12983,
+      "sha256": "93f5fcb92232e9e73e242e44a236578738401fa73fa380b86b6469ecf3732e8d"
+    },
+    {
+      "name": "l1-7981-evaluator-preservation.diff",
+      "bytes": 14203,
+      "sha256": "870581b1e5afe59e94b14ee9c9250cfb45afff5324fefa8156abaf04881fc341"
+    },
+    {
+      "name": "l1-7981-review-attempt1.json",
+      "bytes": 576,
+      "sha256": "058785826419497ecc96ec45226967d5535ab4221f650665ce070b9103e283b4"
+    },
+    {
+      "name": "l1-7981-review-attempt1.py",
+      "bytes": 10767,
+      "sha256": "45a4524a54fcbad0d6ca332682a4ea55b7a50a2e6f01c3a9784f11cd6a884077"
+    },
+    {
+      "name": "l1-7981-review-attempt2.json",
+      "bytes": 629,
+      "sha256": "e8ec90263b46413623993e7c8702171b97e7641213f84070b4fba7fdd991eb82"
+    },
+    {
+      "name": "l1-7981-review-attempt2.py",
+      "bytes": 10864,
+      "sha256": "0332b4757e3db21c2018a06c0cf5bb70282ba8e8bd4424886920344a28ff6d47"
+    },
+    {
+      "name": "l1-7981-review-verification.json",
+      "bytes": 9201,
+      "sha256": "d0f499f1b294981b7988dc61163d3d9d3f9809e14c1fc7eca130726fbaf93356"
+    },
+    {
+      "name": "l1-7981-review.md",
+      "bytes": 13226,
+      "sha256": "5a70c1e0c22bfbce197951439b12fe9eeec51757dfb9f191d16f9c05f563afc4"
+    },
+    {
+      "name": "l1-7981-review.py",
+      "bytes": 10859,
+      "sha256": "2b77193745c0ed5919a9cf0c33e99f355f7e1f86eb90bcf975da715c3951c300"
+    },
+    {
+      "name": "l1-residual38-second-family-derivation.md",
+      "bytes": 10342,
+      "sha256": "a296e8e6657b4546cd64f2d5bcc46a50b5cd9016cee62649e4ef479a834fa5b7"
+    },
+    {
+      "name": "l1-residual38-second-family-geometry.json",
+      "bytes": 851175,
+      "sha256": "cbed097dcbf9b2f16d1ac8e2a3aaf448ac0d9963dbd3fe029495d8a67b68deb1"
+    },
+    {
+      "name": "l1-residual38-second-family-probe.out.json",
+      "bytes": 3526,
+      "sha256": "7d3a077dd566ec69813b692ecf636192aa5f296e69da9596eeb2f032c8b328ab"
+    },
+    {
+      "name": "l1-residual38-second-family-probe.py",
+      "bytes": 8760,
+      "sha256": "d9979aea0a8d3b6f46e71cbafb1d8af2f1df8b17cfa157a5fc71ccab84e3acbe"
+    }
+  ]
+}

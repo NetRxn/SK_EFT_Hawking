@@ -1,0 +1,47 @@
+{
+  "status": "ROOT has inspected all four relevant primary-body attribution sections; full independent source report and corrected-manuscript acceptance remain pending",
+  "readings": [
+    {
+      "bibkey": "BakerBellini2017",
+      "body_scope": "printed pages1-4 tensor actionEqs1-2, scalar/vector/bimetric treatment and caveats/conclusions",
+      "assessment": "Coverage attribution supported with no-tuned-cancellation and bimetric matter/mode assumptions."
+    },
+    {
+      "bibkey": "CreminelliVernizzi2017",
+      "body_scope": "printed pages1-4 EFT background changes and covariantEqs11-16, frame/matter qualifications and conclusions",
+      "assessment": "Nearby-background and one quartic/quintic free function B4 supported; G2/G3 remain free. Held arXivv3 is2018 revision of2017 publication; preserve distinct version/title identity."
+    },
+    {
+      "bibkey": "SaksteinJain2017",
+      "body_scope": "printed pages2-5 cluster/dwarf tests, quartic Lagrangian Eqs5-8, GWplusM87 contribution and Figure2/conclusion",
+      "assessment": "General beyond-Horndeski cluster/dwarf analysis is distinct from quartic-galileon GW+M87 conclusion at representative order-unity matter coupling. Current L1 should separate these rather than imply one joint three-input derivation."
+    },
+    {
+      "bibkey": "EzquiagaZumalacarregui2017",
+      "body_scope": "printed pages1-2 GW/signal/scalar action Eqs1-10 and pages4-5 surviving theories, frame/matter footnote and affected broader models",
+      "assessment": "Aether, some Horava sectors, generalizedProca andTeVeS are affected; blanket elimination not established. Physical cg/c invariant under simultaneous whole-action field redefinition including matter."
+    }
+  ],
+  "sources": {
+    "BakerBellini2017": {
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.pdf",
+      "url": "https://arxiv.org/pdf/1710.06394",
+      "sha256": "8db10502fed0af2ce62871daef14d28a2d3f449740156865b0d602cd903ba08c"
+    },
+    "CreminelliVernizzi2017": {
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.pdf",
+      "url": "https://arxiv.org/pdf/1710.05877",
+      "sha256": "75068cfe7b5039b29e43fccae6276d1f572ac6aa9eef28cb61650f54cb211650"
+    },
+    "EzquiagaZumalacarregui2017": {
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.pdf",
+      "url": "https://arxiv.org/pdf/1710.05901",
+      "sha256": "d60c659f707b1d5822ed5cd2b957081a77a3b9082221152163f346d5b2f5781d"
+    },
+    "SaksteinJain2017": {
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.pdf",
+      "url": "https://arxiv.org/pdf/1710.05893",
+      "sha256": "1538e145aa626598e04184dfc15ef34b1b6118e796f1d5c60e9d4a135da28adf"
+    }
+  }
+}

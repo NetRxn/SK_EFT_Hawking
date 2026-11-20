@@ -1,0 +1,65 @@
+{
+  "candidate": "4672e9fecad14dc2223704548786bdf4a5ccdca8",
+  "slot": 1,
+  "scope": "Read-only Lean import/type discovery",
+  "result": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.original_eq10 (L : SKEFTHawking.ADW.FiniteGrassmannCoframe.Torus) (σ : ℝ)\n  (hσ : 0 < σ) (v : NNReal) (hv : ↑v = σ ^ 2)\n  (S :\n    SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L →\n      SKEFTHawking.ADW.FiniteGrassmannCoframe.Site L → SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.Polynomial)\n  (hS :\n    ∀ (U : SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L) (x : SKEFTHawking.ADW.FiniteGrassmannCoframe.Site L),\n      MvPolynomial.constantCoeff (S U x) = 0)\n  (hC :\n    ∀ (x : SKEFTHawking.ADW.FiniteGrassmannCoframe.Site L) (α : SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.D →₀ ℕ),\n      Continuous fun U => MvPolynomial.coeff α (S U x)) :\n  ∫ (U : SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L),\n      (berezin L)\n        (SKEFTHawking.ADW.FiniteGrassmannEvaluation.nilExp (4 * SKEFTHawking.ADW.FiniteGrassmannCoframe.volume L)\n          (∑ x,\n            ↑((MvPolynomial.aeval (SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.localCoframe L U x))\n                (S U x)))) ∂linkHaar L =\n    ∫ (z : SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L × (Auxiliary L → ℝ)),\n      fullWeight L σ (S z.1) z.2 *\n        Matrix.det\n          (globalMatrix L z.1 fun a =>\n            ↑(z.2 a)) ∂(linkHaar L).prod (SKEFTHawking.ADW.GaussianGrassmannAuxiliary.gaussianMeasure (Auxiliary L) v)",
+        "line": 4,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.haarPolynomial_integrable\n  (L : SKEFTHawking.ADW.FiniteGrassmannCoframe.Torus) (σ : ℝ) (hσ : 0 < σ) (v : NNReal) (hv : ↑v = σ ^ 2)\n  (P : HaarPolynomial L) :\n  MeasureTheory.Integrable (fun z => (haarPolynomialEvaluation L z.1 z.2) P)\n    ((linkHaar L).prod (SKEFTHawking.ADW.GaussianGrassmannAuxiliary.gaussianMeasure (Auxiliary L) v))",
+        "line": 5,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.completeHaarPolynomial_eval\n  (L : SKEFTHawking.ADW.FiniteGrassmannCoframe.Torus) (σ : ℝ)\n  (S :\n    SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L →\n      SKEFTHawking.ADW.FiniteGrassmannCoframe.Site L → SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.Polynomial)\n  (hS :\n    ∀ (U : SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L) (x : SKEFTHawking.ADW.FiniteGrassmannCoframe.Site L),\n      MvPolynomial.constantCoeff (S U x) = 0)\n  (hC :\n    ∀ (x : SKEFTHawking.ADW.FiniteGrassmannCoframe.Site L) (α : SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.D →₀ ℕ),\n      Continuous fun U => MvPolynomial.coeff α (S U x))\n  (U : SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L) (h : Auxiliary L → ℝ) :\n  (haarPolynomialEvaluation L U h) (completeHaarPolynomial L σ S hS hC) =\n    fullWeight L σ (S U) h * Matrix.det (globalMatrix L U fun a => ↑(h a))",
+        "line": 6,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.diracHaarPolynomial_eval\n  (L : SKEFTHawking.ADW.FiniteGrassmannCoframe.Torus) (U : SKEFTHawking.ADW.FiniteGrassmannCoframe.Links L)\n  (h : Auxiliary L → ℝ) :\n  (haarPolynomialEvaluation L U h).mapMatrix (diracHaarPolynomial L) = globalMatrix L U fun a => ↑(h a)",
+        "line": 7,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "MvPolynomial.pderiv.{u, v} {R : Type u} {σ : Type v} [CommSemiring R] (i : σ) :\n  Derivation R (MvPolynomial σ R) (MvPolynomial σ R)",
+        "line": 8,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "MvPolynomial.pderiv_map.{u, v, u_1} {R : Type u} {σ : Type v} [CommSemiring R] {S : Type u_1} [CommSemiring S]\n  {φ : R →+* S} {f : MvPolynomial σ R} {i : σ} :\n  (MvPolynomial.pderiv i) ((MvPolynomial.map φ) f) = (MvPolynomial.map φ) ((MvPolynomial.pderiv i) f)",
+        "line": 9,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "MvPolynomial.pderiv_mul.{u, v} {R : Type u} {σ : Type v} [CommSemiring R] {i : σ} {f g : MvPolynomial σ R} :\n  (MvPolynomial.pderiv i) (f * g) = (MvPolynomial.pderiv i) f * g + f * (MvPolynomial.pderiv i) g",
+        "line": 10,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "MvPolynomial.pderiv_monomial.{u, v} {R : Type u} {σ : Type v} {a : R} {s : σ →₀ ℕ} [CommSemiring R] {i : σ} :\n  (MvPolynomial.pderiv i) ((MvPolynomial.monomial s) a) = (MvPolynomial.monomial (s - fun₀ | i => 1)) (a * ↑(s i))",
+        "line": 11,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "SKEFTHawking.ADW.integral_prod_hermite_mul_affine.{u_1} {ι : Type u_1} [Fintype ι] (α : ι → ℕ) (p : ι → Polynomial ℝ)\n  (σ μ : ι → ℝ) (hσ : ∀ (i : ι), 0 < σ i) (v : ι → NNReal) (hv : ∀ (i : ι), ↑(v i) = σ i ^ 2) :\n  (∫ (x : ι → ℝ),\n      ∏ i,\n        (Polynomial.aeval ((x i - μ i) / σ i)) (Polynomial.hermite (α i)) *\n          Polynomial.eval (x i) (p i) ∂MeasureTheory.Measure.pi fun i => ProbabilityTheory.gaussianReal (μ i) (v i)) =\n    ∏ i,\n      σ i ^ α i *\n        ∫ (y : ℝ), Polynomial.eval y ((⇑Polynomial.derivative)^[α i] (p i)) ∂ProbabilityTheory.gaussianReal (μ i) (v i)",
+        "line": 12,
+        "column": 1
+      }
+    ]
+  }
+}

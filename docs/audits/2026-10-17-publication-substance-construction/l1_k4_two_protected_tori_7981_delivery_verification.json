@@ -1,0 +1,1237 @@
+{
+  "status": "SUBMITTED for independent final delivery review; portable234 remains current until acceptance",
+  "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+  "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+  "previous_accepted_populations": {
+    "l1_k4_core42_receipts.jsonl": [
+      4,
+      5,
+      7,
+      13,
+      20,
+      31,
+      32,
+      34,
+      36,
+      38,
+      47,
+      48,
+      49,
+      51,
+      59,
+      69,
+      73,
+      74,
+      75,
+      77,
+      91,
+      92,
+      94,
+      99,
+      101,
+      108,
+      111,
+      115,
+      116,
+      120,
+      130,
+      131,
+      133,
+      138,
+      140,
+      147,
+      150,
+      151,
+      154,
+      159,
+      160,
+      162
+    ],
+    "l1_k4_remaining48_receipts.jsonl": [
+      6,
+      8,
+      25,
+      30,
+      35,
+      50,
+      52,
+      67,
+      70,
+      72,
+      98,
+      104,
+      112,
+      118,
+      139,
+      146,
+      155,
+      157,
+      168,
+      169,
+      170,
+      171,
+      172,
+      177,
+      180,
+      181,
+      183,
+      190,
+      197,
+      198,
+      200,
+      201,
+      209,
+      212,
+      213,
+      214,
+      215,
+      216,
+      221,
+      222,
+      227,
+      228,
+      234,
+      235,
+      237,
+      241,
+      256,
+      269
+    ],
+    "l1_k4_peeled86_receipts.jsonl": [
+      0,
+      2,
+      9,
+      10,
+      11,
+      12,
+      15,
+      16,
+      18,
+      19,
+      27,
+      33,
+      37,
+      39,
+      41,
+      43,
+      44,
+      45,
+      46,
+      54,
+      55,
+      57,
+      58,
+      62,
+      68,
+      76,
+      82,
+      83,
+      85,
+      86,
+      87,
+      89,
+      90,
+      93,
+      97,
+      100,
+      107,
+      113,
+      117,
+      119,
+      121,
+      122,
+      124,
+      125,
+      126,
+      128,
+      129,
+      132,
+      136,
+      137,
+      143,
+      148,
+      156,
+      158,
+      166,
+      167,
+      173,
+      174,
+      175,
+      176,
+      182,
+      185,
+      186,
+      188,
+      189,
+      193,
+      199,
+      203,
+      205,
+      207,
+      208,
+      210,
+      211,
+      218,
+      220,
+      224,
+      230,
+      231,
+      236,
+      240,
+      248,
+      250,
+      252,
+      263,
+      265,
+      267
+    ],
+    "l1_k4_single_square6_receipts.jsonl": [
+      3,
+      42,
+      165,
+      206,
+      247,
+      262
+    ],
+    "l1_k4_free_torus30_receipts.jsonl": [
+      1,
+      14,
+      17,
+      23,
+      40,
+      53,
+      56,
+      65,
+      84,
+      88,
+      96,
+      123,
+      127,
+      135,
+      164,
+      178,
+      187,
+      192,
+      204,
+      217,
+      223,
+      233,
+      246,
+      249,
+      251,
+      254,
+      259,
+      261,
+      264,
+      266
+    ],
+    "l1_k4_two_square8_receipts.jsonl": [
+      28,
+      63,
+      114,
+      149,
+      194,
+      219,
+      253,
+      268
+    ],
+    "l1_extended_offset_witness_k4_both_source_square_free_torus.py": [
+      106,
+      142
+    ],
+    "l1_extended_offset_witness_k4_two_square_protected_torus.py": [
+      191,
+      202,
+      238,
+      239
+    ],
+    "l1_extended_offset_witness_k4_two_protected_tori.py": [
+      243,
+      245,
+      257,
+      270
+    ],
+    "l1_extended_offset_witness_k4_connected_source_square_torus.py": [
+      78,
+      80
+    ],
+    "l1_extended_offset_witness_k4_shared_square_protected_free_tori.py": [
+      110,
+      153
+    ]
+  },
+  "previous_total": 234,
+  "qualifying_new_words": [
+    79,
+    81
+  ],
+  "class_disjoint": true,
+  "candidate_total": 236,
+  "candidate_same": 142,
+  "candidate_mixed": 94,
+  "candidate_remaining": [
+    21,
+    22,
+    24,
+    26,
+    29,
+    60,
+    61,
+    64,
+    66,
+    71,
+    95,
+    102,
+    103,
+    105,
+    109,
+    134,
+    141,
+    144,
+    145,
+    152,
+    161,
+    163,
+    179,
+    184,
+    195,
+    196,
+    225,
+    226,
+    229,
+    232,
+    242,
+    244,
+    255,
+    258,
+    260,
+    271
+  ],
+  "remaining_same": 22,
+  "remaining_mixed": 14,
+  "coefficient_each": [
+    1165710661495982585955,
+    35184372088832
+  ],
+  "same_axis_subtotal_no_extra_factor": [
+    1165710661495982585955,
+    17592186044416
+  ],
+  "actual_portable_cli": {
+    "census": {
+      "exit": {
+        "actual_child_exit": 0,
+        "actual_parent_wall_seconds": 6.262136040953919,
+        "command": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "/tmp/l1-7981-portable-cli-r31-runner.py",
+          "census"
+        ],
+        "complete_fixed_branch_records": 0,
+        "complete_unrestricted_branch_records": 0,
+        "driver_exit": 0,
+        "full_word_phase_limits": null,
+        "invalid_lines": 0,
+        "last_complete_record": "portable-cli-wrapper-complete",
+        "mode": "census",
+        "native_record_count": 1,
+        "parent_timeout": false,
+        "reason": "terminal",
+        "runner_sha256": "ce33a04a2abf764b875b42797ce185ae10cabd6285640b147a3e338a0d8c6d8a",
+        "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+        "whole_process_limit_seconds": 30
+      },
+      "path_and_source_proof": {
+        "AUDIT": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction",
+        "actual_seconds": 6.192542625009082,
+        "kind": "portable-cli-wrapper-complete",
+        "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+        "mode": "census",
+        "native_argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py"
+        ],
+        "script": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+        "source_sha256": {
+          "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+          "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+          "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+          "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+          "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+          "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+          "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+          "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+          "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+          "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+          "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+          "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+          "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+          "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+          "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+          "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+        },
+        "warm_entry_hooks": 0
+      }
+    },
+    "fixed": {
+      "exit": {
+        "actual_child_exit": 0,
+        "actual_parent_wall_seconds": 7.595887458068319,
+        "command": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "/tmp/l1-7981-portable-cli-r31-runner.py",
+          "fixed"
+        ],
+        "complete_fixed_branch_records": 450,
+        "complete_unrestricted_branch_records": 0,
+        "driver_exit": 0,
+        "full_word_phase_limits": null,
+        "invalid_lines": 0,
+        "last_complete_record": "portable-cli-wrapper-complete",
+        "mode": "fixed",
+        "native_record_count": 452,
+        "parent_timeout": false,
+        "reason": "terminal",
+        "runner_sha256": "ce33a04a2abf764b875b42797ce185ae10cabd6285640b147a3e338a0d8c6d8a",
+        "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+        "whole_process_limit_seconds": 60
+      },
+      "path_and_source_proof": {
+        "AUDIT": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction",
+        "actual_seconds": 7.510848750011064,
+        "kind": "portable-cli-wrapper-complete",
+        "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+        "mode": "fixed",
+        "native_argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+          "--controls-only"
+        ],
+        "script": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+        "source_sha256": {
+          "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+          "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+          "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+          "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+          "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+          "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+          "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+          "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+          "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+          "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+          "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+          "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+          "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+          "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+          "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+          "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+        },
+        "warm_entry_hooks": 0
+      },
+      "all450_original_reconciled_fixed_fields_equal": true
+    },
+    "79": {
+      "exit": {
+        "actual_child_exit": 0,
+        "actual_parent_wall_seconds": 141.37239029200282,
+        "command": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "/tmp/l1-7981-portable-cli-r31-runner.py",
+          "79"
+        ],
+        "complete_fixed_branch_records": 0,
+        "complete_unrestricted_branch_records": 225,
+        "driver_exit": 0,
+        "full_word_phase_limits": {
+          "WHOLE225warm": 60,
+          "cold": 600,
+          "parent": 665
+        },
+        "invalid_lines": 0,
+        "last_complete_record": "portable-cli-wrapper-complete",
+        "mode": "79",
+        "native_record_count": 226,
+        "parent_timeout": false,
+        "reason": "terminal",
+        "runner_sha256": "ce33a04a2abf764b875b42797ce185ae10cabd6285640b147a3e338a0d8c6d8a",
+        "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+        "whole_process_limit_seconds": 665
+      },
+      "path_and_source_proof": {
+        "AUDIT": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction",
+        "actual_seconds": 141.2756324580405,
+        "kind": "portable-cli-wrapper-complete",
+        "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+        "mode": "79",
+        "native_argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+          "--word",
+          "79"
+        ],
+        "script": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+        "source_sha256": {
+          "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+          "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+          "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+          "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+          "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+          "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+          "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+          "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+          "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+          "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+          "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+          "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+          "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+          "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+          "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+          "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+        },
+        "warm_entry_hooks": 1
+      },
+      "native_final": {
+        "action_edges": 20,
+        "actual_unique_inputs": 154,
+        "branch_order": "source0_major_source1_minor",
+        "branches": 225,
+        "coefficient": [
+          1165710661495982585955,
+          35184372088832
+        ],
+        "divisor": 107991210608914791025028831160135258120672641509853274272040118476778485237566901637918651402396721263073765801209830194914766075900591610316317523968,
+        "fixed_action_routing": [
+          {
+            "edge": [
+              3,
+              7,
+              2
+            ],
+            "labels": [
+              {
+                "axis": 2,
+                "center": 7,
+                "center_flag": 1,
+                "frame_gamma_slot": 1
+              }
+            ],
+            "physical_anchor": 0
+          },
+          {
+            "edge": [
+              5,
+              7,
+              1
+            ],
+            "labels": [
+              {
+                "axis": 1,
+                "center": 5,
+                "center_flag": 0,
+                "frame_gamma_slot": 1
+              }
+            ],
+            "physical_anchor": 1
+          }
+        ],
+        "fixed_sources": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "fixed_square_links": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            7,
+            1
+          ]
+        ],
+        "forest_components": 2,
+        "grassmann_sites": 16,
+        "joined_edges": [],
+        "joint_forest": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            7,
+            1
+          ]
+        ],
+        "kind": "exact-word",
+        "live_action_routing": {
+          "edge": [
+            1,
+            3,
+            1
+          ],
+          "labels": [
+            {
+              "axis": 1,
+              "center": 1,
+              "center_flag": 0,
+              "frame_gamma_slot": 1
+            }
+          ],
+          "physical_anchor": 1
+        },
+        "lives": [
+          [
+            3,
+            1
+          ]
+        ],
+        "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+        "pair_cap": 3000000,
+        "paired_action_vertices": 15,
+        "peak_rows": 5632,
+        "peeled": 6,
+        "preparation_seconds": 84.01887254195753,
+        "raw_numerator": 3577909682083771754056551075808013519022378282253661397611264274989767082288381734141931877309402714624223663143998407185107022560223475281076507381774417920,
+        "replay_geometry": "source-sharing-square-two-protected-tori",
+        "row_cap": 120000,
+        "scope": "Complete selected unrestricted word",
+        "seconds": 128.094,
+        "shared_source": [
+          1,
+          2
+        ],
+        "source_sha256": {
+          "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+          "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+          "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+          "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+          "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+          "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+          "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+          "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+          "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+          "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+          "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+          "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+          "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+          "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+          "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+          "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+        },
+        "sources": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "squares": [
+          [
+            3,
+            1,
+            2
+          ]
+        ],
+        "tori": [
+          {
+            "faces": [
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                2,
+                3
+              ],
+              [
+                8,
+                2,
+                3
+              ],
+              [
+                12,
+                2,
+                3
+              ]
+            ],
+            "fixed_source": [
+              0,
+              2
+            ],
+            "linked": [
+              0,
+              4
+            ],
+            "other": [
+              8,
+              12
+            ]
+          },
+          {
+            "faces": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                5,
+                2,
+                3
+              ],
+              [
+                9,
+                2,
+                3
+              ],
+              [
+                13,
+                2,
+                3
+              ]
+            ],
+            "fixed_source": [
+              1,
+              2
+            ],
+            "linked": [
+              1,
+              5
+            ],
+            "other": [
+              9,
+              13
+            ]
+          }
+        ],
+        "whole225_warm_seconds": 44.075346041005105,
+        "word": {
+          "axes": [
+            2,
+            2
+          ],
+          "changes": [
+            [
+              3,
+              [
+                0,
+                3
+              ]
+            ],
+            [
+              6,
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              7,
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              10,
+              [
+                1,
+                3
+              ]
+            ]
+          ],
+          "geometry_diagnostic": "ValueError: too many values to unpack (expected 1)",
+          "index": 79,
+          "omitted": 2,
+          "supported_geometry": false
+        },
+        "xor1_branch_map": "15*i+j -> 15*j+i"
+      },
+      "all225_pilot_fields_equal": true
+    },
+    "81": {
+      "exit": {
+        "actual_child_exit": 0,
+        "actual_parent_wall_seconds": 141.17497754190117,
+        "command": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "/tmp/l1-7981-portable-cli-r31-runner.py",
+          "81"
+        ],
+        "complete_fixed_branch_records": 0,
+        "complete_unrestricted_branch_records": 225,
+        "driver_exit": 0,
+        "full_word_phase_limits": {
+          "WHOLE225warm": 60,
+          "cold": 600,
+          "parent": 665
+        },
+        "invalid_lines": 0,
+        "last_complete_record": "portable-cli-wrapper-complete",
+        "mode": "81",
+        "native_record_count": 226,
+        "parent_timeout": false,
+        "reason": "terminal",
+        "runner_sha256": "ce33a04a2abf764b875b42797ce185ae10cabd6285640b147a3e338a0d8c6d8a",
+        "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+        "whole_process_limit_seconds": 665
+      },
+      "path_and_source_proof": {
+        "AUDIT": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction",
+        "actual_seconds": 141.0388962920988,
+        "kind": "portable-cli-wrapper-complete",
+        "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+        "mode": "81",
+        "native_argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+          "--word",
+          "81"
+        ],
+        "script": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py",
+        "source_sha256": {
+          "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+          "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+          "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+          "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+          "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+          "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+          "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+          "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+          "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+          "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+          "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+          "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+          "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+          "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+          "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+          "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+        },
+        "warm_entry_hooks": 1
+      },
+      "native_final": {
+        "action_edges": 20,
+        "actual_unique_inputs": 154,
+        "branch_order": "source0_major_source1_minor",
+        "branches": 225,
+        "coefficient": [
+          1165710661495982585955,
+          35184372088832
+        ],
+        "divisor": 107991210608914791025028831160135258120672641509853274272040118476778485237566901637918651402396721263073765801209830194914766075900591610316317523968,
+        "fixed_action_routing": [
+          {
+            "edge": [
+              2,
+              6,
+              2
+            ],
+            "labels": [
+              {
+                "axis": 2,
+                "center": 6,
+                "center_flag": 1,
+                "frame_gamma_slot": 1
+              }
+            ],
+            "physical_anchor": 0
+          },
+          {
+            "edge": [
+              4,
+              6,
+              1
+            ],
+            "labels": [
+              {
+                "axis": 1,
+                "center": 4,
+                "center_flag": 0,
+                "frame_gamma_slot": 1
+              }
+            ],
+            "physical_anchor": 1
+          }
+        ],
+        "fixed_sources": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "fixed_square_links": [
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        "forest_components": 2,
+        "grassmann_sites": 16,
+        "joined_edges": [],
+        "joint_forest": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        "kind": "exact-word",
+        "live_action_routing": {
+          "edge": [
+            0,
+            2,
+            1
+          ],
+          "labels": [
+            {
+              "axis": 1,
+              "center": 0,
+              "center_flag": 0,
+              "frame_gamma_slot": 1
+            }
+          ],
+          "physical_anchor": 1
+        },
+        "lives": [
+          [
+            2,
+            1
+          ]
+        ],
+        "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+        "pair_cap": 3000000,
+        "paired_action_vertices": 15,
+        "peak_rows": 5632,
+        "peeled": 6,
+        "preparation_seconds": 84.03505941608455,
+        "raw_numerator": 3577909682083771754056551075808013519022378282253661397611264274989767082288381734141931877309402714624223663143998407185107022560223475281076507381774417920,
+        "replay_geometry": "source-sharing-square-two-protected-tori",
+        "row_cap": 120000,
+        "scope": "Complete selected unrestricted word",
+        "seconds": 127.806,
+        "shared_source": [
+          0,
+          2
+        ],
+        "source_sha256": {
+          "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+          "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+          "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+          "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+          "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+          "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+          "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+          "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+          "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+          "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+          "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+          "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+          "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+          "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+          "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+          "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+        },
+        "sources": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "squares": [
+          [
+            2,
+            1,
+            2
+          ]
+        ],
+        "tori": [
+          {
+            "faces": [
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                2,
+                3
+              ],
+              [
+                8,
+                2,
+                3
+              ],
+              [
+                12,
+                2,
+                3
+              ]
+            ],
+            "fixed_source": [
+              0,
+              2
+            ],
+            "linked": [
+              0,
+              4
+            ],
+            "other": [
+              8,
+              12
+            ]
+          },
+          {
+            "faces": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                5,
+                2,
+                3
+              ],
+              [
+                9,
+                2,
+                3
+              ],
+              [
+                13,
+                2,
+                3
+              ]
+            ],
+            "fixed_source": [
+              1,
+              2
+            ],
+            "linked": [
+              1,
+              5
+            ],
+            "other": [
+              9,
+              13
+            ]
+          }
+        ],
+        "whole225_warm_seconds": 43.77051495795604,
+        "word": {
+          "axes": [
+            2,
+            2
+          ],
+          "changes": [
+            [
+              2,
+              [
+                0,
+                3
+              ]
+            ],
+            [
+              6,
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              7,
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              11,
+              [
+                1,
+                3
+              ]
+            ]
+          ],
+          "geometry_diagnostic": "ValueError: too many values to unpack (expected 1)",
+          "index": 81,
+          "omitted": 3,
+          "supported_geometry": false
+        },
+        "xor1_branch_map": "15*i+j -> 15*j+i"
+      },
+      "all225_pilot_fields_equal": true
+    }
+  },
+  "independent_full450_originalL_fullrows": {
+    "final": {
+      "all_fullaction_rows_original_cubature": true,
+      "all_fullcenter_weights_original_L": true,
+      "branches": 450,
+      "kind": "independent450-unrestricted-complete",
+      "pair_cap": 3000000,
+      "row_cap": 120000,
+      "scalar_contractions_run": 0,
+      "seconds": 99.28001829201821,
+      "signed225_fullrow_covariance": true,
+      "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+      "square_source_independent": true,
+      "unrestricted_coefficients_run": 0,
+      "words": {
+        "79": {
+          "branches": 225,
+          "center_rows_checked": 53370,
+          "edge_rows_checked": 211950,
+          "nonempty": 225,
+          "structural_empty": 0
+        },
+        "81": {
+          "branches": 225,
+          "center_rows_checked": 53370,
+          "edge_rows_checked": 211950,
+          "nonempty": 225,
+          "structural_empty": 0
+        }
+      }
+    },
+    "exit": {
+      "actual_child_exit_code": 0,
+      "cold_limit_seconds": 600,
+      "command": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-7981-independent-unrestricted-r23-control.py"
+      ],
+      "complete_raw_branch_records": 0,
+      "driver_exit_code": 0,
+      "last_complete_record_kind": "independent450-unrestricted-complete",
+      "parent_seconds": 100.1142440829426,
+      "parent_timeout": false,
+      "parent_wall_limit_seconds": 665,
+      "runner_sha256": "47744003e2622fc437793f8f0e5988d4079fca864471b2db20be24cef53ae67d",
+      "scope": "INDEPENDENT ORIGINAL-L/all450 UNRESTRICTED PREPARED ROWS ONLY; no scalar contraction",
+      "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+      "truncated_or_nonJSON_lines": 0,
+      "whole225_fixed_warm_limit_seconds": null
+    }
+  },
+  "fresh_full79_replay": {
+    "final": {
+      "actual_unique_inputs": 154,
+      "all225_reference_equalities": true,
+      "branches": 225,
+      "coefficient": [
+        1165710661495982585955,
+        35184372088832
+      ],
+      "cold_seconds": 34.59243716695346,
+      "divisor": 107991210608914791025028831160135258120672641509853274272040118476778485237566901637918651402396721263073765801209830194914766075900591610316317523968,
+      "full_seconds": 76.51700354192872,
+      "kind": "independent-replay-exact-word",
+      "peak_rows": 5632,
+      "raw_numerator": 3577909682083771754056551075808013519022378282253661397611264274989767082288381734141931877309402714624223663143998407185107022560223475281076507381774417920,
+      "reference_sha256": "ba80ef752c93ff9c9914d5d695ac7ed9f4d8b3603d3c5ae4d9e56d83b62c2c7a",
+      "representatives": 154,
+      "restrictions": {},
+      "reuse": 71,
+      "source_sha256": {
+        "evaluator": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+        "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+        "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+        "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+        "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+        "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+        "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+        "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+        "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+        "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+        "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+        "l1_extended_offset_witness_k4_free_torus.py": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109",
+        "l1_extended_offset_witness_k4_peeled.py": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c",
+        "l1_extended_offset_witness_k4_single_square.py": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd",
+        "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+        "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+        "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+      },
+      "whole225warm_seconds": 41.924018374993466,
+      "word": 79
+    },
+    "exit": {
+      "actual_child_exit_code": 0,
+      "cold_limit_seconds": 600,
+      "command": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-7981-independent-unrestricted-r23-replay79-runner.py"
+      ],
+      "complete_raw_branch_records": 225,
+      "driver_exit_code": 0,
+      "last_complete_record_kind": "independent-replay-exact-word",
+      "parent_seconds": 77.54855445795693,
+      "parent_timeout": false,
+      "parent_wall_limit_seconds": 665,
+      "runner_sha256": "d5a874fe5037778be8d086f749079ea51e008b872971daadb722371bb2563cec",
+      "scope": "Independent full selected unrestricted79 replay fromzero",
+      "source_sha256": "2b852f30013c9edf0873275bdeb98c92f845bba27c3bd09aba71541678fb9f10",
+      "truncated_or_nonJSON_lines": 0,
+      "whole225_warm_limit_seconds": 60
+    }
+  },
+  "scope": "Complete selected family only. Fullk4/derivative-normalized source-action ensemble/commonZ/physical B3/modes/transport/main/human/publication remain open. Scoped source/runtime reviews and final archive acceptance are separate."
+}

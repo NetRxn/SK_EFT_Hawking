@@ -1,0 +1,35 @@
+{
+  "archive": "original_low_degree_metric_proposal_evidence.zip",
+  "sha256": "c14da59f12bd7094e8501fca973b2a425edd52c7696bef0211cac193da6bafcd",
+  "bytes": 1010047,
+  "members": 18,
+  "proposal_sha256": "c92a0db356ee4453aa6251aa130ba75c23f5650a271cf054d1c237442d41efcc",
+  "parent_checkpoint": "7c572ca494b722bba182e6e0100724e3d240e2f4",
+  "canonical_copies": {
+    "l1-low-degree-metric-physical-proposal-r2.md": "ORIGINAL_LOW_DEGREE_METRIC_PROPOSAL.md",
+    "l1-low-degree-metric-math-proposal-review-r2.md": "ORIGINAL_LOW_DEGREE_METRIC_MATH_REVIEW_R2.md",
+    "l1-low-degree-metric-source-proposal-review-r2.md": "ORIGINAL_LOW_DEGREE_METRIC_SOURCE_REVIEW_R2.md"
+  },
+  "files": {
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "d0cb41c784f36beed3f41e613c4a59e620b71540f373bb0871e4d1e383ad9f91",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_BOUNDARY_ONLY_OPERATORS.md": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "accepted/ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_boundary_only_operators_evidence.zip": "0ac81f80b9255fbb113a673885298549aac7a0f712eecc373a897490b494d3e6",
+    "parent/original_boundary_only_operators_manifest.json": "6b51731fe94d4e134a7a8bf3265361c017ed72824383987e5080f9ecd226319b",
+    "proposal/l1-low-degree-metric-physical-proposal-r2.md": "c92a0db356ee4453aa6251aa130ba75c23f5650a271cf054d1c237442d41efcc",
+    "review/l1-low-degree-metric-math-proposal-review-r2.md": "722c37922de927d797038aacb99a3e9a32b7592812ece15a994482abf2ac0c61",
+    "review/l1-low-degree-metric-source-proposal-review-r2.md": "787801320937317e86ac9e5e8c6810d9f492e55e62caa6d676b5ae5c85d2a581",
+    "revision-history/l1-low-degree-metric-math-proposal-review-r1.md": "61b7daf3bc71d5193f29bcb5e0947a610be871d2d668a3cf7419acb2d450ad9f",
+    "revision-history/l1-low-degree-metric-physical-proposal-r1.md": "24a8d2bb4bd559cfe6a172c5e8e7475ff50f96f9ba2becdb72d85b225fb00da6",
+    "revision-history/l1-low-degree-metric-source-proposal-review-r1.md": "6f8415604dce450480978ce3f3a14a483981248fd05d60beb6b398abe77a281e",
+    "source/metric-proposal-custody-r2.json": "e3709b8f1826dc7aa33da9579dac35c83872889e7c97fa7f459f0597581d94fd"
+  },
+  "outcome": "Both prospective R2 reviews APPROVE narrow preparatory audit only conditional on ROOT concrete use; ACCEPT readiness breakdown; NO physical construction approval",
+  "scope": "Proposal-only; no M/P construction, physical state/Q1/W1 acceptance or runtime grant"
+}

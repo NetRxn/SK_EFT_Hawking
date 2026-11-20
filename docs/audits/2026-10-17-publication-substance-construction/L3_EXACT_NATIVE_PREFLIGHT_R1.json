@@ -1,0 +1,54 @@
+{
+  "candidate": "263c882b2714d94a50a1e0ece1fcd402ca2f1539",
+  "tracked_project_module_hashes": {
+    "SKEFTHawking.BHThermodynamicsFourLaws": "3dad53ccf26c7fd5608ae234a51f88e4e50b5196b69f4321d690092e9611d3e2",
+    "SKEFTHawking.BHEntropyMicroscopic": "e534daa844bbea60a9b5837330a4f88e7a28ce80cc1aa9c5e033986dd9e2b3c6",
+    "SKEFTHawking.ModularInvarianceConstraint": "3274531d49b7c2d83189a03dc497a637e8b4cf21afab12d89da7c8dce6fa6d56",
+    "SKEFTHawking.GenerationConstraint": "53703bbce3a733ed29b2bafd4ad9a2ba9e99a9db8385c336cbb6cac39ee71115",
+    "SKEFTHawking.Z16AnomalyComputation": "a13f41f3d0693a3e857f5bd1cf7db8cd01a53d89463d6d3f01f87179d7023fa8",
+    "SKEFTHawking.Z16Classification": "3326adb8208efad826de4dda7c6d85d48a2c3cb94b4d580017fab9614437ce55",
+    "SKEFTHawking.GaugeEmergence": "f3ad0fcfcd902da727f5f94f9d3ee3b5d0600522056655e6211db39d645547d6",
+    "SKEFTHawking.FusionCategory": "4b6fdf8d9e088f82c2c9529285efd69ffa30de763fd787568e16695f3de46e6c",
+    "SKEFTHawking.SphericalCategory": "1f59203059207dca875ed3729814a30716f2e93264ad648568132fff822b12a7",
+    "SKEFTHawking.KLinearCategory": "458a28f60c93021a25d249125bea3d86c3578e4434936db582d643278a3e0b90",
+    "SKEFTHawking.DrinfeldDouble": "3feebcafe867a31fb1e19b0aa47bc8641aab2a18c9a0a1e0791eb7bc1613a928",
+    "SKEFTHawking.VecG": "a7747e3935b4b97b594da2ea09d6c7daa9c63e9e6a324c55441e1f44b23cdfd1",
+    "SKEFTHawking.SMFermionData": "7e29206e6ecc43927689e0c551073dcf4ede2b7b3db853cfd4a1fb688b4bbfa9",
+    "SKEFTHawking.WangBridge": "ab5a144a83410da6b7eabf3ce03aae0a218906f25b00ee3dd5b71ca21606f578",
+    "SKEFTHawking.FibonacciMTC": "dc48415b5eec9994d89ded950b2cdebe1c00772750f5197def9477a3e69eb082",
+    "SKEFTHawking.QSqrt5": "10addff31bfcde5cca27bf4cdf212d247d6121890a88d87ca119450fdb8a069b",
+    "SKEFTHawking.PolyQuotQ": "6941b2268e083b419a4c3842c978442a535fa3de748b8b613d14aa00c7d7ef9a",
+    "SKEFTHawking.RibbonCategory": "ae509196594da61eede90c52fa26ee1e99afa1b8a65abfd5b2b3293982d65f12",
+    "SKEFTHawking.SU2kFusion": "12f6ef5b442744cfff4b85a251d2c427f2ba26a8e6adcfbe2446523236b46795",
+    "SKEFTHawking.ContinuumCatalan": "6d8ca89423a08c3b2f3dc8f75f5e7b7a608e798e16e4a48bd85d36fdabb1ceaf",
+    "SKEFTHawking.GammaStirling": "e431905dce88906a2348d5bffe942e4f127d1de00d6ef38092629e76896ca26e",
+    "SKEFTHawking.LaplaceMethodAsymptotic": "a156c9e4b9f96f6dcb1dc464ac5ff252ba3335829d1bd9d14fdfa65c97460fa3",
+    "SKEFTHawking.Basic": "2bb228652560bd95d72e562a0eafbd95dfa531380e45a45c18e8f3e43e275557",
+    "SKEFTHawking.LaplaceMethod": "efe42c3baa3a59e2f5d01ad01a068265f40d4f1d6a3f44853804533c17533010",
+    "SKEFTHawking.LinearizedEFE": "ef2c73f40daabb1266d9d10803bebeab894dafdce9c2682f7b3cfc9ac397e339",
+    "SKEFTHawking.ADWMechanism": "025eb5c3934b1b0866b0a85aabf0cb3c0bec263a0f9970092e32dad3d5428e24"
+  },
+  "external_import_roots": [
+    "Mathlib",
+    "Mathlib.Analysis.Calculus.Deriv.Basic",
+    "Mathlib.Analysis.InnerProductSpace.Basic",
+    "Mathlib.Analysis.SpecialFunctions.Pow.Real",
+    "Mathlib.LinearAlgebra.Matrix.NonsingularInverse",
+    "Mathlib.Topology.MetricSpace.Basic"
+  ],
+  "module_drift": {
+    "22d5708f1863fc0c7d1614ee3b5648c10f7fc627": [
+      "SKEFTHawking.BHThermodynamicsFourLaws"
+    ],
+    "ddc320ec365a1f42fd5d8d81796ae07bc0bb029c": [
+      "SKEFTHawking.BHThermodynamicsFourLaws"
+    ]
+  },
+  "declared_on_current_source": [
+    "G_N_emerg_eval_mul_M_c_eq_inv_cutoff",
+    "balbinotAffine_deriv",
+    "regime_partition_profile_criterion",
+    "schwarzschild_profile_deriv"
+  ],
+  "present_in_committed_index": []
+}

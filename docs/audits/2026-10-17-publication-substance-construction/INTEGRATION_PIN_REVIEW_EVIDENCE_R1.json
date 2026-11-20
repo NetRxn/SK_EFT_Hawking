@@ -1,0 +1,34 @@
+{
+  "source_reviewed": "1dc710e9185411ca86c794b75b95e86552e7610b",
+  "archive_sha256": "107a879d15c169b9b3f26ef7fdbe112547a98c5c72a9dcde9b2150fd46f948a2",
+  "members": [
+    {
+      "name": "publication-integration-pin-repair-r1.patch",
+      "bytes": 1305,
+      "sha256": "b8121565392bf6bf3c565f251f387316532a41d90936f1f2346526ad7075427b"
+    },
+    {
+      "name": "publication-integration-pin-repair-r1.md",
+      "bytes": 14809,
+      "sha256": "8a044ae843fe842bd411f3992bc9e2eb9d68aca0452314041635252a31fa7137"
+    },
+    {
+      "name": "publication-integration-pin-repair-r1.json",
+      "bytes": 814026,
+      "sha256": "1b79e08b8113dbe3e91e704921e4bdd214760534ce4edf5e0692008f8ef24d0a"
+    },
+    {
+      "name": "publication-integration-pin-independent-r1.md",
+      "bytes": 12423,
+      "sha256": "769fa221ffed8c96d0b519855436deaa975afcbafb31acdad0723e045a12ecb8"
+    },
+    {
+      "name": "publication-integration-pin-independent-r1.json",
+      "bytes": 155300,
+      "sha256": "c0dea2eaeceaf28577986da2a8a4708cacae19bd3248b85ffc82eb3a4db1d83d"
+    }
+  ],
+  "validator_hunks": "UNAPPLIED; held for bundled architecture assessment",
+  "L2": "Independent semantic acceptance and separate actual existing-test production control; one terminal LF only",
+  "scope": "No scientific closure or bundle readiness accepted"
+}

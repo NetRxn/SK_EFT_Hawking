@@ -2,7 +2,7 @@
 
 **Phase:** 6w (Classical Simulability & Quantum Advantage in Analog Hawking — Tensor-Network Substrate)
 **Wave:** 6w.3 (LDP saddle-point characterization of BP convergence; former A1a follow-up)
-**Status:** ✅ SHIPPED 2026-05-26 PM. Headline `bp_convergence_iff_ldp_below_threshold` kernel-only `[propext, Classical.choice, Quot.sound]`; 7 substantive theorems + 2 companion lemmas; build clean 8709 jobs.
+**Current status — 2026-10-18:** genuine continuous Bernoulli loop-density/Legendre source retained; actual headline `fourCycleFree_nonneg_iff_ldp_rate_zero` is a combinatorial screen, not BP dynamics or complexity. Historical May26 source/build/kernel reports remain dated receipts. The [forest-rank/exact-marginal construction](../../audits/2026-10-17-publication-substance-construction/B2_FOREST_RANK_EXACT_MARGINALS.md), with [full independent review](../../audits/2026-10-17-publication-substance-construction/reviews/B2_FOREST_RANK_EXACT_MARGINALS.md), is independently accepted manual mathematics: all-pairs finite-forest ranks, horizon<=max(1,n), and exact normalized marginals for local nonnegative factors with Z>0, preserving q^(|V|-scope) constants. The five-node initial2 witness needs five sweeps at diameter four. Native/physical tensor-readout/precision-complexity and genuine Chern remain BUILD.
 **Bundle target:** D1 cross-bridge to LDP/ + new I-bundle section (later D7 candidate)
 **LoE:** ~2 sessions per Phase6w_Roadmap.md
 
@@ -23,41 +23,20 @@ rate function is below a computable threshold.
 
 ## Substantive deliverables
 
-1. **New Lean module** `lean/SKEFTHawking/BPLDPSimulability.lean`:
-   - `loopCorrectionRate G` — concrete rate function valued in ℝ:
-     `0` on tree factor graphs, `1` on loopy graphs (via
-     `IsTreeFactorGraph G` predicate from Wave 6w.2).
-   - `ldpSimulabilityThreshold : ℝ := 1/2` — the classical-
-     simulability threshold derived from the LDP saddle-point
-     condition (Tindall-Sels Section 3).
-   - `IsBPConvergenceFavorable G factorWeight` — the substantive
-     structural property: factor graph is a tree AND all factor
-     weights are non-negative.
-   - **Substantive Theorem 1** `loopCorrectionRate_eq_zero_iff_tree`:
-     the rate is `0` iff the factor graph is a tree (substantive
-     biconditional consuming the `Classical.byCases`-defined rate).
-   - **Substantive Theorem 2** `loopCorrectionRate_eq_one_of_not_tree`:
-     the rate is `1` when the factor graph is not a tree.
-   - **Substantive Theorem 3** `loopCorrectionRate_below_threshold_iff_tree`:
-     `loopCorrectionRate G ≤ ldpSimulabilityThreshold ↔ IsTreeFactorGraph G`.
-   - **Substantive Theorem 4** `loopCorrectionRate_nonneg`: positivity.
-   - **Headline `bp_convergence_iff_ldp_below_threshold`**:
-     substantive biconditional combining the structural
-     simulability property with the LDP-rate-function threshold —
-     consumes Theorems 1-4 and the BP substrate from Wave 6w.2.
+1. **Current source and retained physical target** `BPLDPSimulability.lean`:
+   - Actual four-cycle count/density and Bernoulli MGF produce a Legendre rate `-log(1-loopDensity)`.
+   - The old0/1 tree indicator and fixed1/2 threshold are not current source.
+   - `fourCycleFree_nonneg_iff_ldp_rate_zero` characterizes four-cycle-freeness/nonnegative weights; a bipartite six-cycle passes while remaining loopy.
+   - Ranked tree BP dynamics are separate. The accepted forest note supplies manual all-pairs ranks and conditional exact marginals, pending native integration.
+   - Original physical dynamical-loop/LDP matching, convergence/error and computable simulation criterion on actual tensor/readout inputs remain BUILD. No quantum advantage follows from the screen.
 
 2. **Pipeline integration**:
    - Add `BPLDPSimulability` to root `SKEFTHawking.lean` imports.
    - `lake build SKEFTHawking.BPLDPSimulability` clean.
 
-## Acceptance criteria (Wave 6w.3)
+## Current acceptance and historical evidence
 
-- ✅ Headline theorem `bp_convergence_iff_ldp_below_threshold` shipped
-  SUBSTANTIVELY (biconditional with non-trivial proofs in both
-  directions; no P5 restatement).
-- ✅ Module builds clean; zero new project-local axioms; zero sorries.
-- ✅ Headline verified kernel-only `[propext, Classical.choice, Quot.sound]`.
-- ✅ Preemptive-strengthening 5Q checklist applied.
+Actual rate/Legendre source identities and historical source/kernel receipts remain credited. The [forest-rank/exact-marginal construction](../../audits/2026-10-17-publication-substance-construction/B2_FOREST_RANK_EXACT_MARGINALS.md), with [full independent review](../../audits/2026-10-17-publication-substance-construction/reviews/B2_FOREST_RANK_EXACT_MARGINALS.md), is independently accepted manual mathematics: all-pairs finite-forest ranks, horizon<=max(1,n), and exact normalized marginals for local nonnegative factors with Z>0, preserving q^(|V|-scope) constants. The five-node initial2 witness needs five sweeps at diameter four. Native/physical tensor-readout/precision-complexity and genuine Chern remain BUILD. No historical checkbox certifies a physical BP-LDP/complexity headline.
 
 ## Cross-references
 

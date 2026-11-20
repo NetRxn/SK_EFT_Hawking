@@ -1,0 +1,45 @@
+{
+  "author_reduction_sha256": "64197d902b4c3f3cc3252cd4bc5a869fd5ceef216ab421c62772b7dd50307eff",
+  "manifest_sha256": "ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b",
+  "mixed": "20255649238809619245/137438953472",
+  "receipts": [
+    {
+      "coefficient": "18213535071678203955/549755813888",
+      "index": 3,
+      "peak": 3952,
+      "stdout_sha256": "d3a6c2095233e196bbd8399eadd3419fe3a3aadd9a181c0301ccdbffcaa633c2"
+    },
+    {
+      "coefficient": "18213535071678203955/549755813888",
+      "index": 42,
+      "peak": 9600,
+      "stdout_sha256": "c0b6e151cd35d9ae77d967d50bdc08cdd4d0c46fa986f8cca2741c73a4288fa7"
+    },
+    {
+      "coefficient": "20255649238809619245/549755813888",
+      "index": 165,
+      "peak": 3952,
+      "stdout_sha256": "fe6959ebdcf0ad5bb46ca08e071e693f866089da545e5dabb7289b29297cdc94"
+    },
+    {
+      "coefficient": "20255649238809619245/549755813888",
+      "index": 206,
+      "peak": 3952,
+      "stdout_sha256": "20cc958cb7f4ca6b224806797bfd0f3497f41a4db6f93b90e78e542a00e2ccdb"
+    },
+    {
+      "coefficient": "20255649238809619245/549755813888",
+      "index": 247,
+      "peak": 3952,
+      "stdout_sha256": "df9db3b429dcbf32af05456e24e3ad6898fb447ca1d1bcc2e7a96348c8dfe23f"
+    },
+    {
+      "coefficient": "20255649238809619245/549755813888",
+      "index": 262,
+      "peak": 3952,
+      "stdout_sha256": "bf76fcb96a2947d42e52de809b1c2e1b61550a6aabb583e18237212af025c7a4"
+    }
+  ],
+  "restricted_shear": "-22297763405941034535/137438953472",
+  "same": "18213535071678203955/274877906944"
+}

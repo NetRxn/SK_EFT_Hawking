@@ -1,0 +1,19 @@
+{
+  "author_commit": "ae0076b43813cd4c486b51dee1d5dd2466adda2c",
+  "source_sha256": "3e6a5a5671a518595571395a2584f3d8794f157aadd3b0d552677dec69b47676",
+  "source_branch": "codex/publication-l1-affine-source-20261106",
+  "review_verdict": "ACCEPT_SOURCE_AND_KERNEL_COEFFICIENT_FOUNDATION",
+  "ROOT_full_source_and_review_read": true,
+  "ROOT_actual42response_inspection": true,
+  "independent_native_requests": 42,
+  "archive_sha256": "6338a55fd6339899bdb81a6705af00e9dff35f71c9a36a8b68cac034425ec0a7",
+  "members": {
+    "publication-l1-affine-product-wt1-r1.md": "643a3d9a2ad73a2c0a75f46cf6bbf31b00a59e24de8e327045647182373ee7f0",
+    "publication-l1-affine-product-wt1-r1.json": "bfffff3681d2964c14022b3542a83dcffe7859152430f0c526d1cc51fcccbafe",
+    "publication-l1-affine-product-wt1-r2.md": "7a3a19dfe988cc04890c43489df5831164b1737f4a51024fadc7312a5c244fef",
+    "publication-l1-affine-product-wt1-r2.json": "347698796d2cb025d6d172d23a136079ecfd18b4cee59b4db00e5d90eabb7327",
+    "publication-l1-affine-product-kernel-review-r1.md": "dd41d3c0c117cdc83616be3c99a8e2ee830e86391cc4d9f633568958f742e179",
+    "publication-l1-affine-product-kernel-review-r1.json": "f7c8923c0c5c201c34e734b1016bd16c5c95f57e97ff0527f39af770a4ee6efc"
+  },
+  "scope": "Actual source/kernel coefficient foundation accepted; aggregate/primary/main qualification and full auxiliary/physical/publication remain pending"
+}

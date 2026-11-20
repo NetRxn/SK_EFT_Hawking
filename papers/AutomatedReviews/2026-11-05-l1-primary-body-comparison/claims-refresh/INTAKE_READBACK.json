@@ -1,0 +1,15 @@
+{
+  "canonical_sha256": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23",
+  "matches_independently_accepted_proposal": true,
+  "current_units": 125,
+  "prior124_complete_reconciled": true,
+  "all118_retained_assessments_preserved": true,
+  "old49_candidates_preserved": true,
+  "new_candidates": 5,
+  "total_candidates": 54,
+  "auto_closed": 0,
+  "four_blocker_records_unchanged": true,
+  "audit_prefix_preserved": true,
+  "audit_appends": 1,
+  "all_prose_state_and_human_fields_unchanged": true
+}

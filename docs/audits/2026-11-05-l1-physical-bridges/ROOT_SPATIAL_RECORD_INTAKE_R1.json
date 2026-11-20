@@ -1,0 +1,27 @@
+{
+  "candidate": "4aaebb7974e714dd49e052357b9677e9325ba141",
+  "result_sha256": "7bd54eedcc36fae5fd9340301f44189d6ee12bdce06572042125d0266ac52993",
+  "archive_sha256": "786663c993c04a567feef25a29aafaec50222b16f28eccb4a546a8628343a54d",
+  "members_verified": 25,
+  "exact_copies_verified": 8,
+  "accepted_current_input_pins_verified": 8,
+  "held_pdf_custody_verified": 3,
+  "exact_path_set_verified": [
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROPOSAL_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_PROSPECTIVE_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_spatial_record_evidence_r1.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_spatial_record_manifest_r1.json",
+    "docs/roadmaps/Phase6a_Roadmap.md"
+  ],
+  "root_full_read": "All193 result lines, complete actual math/source reviews and acceptance; restricted manual result only",
+  "scientific_execution": false,
+  "physical_positive_construction_complete": false,
+  "integrated_commit": "1f085a43e224f43fa0d6f17e95dcedc716be91c0"
+}

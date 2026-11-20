@@ -1,0 +1,37 @@
+{
+  "archive": "original_graded_constraint_evidence.zip",
+  "sha256": "84c522605571d95435de626f137d5d6a0803b78c2ef26763eda78d079649bd0b",
+  "bytes": 775158,
+  "members": 19,
+  "manual_result_sha256": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+  "parent_checkpoint": "f70942ea2e5aadfd979af83509a8e7b9409f4a45",
+  "approved_brief_sha256": "6722bb6ea2e55e42f521f6ff137a1c358dcb9c7425b03913e66316fb52961a62",
+  "canonical_copies": {
+    "l1-original-graded-constraint-relation-r1.md": "ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+    "l1-original-graded-constraint-math-result-review-r1.md": "ORIGINAL_GRADED_CONSTRAINT_MATH_REVIEW_R1.md",
+    "l1-original-graded-constraint-source-result-review-r1.md": "ORIGINAL_GRADED_CONSTRAINT_SOURCE_REVIEW_R1.md"
+  },
+  "files": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "d0cb41c784f36beed3f41e613c4a59e620b71540f373bb0871e4d1e383ad9f91",
+    "accepted/NONREGULAR_BOUNDARY_RESEARCH.md": "981801bd594e89c92c1a1cb8552a4e83a8cc8cac9025a2b8c156259d4d68d2d1",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "candidate/l1-original-graded-constraint-relation-r1.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_nonregular_boundary_design_evidence.zip": "324b33256a368a826c0acb1b675169d87561eb69a6680fbb50f749f120c7a9d4",
+    "parent/original_nonregular_boundary_design_manifest.json": "6d50cef29660e2b202f010f487442a5a27176056d3be032cef10b667407f84dc",
+    "prework/ORIGINAL_NONREGULAR_BOUNDARY_ARCHITECTURE_REVIEW_R2.md": "d8a5a9794744c1504d2dc18c258543b0cd75618d7ca820539b8bd5f3de237321",
+    "prework/ORIGINAL_NONREGULAR_BOUNDARY_BRIEF.md": "6722bb6ea2e55e42f521f6ff137a1c358dcb9c7425b03913e66316fb52961a62",
+    "prework/ORIGINAL_NONREGULAR_BOUNDARY_SOURCE_REVIEW_R2.md": "54cbdfb038ade895e5a03c0d11a55a56f753af801e6fa77caa101e6ab4bf68bb",
+    "review/l1-original-graded-constraint-math-result-review-r1.md": "5377b70d6bd2c2c1d7eeecc5e36444069756a3aadb0b2f91d519b8d78c7c12fb",
+    "review/l1-original-graded-constraint-source-result-review-r1.md": "ade2488983aa40fae7b91fbf8644c0981072b84ff861ad295df728d9a9058b05",
+    "source/closed-order-static-helper.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+    "source/manual-result-custody-r1.json": "a39f4fdfe744881079225c468d3840320fcb126d2e229851dea41d06a9b82423"
+  },
+  "outcome": "Independent math and original-source ACCEPT of commissioned manual L1-L4 component/graph/IBP/contact/source-lifting results",
+  "scope": "No complete physical constraint classification, Q1-Q4 reconstruction, positive state, nonzero fullZ/c0, N4/B3/dynamics/transport closure, runtime or slot approval"
+}

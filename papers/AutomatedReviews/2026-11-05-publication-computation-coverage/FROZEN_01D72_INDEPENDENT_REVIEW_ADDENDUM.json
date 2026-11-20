@@ -1,0 +1,25 @@
+{
+  "verdict": "ACCEPT corrected frozen RED qualification composition",
+  "required_r33_precision_condition_satisfied": true,
+  "new_interpretation": "One diagnostic changes which dictionary entries are displayed in truncated output; omitted population equality is not established. Unattributed open-required population improves58to57 after enforced source-register closure, stillabove44ceiling. RawJUnit/fullmessage diff preserved; neither result is a waiver.",
+  "verification_only_interpretation_changed": true,
+  "raw_JUnit_exit_graph_archive_other_installed_receipts_unchanged": true,
+  "prior_author_verification_preserved_sha256": "d89cede2f192db9bc0770993dbc8b8558628cd652af239e72ecf2b0c75168c7b",
+  "qualification_sha256": "cd5c548ca70b9bfb5bffa8aaeb2716dbb9b6a5d9966e259d56b65d5150dc3a28",
+  "corrected_verification_sha256": "6a4ffbc1dc16d9c7741b72bf38770fc397b1a7bf1ad1ff4acdd920421953c9b6",
+  "prior_r33_report_sha256": "072a8a4cf089b3a58b6f676a64d1db744a14d22923aeef6fc1d46f09e8dc06e5",
+  "prior_r33_json_sha256": "448f6b097fab41db56984399fbffdf50f4ff5763d9e0ef412f15007418e1cf4a",
+  "counts": {
+    "skipped": 8,
+    "passed": 7167,
+    "failed": 29
+  },
+  "gate_states": {
+    "passed": 159,
+    "open": 28,
+    "blocked": 25,
+    "needs-recheck": 19
+  },
+  "required_corrections": [],
+  "scope": "RED evidence only;29failures unwaived and no full-project/native/security/main/human/publication acceptance"
+}

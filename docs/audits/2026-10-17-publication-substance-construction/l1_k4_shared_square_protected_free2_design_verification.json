@@ -1,0 +1,321 @@
+{
+  "verdict": "ACCEPT scientific source/design only; direct/fixed execution remains unrun and requires ROOT authorization",
+  "pinned_immutable_source_commit": "16fde9b0803019d55d0b10250fed52e6258c1d42",
+  "source_sha256": "a30dacedacc857ae1cf8ce32db6b4b2a62ee2cdfc33e890bf601995bfd942a98",
+  "principal16_hashes_match_immutable_git_blobs": true,
+  "all_author_captured_evidence_hashes_match": true,
+  "accepted_disjoint_union": 232,
+  "remaining40": [
+    21,
+    22,
+    24,
+    26,
+    29,
+    60,
+    61,
+    64,
+    66,
+    71,
+    79,
+    81,
+    95,
+    102,
+    103,
+    105,
+    109,
+    110,
+    134,
+    141,
+    144,
+    145,
+    152,
+    153,
+    161,
+    163,
+    179,
+    184,
+    195,
+    196,
+    225,
+    226,
+    229,
+    232,
+    242,
+    244,
+    255,
+    258,
+    260,
+    271
+  ],
+  "remaining_same": 26,
+  "remaining_mixed": 14,
+  "unique_structural_family": [
+    110,
+    153
+  ],
+  "geometry": [
+    {
+      "word": 110,
+      "omitted_action_center": 4,
+      "omitted_site_incoming_action_degree": 6,
+      "omitted_site_source_degree": 2,
+      "square": [
+        0,
+        0,
+        2
+      ],
+      "live": [
+        0,
+        0
+      ],
+      "fixed_forest": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "shared_source": [
+        1,
+        2
+      ],
+      "protected_torus": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          5,
+          2,
+          3
+        ],
+        [
+          9,
+          2,
+          3
+        ],
+        [
+          13,
+          2,
+          3
+        ]
+      ],
+      "free_torus": [
+        [
+          3,
+          2,
+          3
+        ],
+        [
+          7,
+          2,
+          3
+        ],
+        [
+          11,
+          2,
+          3
+        ],
+        [
+          15,
+          2,
+          3
+        ]
+      ],
+      "protected_centers": [
+        1,
+        5,
+        9,
+        13
+      ],
+      "free_centers": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "live_action": [
+        [
+          1,
+          0
+        ]
+      ],
+      "fixed_action": [
+        [
+          [
+            4,
+            5,
+            0
+          ],
+          [
+            [
+              5,
+              0
+            ]
+          ]
+        ]
+      ],
+      "fixed_anchor": 0,
+      "E": 20,
+      "J": 0,
+      "peeled": 6,
+      "factor_count": 38,
+      "labels": 32,
+      "all_site_degrees8": true,
+      "divisor": 107991210608914791025028831160135258120672641509853274272040118476778485237566901637918651402396721263073765801209830194914766075900591610316317523968
+    },
+    {
+      "word": 153,
+      "omitted_action_center": 5,
+      "omitted_site_incoming_action_degree": 6,
+      "omitted_site_source_degree": 2,
+      "square": [
+        1,
+        0,
+        2
+      ],
+      "live": [
+        1,
+        0
+      ],
+      "fixed_forest": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          5,
+          0
+        ]
+      ],
+      "shared_source": [
+        0,
+        2
+      ],
+      "protected_torus": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          4,
+          2,
+          3
+        ],
+        [
+          8,
+          2,
+          3
+        ],
+        [
+          12,
+          2,
+          3
+        ]
+      ],
+      "free_torus": [
+        [
+          2,
+          2,
+          3
+        ],
+        [
+          6,
+          2,
+          3
+        ],
+        [
+          10,
+          2,
+          3
+        ],
+        [
+          14,
+          2,
+          3
+        ]
+      ],
+      "protected_centers": [
+        0,
+        4,
+        8,
+        12
+      ],
+      "free_centers": [
+        2,
+        6,
+        10,
+        14
+      ],
+      "live_action": [
+        [
+          0,
+          0
+        ]
+      ],
+      "fixed_action": [
+        [
+          [
+            4,
+            5,
+            0
+          ],
+          [
+            [
+              4,
+              0
+            ]
+          ]
+        ]
+      ],
+      "fixed_anchor": 1,
+      "E": 20,
+      "J": 0,
+      "peeled": 6,
+      "factor_count": 38,
+      "labels": 32,
+      "all_site_degrees8": true,
+      "divisor": 107991210608914791025028831160135258120672641509853274272040118476778485237566901637918651402396721263073765801209830194914766075900591610316317523968
+    }
+  ],
+  "actual_geometry_data_AST_checked_using_stdlib_graph_stub": true,
+  "prepare_contraction_AST_equal_accepted_d524": true,
+  "branch_products": [
+    {
+      "word": 110,
+      "terms": 45,
+      "negative_terms": 6,
+      "eight_center_domains": true,
+      "index_map": "3i+j -> 3i+j",
+      "all_weights_exact_fractions": true
+    },
+    {
+      "word": 153,
+      "terms": 45,
+      "negative_terms": 6,
+      "eight_center_domains": true,
+      "index_map": "3i+j -> 3i+j",
+      "all_weights_exact_fractions": true
+    }
+  ],
+  "all45_solve_calls_checked_with_inert_stub": true,
+  "XOR1_geometry_and_role_preserving_branch_order": true,
+  "source_assembly_SyntaxError_preserved": true,
+  "no_scientific_import_or_preparation_or_controls_or_coefficients": true,
+  "portable_scope": 232,
+  "new_coefficients": "110/153 and38other residual coefficients all owed",
+  "full_k4_sourceaction_commonZ_physicalB3_modes_transport": "OPEN"
+}

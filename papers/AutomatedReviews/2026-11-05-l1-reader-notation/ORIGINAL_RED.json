@@ -1,0 +1,7 @@
+{
+  "command": "python3 -c 'from pathlib import Path; s=Path(\"papers/L1/paper_draft.tex\").read_text(); assert chr(92)+\"mathrm{tol}\" not in s, \"dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\"'",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"papers/L1/paper_draft.tex\").read_text(); assert chr(92)+\"mathrm{tol}\" not in s, \"dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\"\n                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: dispersion theorem carries undefined generic tol instead of fixed GW170817 tolerance\n",
+  "source_head": "6962a3c0475d6386a6427a765949f413efa76f80"
+}

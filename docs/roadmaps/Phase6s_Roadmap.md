@@ -60,12 +60,12 @@ Ten waves across two Tracks.
 | **Wave 1c** | Bootstrap-as-uniqueness application: program's SK-EFT-Hawking substrate as OS-axiom instance | ⏳ NOT STARTED | F flagship (positioning) + new bundle — DEFERRED | **D.2** | none |
 | **Track 2 — Substantive I3 Mathlib upstream (6 PR cycles)** | | | | | |
 | **Wave 2a** | Substrate analysis + Mathlib4 PR-quality bar audit | ⏳ NOT STARTED — **substrate codebase-ready** (audit 2026-05-23): 6 Itô modules verified at `lean/SKEFTHawking/Itô/` (`StochasticIntegral`, `QuadraticVariation`, `Semimartingale`, `ItoIsometry`, `ItoLemma`, `Novikov`; last modified 2026-05-20) + 6 LDP modules at `lean/SKEFTHawking/LDP/` (`CramerIID`, `Sanov`, `Contraction`, `CramerLowerBound`, `Varadhan`, `LDPCompatibleSKEFT`; last modified 2026-05-17). **User direction 2026-05-23: in-repo PR-quality lift work IS authorized; no Mathlib upstream submission yet.** Substantive Lean lift (Mathlib-style naming, doc-strings, generalization to Mathlib-grade typeclasses) may proceed in `SK_EFT_Hawking/lean/SKEFTHawking/{Itô,LDP}/`. Mathlib PR-quality bar audit working doc at `temporary/working-docs/phase6s/wave_2a_Mathlib_quality_bar.md` may also be drafted. External Mathlib PR submission remains gated. | n/a (working doc + Mathlib coordination) | n/a | 🔒 External Mathlib PR submission PENDING; in-repo lift work UNGATED |
-| **Wave 2b** | I3 Itô PR 1 — `StochasticIntegral` substantive lift + Mathlib PR | ⏳ NOT STARTED | I3 refinement (substantive-content addendum) — DEFERRED | **D.2** | none after Wave 2a |
-| **Wave 2c** | I3 Itô PR 2 — `QuadraticVariation` + `Semimartingale` substantive lift + Mathlib PR | ⏳ NOT STARTED | I3 refinement — DEFERRED | **D.2** | none |
-| **Wave 2d** | I3 Itô PR 3 — `ItoIsometry` + `ItoLemma` + `Novikov` substantive lift + Mathlib PR | ⏳ NOT STARTED | I3 refinement — DEFERRED | **D.2** | none |
-| **Wave 2e** | I3 LDP PR 1 — `CramerIID` substantive lift + Mathlib PR | ⏳ NOT STARTED | I3 refinement — DEFERRED | **D.2** | none |
+| **Wave 2b** | I3 Itô PR1 — `StochasticIntegral` substantive lift + Mathlib PR | Brownian predictable-L² manual construction ACCEPTED; general semimartingale/native/upstream remains OPEN | I3 refinement — native/consumer work owed | **D.2** | external submission separate |
+| **Wave 2c** | `QuadraticVariation` + `Semimartingale` lift + Mathlib PR | Brownian integral bracket manual result ACCEPTED; general decomposition/native/upstream OPEN | I3 refinement — remaining original BUILD | **D.2** | external submission separate |
+| **Wave 2d** | `ItoIsometry` + `ItoLemma` + `Novikov` lift + Mathlib PR | Brownian isometry/exact Novikov manual result ACCEPTED; general Itô/Girsanov/native/upstream OPEN | I3 refinement — remaining original BUILD | **D.2** | external submission separate |
+| **Wave 2e** | `CramerIID` substantive lift + Mathlib PR | Actual all-real-MGF closed-upper/manual theorem ACCEPTED; native/upstream OPEN | I3 refinement — original broader consumers retained | **D.2** | external submission separate |
 | **Wave 2f** | I3 LDP PR 2 — `Sanov` + `Contraction` substantive lift + Mathlib PR | ⏳ NOT STARTED | I3 refinement — DEFERRED | **D.2** | none |
-| **Wave 2g** | I3 LDP PR 3 — `CramerLowerBound` + `Varadhan` + `LDPCompatibleSKEFT` substantive lift + Mathlib PR | ⏳ NOT STARTED | I3 refinement — DEFERRED | **D.2** | none |
+| **Wave 2g** | `CramerLowerBound` + `Varadhan` + `LDPCompatibleSKEFT` lift + Mathlib PR | Actual all-real-MGF open-lower/manual theorem ACCEPTED; Varadhan/cross-bridge/native/upstream OPEN | I3 refinement — remaining original BUILD | **D.2** | external submission separate |
 
 **Wave dependencies:**
 - Track 1 waves run sequentially (1a → 1b → 1c).
@@ -164,7 +164,7 @@ Ten waves across two Tracks.
 
 ### Wave 2a — Substrate analysis + Mathlib4 PR-quality bar audit ⏳ NOT STARTED
 
-**This is the gating wave for Track 2. User-authorization required.**
+**External campaign gate only:** Mathlib submission/community coordination still requires its existing authorization. Already authorized in-repo substantive construction continues under ordinary ROOT native admission when execution is needed; no new operator gate is created for the accepted manual work. [Cramér](../audits/2026-10-17-publication-substance-construction/B8_CRAMER_PROBABILITY.md) and [Brownian Novikov](../audits/2026-10-17-publication-substance-construction/B8_NOVIKOV_STOCHASTIC_EXPONENTIAL.md), with their full independent reviews, are accepted manual milestones. Their native carriers, general Itô/Girsanov drift, other I3 consumers and upstream campaign remain separate.
 
 **Sub-wave decomposition (proposed):**
 
@@ -189,7 +189,7 @@ Ten waves across two Tracks.
 - Mathlib4 review cadence (external; weeks-to-months Mathlib cadence).
 - Per-module substantive-content gap may be larger than expected for some modules; substrate-discovery yield.
 
-### Wave 2b — I3 Itô PR 1: `StochasticIntegral` substantive lift + Mathlib PR ⏳ NOT STARTED
+### Wave 2b — I3 stochastic integral: Brownian manual milestone ACCEPTED; native/general-semimartingale/PR work OPEN
 
 **Sub-wave decomposition (proposed):**
 
@@ -219,7 +219,7 @@ Mathlib/Probability/Stochastic/Integral.lean (or equivalent — Mathlib decides 
 - Mathlib review cadence.
 - PR-scope decisions.
 
-### Waves 2c-2g — Remaining I3 module PRs ⏳ NOT STARTED
+### Waves 2c–2g — accepted Brownian Novikov/Cramér manual milestones; remaining original native/Itô/LDP/PR work OPEN
 
 Same pattern as Wave 2b applied to each remaining I3 module group. Wave-by-wave skeleton:
 

@@ -1,0 +1,44 @@
+{
+  "verdict": "ACCEPT",
+  "proposal_sha256": "449ad954ca031c3c3bef9526d39a681f76a9c68e4ceec9db9afcbf7b9b8283a6",
+  "canonical_sha256": "d441e52371493e719d592ce2c79473705fee91510df65cbd2f14da53fab662b4",
+  "changed_sentence_indices": [
+    69,
+    122
+  ],
+  "changed_quote_indices": [
+    122
+  ],
+  "verdict_changes": [
+    {
+      "index": 122,
+      "from": "WARN",
+      "to": "PASS"
+    }
+  ],
+  "by_verdict": {
+    "PASS": 81,
+    "INFO": 26,
+    "TRANSITION": 4,
+    "WARN": 12,
+    "UNGROUNDED": 1
+  },
+  "human_fields_preserved": true,
+  "historical_evidence_preserved": true,
+  "schema_command": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/sentence_state.py",
+    "validate",
+    "/tmp/l1-numeric-claims-refresh-20261105-r1/claims_review.json"
+  ],
+  "schema_exit": 0,
+  "schema_output": "{\"ok\": true, \"path\": \"/private/tmp/l1-numeric-claims-refresh-20261105-r1/claims_review.json\", \"sentences\": 124, \"reviewer_version\": \"claims-reviewer-v2\"}\n",
+  "scope": "bounded numerical coverage catalog refresh only",
+  "packet_initial_fresh": true,
+  "canonical_intake_performed": false,
+  "physical_or_human_promotion": false,
+  "universal_numeric_requirement_retained": true,
+  "required_corrections": [],
+  "report": "/tmp/l1-numeric-claims-refresh-independent-20261105-r1.md",
+  "packet_final_fresh": true
+}

@@ -371,18 +371,43 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0505065',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf',
+        'primary_source_path': None,
         'used_in': [
             'src/core/transonic_background.py',
             'papers/paper1_first_order/paper_draft.tex',
         ],
         'provides': [],
-        'notes': 'Canonical review of analog gravity. Acoustic metric definition.',
+        'notes': ('2005 review metadata; no verified 2005 full body is held. '
+                  'Historical artifact Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf '
+                  'is arXiv gr-qc/0505065v4 (29 November 2024). '
+                  'Its bytes and historical fetch record are preserved. '
+                  'The 2011 E1 reference is registered separately as Barcelo2011.'),
     },
 
     # ════════════════════════════════════════════════════════════════
     # Polariton analog gravity
     # ════════════════════════════════════════════════════════════════
+
+    'Barcelo2011': {
+        'authors': 'Barceló, C., Liberati, S., Visser, M.',
+        'title': 'Analogue Gravity',
+        'journal': 'Living Reviews in Relativity',
+        'volume': 14,
+        'page': '3',
+        'year': 2011,
+        'doi': '10.12942/lrr-2011-3',
+        'arxiv': 'gr-qc/0505065v3',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf',
+        'used_in': ['papers/E1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Published 2011 review metadata verified at the publisher. '
+                  'Held full author preprint v3, 12 May 2011; the journal body is '
+                  'not the cached artifact. Eqs. (61), (63)-(64) distinguish '
+                  'acceleration g_H from frequency kappa = g_H/c_H and give '
+                  'k_B T_H = hbar kappa/(2 pi). Not the 2005 or 2024 edition.'),
+    },
 
     'Falque2025': {
         'authors': 'Falque, K., Delhom, A., Glorieux, Q., Giacobino, E., Bramati, A., Jacquet, M. J.',
@@ -3578,14 +3603,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.06394',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'scalar-tensor / vector-tensor elimination from the c_GW bound',
-            'independent graviton-mass bound in bimetric gravity',
+            'constraints on scalar-tensor/vector-tensor functions under stated assumptions',
+            'conditional independent graviton-mass bound in bimetric gravity',
         ],
-        'notes': 'Sweep member covering the vector-tensor and bimetric classes. '
-                 'Cited by L1 to delimit what the 2017 sweep reached.',
+        'notes': 'Scalar/vector-tensor restrictions include the stated no-finely-tuned-cancellation premise; the bimetric mass bound has separate matter-coupling and mode-amplitude assumptions. Held arXiv:1710.06394v1 (17 October 2017), body pp.2-4.',
     },
     'CreminelliVernizzi2017': {
         'authors': 'Creminelli, P., Vernizzi, F.',
@@ -3598,14 +3622,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.05877',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
             'no-tuning criterion: c_GW unaffected on nearby cosmological solutions',
             'Horndeski / beyond-Horndeski / DHOST operator relations',
         ],
-        'notes': 'Supplies the stability-under-nearby-solutions criterion that L1 '
-                 'contrasts with its own window-measure argument.',
+        'notes': 'Nearby-background robustness criterion; the quartic/quintic beyond-Horndeski sector reduces to one B4 function while G2/G3 remain free. Held arXiv:1710.05877v3 (7 June 2018) is titled Dark Energy after GW170817; the distinct registered journal title is retained. Body pp.2-4, Eqs.(3)-(16).',
     },
     'SaksteinJain2017': {
         'authors': 'Sakstein, J., Jain, B.',
@@ -3619,14 +3642,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.05893',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'c_GW bound combined with cluster + M87 SEP constraints',
-            'quartic-galileon exclusion; disformal photon-coupling bound',
+            'GW plus cluster/dwarf-star tests constrain beyond-Horndeski parameters; separate GW plus M87 constraints restrict the covariant quartic galileon',
+            'quartic-galileon cosmological-density restriction for stated order-unity matter couplings; disformal photon-coupling bound',
         ],
-        'notes': 'The sweep member that combines the bound with independent '
-                 'astrophysical data rather than using it alone.',
+        'notes': 'The cluster/dwarf-star parameter analysis and the GW-plus-M87 quartic-galileon inference are separate. The latter uses the representative order-unity matter couplings considered in the paper. Held arXiv:1710.05893v3 (18 December 2017), body pp.2-5, Eqs.(1)-(8) and Fig.2.',
     },
     'EzquiagaZumalacarregui2017': {
         'authors': 'Ezquiaga, J. M., Zumalacarregui, M.',
@@ -3639,16 +3661,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.05901',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'broadest sweep coverage: Einstein-aether, Horava, Generalized Proca, '
-            'TeVeS, MOND-like',
-            'GW-speed bound |c_g/c - 1| <= 5e-16',
+            'discussion of affected GW-speed-modifying couplings in Einstein-aether, some Horava sectors, Generalized Proca, TeVeS and MOND-like theories',
+            'paper-adopted symmetric GW-speed bound |c_g/c - 1| <= 5e-16',
         ],
-        'notes': 'L1 leans on this paper\'s closing enumeration: every class it names '
-                 'has a Lagrangian predicting a varying c_g, which is exactly what the '
-                 'kinematic vestigial identification lacks.',
+        'notes': "Explicit scalar-tensor actions and surviving sectors are analyzed; the closing enumeration discusses affected broader families without deriving a complete allowed-coefficient classification for every named family. The symmetric 5e-16 is this paper's adopted convention, not L1's conservative envelope. Held arXiv:1710.05901v2 (21 November 2017), body pp.2-5.",
     },
     'Abbott2017GW170817': {
         'authors': 'Abbott, B. P. et al. (LIGO+Virgo+EM partners)',
@@ -12692,6 +12711,210 @@ CITATION_REGISTRY = {
     # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
     # ════════════════════════════════════════════════════════════════
 
+    # Exact citing-key identities reconciled against current sources (2026-10-15).
+    'CompanionCompilation': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D8/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'CompanionFaultTolerance': {
+        'authors': 'Roehm, John G.',
+        'title': 'Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D6/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'CompanionStochastic': {
+        'authors': 'Roehm, John',
+        'title': "Verified Stochastic Calculus and Large-Deviation Foundations for Lean 4 / Mathlib4: A Predicate-Substrate Library for the Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Principles, with a Typeclass Bridge to Schwinger--Keldysh Effective Field Theory",
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/I3/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'Roehm2026TQC': {
+        'authors': 'Roehm, John',
+        'title': 'Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D4/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD8Compilation': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D8/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD4Topological': {
+        'authors': 'Roehm, John',
+        'title': 'Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D4/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD6FaultTolerant': {
+        'authors': 'Roehm, John G.',
+        'title': 'Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D6/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD9Certification': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D9/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'FinazziLiberatiSindoni2012': {
+        'authors': 'Finazzi, S., Liberati, S., Sindoni, L.',
+        'title': 'Cosmological Constant: A Lesson from Bose-Einstein Condensates',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 108,
+        'page': '071101',
+        'year': 2012,
+        'doi': '10.1103/PhysRevLett.108.071101',
+        'arxiv': '1103.4841',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf',
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of FinazziLiberatiSindoni2012PRL; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:1103.4841v2, 28 February 2012; the separate proceedings source 1204.3039 is not substituted.',
+    },
+
+    'Kitaev2006': {
+        'authors': 'Kitaev, A.',
+        'title': 'Anyons in an exactly solved model and beyond',
+        'journal': 'Annals of Physics',
+        'volume': 321,
+        'page': '2-111',
+        'year': 2006,
+        'doi': '10.1016/j.aop.2005.10.005',
+        'arxiv': 'cond-mat/0506438',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf',
+        'used_in': ['papers/D2/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of KitaevHonest2006; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:cond-mat/0506438v3, 1 January 2008, distinct from the 2006 publication metadata.',
+    },
+
+    'Wang2026TMDPolariton': {
+        'authors': 'Wang, Z., Kim, B., Zhen, B., He, L.',
+        'title': 'Strongly Nonlinear Nanocavity Exciton Polaritons in Gate-Tunable Monolayer Semiconductors',
+        'journal': 'PRL',
+        'volume': 136,
+        'page': '146901',
+        'year': 2026,
+        'doi': '10.1103/gc15-qsvf',
+        'arxiv': '2411.16635',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf',
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of WangKimBZHe2026PennTMDPolariton; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:2411.16635v1 (2024), authors Wang/He/Kim/Zhen; published metadata has author order Wang/Kim/Zhen/He. The published body was read online for the cited linewidths, but is not the cached file. No identity of all parameters across revisions is asserted.',
+    },
+
+    'Verlinde1988': {
+        'authors': 'Verlinde, Erik',
+        'title': 'Fusion rules and modular transformations in 2D conformal field theory',
+        'journal': 'Nuclear Physics B',
+        'volume': 300,
+        'page': '360-376',
+        'year': 1988,
+        'doi': '10.1016/0550-3213(88)90603-7',
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json',
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Publisher bibliographic identity verified 2026-10-15. Full body not held or read in this package. Existing acquisition writer cached Crossref metadata only on 2026-10-15; no abstract or full body was acquired, so this does not back a source-content claim. No citation-class exemption is declared.',
+    },
 }
 
 

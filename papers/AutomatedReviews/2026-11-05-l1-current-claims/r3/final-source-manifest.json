@@ -1,0 +1,52 @@
+{
+  "schema": "review-final-source-manifest/v1",
+  "snapshot": "R3 final documentary input snapshot; not a scientific or publication acceptance record",
+  "files": {
+    "figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/CONSUMER_COMPILE_FIRST.txt": "5b97eb6b37d13b26c5ed35f0af97303343c7adf02df764a1fa132be62f123774",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/D3_FINAL_COMPILE.txt": "d419a14f2267238aed5e76c8ae11e8edb841ad346ef5ec399225670add4daafe",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/L1.md": "a435df28966ac7ce9cc5349ee97ce2ec60b345e01d2a12f3009f240e3a0bd8a3",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/ORIGINAL_FIGURE_REVIEW.json": "7927d76bea9ff759695a77826c75903ceab88cb2649431ca5847afdf32ce0bc5",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/ORIGINAL_RED_CONTROLS.json": "103b08643281304b945a63e9c39d0b1f500e83ffe2a971bf2ee530ac84962c3a",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/ORIGINAL_REVIEW.txt": "52fd9852566aa558ba0ffb789cb690cf61ba659a2f4514ba460ff1a634c334c0",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/PHYSICS_TESTS.txt": "1632c2e83946ce34429a17a9521b4f6d9bbb6cc26282dfc147b9e7afa727445e",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/REPAIRED_GREEN_CONTROLS.json": "ae99127a491b2293ecd5f73b9b08e437c0673fb2e0fe7ed159b38f1f17039389",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/SOURCE_COMPILE_GREEN.txt": "3e8e3437155f09ee5b3b34990bddfb69962c0573d7e8b078642bc6e10b5bb724",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/SOURCE_COMPILE_RED.txt": "10dc6fa0b36d7306d379410ef71e6497310683febe4e1ada2340b75c41bbf8a4",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/SOURCE_LAYOUT_GREEN.txt": "e28118cfaf1c581dea41c3c8262d4e6d067bf99ebbe98a90528fb41afe07e788",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/SOURCE_LAYOUT_RED.txt": "8a67bc02a2d79320fb5fc1a212aad51d4cded2b2298edef83a1f7e37b4f57dfb",
+    "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/TARGETED_STRUCTURAL_CHECKS.json": "e1fa96f968f0f5d46b68feac5e14131310e16922a3304051d11cc5cc5e1aa9d9",
+    "papers/D3/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/D3/paper_draft.pdf": "3903f15c2332e51ffe08893199532b152f3e898dd7ccdce5b9e6b0e39e61bb65",
+    "papers/D3/paper_draft.tex": "80938e91fe03727a56c894786f00b6d2725ccb85563e22a53c1d15e8afe139b4",
+    "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62",
+    "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/L1/paper_draft.pdf": "529336d8d9fcb910132e6919e5a0ec85aa71147cb4dc6cc92e66cdc537bdccad",
+    "papers/L1/paper_draft.tex": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+    "papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/paper25_gravitational_waves/paper_draft.pdf": "32555ab77e65deaf66201ae752575dfeac545b4e754e8fa2088596a8a167578d",
+    "papers/paper25_gravitational_waves/paper_draft.tex": "75a84e6136717a2db4158f9b35c51b9026563a1869b48c3243a01abcbbf27048",
+    "scripts/review_figures.py": "9426060ca6c1721e8f940418e0c969dc9fd6824295c3605740712c38b03db752",
+    "src/core/formulas.py": "deaa9898b4463360d26479dd65014ae884d511391df17cbd86fe4b429b7a568e",
+    "src/core/visualizations.py": "d723a9bacc93bac9e3b76010b201a3a718b5c55acbff320ca44f5b5496202e6d",
+    "tests/test_gravitational_waves.py": "00381658addd9eb76c2eee70ec0bb74a0bbdb633b018bfa845e6f075cd4bb9c7"
+  },
+  "independent_scratch_reports": {
+    "/tmp/l1-repaired-figure-review-20261105-r1.md": "f6d37dce7f5d1a40261c62707b9f9dac4e62e6320860801976053e7218b6408c",
+    "/tmp/l1-repaired-figure-review-20261105-r1.json": "bc96a8d118b19db659edb9241998b8d99cbed6e5fb954c6053835e6bb3849029",
+    "/tmp/l1-source-layout-final-review-20261105-r2.md": "f6eef53ad79990a8d72a91309fe7ac64f7e28a2931cc1ac188d4a4414aab030a",
+    "/tmp/l1-source-layout-final-review-20261105-r2.json": "89dc2416d643f8d17a88c997839730b6e51476f418c8313ec801c51f3ce8eea4"
+  },
+  "immutable_prior_inputs": {
+    "/tmp/l1-current-claims-review-20261105-r1/claims_review.json": "66420557525e26ac9f876fe6c344e4b87ba5c20ece195678d99708c354d754b6",
+    "/tmp/l1-current-claims-review-20261105-r1/source_manifest.json": "a52fb15c4b1cef945994466195410f60cbf0a172e6e700a252e9054ee1db28d7",
+    "/tmp/l1-current-claims-review-20261105-r2/claims_review.json": "463f015a91ecb3b42d82afaca6af34f0b11596220efca0cba70be53e3e902fa2",
+    "/tmp/l1-current-claims-review-20261105-r2/source_manifest.json": "fef339a491dd04773a18349063805eb56cdb46ae31d578ceda77e78822e9b088"
+  },
+  "announced_r2_to_r3_delta": "P25 finding1.5 source-only typesetting: two aligned display wrappers/spacing/rowbreaks and five breakable exact identifiers; canonical figure L1.md adds actual RED finding1.5. Final independent source-layout report accepts these changes narrowly. L1 TeX bytes unchanged.",
+  "figure_review_previous_input_exceptions": [
+    "papers/paper25_gravitational_waves/paper_draft.pdf",
+    "papers/paper25_gravitational_waves/paper_draft.tex"
+  ],
+  "copy_policy": "ROOT copies selected reports/artifacts exactly; no primary-source full text copying. Canonical selected destination papers/AutomatedReviews/2026-11-05-l1-current-claims/r3/final-source-manifest.json"
+}

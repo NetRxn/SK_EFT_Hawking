@@ -2676,8 +2676,8 @@ def classify_readiness(gates: List[dict]) -> dict:
     synthetic gates instead of a 15-second graph build over the live tree. Same
     precedent as `_tp_scan_lines`.
 
-    A paper is submission-ready iff every P1 gate is `passed` and no P2 gate is
-    `blocked`. P2 `needs-recheck`/`open` are advisory.
+    Literal `blocked` at either priority makes RED. Other outstanding states
+    can remain YELLOW/advisory; human submission requires GREEN.
     """
     from collections import defaultdict
     per_paper: dict = defaultdict(lambda: {
@@ -2715,13 +2715,13 @@ def partition_readiness(per_paper: dict) -> tuple[list, list, list]:
 
 
 @register_check("readiness_submission_gate",
-                "Every paper has all P1 readiness gates passed (Phase 5v Wave 4)")
+                "No paper has a blocked readiness gate; report outstanding state and measurement")
 def check_readiness_submission_gate() -> CheckResult:
     """Aggregate per-paper readiness state, and FAIL when a paper is not ready.
 
-    A paper is submission-ready iff ALL priority-1 gates are `passed` and no
-    priority-2 gate is `blocked`. Priority-2 `needs-recheck`/`open` are advisory
-    warnings and do not fail the check.
+    Literal blocked at either priority fails. Outstanding nonblocked states can
+    remain YELLOW/advisory, including P1 OPEN/unmeasured. Human submission requires
+    GREEN. Report G4 from serialized nodes without changing aggregate policy.
 
     ⚠️ **THIS CHECK WAS INVERTED UNTIL 2026-08-03 (ADR-009 §Deferred item 2).** It
     classified papers into green/yellow/red exactly as it does now, emitted a
@@ -2784,8 +2784,9 @@ def check_readiness_submission_gate() -> CheckResult:
         s = per_paper[paper]
         details.append(Detail(
             paper, True,
-            f"all P1 passed; advisory on: "
-            f"{', '.join(g for g,_,_ in s['p2_advisory'] + s['open'])}",
+            "outstanding readiness (not all gates passed): "
+            + ", ".join(f"{gate}={state}" for gate, state, _notes
+                        in s['p2_advisory'] + s['open']),
             warning=True))
     for paper in red:
         s = per_paper[paper]
@@ -2795,6 +2796,23 @@ def check_readiness_submission_gate() -> CheckResult:
             f"{len(blockers)} blocked: "
             f"{', '.join(g for g,_,_ in blockers[:5])}"
             + (f" (+{len(blockers)-5} more)" if len(blockers) > 5 else "")))
+
+    # Read the original payload, not the classifier's lossy three-field tuples.
+    for gate in sorted(gates, key=lambda node: (
+            node['meta']['paper'], node['meta']['gate'])):
+        m = gate['meta']
+        if m['gate'] != 'ComputationCorrectness':
+            continue
+        evidence, blockers = m.get('evidence', []), m.get('blockers', [])
+        state, measured = m['state'], m.get('measured', False)
+        details.append(Detail(
+            f"{m['paper']}:ComputationCorrectness", state != 'blocked',
+            f"state={state}; measured={measured}; notes={m.get('notes', '')}; "
+            f"evidence={evidence!r}; total={m.get('evidence_total', len(evidence))}; "
+            f"truncated={m.get('evidence_truncated', False)}; "
+            f"blockers={blockers!r}; total={m.get('blockers_total', len(blockers))}; "
+            f"truncated={m.get('blockers_truncated', False)}",
+            warning=state != 'passed' and state != 'blocked', measured=measured))
 
     return CheckResult(passed=ok, details=details)
 

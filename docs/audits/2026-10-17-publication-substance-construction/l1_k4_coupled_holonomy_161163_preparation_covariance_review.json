@@ -1,0 +1,501 @@
+{
+  "verdict": "ACCEPT original finite selected-word covariance and unit-Berezin forest-change bridge; no evaluator implementation/runtime acceptance",
+  "first_and_return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  },
+  "original_owner_source_hashes": {
+    "l1_ward_witness.py": "6d979d4fb299a1f952882974780f993521dbc53faa3d3aea877a8683612aa0ea",
+    "l1_full_action_reference.py": "0ad0fd402e18c7d13cc84f9d92d4820bfc7b2726033dc42aa7d79fb0bf5327b6",
+    "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+    "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+    "l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+    "l1_normalization_disjoint_sector.py": "5bb44725a1895eb2dfc2801aadc8b51946475893746dd7ec6790ba186b0f1300",
+    "l1_normalization_opposed_fourth.py": "e4df718d0ae922a477319b4efd902710c586d1bb73e50252f261c2cbf9941e69",
+    "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+    "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+    "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+    "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2",
+    "l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+    "L1_OFFDIAGONAL_HESSIAN.md": "91e126120668028cde23c1ead1f8129e5c661acc4dde86d1c542cd70e05ff57d"
+  },
+  "actual_control_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066",
+  "final_successful_control_commands": 35,
+  "supplemental_full_polynomial_exports": 2,
+  "max_final_control_parent_seconds": 1.1233974160859361,
+  "words": [
+    161,
+    163
+  ],
+  "local_actions_checked": 30,
+  "individual_origin_blocks_checked": 240,
+  "source_quartics_checked": 4,
+  "site_top_Berezin_checks": 32,
+  "coframe_center_anchor_basis_checks": 128,
+  "all_polynomial_equalities_exact": true,
+  "full_readback_examples": [
+    "l1-coupled-covariance-independent-r1-polynomial-action-161-5.out",
+    "l1-coupled-covariance-independent-r1-polynomial-source-161.out"
+  ],
+  "transformation_law": {
+    "directed_link": "U_xy prime = S_y U_xy S_x dagger",
+    "psi": "psi prime=S psi",
+    "bar": "bar prime=bar S dagger",
+    "gamma": "S_x dagger gamma_a S_x = sum_b R_x[a,b] gamma_b",
+    "origin_coframe": "Each of4 original bilinear blocks at originx transforms by R_x independently",
+    "curvature": "Closed P_x=d dagger c dagger b a transforms S_x P_x S_x dagger",
+    "local_action": "Trace(P_x antisym(gamma_a gamma_b) gamma5) T_mu^a wedge T_nu^b is invariant at each origin separately",
+    "selected_source": "sum_a T_out^a wedge T_out^a invariant at its own origin",
+    "measure": "detS=detconjugateS=1 gives unit Berezin Jacobian at each site"
+  },
+  "negative_controls_detected": [
+    "Wrong bar transformation",
+    "Missing endpoint factor on extra curvature-only forest link",
+    "Opposite directed H identified with inverse fixed source",
+    "Reverse-source frame misused as incoming-origin action frame"
+  ],
+  "setup_failures_preserved": [
+    "Missing eye symbol in isolated AST namespace before covariance tests",
+    "Unevaluated Sympy matrix structural equality; exact expansion fixed comparison without changing rotations",
+    "Batch orchestrator bracket SyntaxError before dispatch; original and captured reproduction preserved"
+  ],
+  "attempt_inventory": [
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-0-r4.exit.json",
+      "receipt_sha256": "7b92c63a83f2e02c1445a6e241f08def2d22c7bb3e443758338a2ceb466f59c9",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-0-r4.out",
+      "stdout_sha256": "e62d1beada585d2396b5264ff48f5a9309ec8fcedf595dfae1ed7310304d81bc",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-0-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-1-r3.exit.json",
+      "receipt_sha256": "08a2617059cbe19e0d64e704ab280f2701874188614365edb611f2912cf2c33c",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-1-r3.out",
+      "stdout_sha256": "74f984056edec823be018c4fe1514478f506b8af1d945d8740ba83a473151ae6",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-1-r3.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "778f7b7a4ca4b07c46e0b2d442b40400efadf81a77601806cfcff5a06f0cb7d3"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-1-r4.exit.json",
+      "receipt_sha256": "99a32bd5b85b80991ab7428ee0b5823fa63dde56831fda52156f645046a88ae5",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-1-r4.out",
+      "stdout_sha256": "52f2c86adf6aca203adf112cccffee392c41d3f9434b08f719e1c800d74e0715",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-1-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-10-r4.exit.json",
+      "receipt_sha256": "1aeee93645259dbdcfd0196b00703c5cef124107c03634c244f4d7d07c1b0858",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-10-r4.out",
+      "stdout_sha256": "5acf6718b7ee4617bbb05cefa256f7d18325ba52cadd39ba60612e3d09a735e8",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-10-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-11-r4.exit.json",
+      "receipt_sha256": "202c01734f53e77808764001e0a63fc9a5ec26a5be2dd4f5da653de2bce6453e",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-11-r4.out",
+      "stdout_sha256": "2616e8e6491f3e86590fee8f627a9bc70cd41aff911903e0883619a101316f9e",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-11-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-12-r4.exit.json",
+      "receipt_sha256": "def69520f06d72d9518d779fb9d7e9802da1c7ebf3ea281c93f5172da1ce58d0",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-12-r4.out",
+      "stdout_sha256": "9ebd68047688f21a9ecc9080ab4e37c4509403bbc85d6c46ff16c094eb843647",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-12-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-13-r4.exit.json",
+      "receipt_sha256": "8c433f45c999bac3fba07033b1d52e5e5b6325e60a057a0aa5d927ea4223ca5d",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-13-r4.out",
+      "stdout_sha256": "af01613ea0ebdde4b69edfc229f9ed3e14fb899e006d615e6a44dbcd90bf709d",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-13-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-14-r4.exit.json",
+      "receipt_sha256": "4ce7bdd9de57ae14b4cabcd315f94b2cad13912a0a88b26f2dff69fe66aca028",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-14-r4.out",
+      "stdout_sha256": "7838d7c36a9343ae4621bba06c8389ab7b10ae193b176f826d36d2805b2a12d6",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-14-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-15-r4.exit.json",
+      "receipt_sha256": "fda827c77723a085bf676d75b7999e9272630e6760c74d2f94fef4f2bf4b6066",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-15-r4.out",
+      "stdout_sha256": "6c3bf9a0ec7f5fe3d9fc761d4aa1144ac3d9bfded2bd6b79c8ced0b13ac0b579",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-15-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-2-r4.exit.json",
+      "receipt_sha256": "3b2e8eb7204e76b8d1b888109f5250018a9231eb7ad82dd3ef96d7133b8b9d2a",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-2-r4.out",
+      "stdout_sha256": "bca3822d657c022dc7dbd0b10ac4e0652b966bec87591b102f7755670992bb7f",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-2-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-3-r4.exit.json",
+      "receipt_sha256": "a76f449b282de62b5debb53ffc99e9ecf67021557814c816751225a6610a35a4",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-3-r4.out",
+      "stdout_sha256": "1b6f2fdbc30a8a9cebe31cbdd4e624c09902652ee6f2ef38ce72c98d3378d067",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-3-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-4-r4.exit.json",
+      "receipt_sha256": "3204cf3827db45e25ca48445c6c77a0d8f3abeaf429902de57e8779633f458cd",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-4-r4.out",
+      "stdout_sha256": "6aee153c705c0ac81a756e3e350108c571ea317cf7f6625aba47fc2c07fdcff0",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-4-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-5-r4.exit.json",
+      "receipt_sha256": "39dbb9d89280adfce0833b93e387915b411f6e3ad079f33533129418fede9bc1",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-5-r4.out",
+      "stdout_sha256": "b1f300c68524ad971db61c1b866956b9e21f1085772498fa4141fed902bad780",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-5-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-7-r4.exit.json",
+      "receipt_sha256": "0ffbacc5710a76dd2e7498c0c33ca7005f3b30201a779e871009188ed2c3c6a6",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-7-r4.out",
+      "stdout_sha256": "e29d0e7065831caf69d9461f4c3c1c0b5268f16f9622a09e1e2e2db6cc612c34",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-7-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-8-r4.exit.json",
+      "receipt_sha256": "4fe2553aaf6b608908c26a0d8ff5f09cfc828ff42df24ff0c33f60fa7d665cbf",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-8-r4.out",
+      "stdout_sha256": "a0242756c3b3437c3b1d27931ba9aab38b3bf03516fd94a620df9ab534cf8b5c",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-8-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-161-9-r4.exit.json",
+      "receipt_sha256": "4d24e1f499dcc2eb7cc9ef1eff99a6eeab318a5f5c0c2d4d440fd8449f9626cd",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-161-9-r4.out",
+      "stdout_sha256": "f680e4f91f4bfaa8a44b8da207925c94a735a8af17f9ce838bd274d251f6a028",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-161-9-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-0-r4.exit.json",
+      "receipt_sha256": "228556944b2565c14fbce34fa69e74d67a301ea97b41cc91c17bb183ac8b542b",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-0-r4.out",
+      "stdout_sha256": "b5023c860c6fe0201f4578938ef53edc00bca5e08ee7fabcaadb9a42fee3bf1e",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-0-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-1-r4.exit.json",
+      "receipt_sha256": "8363f42b9fa3ddb3ba17031922b003043deba3c7841f6f06b3f8b032ec0a7efb",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-1-r4.out",
+      "stdout_sha256": "f86c1985f0938cf75e58b433760e3bdd274123db6d0711c7694c0e36dfb7137d",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-1-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-10-r4.exit.json",
+      "receipt_sha256": "ee55838c09a72300da479ccffb55f95811d054d8008db42a364fe92ed0f1f84b",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-10-r4.out",
+      "stdout_sha256": "37b9506dcc2f2a17f324aabe06dc02274ee0fd0106722df2d945e1feb63c9cf6",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-10-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-11-r4.exit.json",
+      "receipt_sha256": "5d93d19c5cbe23aecbb2025a68d295889637d07e43e3bce87e7b9f2110ae3857",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-11-r4.out",
+      "stdout_sha256": "27a916e106e7d55158a0a2d74443639ee0e52786fae2f747726dd04d59f7df9d",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-11-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-12-r4.exit.json",
+      "receipt_sha256": "d3c00b4e2ef2bbf043ee87653536395912638bfc96fc297a9103e57b9cca7e72",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-12-r4.out",
+      "stdout_sha256": "4bf2753a4d1063b2b0d7ee837c8b85da30e35b6dbb317924360ee4ef70df7848",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-12-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-13-r4.exit.json",
+      "receipt_sha256": "8f23968019f1ebc518989ab655fac04bb3e3da016de66797b2d96d4a6bdc2e66",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-13-r4.out",
+      "stdout_sha256": "2355ff312046ddf7fa99bcbeb7c44355a66a7a8253f53d078ff837ecdd45fe4c",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-13-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-14-r4.exit.json",
+      "receipt_sha256": "cfcafe7471a5c90c11cf7ae798498ce33336805abe120b748843d92a8d4cc156",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-14-r4.out",
+      "stdout_sha256": "228840f197bef61805a171adc2a816ae876b94645f0edb789630476e8c92b0da",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-14-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-15-r4.exit.json",
+      "receipt_sha256": "c6fb469c4d4c9b3b94a15671f7571034e7c27034ec36f7478f231ff7ea280069",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-15-r4.out",
+      "stdout_sha256": "f435e1042507b32fc588e5ca8ff5c9847dc811966882fa7b38a6910d210f2f5c",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-15-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-2-r4.exit.json",
+      "receipt_sha256": "84bcb84c94021a0306eec88d504cdbbaf09574a9816782812f2eff869f993c4e",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-2-r4.out",
+      "stdout_sha256": "9099b11072d2ef0bf1dcb38749d621161271d8f2d58ee39b75f937bece180e70",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-2-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-3-r4.exit.json",
+      "receipt_sha256": "27ea91030ab85dfe29a5194c90e19757ebab84ddc6bf031348fc6a28911bd14b",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-3-r4.out",
+      "stdout_sha256": "4b2eb51f8c109627b7042fb08b0641ccc404fdb182bb9f03be8543e739911e07",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-3-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-4-r4.exit.json",
+      "receipt_sha256": "7e455ed23a8f70f3427279a4078b0a368459f40429261c2d57d0c7246c410ba1",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-4-r4.out",
+      "stdout_sha256": "1e3cb7d8c58a3314dac15ceeee576c9b22881141ac061c13c0a3ee23388952cc",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-4-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-5-r4.exit.json",
+      "receipt_sha256": "62448649078457c3760c6e27a4bfa81ede08811b5eaa11de7fd11782be0a340e",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-5-r4.out",
+      "stdout_sha256": "5e242c8cea3cc6f257d9676115322996f9909a83fa60f916828d589f551dc32c",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-5-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-6-r4.exit.json",
+      "receipt_sha256": "09a94a249e44f7059a48004b6711966dafd977fbcda06fe01e575dde5b647e32",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-6-r4.out",
+      "stdout_sha256": "7a27a06d51734dc59afff015ec512b4145179def0adb3473ddb6a915de141b1d",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-6-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-8-r4.exit.json",
+      "receipt_sha256": "1c3a874dfc58bce9f9152b9b1ca9547e8547b766daa1a2044723a164d6324a44",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-8-r4.out",
+      "stdout_sha256": "6fb86999a1aa3f8fd84afc8841fb0948573972357ae61a37d39e28164901bb7f",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-8-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-action-163-9-r4.exit.json",
+      "receipt_sha256": "178ad1da51e30f6612ea38116e0f522e51e14cd6696b45fe2cacb28da228d1ba",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-action-163-9-r4.out",
+      "stdout_sha256": "be900eb556aa7bf3b10da433e5fb4652048ed6a11afefb55326dc54350f9089e",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-action-163-9-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-batch-setup.exit.json",
+      "receipt_sha256": "c9112f3631effdd78ad3e7589139549aece644fd2dcc23da4eec81ed0dddd7e3",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-batch-setup.out",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-batch-setup.err",
+      "stderr_sha256": "789677d1543a626f81269593f0cbcf2a35e7cae4a4ae841d2ea0416feebe470d",
+      "exit": 1,
+      "source_sha256": "fa74ba7140a450853dca2c692c344f585c6788e8e208a3b51bda6612d8cf3914"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-coframe-basis-161-r4.exit.json",
+      "receipt_sha256": "e6e87ddbf698573f248d570c95adf95016833174bde6c395d963be1c2f583914",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-coframe-basis-161-r4.out",
+      "stdout_sha256": "034ea5fe3a5a91e614fbf054bf528c3de11ee2793e2730696de2c931c4f22531",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-coframe-basis-161-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-jacobian-161-r4.exit.json",
+      "receipt_sha256": "40ff895f172dc86a0389c825da1c825ce640c8034275879487304f185c1ff430",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-jacobian-161-r4.out",
+      "stdout_sha256": "0b9a3cb22ca4af53c28cf618830405e4d4dbd880cb631413079ef4494adcc460",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-jacobian-161-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-jacobian-163-r4.exit.json",
+      "receipt_sha256": "a93717ddf33fdb54e13eca6b5313ca54ba88fb4097ba3841bca6262c159cb416",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-jacobian-163-r4.out",
+      "stdout_sha256": "18c54414cd4afc39b0e50a1917e054a889a4ba256c1b0693782ffe4202ccd19b",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-jacobian-163-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-polynomial-action-161-5.exit.json",
+      "receipt_sha256": "7d0e69bc53ae345d31b6deef48220b3359104898088e38b0dd932c883c4a11f4",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-polynomial-action-161-5.out",
+      "stdout_sha256": "de594aa3218334d0a6c7548500b2416235c133b4d6c31754f43ae243e15a1ba8",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-polynomial-action-161-5.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "93509389ab7b808ccb4b1677b2e66bdef0b74a4ee39003a2ee781dd47eb8aeb8"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-polynomial-source-161.exit.json",
+      "receipt_sha256": "21274d0942056b661a1fe2bae4568bb77b3a7a3aab5bac2f1a4e7dd196c20190",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-polynomial-source-161.out",
+      "stdout_sha256": "bbd8a2c902f301e28e8a469be5eacc3ddfa4c9def5d0a42057ba75c8e0417f9a",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-polynomial-source-161.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "93509389ab7b808ccb4b1677b2e66bdef0b74a4ee39003a2ee781dd47eb8aeb8"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-source-161-r2.exit.json",
+      "receipt_sha256": "ea1df4ec9dad93291106970c0fcd8e7f8e9685290988e84781a80ff2c4dad0d1",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-source-161-r2.out",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-source-161-r2.err",
+      "stderr_sha256": "e0684de1603191a127ac4e59b72475fae3d057aaeb3731ada90c617b8c0edf81",
+      "exit": 1,
+      "source_sha256": "fd89f7649fa0faf884440d47401dd0177cf2cc737b37be01a2675012b2693fdd"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-source-161-r3.exit.json",
+      "receipt_sha256": "c8e078943e23ed4ce086affc058da007231eb6d21042447d3503b15020ee1378",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-source-161-r3.out",
+      "stdout_sha256": "1b5f2eb919cc2ccac0bbe0b05834ff583683b58dddecb9e10e967ab60997fe22",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-source-161-r3.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "778f7b7a4ca4b07c46e0b2d442b40400efadf81a77601806cfcff5a06f0cb7d3"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-source-161-r4.exit.json",
+      "receipt_sha256": "de5f367e41eef321c2b8e31600ff25fe112c15f32c4440875769c362978d9b66",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-source-161-r4.out",
+      "stdout_sha256": "a80fbf869db8fee768359eda0018f724b3633e09a090e2f924f87e8b344e6269",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-source-161-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-source-161.exit.json",
+      "receipt_sha256": "527a8179421f05245a3f0687f4a1cfca8f09a6a5e5f2a1c230eea91e570dde4f",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-source-161.out",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-source-161.err",
+      "stderr_sha256": "f0473ce8cae4188d0d5a3916a0993d5800f1c6dd4fef1e7089e1d1e5c0da4cc8",
+      "exit": 1,
+      "source_sha256": "274ab57947c0d02f4c5a1fc4bc7fefc760717c994f23ee67a96f7688ba175d8f"
+    },
+    {
+      "receipt": "/tmp/l1-coupled-covariance-independent-r1-source-163-r4.exit.json",
+      "receipt_sha256": "81af81e55ffcd995a378cdedecc9f1152534611f5e245929a11e2225a96084a6",
+      "stdout": "/tmp/l1-coupled-covariance-independent-r1-source-163-r4.out",
+      "stdout_sha256": "4801a615ae2e48e2d23f6e8d40b8510046e17e9a7cf577b0f3e1e68cc53ce32a",
+      "stderr": "/tmp/l1-coupled-covariance-independent-r1-source-163-r4.err",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "source_sha256": "e17b027facb6b4a07882f9aec47a1f0aab4e252a16f4e303dbecba2a8692b066"
+    }
+  ],
+  "all_original_scientific_source_bytes_unchanged": true,
+  "required_corrections_to_original_covariance_law": [],
+  "remaining_gates": [
+    "Full internally summed origin action/source word is gauge invariant; individual fixed gamma components mix under R_x and are only gauge-fixed diagnostic slices",
+    "Separate nonauthor exact47-factor evaluator source/normalization/role review",
+    "Actual full prepared-row XOR1 with mask signs and bounded direct/fixed acceptance",
+    "No complete contraction/pilot/runtime admission or selected coefficient is granted",
+    "Coverage236 unchanged; fullk4/commonZ/physicalB3/modes/transport/main/human/publication remain open"
+  ],
+  "return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  },
+  "report_sha256": "d9e1030df35e9ea7e23f54212c15f75ec543bc4c55b44a3ba47d91f801662eb4",
+  "results_sha256": "439f500c70b61a0eb66fb6e1be9af91b5a94cf65e0f32b30789e5cb212d76055"
+}

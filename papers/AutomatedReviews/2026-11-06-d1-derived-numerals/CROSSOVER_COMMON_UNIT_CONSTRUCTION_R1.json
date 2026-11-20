@@ -1,0 +1,52 @@
+{
+  "source_commit": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "method": "Standard-library arithmetic on retained canonical producer values; no project imports, no root-solver/model evaluator or repository source edits",
+  "retained_receipt_sha256": "d06a90dd7ad91367f514c354ce977ba0b175fef2e0c78f136ba009ea30d5b1b0",
+  "committed_source_pins": {
+    "src/wkb/connection_formula.py": "fcfdf40af49f211a03422fb37d5087828f69ecf72b9dcd0b7f94b4fa1cab21a4",
+    "src/wkb/spectrum.py": "04dd00f3ea02f0931ac7f95772abebb1b64c990903d2db2053e848d3cb8cdf4e",
+    "src/wkb/bogoliubov.py": "7f037c752c74c9d85881d5db63f7340daf918ee1cd9c0f7a27fd1c327e705803",
+    "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+    "src/second_order/wkb_analysis.py": "227da6446ec3dc8050d8ef747ba6f804a52f6fd95305e7c96cdd32b092777141",
+    "scripts/gen_d1_hierarchy_table.py": "8a8c15b7e00c7dcb7e9f47d0e09ba79d8a16e8c1c8153852b4c8bc8966feb845"
+  },
+  "model_scope": "Existing natural-unit factory WKB branch with on-shell second-order cancellation and supplied third-order coefficients; not physical EFT remainder",
+  "rows": {
+    "Steinhauer": {
+      "a": 0.9999384485007985,
+      "L": 10.64704149528589,
+      "eta": 2.4854648775499726e-12,
+      "leading_y0": 10.647696876991713,
+      "quartic_root_lower_bound": 10.647696536808606,
+      "quartic_root_upper_bound": 10.647696876991713,
+      "relative_retained_quartic_bound": 3.194898596942822e-08,
+      "cutoff_over_TH": 115.03336346284847,
+      "upper_root_over_cutoff": 0.09256181473325803,
+      "brightness_over_thermal_at_crossover": 1.0696332242061677
+    },
+    "Heidelberg": {
+      "a": 1.0015193126836395,
+      "L": 6.4440380509870305,
+      "eta": 1.4283359260818883e-10,
+      "leading_y0": 6.43426239452117,
+      "quartic_root_lower_bound": 6.434260821752808,
+      "quartic_root_upper_bound": 6.43426239452117,
+      "relative_retained_quartic_bound": 2.444365259893444e-07,
+      "cutoff_over_TH": 121.0663800786541,
+      "upper_root_over_cutoff": 0.05314656629149211,
+      "brightness_over_thermal_at_crossover": 1.1202191959444299
+    },
+    "Trento": {
+      "a": 0.9999152187178119,
+      "L": 11.167215912806597,
+      "eta": 1.7126718341909739e-12,
+      "leading_y0": 11.168162763965412,
+      "quartic_root_lower_bound": 11.168162466374516,
+      "quartic_root_upper_bound": 11.168162763965412,
+      "relative_retained_quartic_bound": 2.6646361530436875e-08,
+      "cutoff_over_TH": 109.50416077648174,
+      "upper_root_over_cutoff": 0.10198847865481295,
+      "brightness_over_thermal_at_crossover": 1.0661760136773768
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "original_junit_sha256": "2202a5ea9666fb720c2d5e21a14efeb8b6b01be853dd61fbeb480d03a1cfbb94",
+  "original_junit_bytes": 1003902,
+  "zip_sha256": "45c18d476c51bc8ad6f70912d8d94d0165fbae7bd62dcf8b650cf0790aa92acf",
+  "member": "l1-16fde9-fast.xml",
+  "scope": "Original unmodified JUnit, canonical bare fast at16fde9. Archive after terminal with same-head/clean receipts; no rerun or transformed test outcome."
+}

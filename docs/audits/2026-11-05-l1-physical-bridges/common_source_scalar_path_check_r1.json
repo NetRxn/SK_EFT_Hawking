@@ -1,0 +1,10 @@
+{
+  "scope": "Exact 16-mode scalar lambda=0 contact comparison; no geometry integral or physical matching",
+  "convention": "P=diag(0,0,1,-1)/sqrt(2), periodic two sites each axis, mass=spacing=1",
+  "variance": "193312/342225",
+  "exponential_log_hessian": "-6288976/5817825",
+  "affine_log_hessian": "7407044/5817825",
+  "affine_minus_exponential": "7804/3315",
+  "independent_chain_rule_difference": "4 - 5456/3315",
+  "mode_count": 16
+}

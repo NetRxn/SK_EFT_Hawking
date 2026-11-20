@@ -49,17 +49,32 @@ parameter window, and doing so makes the result stronger.
 
 ## 2. BUILD queue
 
+### Current construction reconciliation — 2026-10-17
+
+The original B1–B8 objectives and governing full-strength posture remain unchanged. The current publication-remediation lead explicitly ACCEPTS scientific construction responsibility in notebook r40; this is not evidence of an older private assignment, native admission or a successful BUILD. Historical estimates and original queue diagnoses below do not override the current delivered-source/remaining-construction distinction:
+
+- **B1:** actual many-body Coulomb/kinetic self-adjointness and relative-bound source are delivered; construct the physical density/energy/variational and Levy–Lieb carriers and attainment bridge.
+- **B2:** genuine acyclicity, rank-local BP dynamics/stabilization and a star witness exist; construct all-tree rank certificates, exact normalized marginals and a genuine topological invariant/marker bridge. The earlier statement in §0 that no build happened is historical and no longer describes this delivered portion.
+- **B3:** exact regulated scalar bubble/remainder and conditional RPA-zero analysis are independently accepted manual mathematics (construction `9ad73436a0ae121725b60c12e39b856dbad6f58cf832176f984f6654d2b69053`, independent review `0f13436bf9fc191647a15bf2d39510308b84d5fbae161699056a85331bc4afb7`). Physical metric channel/normalization/domain/window, propagating mode/matter coupling and transport/frequency matching remain OPEN. Scalar positivity does not bound the response near its pole. The original stated O(Λ²/16π²) normalization and [0.1,10]-as-result target below remain the full acceptance requirement; an alternative computed window needs the operator’s specific disposition, not automatic substitution.
+- **B4:** genuine A(1) Hom-space dimension/equality theorems exist; construct the noncommutative balanced tensor/induction equivalence, natural chain map and actual Ext comparison.
+- **B5:** real AGP failure-set/probability and concatenation composition exists; construct the common-carrier code/decoder/channel/compiler semantic theorem, including good-implies-correct.
+- **B6:** the QHO ensemble/partition/mean-energy calculation exists; construct the response/correlation spectrum and convention-correct physical FDT/noise mapping.
+- **B7:** entropy/log positivity and scope repair exist; construct actual encoding/error algebra, code distance and recovery theorem, then a justified entropy relation.
+- **B8:** historical continuity/normalization-shape predicate repairs exist; construct genuine stochastic-exponential integrability/martingale content and distinct iid-law Cramer upper/lower bounds. A zero MGF is not a probability-law witness.
+
+These are updates within this existing queue, not new finding IDs or another tracker. First substantive milestones and scientific-review evidence remain the actual carriers/response/integral/semantic constructions identified above; native acceptance follows ordinary ROOT admission. The D12 real-exponent coefficient bridge remains separate under its existing 2.5 lineage (July31-1524 and July31-2220 to be reconciled, not replaced by a new ID). Both dated D12:2.5 findings also retain the existing formula_grounding zero-reference public-function population duty, owned by ROOT’s G4 machinery process, separately from coefficient construction. A theorem or two reference lines cannot close that population/anti-vacuity duty; require independently verified full-population and real-consumer evidence under the existing architecture, preserving ADR-009 decisions and creating no new gate. Original targets may be reconsidered only after demonstrated, decomposed counterevidence and the operator's specific decision.
+
 Ordered by (value to the claim) × (existing substrate leverage). "Roadmap" column shows whether an authorized
 item already specs the work — where one exists, this is **unexecuted authorized work**, not new scope.
 
 | # | Finding | What must be built | Existing leverage | Roadmap | Est. |
 |---|---|---|---|---|---|
-| B1 | **D10** HK / Levy–Lieb claimed as "first formalization"; files are 66-line order-theory stubs | Real HK uniqueness + Levy–Lieb constrained search over an actual many-body Hamiltonian, on PhysLib spectral theory | `CoulombRelativeBound.lean` (2,492 lines) — the Kato half is **done** | **`Phase6BB_Roadmap.md` — specs exactly this** | M |
+| B1 | **D10** physical HK / Levy–Lieb carrier/variational bridge remains owed; molecular operator layer is built | Real HK uniqueness + Levy–Lieb constrained search over an actual many-body Hamiltonian, on PhysLib spectral theory | `CoulombRelativeBound.lean` (2,492 lines) — the Kato half is **done** | **`Phase6BB_Roadmap.md` — specs exactly this** | M |
 | B2 | **D7** demarcation theorem disclaimed by its own Lean; topological axis vacuous | (a) real bipartite acyclicity + BP-exactness-on-trees; (b) a genuine Chern class, replacing `categoricalChernExpansion`'s linear `c0+c1x` | `AnalogHawkingDemarcation.lean` (286 lines) | B-04 follow-up (retracted walk-back) | M–L |
-| B3 | **L1** χ_vest window stipulated, not derived | Carry out the RPA bubble integral with the stated `O(Λ²/16π²)` normalisation, so `[0.1,10]` is a **result** | `VestigialSusceptibility.lean` (382 lines) already has `χ_RPA = χ₀/(1−γ⋆χ₀)` | — | S–M |
-| B4 | **D2** H2 "discharged" by `rank = rank` | The genuine Hom-tensor / change-of-rings adjunction | `ChangeOfRings.lean` (167 lines); Mathlib has `Algebra.TensorProduct` adjunctions | — | M |
-| B5 | **D6** end-to-end claim with no composite theorem; §2 compiler link empty | The composite theorem chaining code → measurement → compiler → universal logic | all four component layers exist | — | M |
-| B6 | **D9** `fdt_quantum_noise_floor` — Johnson term cancels; content is `0 < E0/2` | A real fluctuation–dissipation statement with the thermal→quantum crossover regime | — | — | M |
+| B3 | **L1** χ_vest window stipulated, not derived | Carry out the RPA bubble integral with the stated `O(Λ²/16π²)` normalisation, so `[0.1,10]` is a **result** | `VestigialSusceptibility.lean` conditional algebra; accepted exact scalar bubble/remainder/RPA-zero manual milestone, physical normalization/window open | — | S–M |
+| B4 | **D2** H2 remains open after genuine A(1) Hom-space dimension progress | The genuine Hom-tensor / change-of-rings adjunction | `ChangeOfRings.lean` (167 lines); Mathlib has `Algebra.TensorProduct` adjunctions | — | M |
+| B5 | **D6** end-to-end semantic bridge remains owed after real AGP/probability composition | The composite theorem chaining code → measurement → compiler → universal logic | all four component layers exist | — | M |
+| B6 | **D9** capstone Johnson term cancels; genuine QHO ensemble/mean-energy layer built, response-spectrum FDT open | A real fluctuation–dissipation statement with the thermal→quantum crossover regime | — | — | M |
 | B7 | **D4** "central QEC theorem" = `Real.log_pos_iff` on a `codeDistance` *defined* as a log | `codeDistance` from the actual code (min weight of a nontrivial logical operator), then the relation as a theorem | `QECHolographyBridge.lean` (381 lines) | — | M–L |
 | B8 | **I3** predicates named for theorems they don't state | `IsNovikovCondition` as the actual Novikov condition; separate Cramér upper/lower bounds | — | — | L; may hit a genuine Mathlib gap → then document as a buildable-absent gap per rule (2) |
 
@@ -119,7 +134,7 @@ ratchet) is **546 decl-closure over 494 real tactic sites in 43 files**, cluster
 6GA is the `native_decide → decide +kernel` ratchet, with a verified spike: **90 of 494 sites converted with
 zero errors**, cost from negligible to ~7×. Its guardrails already cover the failure modes I was going to
 raise — never raise heartbeats to force a conversion; statements stay byte-identical; the ratchet is a floor,
-not a target. It also records a known negative (the private braid-word corpus does **not** convert).
+not a target.
 
 **The only publication-side action here** is ordering, not scope: **6GA should prioritise the clusters that
 back promoted manuscript claims** — D4's trefoil / figure-eight / hexagon / ribbon invariants sit in

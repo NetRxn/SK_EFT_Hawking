@@ -1,0 +1,16 @@
+{
+  "candidate_sha256": "d441e52371493e719d592ce2c79473705fee91510df65cbd2f14da53fab662b4",
+  "sentences": 124,
+  "preserved_blocker_ids": [
+    "L1-H1-endpoint-attribution",
+    "L1-B3-physical-normalization",
+    "L1-physical-dynamics-transport",
+    "L1-fix-propagation"
+  ],
+  "human_sentence_states_before_after": "unchanged empty dictionaries",
+  "audit_append_events": 1,
+  "no_prior_audit_bytes_changed": true,
+  "automatic_closures": 0,
+  "candidate_supersessions": 49,
+  "scope": "Current catalog/evidence intake through existing writer only; full Stage10, exhaustive numerical/source-body/physical/native/human/publication acceptance remain open"
+}

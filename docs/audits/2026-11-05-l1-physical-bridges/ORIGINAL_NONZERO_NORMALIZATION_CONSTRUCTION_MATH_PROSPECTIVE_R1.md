@@ -1,0 +1,43 @@
+# Independent prospective mathematical review — original nonzero normalization R1
+
+Verdict: APPROVE the exact bounded MANUAL Z1–Z4/M1 scope. No necessary corrections to the frozen brief. Approval is permission to attempt the complete contraction and conditional basepoint step, not certification of any occupation enumeration, coefficient sign/value, nonzero Z, metric response, runtime admission or physical state.
+
+Candidate /private/tmp/l1-original-nonzero-normalization-brief-r1.md: 11687 bytes; SHA256 ba13d0000e4d54b7a1d682c0d498ded9cff25b6a177a2f6c8d0cfd28283d0598.
+
+## Continuity, authority and work performed
+
+FIRST action from /Users/johnroehm/.codex/worktrees/l1-coupled-fixed-controls/.publication-l1-checkpoint-20261103:
+
+`python3 scripts/codex_continuity.py check /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-nonzero-normalization-math-prospective-r1.json`
+
+First and final SAME checks returned fresh:true, changed:[], exit0. Final check immediately preceded report writing; no packet refresh. Packet checkpoint58c3b7c7c265ef02febb10b72322eef06f2de28f. Read complete brief/packet and newest relevant primary notebook entries. ROOT's explicit deeper nonzero-Z/source commission and corrected ownership are recorded; ordinary ROOT normalization reconciliation is not represented as an active competing original128-generator partition derivation. Both new prospective approvals are still required before substantive work. Existing conditional244ed acceptance is not a nonzero antecedent certificate.
+
+Read accepted N16_SYMBOLIC_NORMALIZATION.md's polynomial/selection/denominator/height statements, and reused the just-reviewed actual244ed source coefficient and nontriviality formulas, original coframe/action and raw saturation boundaries. Directly inspected the versioned primary Diakonov1109.0091v1 at https://arxiv.org/pdf/1109.0091v1, especially the original measure/Haar formulas26–28 and sectionVI expansion premise. That source motivates saturation and link integration; it is not a complete signed N16 coefficient certificate.
+
+Actual commands: continuity adapter twice; cat brief and packet; tail -n15 of primary notebook; sed -n1,65p and rg on the accepted symbolic normalization; stdlib pathlib/hashlib byte count/hash read. Primary web PDF open/find reads. No new occupation classification, scientific contraction/proof implementation, evaluator, scientific imports, CAS/matrix/exterior/Haar/Gram script, tests/build/Lean/native/slot/controller/harness/runtime actions. Only this report was written.
+
+## Mathematical assessment of the proposed path
+
+The exact target is a full coefficient of the unchanged original polynomial, with all128 odd variables,64 independently anchored compact links and the original orientation. Choosing c16 removes EHC curvature factors from this coefficient but does not replace the requested model by g2=0: a certified nonzero highest cosmological coefficient can subsequently control the full polynomial at g2=1. This is a legitimate proof strategy, not a claim that the coefficient is already nonzero.
+
+Z1 is appropriately phrased as a required completeness proof. Local central/neighbor capacity, coincident periodic neighbor vertices and independent directed anchors all matter. Haar center parity is imposed separately on both chiral factors for each anchored link; site bipartition alone is not the integration criterion. The all-linear and two checkerboard patterns are explicitly proposed hypotheses to test. I do NOT endorse their completeness or even their surviving signed contributions prospectively. Additional classes must be retained, and enumeration must be settled before a final coefficient claim.
+
+Z2 names the required local contraction data and signs. Same-oriented SU(2) pairings use epsilon tensors, while opposite-oriented ones use Kronecker contractions; pseudoreality is not automatically a positive norm. Both chiral factors, quarter-coframe normalization, independent anchor choices, gamma ordering and original top orientation must survive the local reduction. The brief does not allow merging the two directed links merely because their endpoint vertices coincide on the two-cycle. Nor does it silently extend the pair formulas to a higher-occurrence link without the corresponding correct full moment. The result must show the actual occurrence/support census and use whichever exact Haar tensor it requires.
+
+Z3 correctly demands control of the COMPLETE signed contraction. A surviving term is insufficient in the presence of other terms that could cancel it. A norm/square decomposition requires a proved involution, signs and equality to the whole target, not a visual resemblance to a chiral pairing. A valuation or grouping argument likewise needs all competitors controlled. Positivity of a fixed-link determinant or an unweighted auxiliary norm would not establish the signed weighted original coefficient. If the coefficient vanishes, that cancellation must be proved and reported only at its selected-coefficient scope.
+
+Z4 is mathematically adequate as a prospective target. If c16 is certified nonzero, the accepted common denominator bounds its magnitude away from zero and the accepted height bounds the finitely many lower coefficients. An explicit sufficiently dominant rational/integer g1 at g2=1 and a numerical-symbolic lower bound can then be constructed without evaluating every lower coefficient. This approval supplies no such coefficient or coupling point. If a different coefficient is used, the brief rightly requires accounting for all higher terms before applying dominance; unknown higher terms cannot be discarded. The original raw sign is retained. Activating the244ed scaling theorem requires an actual discharged nonzero-Z antecedent, and still does not justify physical CAR/metric or causal evolution.
+
+M1 is a genuine original integrated source target: a named literal coordinate, with either Z_alpha nonzero or a nonzero Eq31 coefficient, every link integrated and the denominator matched at a common actual coupling point. A source polynomial nonzero somewhere is not sufficient evidence at the selected normalization point. A Ward identity, local Q term, raw F/G overlap or normalization derivative is not silently promoted to a literal metric mean. Mean, normalized response, signature and physical metric interpretation remain distinct. The full C2 source/contact conventions remain intact.
+
+## Critical-path and boundedness
+
+This is the actual missing nonzero-normalization task, not another general conditional matrix lemma. The first coefficient is precisely fixed and its complete saturation/Haar/cancellation route is named. I find it sufficiently concrete to attempt, with no scientific guarantee that a short manual closure exists.
+
+The residual-contraction fallback is substantive and correctly limited. It requires the complete support/local tensors actually derived, the exact remaining contraction and a bounded certificate task with inputs, coefficient ring, arithmetic/output/checker/acceptance and a structurally justified size estimate. Merely restating c16, giving another nonempty-domain conditional theorem or claiming a selected subtotal would fail the deliverable. A residual task is not successful nonzero-Z discharge and is not permission to execute it. Pure-EHC or other successor calculations are not automatically admitted by this first manual package.
+
+No further prospective correction is needed. Both exact independent written approvals/read/fresh checks permit the commissioned manual scope under ROOT's existing continuation authority, followed by separate actual mathematical and source RESULT reviews. This report is independent of the source reviewer's verdict. It certifies no prospective pattern or result.
+
+No evaluator, executable producer, scientific test/build, Lean, slot, controller or harness work is authorized. ROOT's standalone merge build must not be competed with or probed. A concrete computation need goes to ROOT with its exact scientific/resource proposal and current admission; scientific difficulty is not an infrastructure defect. No infrastructure change is proposed.
+
+All original fullZ/c0/N4/B3, physical domain/adjoint/state/metric, signature/units, tensor/matter/light, causal transport and controlled-limit requirements retain their full strength. ROOT retains ordinary publication/Lean/Python/manuscript/consumer/gate/integration duties; the explicitly commissioned deeper original normalization/source construction is Executor-owned. Final physical/publication acceptance remains separate.

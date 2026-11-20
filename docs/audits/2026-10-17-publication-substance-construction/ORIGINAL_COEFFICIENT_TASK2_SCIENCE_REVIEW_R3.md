@@ -1,0 +1,72 @@
+# Independent complete Task2 R3 scientific/source/API review
+
+**Verdict: ACCEPT_SOURCE within the original declared exact finite scope. No mandatory source correction identified.** The R3 repair resolves both independently established R2 residual roots in the actual generic paths, while conserving the full original one-site mathematical producer and its acceptance requirements. This is source-review acceptance, not an actual full scientific result or closure of Task2, canonical findings, physical/B3 work, main or publication.
+
+The complete original scientific test remains **UNEXECUTED / UNADMITTED** by this reviewer. Full coefficient equality, actual full arithmetic/height/storage/RSS/time and independent scientific-result verification remain owed. ROOT retains intake, canonical closure, runtime admission and integration authority.
+
+## Identity, continuity and complete review scope
+
+Task publication-original-coefficient-task2-science-review-r3, parent publication-remediation. PRIMARY is `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking`; HEAD056ccb9f08454238934977de4bb6548d18c6275e plus the frozen assigned source. The FIRST action was the existing SAME continuity check; exit0,fresh=true,changed=[]. FINAL SAME check after all source inspection and actual tests/probes also returned exit0,fresh=true,changed=[], without refreshing the packet.
+
+| Actual path | SHA256 | Bytes |
+|---|---|---:|
+| src/core/formulas.py | d2eb079a84da6ab0c68aabb91640e9b29013bcf4b22104e816d68a804bd5c1b4 |536661|
+| src/vestigial/original_coefficients.py |fb0ac84c5623f9fd2454561d007a4f973e0db5874f259fe5f395879a9b3a7df8|71849|
+| tests/test_original_coefficient_jets.py |0b8fd40a3749090d30f8793cd6aaa103e3f841e070d6686701a64ad013c0ebf8|30825|
+| tests/test_original_coefficients.py |15d64a3899ad078015864ae4354156c62bbe1bb6a4e8db3c5a398833865d885d|25695|
+
+I read all1688 actual domain lines, the full canonical original gamma/link/coframe/action context and appended Task2 producer, all598 current jet-test lines including the unexecuted full test, complete R3 handoff/diff, both full R2 independent reports, R2 author repair and original accepted one-site factorization/acceptance specifications, complete manual one-site derivation and its independent review, current canonical findings, packet/notebook and applicable scientific/review/continuity/slot-authority contracts and owning-roadmap original BUILD boundaries. Oversized combined documentary output was followed by smaller reads of the substantive source/spec sections; conclusions do not rely on clipped source. No other new R3 reviewer verdict was consulted.
+
+Independent archive/AST comparison establishes: the entire536661-byte formulas file is exactly R2; protected Task1 tests are exact R2; all23031 R2 jet-test bytes are an exact prefix; only `RawJet.__mul__`, `SourceJet.__post_init__` and `exterior_phase_derivative` change in the domain. No old function is deleted or new production helper/framework introduced. All four actual files match the frozen R3 archive. Archive hashes and source comparison are in the companion conservation receipt.
+
+## R2 root1.1: complete finite exponential domain repaired
+
+Actual `SourceJet.__post_init__` first reconstructs every action/insertion/measure derivative slot from typed graded terms, then inspects the ACTUAL collected action. Each declared value/first/repeated/mixed action slot must lie in the positive even exterior ideal. Scalar mask0 or odd exterior degree refuses. The existing scope check separately refuses hidden nonzero contacts beyond declared order. This supplies the missing premise for the unchanged finite4V exponential in `contract_original`: every factor has exterior degree at least2, including differentiated factors. Derivative order does not shrink this Grassmann cutoff.
+
+The restriction repairs the original nilpotent API rather than narrowing a previously valid physical model. Scalar/formal-source ACTION bodies are outside that exact finite-exponential contract. Legitimate insertion/measure scalar bodies remain allowed. Pre-collection +1/−1 action bodies may stay in grading because the actual collected action body is zero. Evenness is enforced by homogeneous masks/graded reconstruction as well as the explicit final check; no generic odd-H exclusion is introduced.
+
+Fresh independent probes, not calls to test helpers, construct the actual original V1 coframe from all four quarter increments with norm-one q3 links in BOTH chiral factors. Its fourth power is24 times the oriented full top. All six C2 action slots independently poisoned with a body1 refuse after matching grading. A formal J scalar body in the mixed slot also refuses. Valid A(t)=(1+t+t²)T with unit insertion and fixed scalar measure returns raw value/first/second **(1,4,20)**. Moving scalar measure(3+t) returns **(3,13,68)**. Cancelled raw scalar-body provenance still gives(1,4,20), with602 actual contraction products; moving measure uses648. No lowered cutoff or analytic-body approximation was used.
+
+## R2 root1.2: actual rational/current intermediates repaired
+
+Actual `RawJet.__mul__` now accumulates rational-valued product-rule terms with existing checked `rational_add`; QComplex/Polynomial/ExteriorPolynomial retain their checked type-specific additions. Each unreduced numerator/denominator product and sum is observed before normalization. Logical coefficient-product billing is conserved:7 products for one-label raw C2,17 for two-label C2,1 for a one-term exterior current derivative. Integer arithmetic remains separately counted.
+
+Actual `exterior_phase_derivative` validates each USED exact real charge with `_rational`, then accumulates fixed signed charges with the same checked addition. Negation does not change width or need a fabricated coefficient product. This preserves the prior exact real current/source contract: QComplex construction already required real integer/Fraction components. No physical complex-charge domain was previously established or silently removed. Shared sites still accumulate before multiplication; no artificial independent-site current is substituted.
+
+Independent fresh probes reproduce the former8-bit and actual-default1024-bit escapes. Raw rational jets now refuse at peaks10/1026bits respectively, before returning a false small derivative. Higher-limit cases retain exact n/15 derivatives,7 products, observed peaks12/1028bits. The actual two-site bar_x psi_y current similarly refuses at10/1026bits; admitted higher-limit cases retain i*n/15 and exactly1 product. The mixed cancellation200+200−200−200 refuses at the9-bit400 intermediate under8bits; under9bits it returns(1,201,199,0,0,0) with exactly17products and peak9. These are bounded interface probes, not a claim that the fixed scientific producer actually needs over1024bits.
+
+## Whole original producer and acceptance assessment
+
+| Complete requirement | Assessment of actual current source |
+|---|---|
+| Original carrier/conventions | V1 retains8 independent odd generators,16 original coframes,4 independent Spin4/eight S3 factors; all four signed quarter blocks ADD at coincidences. Source C gamma/gamma5, plus exponent, actual printed/closed words, and generic unsquared-g2 convention controls are conserved. N16 local8/polar substitutes are not used. |
+| Complete free tensors, independent routes | All136 exterior pairs feed3876 quartics:740 center-compatible slots computed and3136 exact center zeros. The independent two actual2x2 chiral determinants use positive offdiagonal4x4 determinant sign and DISTINCT multiset splits; they do not read direct outputs as producers.172 nonzeros and expected quartic constants are regression oracles only. |
+| Original action/curvature | Both action builders keep the full ordered trace, including diagonal scalar terms before antisymmetrization,72 EHC quadratics and24 cosmological factors. Each route and word recomputes full curvature means and six complete6x6 covariances. Commutators are not replaced by Haar holonomies. |
+| Legal factorization | Actual common fermion top coefficients precede Haar factorization. Direction-center selection excludes forbidden planes, and surviving curvature/coframe link directions are explicitly checked disjoint. Site/anchor/chirality grouping occurs before normalized moment symmetry/bucketing; repeated links remain one correlated group. g1 and g2J² queries remain until actual support/mean cancellation. |
+| Full W/Gaussian schedule | All4029 raw W terms remain, including16 compensation squares and every cross/square term with raw factorial.23504 queries perword/variance,94016 across both words and v2/v3. Exact Hermite/Gaussian kernel, shifted source binomials and unframed compensation are conserved. No expected partition polynomial produces answers. |
+| Literal T/H/full contacts | Complete joint J/H polynomial, offdiagonal H once,H²/2!,16/136T and10/55H derivatives at both origin/nonzero source remain. Full six raw diagonal-frame slots attach to original W/action/source factors.26 normalized T/H insertion families at BOTH points preserve insertion/action/acceleration/measure/denominator contacts. No source/proof/cost cap shrinks to the observed172 slots. |
+| Current/generic API | Pre-Haar original source builder retains endpoint phase/frame/current derivatives, numeric-H versus g2 grading and supplied moving measure. Exact phase base is explicitly zero. V1 global-current limitation remains labeled; no N16 Ward acceptance is inferred. |
+| Singular and normalized quantities | Subset DP/complementary minors remain polynomial with no inverse/det division, including singular inputs and both repeated cross orders. Matching nonzero-Z certificates are required; unknown/zero refuses. Quotient cross terms, log-branch disclosure and explicit nondegenerate restricted Hessian remain. |
+| Shared arithmetic/cost | Existing common rational/QComplex checked primitives, integer kernels and unique recursive payload/reservations remain. The three R3 changes add no logical coefficient products. Prospective225370240 remains below unchanged250M;78336 pair-sign units are explicitly moved from the unchanged construction margin. Full native count/height/RSS/time remain UNKNOWN, not proved by the bounded suite. |
+
+The full source factorization is mathematically credible under the original finite one-site hypotheses; source acceptance is not a full execution certificate. Generic formal source-to-executable, all-order kernel/minor/contact bridges retain their Stage2/3 boundaries. No missing-Lean inference was made from grep, comments or an old declaration catalog; no Lean action occurred.
+
+## Fresh execution, reuse and evidence
+
+Actual command, from PRIMARY existing .venv, explicit `-m ''`, all numeric pools1, no bytecode or pytest cache:
+
+`.venv/bin/python -B -m pytest -m '' tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -vv -s -p no:cacheprovider --junitxml=/tmp/publication-task2-science-r3-bounded.xml`
+
+Actual exit0: **109passed,1deselected in25.17s**; driver wall25.378795s. Native child peak RSS**253132800bytes**, below512MiB. XML records109selected node IDs,0failures/errors/skips.104 outer fixture counters: maximum194033,sum377719. Five dependency tests have no invented coefficient counters. These outer counters are not whole-science counts or sums of nested budgets. The only deselection is the unchanged complete scientific test.
+
+Fresh independent probe driver `/tmp/publication-task2-science-r3-probe.py` exits0 in0.10245s measured within its process, native RSS102170624bytes. Its result JSON records each refusal/positive result, actual product/integer counters/peak bits, all-slot refusal and actual original acceleration/measure controls. Probe setup outside nested coefficient budgets is not represented as a whole-interpreter operation census.
+
+I also read and hash-bound the archived R2 independent minor/Hermite scripts and receipts. Reuse is justified by exact algorithm/input conservation: complementary_insertion, determinant_polynomial, exterior/scalar algebra, regulator order, and all Gaussian/Hermite kernels called by those scripts are unchanged R2→R3. The only changed RawJet/current/SourceJet methods are not called by those scripts. Thus the R2 independent140 real invertible/singular complementary-minor comparisons and separately140 exact complex-minor plus90Hermite/Gaussian comparisons remain applicable prior evidence. I did NOT rerun them or label their archived5638products/23bits/102105088RSS as fresh R3 execution. Their scripts/receipts/archive hashes are bound in conservation JSON.
+
+Reviewer outputs use `/tmp/publication-task2-science-r3-*` and the requested review basename. No repository/source/Git/index/ledger/notebook/packet/roadmap/registry mutation, controller/process/slot manipulation, cache/dependency repair, Lean/build/LSP, broad suite, network/GPU/campaign or full scientific evaluator ran. Ordinary bounded pytest temporary output is the only non-review temporary work. No other new reviewer verdict, global memory or subagent was used.
+
+## Required continuation and outstanding obligations
+
+ROOT may reconcile source-level repair evidence for canonical1.1/1.2 through the existing author→different independent verification→recorded closure mechanism. This report does not itself close those findings or grant full scientific execution. Obtain the separate complete algebra/cost assessment, then ROOT's actual oneCPU/2GiB/24h admission if warranted. Preserve the entire scientific test and run/evaluate its actual both-route/both-word/both-variance outputs, complete source/frame derivatives, counts/heights/records/RSS/time and different result review.
+
+Task2 completion remains pending those results and actual formal/executable acceptance. Task3 original N16 complete metric/contact/all-minor application and Task4 viable complete-Z/source allocation/nonzero-normalization constructions remain owed. Physical source/projector/state/domain/adjoint/constraints/calibration, B3 normalization/window, actual modes/matter/transport and controlled source/thermodynamic/continuum limits remain full-strength BUILD. Existing publication gates, main integration and final human approval remain separate. No deferral, reduced claim strength, gate waiver or scientific impossibility is inferred.

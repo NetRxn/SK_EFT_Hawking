@@ -1,0 +1,19 @@
+{
+  "native": {
+    "integrated_head": "9e9ea25ad040c1cbf71dea9a3634bd36a3b9e6f9",
+    "epoch_id": "5659fa315c9b9a6869b37df44c62dc889e07d2f17084a253473d7143e855a75d"
+  },
+  "olean_sha256": "41d68b756ad9f73c0f75dc616a84aba1b03e111d6ff531433ef4e378f8c4e9d7",
+  "post_absorb": {
+    "capacity_complete": true,
+    "capacity_conflicts": [],
+    "reserved_physical_slots": [],
+    "wt1": {
+      "head": "9e9ea25ad040c1cbf71dea9a3634bd36a3b9e6f9",
+      "dirty": [],
+      "resource_reserved": false,
+      "backend_state": "down",
+      "lease_present": false
+    }
+  }
+}

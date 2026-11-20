@@ -1,0 +1,1057 @@
+{
+  "cap_hex": "0x1.b05876e5b0120p-49",
+  "cases": [
+    {
+      "chi_hex": "0x1.fffffffffff8ap-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff8bp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff8cp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff8dp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff8ep-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff8fp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff90p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff91p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff92p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff93p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff94p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff95p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff96p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff97p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff98p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff99p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff9ap-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff9bp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff9cp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff9dp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff9ep-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffff9fp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa0p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa1p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa2p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa3p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa4p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa5p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa6p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa7p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa8p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffa9p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffaap-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffabp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffacp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffadp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffaep-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffafp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb0p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb1p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb2p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb3p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb4p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb5p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb6p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb7p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb8p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffb9p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffbap-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffbbp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffbcp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffbdp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffbep-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffbfp-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc0p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc1p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc2p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc3p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc4p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc5p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc6p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc7p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc8p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffc9p-1",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.fffffffffffcap-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffcbp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffccp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffcdp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffcep-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffcfp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd0p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd1p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd2p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd3p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd4p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd5p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd6p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd7p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd8p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffd9p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffdap-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffdbp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffdcp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffddp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffdep-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffdfp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe0p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe1p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe2p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe3p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe4p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe5p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe6p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe7p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe8p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffe9p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffeap-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffebp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffecp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffedp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffeep-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffefp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff0p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff1p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff2p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff3p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff4p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff5p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff6p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff7p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff8p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffff9p-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffffap-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffffbp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffffcp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffffdp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.ffffffffffffep-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.fffffffffffffp-1",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000000p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000001p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000002p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000003p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000004p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000005p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000006p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000007p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000008p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000009p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000000ap+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000000bp+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000000cp+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000000dp+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000000ep+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000000fp+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000010p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000011p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000012p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000013p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000014p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000015p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000016p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000017p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000018p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.0000000000019p+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000001ap+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000001bp+0",
+      "expected": true,
+      "observed": true
+    },
+    {
+      "chi_hex": "0x1.000000000001cp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000001dp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000001ep+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000001fp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000020p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000021p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000022p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000023p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000024p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000025p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000026p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000027p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000028p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000029p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000002ap+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000002bp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000002cp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000002dp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000002ep+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000002fp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000030p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000031p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000032p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000033p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000034p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000035p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000036p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000037p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000038p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000039p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000003ap+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000003bp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000003cp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000003dp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000003ep+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000003fp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000040p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000041p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000042p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000043p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000044p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000045p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000046p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000047p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000048p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000049p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000004ap+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000004bp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000004cp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000004dp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000004ep+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000004fp+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000050p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000051p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000052p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000053p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000054p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000055p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000056p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000057p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000058p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.0000000000059p+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000005ap+0",
+      "expected": false,
+      "observed": false
+    },
+    {
+      "chi_hex": "0x1.000000000005bp+0",
+      "expected": false,
+      "observed": false
+    }
+  ],
+  "formula_sha256": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
+  "mismatches": 0
+}

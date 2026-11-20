@@ -1,0 +1,30 @@
+[
+  {
+    "finding": "3.3",
+    "declared_verify": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "finding": "3.4",
+    "declared_verify": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "finding": "4.2",
+    "declared_verify": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "finding": "5.3",
+    "declared_verify": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

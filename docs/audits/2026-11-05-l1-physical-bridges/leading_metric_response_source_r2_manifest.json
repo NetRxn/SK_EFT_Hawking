@@ -1,0 +1,9 @@
+{
+  "accepted_design_sha256": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+  "bytes": 126068,
+  "members": 27,
+  "sha256": "533bc1ba63ee8e6e2c69c6137d565e0ac1a25b14b1088c55f2353d4e8d3963fb",
+  "source_archive": "leading_metric_response_source_r2.zip",
+  "source_pin_manifest_sha256": "d6efcd03049d968fb247e5e2beca1ebc6948cb2f2495c04608312c4b16a0d5a6",
+  "status": "Independently accepted design and SOURCE for bounded control/target attempt; no scientific execution/results yet"
+}

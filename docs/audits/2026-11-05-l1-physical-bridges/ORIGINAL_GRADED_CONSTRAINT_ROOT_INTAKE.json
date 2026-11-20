@@ -1,0 +1,60 @@
+{
+  "intake_time_utc": "2026-11-06T06:00:16.625273+00:00",
+  "source_commit": "0dc9e069bbfdb1cbf9f3f55f04e3190e13d7e5f9",
+  "normal_merge_commit": "96cb6442a5cb013b36cda95ace0ab921df37de97",
+  "reviewer": "ROOT Physics Publication Remediation",
+  "verdict": "ACCEPT_COMMISSIONED_MANUAL_L1_L4_RESULT",
+  "read_in_full": [
+    "ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+    "ORIGINAL_GRADED_CONSTRAINT_MATH_REVIEW_R1.md",
+    "ORIGINAL_GRADED_CONSTRAINT_SOURCE_REVIEW_R1.md",
+    "ORIGINAL_GRADED_CONSTRAINT_ACCEPTANCE.md"
+  ],
+  "result_sha256": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+  "archive_integrity": {
+    "crc": "PASS",
+    "unique_members": 19,
+    "all_manifest_member_hashes": "PASS",
+    "canonical_result_and_both_reviews": "EXACT"
+  },
+  "live_custody_readback": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "docs/audits/2026-11-05-l1-physical-bridges/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+    "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "docs/audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md",
+    "accepted/NONREGULAR_BOUNDARY_RESEARCH.md": "docs/audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_RESEARCH.md",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+    "accepted/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md",
+    "parent/original_nonregular_boundary_design_evidence.zip": "docs/audits/2026-11-05-l1-physical-bridges/original_nonregular_boundary_design_evidence.zip",
+    "parent/original_nonregular_boundary_design_manifest.json": "docs/audits/2026-11-05-l1-physical-bridges/original_nonregular_boundary_design_manifest.json",
+    "prework/ORIGINAL_NONREGULAR_BOUNDARY_ARCHITECTURE_REVIEW_R2.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_ARCHITECTURE_REVIEW_R2.md",
+    "prework/ORIGINAL_NONREGULAR_BOUNDARY_BRIEF.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_BRIEF.md",
+    "prework/ORIGINAL_NONREGULAR_BOUNDARY_SOURCE_REVIEW_R2.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_SOURCE_REVIEW_R2.md",
+    "Phase-5d/primary-sources/Diakonov2011.pdf": "ACTUAL_HELD_BYTES_EXACT",
+    "Phase-5d/primary-sources/Volovik2024.pdf": "ACTUAL_HELD_BYTES_EXACT",
+    "Phase-5d/primary-sources/Vergeles2025.pdf": "ACTUAL_HELD_BYTES_EXACT",
+    "Phase-6a/primary-sources/CrossleyGloriosoLiu2017.pdf": "ACTUAL_HELD_BYTES_EXACT"
+  },
+  "historical_charter": "Exact archived member verified; not asserted to exist as a current standalone roadmap",
+  "accepted_content": [
+    "Original full-action coframe and link forces with closed order retained",
+    "Typed boundary graph and pre/post pullback kernels without Legendre inversion",
+    "Finite unresolved-force zero-body inverse obstruction, without all-routes no-go",
+    "Two-move classical matching distinguished from off-shell quantum sewing",
+    "Actual test-domain graded derivative and ordered second-insertion contact identities",
+    "Complete C2 source contacts and explicit projected-relation lifting equations"
+  ],
+  "not_closed": [
+    "Complete projected physical constraint classification",
+    "Q1-Q4 physical domain/product/adjoint and positive state",
+    "FullZ/c0 nonzero normalization",
+    "N4 physical tensor",
+    "B3 susceptibility normalization and derived window",
+    "Physical tensor/matter/light dynamics and causal transport",
+    "Native/kernel/full-wave/publication/main/human acceptance"
+  ],
+  "ownership": "ROOT retains complete L1 publication delivery. Executor owns only explicitly bounded deeper construction.",
+  "next_executor_action": "Propose a concrete next manual boundary-operator/source-compatible domain and derived-adjoint construction for prospective independent review; no new physical premise, favorable product/state, runtime or slot grant.",
+  "priority_unchanged": true
+}

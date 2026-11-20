@@ -1,0 +1,34 @@
+{
+  "baseline_widths": [
+    "0.86438pt too wide",
+    "14.72267pt too wide",
+    "7.31343pt too wide",
+    "29.71892pt too wide",
+    "1.19531pt too wide",
+    "6.92583pt too wide",
+    "3.27621pt too wide",
+    "9.9673pt too wide",
+    "10.56342pt too wide",
+    "18.54391pt too wide",
+    "21.11562pt too wide",
+    "19.9821pt too wide"
+  ],
+  "current_widths": [
+    "0.86438pt too wide",
+    "14.72267pt too wide",
+    "7.31343pt too wide",
+    "29.71892pt too wide",
+    "1.19531pt too wide",
+    "6.92583pt too wide",
+    "3.27621pt too wide",
+    "9.9673pt too wide",
+    "10.56342pt too wide",
+    "18.54391pt too wide",
+    "21.11562pt too wide",
+    "19.9821pt too wide"
+  ],
+  "same": true,
+  "baseline_pages": 66,
+  "current_pages": 66,
+  "scope": "Twelve retained overflow widths; not full renderer acceptance or waiver"
+}

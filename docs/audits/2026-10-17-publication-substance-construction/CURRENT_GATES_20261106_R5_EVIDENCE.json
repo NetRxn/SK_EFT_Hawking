@@ -1,0 +1,26 @@
+{
+  "source_commit": "a16af66d15d6184c19defcad1f2110515777b6c1",
+  "artifact_commit": "4c6c5149a92a1c3bdedab49fd2864487c280292c",
+  "graph_meta": {
+    "built_at": "2026-11-06T20:17:07.638953+00:00",
+    "source_hash": "2954acb360d07c3e",
+    "node_count": 51334,
+    "edge_count": 19073
+  },
+  "graph_sha256": "231a70c0fdeea614a06ead6cfe36ba7f2e0353cb9146851881a04e52e6ebe9c7",
+  "archive": "AUXILIARY_COFRAME_NATIVE_R1_EVIDENCE.zip",
+  "archive_sha256": "4d41de826d08b6317a64be45d9df22ea681006475d692d1d1e89e593c8fd39eb",
+  "archive_bytes": 6528319,
+  "native": "10840jobsPASS, sourcea16; no fullprojectacceptance",
+  "review": "AUXILIARY_COFRAME_GENERATED_REVIEW_R1.md",
+  "states": {
+    "passed": 160,
+    "open": 28,
+    "blocked": 25,
+    "needs-recheck": 18
+  },
+  "state_transitions": 0,
+  "newly_green_bundles": 0,
+  "G4": "19bundles no declaredformulas; L1/D12staticcoverage distinct from execution/scientific acceptance",
+  "scope": "Same canonical21bundle/231cell measurement; otherbranchesandresearchnotmeasured"
+}

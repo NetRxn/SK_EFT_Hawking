@@ -1,0 +1,105 @@
+{
+  "source_commit": "7532bf3f4ec0ae7076aec8b52641245baa22a3af",
+  "exact_source_and_public_axiom_replay": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.ofSlots_mul' depends on axioms: [propext, Quot.sound]",
+        "line": 214,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.diagonal_mul' depends on axioms: [propext, Quot.sound]",
+        "line": 215,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.ofSlots_zero' does not depend on any axioms",
+        "line": 216,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.ofSlots_one' does not depend on any axioms",
+        "line": 217,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.ofSlots_add' does not depend on any axioms",
+        "line": 218,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.ofSlots_mul_constant' depends on axioms: [propext, Quot.sound]",
+        "line": 219,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.positionalCoefficients_eq' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 220,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.pderiv_swap' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 221,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.sparseSelect_missing' does not depend on any axioms",
+        "line": 222,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.polynomialJet_eq_select' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 223,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.determinantJet_eq_det' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 224,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.determinantJet_polynomial' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 225,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.determinantJet_polynomial_sparse' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 226,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.determinantJet_polynomial_slots' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 227,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.determinantJet_empty' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 228,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.FiniteDeterminantRawJet.determinantJet_zero_of_row_eq' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 229,
+        "column": 1
+      }
+    ]
+  }
+}

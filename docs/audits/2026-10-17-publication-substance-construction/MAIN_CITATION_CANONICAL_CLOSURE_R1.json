@@ -1,0 +1,21 @@
+{
+  "scope": "Only reviewed current citation/custody/zero-headroom metadata repair; no original D4/D8 attribution/fullcompile/fullmain/physical/publication closure",
+  "closure": {
+    "finding_id": "review:2026-11-07-citation-held-source-reconciliation:infra:1.1",
+    "status": "fixed",
+    "evidence": "Complete independent R1 review found one wrong Dawson source locator; R2 independently ACCEPTs corrected exact current source/state/custody composition, all13 genuine identities,662 prior unchanged records, actual held preprint/version/DOI, current writer receipts and measured76/76 zero-headroom population. Full current review is docs/audits/2026-10-17-publication-substance-construction/MAIN_CITATION_COMPOSITION_REVIEW_R2.md with immutable adverse/current evidence archive. Original declared three-module Verify executes on this source. This closes only current metadata/custody/ratchet repair, not historical D4/D8 attribution, compiled outputs, physical or publication acceptance.",
+    "superseded_by": null,
+    "date": "2026-11-06",
+    "commit": "6d6fed8d2",
+    "verified_by": {
+      "command": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+      "declared": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-06"
+    }
+  },
+  "all_prior_records_deep_equal": true,
+  "writer_stdout": "\u2713 wrote 1 record(s): review:2026-11-07-citation-held-source-reconciliation:infra:1.1\n",
+  "writer_stderr": ""
+}

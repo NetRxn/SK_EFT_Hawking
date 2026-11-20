@@ -1,0 +1,24 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_nested_namespace_is_local_without_admitting_data_or_pruned_roots _____
+
+isolated_local_repo = PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-588/test_nested_namespace_is_local0')
+
+    def test_nested_namespace_is_local_without_admitting_data_or_pruned_roots(isolated_local_repo):
+        root = isolated_local_repo
+        for name in ("namespace/deep/producer.py", "ordinary.py",
+                     "data_only/readme.txt", "node_modules/excluded/foreign.py"):
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("")
+        names = _local_module_names()
+>       assert {"namespace", "ordinary"} <= names
+E       AssertionError: assert {'namespace', 'ordinary'} <= frozenset({'d...e_is_local0'})
+E         
+E         Extra items in the left set:
+E         'namespace'
+
+tests/test_dependency_declaration.py:245: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dependency_declaration.py::test_nested_namespace_is_local_without_admitting_data_or_pruned_roots
+1 failed in 0.04s

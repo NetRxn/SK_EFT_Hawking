@@ -1,0 +1,39 @@
+{
+  "archive": "original_state_qualification_evidence.zip",
+  "bytes": 539473,
+  "members": 18,
+  "sha256": "ebaeacb2cd538d121ecba425cf9932c974c24490444462e7ae586f3eb2562463",
+  "accepted_readback_sha256": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+  "parent_scientific_checkpoint": "c4c848d794e56ca5637edd6043972ce1b2830203",
+  "outcome": "not_yet_qualified_physical_candidate; exact source/domain/model/evolution/contact debt, mandatory stop",
+  "files": {
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "charter/publication-Phase6a-945baa478.md": "7c08089484b7a87b88856bbaefe9eadad19278e4a79cc0f083aee2c355720629",
+    "history/l1-original-physical-state-brief-architecture-review-r1.md": "570317e31949de0d7c8a92c01a4f7248712854c96721e493cee05d4a73f85b6a",
+    "history/l1-original-physical-state-brief-r1.md": "0baa4eaa82b20c15889d16b69d59a1b8afd98389d34043b6ad26de2ab5d71c0b",
+    "history/l1-original-physical-state-brief-source-review-r1.md": "ed5924a20f80e1c93ba48dc6e8786f9826de151be7fbb9aa2093004ce1ba26bf",
+    "parent/original_boundary_gauge_evidence.zip": "36ede0c5ad2a3acf0c94fb6a25a0c8ce213e328ec60f0ba75dfccdb639ffac55",
+    "parent/original_boundary_gauge_manifest.json": "260e8daf1f81c779a8276d69c4f3a6ffdb17e2143ff937e3405754827f554959",
+    "prework/l1-original-physical-state-brief-r2.md": "ac5ce37b18a035c6288b26c07ade3ebb7107b1b59ed98b50363209e969582be7",
+    "prework/l1-physical-state-qualification-brief-architecture-review-r2.md": "1d308a0dd3361d711601654b540f4e367387b4b17a3e1cac13ba072b3b2663d4",
+    "prework/l1-physical-state-qualification-brief-source-review-r2.md": "b71ab9792cdf3b56c73645cc7150d04ad316353c92426d07bfb3f8aadc68fcf7",
+    "qualification/l1-physical-state-candidate-qualification-r1.md": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+    "review/l1-physical-state-qualification-architecture-readback-review-r1.md": "7e14b0e5984fefbc4d4785f28edd491f01a402c18baf6d6d161a6d412bc3209c",
+    "review/l1-physical-state-qualification-source-readback-review-r1.md": "a345739950dea05998eecb4c7d5a01f05e46268cca73247237f1670165cf2a90",
+    "source/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "source/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "source/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "source/l1-original-physical-state-primary-intake-r1.md": "49e441f89ffe00ac9e328bd9fc0aba72bb07465bb1f38dfc53dc4b1fcd3b2582",
+    "source/primary-and-qualification-pins-r1.json": "1779d7203f4709051f9c157a58dd4ca4c7402305c304fd2be789ff6635c86b5c"
+  },
+  "canonical_copies": {
+    "l1-physical-state-candidate-qualification-r1.md": "ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md",
+    "l1-physical-state-qualification-architecture-readback-review-r1.md": "ORIGINAL_STATE_QUALIFICATION_CRITICAL_PATH_REVIEW_R1.md",
+    "l1-physical-state-qualification-source-readback-review-r1.md": "ORIGINAL_STATE_QUALIFICATION_SOURCE_REVIEW_R1.md",
+    "l1-original-physical-state-brief-r2.md": "ORIGINAL_STATE_QUALIFICATION_BRIEF_R2.md",
+    "l1-physical-state-qualification-brief-architecture-review-r2.md": "ORIGINAL_STATE_QUALIFICATION_ARCHITECTURE_APPROVAL_R2.md",
+    "l1-physical-state-qualification-brief-source-review-r2.md": "ORIGINAL_STATE_QUALIFICATION_SOURCE_APPROVAL_R2.md",
+    "l1-original-physical-state-primary-intake-r1.md": "PHYSICAL_STATE_PRIMARY_INTAKE_R1.md"
+  },
+  "scope": "Independent source/criticalpath acceptance of narrow source qualification after corrected dualapprovedR2; R1unmetgate/history preserved. No positive state or sourceidentityrefutation, physicalconstruction/limit/runtime/canary/resource approval."
+}

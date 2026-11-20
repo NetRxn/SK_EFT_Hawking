@@ -1,0 +1,60 @@
+{
+  "base_tex_sha256": "ba39d45207c8c100f85a4a0712b33d9490d6c7b268e7534a82ecbf0bac958c4f",
+  "proposal_sha256": "80d48ada62d9842f803d34732937b4fa4fb058fa4a753fa600000a63f04726bd",
+  "appendix_source": {
+    "mechanism_sha256": "3d3ce58efed1eb72e9a7f3381f4a64d2808c05c2c25cfc7c293073b0be793653",
+    "audit_sha256": "9ba6c7645d173083fd004be7fc23d84a0089bbb408e2a59ac14e0110a152947b",
+    "product_sha256": "1f3657d596a78b7059dc14294dbee59a7129da1427bb48e8d925ac65c0c55908",
+    "repro_sha256": "55fcea592d5955e6b8f14e9a84757d30fceef0ccb456b2b739f543359fedd706"
+  },
+  "other_operations": [
+    {
+      "old": "The random phase approximation (RPA) form in\n\\texttt{VestigialSusceptibility.lean} models it using\nunevaluated bare susceptibility and coupling inputs, so that form\nalone supplies no numerical value of $\\chivest$.",
+      "new": "The random phase approximation (RPA) resummation models it using\nunevaluated bare susceptibility and coupling inputs, so that form\nalone supplies no numerical value of $\\chivest$."
+    },
+    {
+      "old": "\\texttt{VestigialSusceptibility.lean} formalizes that closed form and\nits stability properties; it evaluates neither $\\chi_0$ nor\n$\\gamma_\\star$, so it fixes no numerical $\\chivest$, which is why",
+      "new": "The formalized closed form establishes stability properties but\nevaluates neither $\\chi_0$ nor $\\gamma_\\star$, so it fixes no\nnumerical $\\chivest$, which is why"
+    },
+    {
+      "old": "A microscopic realization must determine whether its operator-level mechanisms\npreserve or alter the assumed speed law and its applicability. The possibilities\nin the Discussion could fix $\\chivest$ within the compatible interval or modify\nthe identification or its leading-order assumptions. A fixed-point mechanism\ncould preserve the law; the finite-tolerance constraint alone derives none\nof these mechanisms.",
+      "new": "A microscopic realization must determine whether its operator-level\nmechanisms preserve or alter the assumed speed law and its applicability.\nThe Discussion considers possible mechanisms; the finite-tolerance\nconstraint alone derives none of them."
+    },
+    {
+      "old": "Fix $\\tau=3\\times10^{-15}$ and write\n$\\verb|LigoSatisfied|(\\delta)\\equiv|\\delta|\\leq\\tau$\nfor the conservative symmetric cap.",
+      "new": "Fix $\\tau=3\\times10^{-15}$ for the conservative symmetric cap."
+    },
+    {
+      "old": "\\begin{theorem}[\\texttt{c\\_GW\\_match\\_iff\\_chi\\_close\\_to\\_one}]",
+      "new": "\\begin{theorem}[Finite-tolerance compatibility]"
+    },
+    {
+      "old": "$\\verb|LigoSatisfied|(\\dccap(\\chivest))",
+      "new": "$|\\dccap(\\chivest)|\\leq\\tau"
+    },
+    {
+      "old": "\\begin{theorem}[\\texttt{natural\\_lower\\_violates\\_ligo}]",
+      "new": "\\begin{theorem}[Lower endpoint]"
+    },
+    {
+      "old": "\\begin{theorem}[\\texttt{natural\\_upper\\_violates\\_ligo}]",
+      "new": "\\begin{theorem}[Upper endpoint]"
+    },
+    {
+      "old": "  \\verb|LigoSatisfied| is false.",
+      "new": "cap is violated",
+      "occurrences": 2
+    },
+    {
+      "old": "\\paragraph{Endpoint constraints and the open dynamical bridge.}",
+      "new": "\\paragraph{Reference-speed independence of the endpoint constraints.}"
+    },
+    {
+      "old": "This is the statement of\n\\texttt{natural\\_endpoints\\_violate\\_ligo\\_for\\_every\\_c};\nit includes the physical domain $c>0$ and follows from the\nrelative-deviation identity above.",
+      "new": "This includes the physical domain $c>0$ and follows from the\nrelative-deviation identity above."
+    }
+  ],
+  "representation": "One canonical TeX, appendix before bibliography; all moved assertions remain in existing reviewed source and length population",
+  "link_transformed_author_section_sha256": "0f0e534dd30bfeeb83fdcc67e22c76e4a844af753590ec1521e20e61aab56cfa",
+  "original_author_proposal_sha256": "a0fc6b53948dbd80166dee1dd6fa3828cb8e2c06822e42c3f98fd5ade12d5dfa"
+}

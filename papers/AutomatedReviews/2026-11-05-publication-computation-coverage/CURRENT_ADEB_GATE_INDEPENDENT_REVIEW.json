@@ -1,0 +1,45 @@
+{
+  "verdict": "ACCEPT",
+  "packet_initial_fresh": true,
+  "ledger_prior_exact": 1258,
+  "ledger_current": 1259,
+  "focused_fix_anchor": "9bdd7e2b4537526d334f5933114508df0d1784ef",
+  "four_pdf_anchors_match": true,
+  "exact_declared_verify_record_exit": 0,
+  "accepted_sourcebody_pins_unchanged": true,
+  "matching_manifest_members": 3,
+  "parity_manifest_members": 7,
+  "matching_archive_four_members_crc_hash_match": true,
+  "matching_archive_members": [
+    "PHYSICAL_MATCHING_DECOMPOSITION.md",
+    "PHYSICAL_MATCHING_MATH_REVIEW_R1.md",
+    "PHYSICAL_MATCHING_PHYSICS_REVIEW_R1.md",
+    "manifest.json"
+  ],
+  "two_current_reused_source_pins_match": true,
+  "root_control_matches_immutable_3168_receipt": true,
+  "gate_count": 231,
+  "gate_counts": {
+    "passed": 159,
+    "open": 28,
+    "blocked": 25,
+    "needs-recheck": 19
+  },
+  "zero_state_changes_vs7b9": true,
+  "graph_meta": {
+    "built_at": "2026-11-05T19:27:47.264064+00:00",
+    "source_hash": "682c6bfbc7a60d33",
+    "node_count": 51098,
+    "edge_count": 18785
+  },
+  "full_graph_sha256": "c0a6714ae64e50f8fca56e60b6c9fa2bd3e1b10c2a2955b2732b49d92c38c182",
+  "all_gate_payloads_match": true,
+  "archive_crc_all_member_hashes_match": true,
+  "ambiguity_warnings_preserved": true,
+  "measured_source": "adebcb7efa33a04fc1e14813bc9e66ca0820dba8",
+  "required_corrections": [],
+  "packet_final_fresh": true,
+  "inner_matching_manifest_and_member_bytes_verified": true,
+  "scope": "Final milestone readback only; no physical/native/main/fullstage/publication acceptance",
+  "report": "/tmp/l1-sourcebody-milestone-independent-20261105-r1.md"
+}

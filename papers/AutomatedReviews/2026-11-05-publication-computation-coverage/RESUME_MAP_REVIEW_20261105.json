@@ -1,0 +1,91 @@
+{
+  "verdict": "ACCEPT documentation-only resume map reconciliation",
+  "map_sha256": "6450bbefd45d3ee2476dde009158d023f081464264d97ad7972908b18b936375",
+  "first_continuity_fresh": true,
+  "new_relative_links_all_resolve": [
+    {
+      "link": "l1_k4_two_protected_tori_7981_delivery.md",
+      "sha256": "c6655cc03961deb11aa137b78ad374577340e2329accc3a8381c3417e7a7fda6"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_acceptance.json",
+      "sha256": "66d0111c8d5c6cb092c6238e6c34831b99f25355243cd1ca989a73e2d8e16a56"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_delivery_review.md",
+      "sha256": "e3bc51a64813e4cd19feeab51414243d379d4c4e0f3e774225c3c955f569546a"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_controls.zip",
+      "sha256": "417bfddde7c86a3e6e5b0ae62dadc442a3cd25488dc6667954a4b791469d4f3e"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_01D72_QUALIFICATION.md",
+      "sha256": "265baff80fdc010d0daf3f2123238b95cfd3594d7833619ecf7a2f5927799897"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_AF255_GATE_READBACK.json",
+      "sha256": "a0f8b7d602def6485a686154e56b5713ccdc779586838888e258664188e58c5b"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-source-register-fidelity/source_register_fidelity.md",
+      "sha256": "78286137fbb417d05b4f5c037ccb5914c91fab1adf50e6ce65ab55fa27ef8543"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-source-register-fidelity/SOURCE_REGISTER_CLOSURE_READBACK.json",
+      "sha256": "c4ee45c57ce5b3d5c22b1254bd3f84d995b6db37c42083d8e9cb8213a65974fb"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_delivery.zip",
+      "sha256": "f0b78dba2cf77f5577f330f1fb2c46f452cc691418cde87a7451558e531b811f"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_delivery_manifest.json",
+      "sha256": "1963057bd1e13f17ab7942e50d6932a631c80d3d082d670a232c7f7d0881590d"
+    }
+  ],
+  "accepted_delivery": {
+    "words": 236,
+    "same": 142,
+    "mixed": 94,
+    "remaining": 36,
+    "remaining_same": 22,
+    "remaining_mixed": 14,
+    "review_archive_source_hashes_match": true
+  },
+  "gate_snapshot": {
+    "source": "af255623060a9224a53f33d5dfaac81e37e84d82",
+    "payloads": 231,
+    "bundles": 21,
+    "states": {
+      "passed": 159,
+      "open": 28,
+      "blocked": 25,
+      "needs-recheck": 19
+    },
+    "zero_changes_since_01d72": true,
+    "graph_sha256": "68bfb20c22d259fa56a2369974f3c7da5d4dea984ed210a2d4c6e6d008784f42",
+    "limited_hash_not_full_source_binding": true
+  },
+  "canonical_producer_closure": {
+    "id": "review:2026-11-05-source-register-fidelity:source_register_fidelity:1.1",
+    "status": "fixed",
+    "source_commit": "5b9323a1db94ed07b09a6f5f76d3a125b5b0fc41",
+    "enforced_original_Verify_exit": 0,
+    "old_records_conserved": 1249,
+    "records_added": 1
+  },
+  "scope_checks": [
+    "Dated broadRED7167/29 remains01d72 not AF255",
+    "Coupled161/163 still design with separate independent review/control/runtime/portable acceptance owed",
+    "Full derivative-normalized source/action ensemble/commonZ/physicalB3/modes/transport/main/human/publication remain open",
+    "Lean support remit is planning/coherent batches/retries/handback with native enforcement prerequisite before proof edits; no live lease inferred",
+    "No new gate/infrastructure/priority order/planner or acceptance surface introduced"
+  ],
+  "required_corrections": [],
+  "return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  }
+}

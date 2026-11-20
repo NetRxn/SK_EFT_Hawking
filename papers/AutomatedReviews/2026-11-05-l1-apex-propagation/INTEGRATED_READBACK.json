@@ -1,0 +1,26 @@
+{
+  "changed_apex_indices": [
+    0,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    13
+  ],
+  "all_other_metadata_values_preserved": true,
+  "source_catalog_audit_human_pdf_bytes_unchanged": [
+    "lean/SKEFTHawking/GravitationalWaves.lean",
+    "lean/lean_deps.json",
+    "papers/L1/paper_draft.tex",
+    "papers/L1/paper_draft.pdf",
+    "papers/L1/claims_review.json",
+    "papers/L1/prose_state.json",
+    "papers/L1/audit_log.jsonl"
+  ],
+  "validation_before_after_equal_except_elapsed": true,
+  "validation_result": "0/2 corpus checks; prior errors and warnings identical; no new green claim",
+  "no_native_or_slot_work": true
+}

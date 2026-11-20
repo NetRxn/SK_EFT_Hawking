@@ -1,0 +1,26 @@
+{
+  "source_C": {
+    "curvature": {
+      "mean_entries": 16,
+      "covariance_entries": 256
+    },
+    "temporal": {
+      "covariance_entries": 32,
+      "anchor_count": 2,
+      "Q00_sewing_factor": "1/2",
+      "area_sewing_factor": "3/8"
+    }
+  },
+  "metric_M": {
+    "curvature": {
+      "mean_entries": 16,
+      "covariance_entries": 256
+    },
+    "temporal": {
+      "covariance_entries": 32,
+      "anchor_count": 2,
+      "Q00_sewing_factor": "1/2",
+      "area_sewing_factor": "3/8"
+    }
+  }
+}

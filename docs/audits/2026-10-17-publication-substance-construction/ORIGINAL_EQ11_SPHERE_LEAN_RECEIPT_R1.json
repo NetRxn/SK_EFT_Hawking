@@ -1,0 +1,135 @@
+{
+  "source_commit": "9a5cc446332865d7440cd306da37c7e74eadb924",
+  "exact_source_and_public_axiom_replay": {
+    "success": true,
+    "timed_out": false,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.Coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 198,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.UnitSphere' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 199,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.realBlock' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 200,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 201,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.coordinates_block' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 202,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.block_det' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 203,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.block_coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 204,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.unit_coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 205,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.unit_ofLp_iff' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 206,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.sphereOfSU2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 207,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.su2OfSphere' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 208,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.sphereHomeomorphSU2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 209,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftMap' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 210,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.block_leftMap' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 211,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftMap_norm' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 212,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftMap_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 213,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftIsometry' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 214,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftOnSphere' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 215,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.sphereHomeomorphSU2_left' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "line": 216,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftOnSphere_one' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 217,
+        "column": 1
+      },
+      {
+        "severity": "info",
+        "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.leftOnSphere_mul' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "line": 218,
+        "column": 1
+      }
+    ]
+  }
+}

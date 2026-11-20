@@ -1,0 +1,51 @@
+{
+  "scope": "Canonical finding readback only; no portfolio/fullgraph remeasurement or main acceptance",
+  "old_records_conserved": 1249,
+  "new_records": 1250,
+  "records_added": 1,
+  "source_commit": "5b9323a1db94ed07b09a6f5f76d3a125b5b0fc41",
+  "record": {
+    "finding_id": "review:2026-11-05-source-register-fidelity:source_register_fidelity:1.1",
+    "status": "fixed",
+    "evidence": "Existing acquisition producer now reuses canonical content fidelity and strongest-phase selection, actual registry inprep identity and workspace resolution. Independent source/final/archive reviews accepted;97 complete affected tests and actual producer/derivative red-green mutation controls with exact restoration pass. Original Verify remains unchanged; broad/main/publication acceptance remains open.",
+    "superseded_by": "papers/AutomatedReviews/2026-11-05-source-register-fidelity/SOURCE_REGISTER_ARCHIVE_REVIEW.md",
+    "date": "2026-11-05",
+    "commit": "5b9323a1d",
+    "verified_by": {
+      "command": "python -B -c 'import runpy,sys; sys.path.insert(0,\"scripts\"); from src.core.citations import CITATION_REGISTRY as R; from validation.checks.citations import _cache_fidelity; m=runpy.run_path(\"scripts/source_acquisition_register.py\"); p=m[\"WORKSPACE\"]/R[\"Verlinde1988\"][\"primary_source_path\"]; expected=_cache_fidelity(p,\"json\"); actual=m[\"_holding\"](\"Verlinde1988\",R); rows=m[\"_rows\"](); bad=[r[\"key\"] for r in rows if R.get(r[\"key\"],{}).get(\"inprep\") is True and (r[\"route\"]!=\"internal\" or r[\"priority\"]!=\"\u2014\")]; print({\"Verlinde1988_canonical\":expected,\"register\":actual,\"inprep_misrouted\":bad}); assert actual==expected==\"metadata\" and not bad, \"existing register disagrees with canonical cache fidelity or actual inprep identity\"'",
+      "declared": "python -B -c 'import runpy,sys; sys.path.insert(0,\"scripts\"); from src.core.citations import CITATION_REGISTRY as R; from validation.checks.citations import _cache_fidelity; m=runpy.run_path(\"scripts/source_acquisition_register.py\"); p=m[\"WORKSPACE\"]/R[\"Verlinde1988\"][\"primary_source_path\"]; expected=_cache_fidelity(p,\"json\"); actual=m[\"_holding\"](\"Verlinde1988\",R); rows=m[\"_rows\"](); bad=[r[\"key\"] for r in rows if R.get(r[\"key\"],{}).get(\"inprep\") is True and (r[\"route\"]!=\"internal\" or r[\"priority\"]!=\"\u2014\")]; print({\"Verlinde1988_canonical\":expected,\"register\":actual,\"inprep_misrouted\":bad}); assert actual==expected==\"metadata\" and not bad, \"existing register disagrees with canonical cache fidelity or actual inprep identity\"'",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-05"
+    }
+  },
+  "finding": {
+    "id": "review:2026-11-05-source-register-fidelity:source_register_fidelity:1.1",
+    "type": "ReviewFinding",
+    "label": "1.1 Acquisition producer substitutes filename and key-",
+    "name": "Acquisition producer substitutes filename and key-prefix proxies for canonical fidelity and actual internal identity",
+    "verification": "verified",
+    "detail": "- **Severity:** major - **Lane:** infra - **Gate:** CitationIntegrity - **Gate relationship:** Indirect acquisition/status surface only. The canonical cache check already distinguishes metadata from full text; this producer supports acquisition work and is not a direct readiness evaluator. - **Location:** `scripts/source_acquisition_register.py::_holding`, `scripts/source_acquisition_register.py::",
+    "meta": {
+      "severity": "major",
+      "status": "fixed",
+      "review_file": "papers/AutomatedReviews/2026-11-05-source-register-fidelity/source_register_fidelity.md",
+      "review_date": "2026-11-05-source-register-fidelity",
+      "review_name": "source_register_fidelity",
+      "section": "1.1",
+      "inferred_paper": null,
+      "inferred_bundle": null,
+      "declared_paper": "infra",
+      "declared_bundle": null,
+      "blocks": "CitationIntegrity",
+      "target": "`scripts/source_acquisition_register.py::_holding`, `scripts/source_acquisition_register.py::_rows`, derived `docs/SOURCE_ACQUISITION_REGISTER.md`; canonical owner `scripts/validation/checks/citations.py::_cache_fidelity`; identity owner `src/core/citations.py::CITATION_REGISTRY`.",
+      "lane": "infra",
+      "verify": "`python -B -c 'import runpy,sys; sys.path.insert(0,\"scripts\"); from src.core.citations import CITATION_REGISTRY as R; from validation.checks.citations import _cache_fidelity; m=runpy.run_path(\"scripts/source_acquisition_register.py\"); p=m[\"WORKSPACE\"]/R[\"Verlinde1988\"][\"primary_source_path\"]; expected=_cache_fidelity(p,\"json\"); actual=m[\"_holding\"](\"Verlinde1988\",R); rows=m[\"_rows\"](); bad=[r[\"key\"] for r in rows if R.get(r[\"key\"],{}).get(\"inprep\") is True and (r[\"route\"]!=\"internal\" or r[\"priority\"]!=\"\u2014\")]; print({\"Verlinde1988_canonical\":expected,\"register\":actual,\"inprep_misrouted\":bad}); assert actual==expected==\"metadata\" and not bad, \"existing register disagrees with canonical cache fidelity or actual inprep identity\"'`",
+      "blocked_by": [],
+      "needs_operator": null,
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-source-register-fidelity/SOURCE_REGISTER_ARCHIVE_REVIEW.md",
+      "supersession_evidence": "Existing acquisition producer now reuses canonical content fidelity and strongest-phase selection, actual registry inprep identity and workspace resolution. Independent source/final/archive reviews accepted;97 complete affected tests and actual producer/derivative red-green mutation controls with exact restoration pass. Original Verify remains unchanged; broad/main/publication acceptance remains open.",
+      "supersession_date": "2026-11-05"
+    }
+  }
+}

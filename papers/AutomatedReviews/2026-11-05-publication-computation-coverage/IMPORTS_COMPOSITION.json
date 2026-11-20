@@ -1,0 +1,101 @@
+{
+  "source_head": "26d2545c44b806fb2f417fcfc8b237cb33d490f4",
+  "producer_sha256": "df32bfede07cf4177d11017c7783177772fb8be5495d58a5036550cfba593ccb",
+  "formulas_sha256": "deaa9898b4463360d26479dd65014ae884d511391df17cbd86fe4b429b7a568e",
+  "all436Formula_nodes_exactly_equal": true,
+  "all93old_edge_dictionaries_exactly_conserved": true,
+  "new_edge_count": 109,
+  "added_edges": [
+    {
+      "source": "formula:G_N_emergent_at_coupling",
+      "target": "formula:G_N_sakharov",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:G_N_emergent",
+      "target": "formula:G_N_sakharov",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:planck_mass_emergent_gev",
+      "target": "formula:G_N_emergent",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:G_N_emergent_matches_observed",
+      "target": "formula:G_N_emergent",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:heat_kernel_a2_matches_GN_sakharov",
+      "target": "formula:G_N_from_seeley_dewitt",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:higher_curvature_predicted_in_observational_band",
+      "target": "formula:higher_curvature_R_sq_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:higher_curvature_predicted_in_observational_band",
+      "target": "formula:higher_curvature_Ricci_sq_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:higher_curvature_predicted_in_observational_band",
+      "target": "formula:higher_curvature_Riemann_sq_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:diff_invariance_anomaly_residual_a2",
+      "target": "formula:seeley_dewitt_a2_R_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:higher_curvature_correction_at_background",
+      "target": "formula:higher_curvature_R_sq_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:higher_curvature_correction_at_background",
+      "target": "formula:higher_curvature_Ricci_sq_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:higher_curvature_correction_at_background",
+      "target": "formula:higher_curvature_Riemann_sq_coefficient",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:efe_residual_at_dirac_calibration",
+      "target": "formula:G_N_from_seeley_dewitt",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:g_n_microscopic",
+      "target": "formula:G_N_from_seeley_dewitt",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:microscopic_macroscopic_match_residual",
+      "target": "formula:G_N_from_seeley_dewitt",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "formula:torsion_amplitude_ec",
+      "target": "formula:G_N_from_seeley_dewitt",
+      "type": "IMPORTS"
+    }
+  ],
+  "added_pairs_equal_independent_pilot": true,
+  "only_call_producer_and_stdlib_import_changed": true,
+  "scope": "Dirty reviewed-design candidate; source/edge conservation only, not full graph or scientific/runtime acceptance.",
+  "tests_sha256": "522c6898ef8ce5e02400cd0b052ba970abd45b59f21575fc61e7772e4b87c35f",
+  "revision": "R5 all accepted compiler scope controls repaired",
+  "whole_module_result": "130 passed, 1 skipped, 15 deselected in20.39s",
+  "class_result": "51 cases in whole-module receipt",
+  "production_test_present_and_passed": true,
+  "whole_module_command": "uv run python -m pytest tests/test_build_graph.py -q --junitxml=/tmp/l1-imports-r5-whole-module.xml",
+  "whole_module_junit_sha256": "17173216f3e0d46490518ad43e7abb50df466cd3bc097e9a12105c229d28d725",
+  "verification_attempt_note": "An initial ROOT comparison asserted list equality against the earlier sorted evidence list and failed on order only. Rechecking exact edge dictionary sets showed no additions or omissions beyond the same16. This revised diagnostic preserves source declaration order and asserts the specified set contract."
+}

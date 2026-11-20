@@ -1,0 +1,19 @@
+{
+  "task": "l1-reader-polish-source-r2",
+  "verdict": "ACCEPT",
+  "scope": "exact two-source-correction delta against preserved complete r1 review",
+  "head": "0d45d43d395fc2b1ef524e7ba7baeeba85e08f23",
+  "base_sha256": "e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f",
+  "r1_sha256": "2ee7ecf68385daf395e45dd98c5dcffc87abd66e62bc7b0d46e2f239a33c4137",
+  "r2_sha256": "ba39d45207c8c100f85a4a0712b33d9490d6c7b268e7534a82ecbf0bac958c4f",
+  "exactly_two_unique_replacements": true,
+  "other_bytes_changed": false,
+  "r1_preservation_map_retained": true,
+  "initial_continuity_fresh": true,
+  "final_continuity_fresh": true,
+  "tracked_mutation": false,
+  "scientific_execution": false,
+  "original_build_open": true,
+  "whole_prose_render_acceptance": false,
+  "report": "/tmp/l1-reader-polish-source-r2-independent-20261105.md"
+}

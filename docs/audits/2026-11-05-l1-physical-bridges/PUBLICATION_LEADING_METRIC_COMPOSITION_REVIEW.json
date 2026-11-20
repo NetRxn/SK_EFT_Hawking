@@ -1,0 +1,236 @@
+{
+  "verdict": "ACCEPT actual composed working-tree candidate for ROOT staging/normal merge commit; no scientific completion promotion",
+  "head": "a5d536600443c5c84c0eabcc211a670a0a46e9f7",
+  "merge_head": "bd5b4d471f98d96b01581d97042d4c3fb3d35106",
+  "continuity_packet": "l1-leading-complete-intake-review-r2.json",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "checks": {
+    "head_unchanged": true,
+    "merge_head_exact": true,
+    "no_unmerged_entries": true,
+    "one_exact_authorized_replacement": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_ACCEPTANCE.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_ACCEPTANCE.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R1.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R1.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R2.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R2.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R1.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R1.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R2.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R2.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_SUPPORT.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_SUPPORT.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_FACTORIZATION_R1.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_FACTORIZATION_R1.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_MATH_DESIGN_REVIEW_R1.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_MATH_DESIGN_REVIEW_R1.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_SOURCE_ACCEPTANCE_R1.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_SOURCE_ACCEPTANCE_R1.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_DATA_REVIEW.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_DATA_REVIEW.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_FAILURE.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_FAILURE.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_FAILURE.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_SOURCE_ACCEPTANCE.md": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_SOURCE_ACCEPTANCE.md": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_evidence.zip": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_evidence.zip": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_manifest.json": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_manifest.json": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_evidence.zip": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_evidence.zip": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_manifest.json": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_manifest.json": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_evidence.zip": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_evidence.zip": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_manifest.json": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_manifest.json": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1.zip": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1.zip": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1_manifest.json": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1_manifest.json": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2.zip": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2.zip": true,
+    "incoming_exact:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2_manifest.json": true,
+    "index_original_incoming:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2_manifest.json": true,
+    "all_previous_tracked_bytes_except_queue_unchanged": true,
+    "tracked_delta_exact": true,
+    "only_four_expected_new_documents": true,
+    "review_copy_exact:md": true,
+    "review_copy_exact:json": true,
+    "readback_counts": true,
+    "root_intake_equals_previously_read_proposal": true,
+    "scope_manual_review_ACCEPT": true
+  },
+  "check_count": 63,
+  "failed_checks": [],
+  "receipts": {
+    "docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_ACCEPTANCE.md": {
+      "sha256": "abcbdcc5a9a026773aed8d02cb04c50dc0fcc2072672480a68692defd167078b",
+      "bytes": 3593,
+      "incoming_sha256": "abcbdcc5a9a026773aed8d02cb04c50dc0fcc2072672480a68692defd167078b"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R1.md": {
+      "sha256": "ec4ad04e9f337712a6c68a72d6719ad8b7a4063d03e4c5e330de770b28466a20",
+      "bytes": 11003,
+      "incoming_sha256": "ec4ad04e9f337712a6c68a72d6719ad8b7a4063d03e4c5e330de770b28466a20"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R2.md": {
+      "sha256": "05c0835b79a556d8b96d035de15edb6de62d9e018ee1d69ddf49465c6ae2a193",
+      "bytes": 6155,
+      "incoming_sha256": "05c0835b79a556d8b96d035de15edb6de62d9e018ee1d69ddf49465c6ae2a193"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R1.md": {
+      "sha256": "b8e7131087c4489678eb3103e167095514c497d956d1b1813da78c9987fc325d",
+      "bytes": 6492,
+      "incoming_sha256": "b8e7131087c4489678eb3103e167095514c497d956d1b1813da78c9987fc325d"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R2.md": {
+      "sha256": "09ac9d3e816dd166cabd760d0c73c23233c353292d2327ab591204e1dea2bdd3",
+      "bytes": 3418,
+      "incoming_sha256": "09ac9d3e816dd166cabd760d0c73c23233c353292d2327ab591204e1dea2bdd3"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_SUPPORT.md": {
+      "sha256": "ab4259858312b3fc8fe86d1a19c2461a87445357aaa2646c3af7684b134521b2",
+      "bytes": 7541,
+      "incoming_sha256": "ab4259858312b3fc8fe86d1a19c2461a87445357aaa2646c3af7684b134521b2"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_FACTORIZATION_R1.md": {
+      "sha256": "fa30344e060a0d6af043f0efaf760023d40da192fe4d8000c982cb06eda54ff1",
+      "bytes": 4344,
+      "incoming_sha256": "fa30344e060a0d6af043f0efaf760023d40da192fe4d8000c982cb06eda54ff1"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_MATH_DESIGN_REVIEW_R1.md": {
+      "sha256": "a2706dfcfce3db3e6f108f93b8ee045a14d48090057de99b4a379b2928fd33b1",
+      "bytes": 8933,
+      "incoming_sha256": "a2706dfcfce3db3e6f108f93b8ee045a14d48090057de99b4a379b2928fd33b1"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_REPAIR_R1.md": {
+      "sha256": "c009564ac0fe88581f808991587ae5bd8051aac292dd0967750e9519b71afc1f",
+      "bytes": 4712,
+      "incoming_sha256": "c009564ac0fe88581f808991587ae5bd8051aac292dd0967750e9519b71afc1f"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_SOURCE_ACCEPTANCE_R1.md": {
+      "sha256": "90e8c2801427939b84c15785aa4678254a2a1041929962f9d6d1233773c033d4",
+      "bytes": 2028,
+      "incoming_sha256": "90e8c2801427939b84c15785aa4678254a2a1041929962f9d6d1233773c033d4"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_DATA_REVIEW.md": {
+      "sha256": "93cf3edebc08c9437ad1292d05c44cf14f826eb3ccd86c8dade08674f068a9e5",
+      "bytes": 7642,
+      "incoming_sha256": "93cf3edebc08c9437ad1292d05c44cf14f826eb3ccd86c8dade08674f068a9e5"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_FAILURE.md": {
+      "sha256": "ca191b87ab9146fb169e571e5bc9a02540d1f69ba87451f17fffe331dd9a2f0d",
+      "bytes": 2984,
+      "incoming_sha256": "c5a866dcd8a25b9b6774adfa423787d7ed9fdfd829f72d7e847df14ca6fcbc6a"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": {
+      "sha256": "1eb088b7de988bac3f48d2a81dbadbdecb430f7b5bcd7dcacd145a81f03ec34e",
+      "bytes": 5468,
+      "incoming_sha256": "1eb088b7de988bac3f48d2a81dbadbdecb430f7b5bcd7dcacd145a81f03ec34e"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_FAILURE.md": {
+      "sha256": "1a6276dbfafe1abeddabd646956216ee8af139e2e5010e724edd991bfe4a3981",
+      "bytes": 2607,
+      "incoming_sha256": "1a6276dbfafe1abeddabd646956216ee8af139e2e5010e724edd991bfe4a3981"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_RESPONSE_DESIGN.md": {
+      "sha256": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+      "bytes": 12885,
+      "incoming_sha256": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_SOURCE_ACCEPTANCE.md": {
+      "sha256": "1e6b7ba7c849cb5353c818cfb9e115e798b337994a21524fe056005ebce1125a",
+      "bytes": 2857,
+      "incoming_sha256": "1e6b7ba7c849cb5353c818cfb9e115e798b337994a21524fe056005ebce1125a"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_evidence.zip": {
+      "sha256": "bb8acaad7ceecd8d07c36f4bdfe80e4a4212de4bb63214f5859baa1426facd4a",
+      "bytes": 45446,
+      "incoming_sha256": "bb8acaad7ceecd8d07c36f4bdfe80e4a4212de4bb63214f5859baa1426facd4a"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_manifest.json": {
+      "sha256": "e40be6869942a79d28a27f5db7e857a73907d244bf773cc861d8c3e6eafec6e3",
+      "bytes": 2077,
+      "incoming_sha256": "e40be6869942a79d28a27f5db7e857a73907d244bf773cc861d8c3e6eafec6e3"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_evidence.zip": {
+      "sha256": "378ceef3490d738b740d28fd877eaa76ae3d1e2d5d26af030cb97da289bf10fe",
+      "bytes": 312251,
+      "incoming_sha256": "378ceef3490d738b740d28fd877eaa76ae3d1e2d5d26af030cb97da289bf10fe"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_manifest.json": {
+      "sha256": "58f9aa969e84ca88971555e9a8234a5314c8be874ca7f9f54b174b930eb01925",
+      "bytes": 315,
+      "incoming_sha256": "58f9aa969e84ca88971555e9a8234a5314c8be874ca7f9f54b174b930eb01925"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_evidence.zip": {
+      "sha256": "1a9b9c15478898bd4febee00ce8f3466980929590b70692d864146b4a301cb22",
+      "bytes": 311544,
+      "incoming_sha256": "1a9b9c15478898bd4febee00ce8f3466980929590b70692d864146b4a301cb22"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_manifest.json": {
+      "sha256": "2227c92dbe3ebd61fb9f487c2341eae99d8f83b8d1133630ac1c9818dcc86ca9",
+      "bytes": 414,
+      "incoming_sha256": "2227c92dbe3ebd61fb9f487c2341eae99d8f83b8d1133630ac1c9818dcc86ca9"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1.zip": {
+      "sha256": "d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48",
+      "bytes": 53721,
+      "incoming_sha256": "d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1_manifest.json": {
+      "sha256": "84afe194eea0f48293047e57963b1abb3e8b00fd5ccc4c648384c136ff9dc18f",
+      "bytes": 373,
+      "incoming_sha256": "84afe194eea0f48293047e57963b1abb3e8b00fd5ccc4c648384c136ff9dc18f"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2.zip": {
+      "sha256": "533bc1ba63ee8e6e2c69c6137d565e0ac1a25b14b1088c55f2353d4e8d3963fb",
+      "bytes": 126068,
+      "incoming_sha256": "533bc1ba63ee8e6e2c69c6137d565e0ac1a25b14b1088c55f2353d4e8d3963fb"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2_manifest.json": {
+      "sha256": "5fd7c167897e38b05ff3f7c2f503e8fb82754a13bf232065b41c654e0cf0823f",
+      "bytes": 504,
+      "incoming_sha256": "5fd7c167897e38b05ff3f7c2f503e8fb82754a13bf232065b41c654e0cf0823f"
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_LEADING_METRIC_INDEPENDENT_REVIEW.json": {
+      "sha256": "d76f2388bc91f1b821730405a597609285c8582028072352ec401055a18c1583",
+      "bytes": 76667
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md": {
+      "sha256": "5e383fff973b377e14028f76e229187659dd9a3d14ca2c4e4059259c15666a4d",
+      "bytes": 127759
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_LEADING_METRIC_INTAKE.md": {
+      "sha256": "e76138958c3b122e03b758c17f71049d4c7de70b4de7d1806dc5735827fcd4d1",
+      "bytes": 5142
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_LEADING_METRIC_INTAKE_READBACK.json": {
+      "sha256": "b57b82bb64a26402306b4c5c9c83773fce1d6ba3d67287a0a9c437d6f539067b",
+      "bytes": 460
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_LEADING_METRIC_INDEPENDENT_REVIEW.md": {
+      "sha256": "f5b4715d9238b7b251e577f3af0c8d588c99e8cf2256e3fc8a26ec1d883a3361",
+      "bytes": 9472
+    }
+  },
+  "scope": "All25 other incoming blobs and allfive archives unchanged. One exact descriptor correction only. Existing queue and ROOT intake keep sameN4/fullZ domain, original physics BUILD, Executor OPEN fulltensor and DESIGN-only Dirac-loop. All pre-existing tracked content except existing queue byte-unchanged by Git content diff. No scientific replay/new validation/gate/human promotion.",
+  "staging_state": "Original26 incoming files staged by merge; authorized narrative correction and queue are unstaged, four intake/review documents untracked at audit. ROOT must stage accepted composition before merge commit.",
+  "actions": "Read-only Git/JSON/text/hash/continuity inspection; /tmp report writes only. No tracked/index/Git/source/notebook mutations.",
+  "final_continuity": {
+    "fresh": true,
+    "changed": []
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "checks": {
+    "archive_20_exact_original_bytes_hash_size_crc": true,
+    "five_citation_reports_exact": true,
+    "citation_current_preimages_exact": true,
+    "held_source_hashes_still_match": true,
+    "current_resume_relative_links_resolve": true,
+    "source_only_and_open_obligations_preserved": true,
+    "diff_exact_eight_handoff_paths_only": true,
+    "diff_whitespace": true
+  },
+  "limitations": [
+    "Byte/provenance/source-only handoff review; no scientific imports, tests, controls, coefficients, state writers or Git mutations.",
+    "Historical review bodies retain their historical232 portable scope; current roadmap explicitly records234.",
+    "Scratch paths and dependencies need deliberate rebinding before remote execution."
+  ],
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "cdc75df665dd68f783a49d1ce90969dcff91b7cb\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--",
+        "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md"
+      ],
+      "exit": 0,
+      "stdout": "diff --git a/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md b/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md\nindex ac5280a46..d1f4625f5 100644\n--- a/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md\n+++ b/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md\n@@ -847,9 +847,9 @@ The separate79/81 source-sharing/two-protected-tori225-branch mathematical\n design and actual evaluator source are independently accepted, including\n second gamma-slot routing and branch-role transpose. Its direct/fixed controls\n and coefficients remain unrun; it adds no accepted coefficient to that count.\n-The independent delivery lane is reconciling already reviewed managed-worktree\n-portability history against the current planner path failure; use its accepted\n-coherent source boundary and current verification, not a duplicate mechanism.\n+The independent delivery lane prepares the already reviewed focused citation\n+repair needed by cache finding1.2; managed-worktree planner finding1.1 is fixed\n+as recorded below. Use the accepted source boundary and current verification.\n \n \n The [existing managed-checkout repair adoption](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md)\n@@ -866,3 +866,30 @@ independent delivery dependency, rather than importing unrelated manuscripts\n or weakening assertions. ROOT owns that integration and independent source\n review is required. This later scoped repair does not rewrite frozen16fde9's\n 34fail result or establish a new broad/main/publication pass.\n+\n+### Parallel assignments and remote resume inputs\n+\n+ROOT owns candidate integration and the primary local notebook. The scientific\n+author prepares direct/fixed79 controls from the accepted\n+[79/81 design and scratch-source archive](l1_k4_two_protected_tori_7981_source_design.zip)\n+and its [byte manifest](l1_k4_two_protected_tori_7981_source_design_manifest.json).\n+This archive preserves original failed checker attempts. It establishes no\n+scientific execution: direct/fixed controls precede an unrestricted pilot,\n+and independent review precedes portable coefficient acceptance. Extracted\n+scratch paths must be rebound deliberately before a remote or installed run.\n+The existing resource caps and all physical B3 obligations remain required.\n+\n+The separate delivery author prepares the focused source patch described in the\n+[citation predecessor review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md).\n+Its population, preimage and held-source identity evidence is preserved alongside\n+that review. ROOT applies only the reviewed source scope, obtains fresh local\n+state through the existing writer and measures the current ratchet before\n+tightening it. Historical success rows and unrelated ancestry are excluded.\n+Registry resolution cannot establish full-text fidelity; Verlinde metadata\n+does not supply the still-owed source body. The cache finding remains open\n+until its complete declared verification and independent adoption review pass.\n+\n+These assignments use the existing continuity packets and author/reviewer\n+separation. They do not change the portfolio priorities or create another\n+routing ledger. Shared mutation checks and candidate writes remain serialized;\n+independent scratch preparation may overlap controlled scientific work.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all"
+      ],
+      "exit": 0,
+      "stdout": " M docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md\n?? docs/audits/2026-10-17-publication-substance-construction/l1_k4_two_protected_tori_7981_source_design.zip\n?? docs/audits/2026-10-17-publication-substance-construction/l1_k4_two_protected_tori_7981_source_design_manifest.json\n?? papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_companion_identities.json\n?? papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_held_and_preimages.json\n?? papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_populations.json\n?? papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.json\n?? papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "head": "cdc75df665dd68f783a49d1ce90969dcff91b7cb",
+  "archive_sha256": "f90b03f72751f4d0b4cb494504a197074810a9f90271ffef619ccc4844eb24b7",
+  "failed_checker_attempts": {
+    "l1-7981-review-attempt1.json": {
+      "exit_code": 1,
+      "kind": "stdlib-checker-predicate-attempt",
+      "error": "AssertionError at singleton protected torus hits",
+      "actual_word": 110,
+      "actual_hits": [],
+      "root_cause": "Reviewer extended scan from residual38 to all272 but asserted before filtering a free-torus word excluded from this family",
+      "fix": "Apply exact two-singleton-source-bearing-torus predicate before admission",
+      "scientific_run": false,
+      "effect": "No source/geometry/receipt modified",
+      "original_checker_sha256": "45a4524a54fcbad0d6ca332682a4ea55b7a50a2e6f01c3a9784f11cd6a884077"
+    },
+    "l1-7981-review-attempt2.json": {
+      "exit_code": 1,
+      "kind": "stdlib-checker-opposite-link-attempt",
+      "error": "StopIteration selecting fully action-protected square in excluded161",
+      "root_cause": "The excluded opposite link is not protected by action/source anchors, so that distinct family square is identified by its non-(2,3) face plane rather than the accepted79/81 protected-boundary predicate",
+      "fix": "Select unique non-(2,3) square for diagnostic of excluded161/163 only",
+      "scientific_run": false,
+      "effect": "No input/source/receipt modified",
+      "original_checker_sha256": "0332b4757e3db21c2018a06c0cf5bb70282ba8e8bd4424886920344a28ff6d47"
+    }
+  },
+  "scientific_preimages": [
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_direct_b_haar.py",
+      "sha256": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_four_face_gauge_join.py",
+      "sha256": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_mixed_center_gamma.py",
+      "sha256": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_mixed_curvature_core.py",
+      "sha256": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_mixed_frame_moment.py",
+      "sha256": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_square.py",
+      "sha256": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness.py",
+      "sha256": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k2.py",
+      "sha256": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k3.py",
+      "sha256": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4.py",
+      "sha256": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_connected_source_square_torus.py",
+      "sha256": "1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_free_torus.py",
+      "sha256": "ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_peeled.py",
+      "sha256": "7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_single_square.py",
+      "sha256": "4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_two_protected_tori.py",
+      "sha256": "6d8e93102b87f98ddea6e9fc1fe519245c6b9d993a78a783bb6161d1da5700eb"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_offset_witness_k4_two_square.py",
+      "sha256": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_opposed_source.py",
+      "sha256": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5"
+    },
+    {
+      "path": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_two_mixed_centers.py",
+      "sha256": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2"
+    }
+  ],
+  "archive_files": [
+    {
+      "name": "l1-7981-actual-source-review-verification.json",
+      "bytes": 11430,
+      "sha256": "2015707a831929b9a52373919cea5458b0d341b4b4b90ccffe5bb4475551cf02",
+      "crc32": 611497158,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-actual-source-review.md",
+      "bytes": 3482,
+      "sha256": "1d8f3fa0060aaa5f2137a0b92527464e241d82732c0e3c8c7d9f3fe6136231c5",
+      "crc32": 4122871303,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-actual-source-review.py",
+      "bytes": 13477,
+      "sha256": "4b81f25b37ec1e2d32f71ddd769a7fc5b5722b82f2c144fd0874689e5d667aa4",
+      "crc32": 2367843200,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-build-draft.py",
+      "bytes": 7336,
+      "sha256": "118907c71b66ab0a33f1ada88f630a1d804536d3b73c72f689d22653c043a2c5",
+      "crc32": 3352870715,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-evaluator-ast-probe.py",
+      "bytes": 8269,
+      "sha256": "bf4781407ff9aef8f3d9d48f925aaf83fe1df550655d6aa93161fe092bf7144f",
+      "crc32": 1032322813,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-evaluator-draft-r1.py",
+      "bytes": 14048,
+      "sha256": "e4a228c1194e303001edb65ecdb416d3f9067eb90990bb45726bba91613f39e7",
+      "crc32": 1072796601,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-evaluator-draft-report.md",
+      "bytes": 4940,
+      "sha256": "2140fd3bbd284735c809af5b3ba4dc28180b81473380edb587d27f7c50c35abf",
+      "crc32": 251896475,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-evaluator-draft-verification.json",
+      "bytes": 12983,
+      "sha256": "93f5fcb92232e9e73e242e44a236578738401fa73fa380b86b6469ecf3732e8d",
+      "crc32": 1590676056,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-evaluator-preservation.diff",
+      "bytes": 14203,
+      "sha256": "870581b1e5afe59e94b14ee9c9250cfb45afff5324fefa8156abaf04881fc341",
+      "crc32": 3425999851,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review-attempt1.json",
+      "bytes": 576,
+      "sha256": "058785826419497ecc96ec45226967d5535ab4221f650665ce070b9103e283b4",
+      "crc32": 2501369087,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review-attempt1.py",
+      "bytes": 10767,
+      "sha256": "45a4524a54fcbad0d6ca332682a4ea55b7a50a2e6f01c3a9784f11cd6a884077",
+      "crc32": 1635771516,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review-attempt2.json",
+      "bytes": 629,
+      "sha256": "e8ec90263b46413623993e7c8702171b97e7641213f84070b4fba7fdd991eb82",
+      "crc32": 24027869,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review-attempt2.py",
+      "bytes": 10864,
+      "sha256": "0332b4757e3db21c2018a06c0cf5bb70282ba8e8bd4424886920344a28ff6d47",
+      "crc32": 3449101357,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review-verification.json",
+      "bytes": 9201,
+      "sha256": "d0f499f1b294981b7988dc61163d3d9d3f9809e14c1fc7eca130726fbaf93356",
+      "crc32": 812480960,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review.md",
+      "bytes": 13226,
+      "sha256": "5a70c1e0c22bfbce197951439b12fe9eeec51757dfb9f191d16f9c05f563afc4",
+      "crc32": 4260262322,
+      "exact_original": true
+    },
+    {
+      "name": "l1-7981-review.py",
+      "bytes": 10859,
+      "sha256": "2b77193745c0ed5919a9cf0c33e99f355f7e1f86eb90bcf975da715c3951c300",
+      "crc32": 647731951,
+      "exact_original": true
+    },
+    {
+      "name": "l1-residual38-second-family-derivation.md",
+      "bytes": 10342,
+      "sha256": "a296e8e6657b4546cd64f2d5bcc46a50b5cd9016cee62649e4ef479a834fa5b7",
+      "crc32": 2183082466,
+      "exact_original": true
+    },
+    {
+      "name": "l1-residual38-second-family-geometry.json",
+      "bytes": 851175,
+      "sha256": "cbed097dcbf9b2f16d1ac8e2a3aaf448ac0d9963dbd3fe029495d8a67b68deb1",
+      "crc32": 3768567969,
+      "exact_original": true
+    },
+    {
+      "name": "l1-residual38-second-family-probe.out.json",
+      "bytes": 3526,
+      "sha256": "7d3a077dd566ec69813b692ecf636192aa5f296e69da9596eeb2f032c8b328ab",
+      "crc32": 675897180,
+      "exact_original": true
+    },
+    {
+      "name": "l1-residual38-second-family-probe.py",
+      "bytes": 8760,
+      "sha256": "d9979aea0a8d3b6f46e71cbafb1d8af2f1df8b17cfa157a5fc71ccab84e3acbe",
+      "crc32": 8132471,
+      "exact_original": true
+    }
+  ],
+  "citation_copies": [
+    {
+      "path": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md",
+      "sha256": "401bca3038e1d32a6782a76ca1deb9faad8d6d8dc99b7ab221b1c57f7050bf0f",
+      "original": "/tmp/l1-citation-predecessor-review.md"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.json",
+      "sha256": "d30ca8f8a1329e23ab50f3091bb0d8d5dd981f43959a296d6c94d769456bc878",
+      "original": "/tmp/l1-citation-predecessor-review.json"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_populations.json",
+      "sha256": "7b336b3bd1045fa33fbd5dc6d839b32dac42ac6299fccea6ccd2dfecda412708",
+      "original": "/tmp/l1-citation-predecessor-populations.json"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_held_and_preimages.json",
+      "sha256": "3b75060e39199d2ffc30652fc2a8e7f24ef23df5e3f3fa07b121eadad91672e2",
+      "original": "/tmp/l1-citation-predecessor-held-and-preimages.json"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_companion_identities.json",
+      "sha256": "8ebde1f67e6af85e129e824aa7af1448e85d355686276076900fbfda66061c9d",
+      "original": "/tmp/l1-citation-predecessor-companion-identities.json"
+    }
+  ],
+  "citation_preimages": [
+    {
+      "path": "docs/audits/2026-10-25-njl-qualification-dependencies/NJL_FOCUSED_RENDER_READBACK_20261103.md",
+      "sha256": null
+    },
+    {
+      "path": "docs/primary_sources_state.json",
+      "sha256": "b3e7f4e33d3304f6512cfc5450ecf7f8bfe155ddf79b8df82039cc978c07929d"
+    },
+    {
+      "path": "papers/D1/paper_draft.tex",
+      "sha256": "0e0ae1be8970816add86ed9491f53f0975660bb02b917f9ecb1ff87c403d1138"
+    },
+    {
+      "path": "papers/D3/paper_draft.tex",
+      "sha256": "55642bb6be98c68f2feb6cece25b1d7ce405a4f336aeb2807fc206c2a66fac22"
+    },
+    {
+      "path": "papers/D8/bibliography.bib",
+      "sha256": "859f72ecf366bfdf78153db56478847fcefa003d861d3368d6042d66e1ceece2"
+    },
+    {
+      "path": "papers/D9/paper_draft.tex",
+      "sha256": "d14aa1a4dfa7d8a41923700a179b8925626a2114ebb368a451c69c1e58524fab"
+    },
+    {
+      "path": "papers/E1/paper_draft.tex",
+      "sha256": "42480eb34627c37ecda4ebdace02ad243d8776e451fcef23d4e1bca5faf30233"
+    },
+    {
+      "path": "src/core/citations.py",
+      "sha256": "d0d2720d845ce9fee73bf2ba8b3c3c01b45df41c1212327a5c737c997fb56210"
+    },
+    {
+      "path": "src/core/constants.py",
+      "sha256": "0efa3ffd37d57cec4a942f922d0717024398d70ec33049f57a5e19a06fc32c15"
+    },
+    {
+      "path": "tests/test_d5_citations.py",
+      "sha256": "bab2e802e8a4bfc948209fa00da1b441bc67c83373d042f55b22a0bbb4040a2e"
+    }
+  ],
+  "held_sources": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d",
+      "bytes": 2172677
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "sha256": "61c4da4e5f21112acee522fedbfd65bede2e567fea53eed8ac0e47e3b7c75f3e",
+      "bytes": 318882
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+      "sha256": "eb99541ee61044a6028edc53aad19dd80afed7e96778350a38420f36269e93ba",
+      "bytes": 1533535
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+      "sha256": "010f971d637b39e3e596f40a5d9fa326fbfff713e7b1a35cc79149f34a34e20e",
+      "bytes": 12945
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+      "sha256": "88f4a4eda6a956ab29554730908d916891933379fc7594c3f0a674b4f055bded",
+      "bytes": 1152746
+    }
+  ],
+  "roadmap_sha256": "aeea0123b71f2580add5548cf97102b9fb8f07f387f81c91b860530b1f503d61",
+  "links": [
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_16FDE9_QUALIFICATION.md",
+      "resolved": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_16FDE9_QUALIFICATION.md"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_16FDE9_GATE_READBACK.json",
+      "resolved": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_16FDE9_GATE_READBACK.json"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md",
+      "resolved": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_source_design.zip",
+      "resolved": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_k4_two_protected_tori_7981_source_design.zip"
+    },
+    {
+      "link": "l1_k4_two_protected_tori_7981_source_design_manifest.json",
+      "resolved": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/l1_k4_two_protected_tori_7981_source_design_manifest.json"
+    },
+    {
+      "link": "../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md",
+      "resolved": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md"
+    }
+  ],
+  "verdict": "ACCEPT source-only remote handoff evidence",
+  "corrections_required": [],
+  "continuity": {
+    "packet": "publication-parallel-handoff-review-r1.json",
+    "command": "python3 scripts/codex_continuity.py check /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-parallel-handoff-review-r1.json",
+    "exit": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "review_checker": {
+    "path": "/tmp/l1-parallel-handoff-review-r1.py",
+    "sha256": "25386ac3960931881749722865e50ea6beb0b02fd4196c437f0b6dd68e26f107",
+    "command": "python3 /tmp/l1-parallel-handoff-review-r1.py",
+    "exit": 0
+  }
+}

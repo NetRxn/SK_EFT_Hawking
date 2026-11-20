@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "scripts/sentence_state.py",
+    "ingest_agent_run",
+    "papers/AutomatedReviews/2026-11-05-l1-reader-notation/claims-refresh/claims_review.json",
+    "--dry-run"
+  ],
+  "returncode": 0,
+  "stdout": "{\n  \"ok\": true,\n  \"paper\": \"L1\",\n  \"reviewer_version\": \"claims-reviewer-v2\",\n  \"sentences_in_run\": 123,\n  \"tombstoned_sentences\": [],\n  \"tombstoned_count\": 0,\n  \"rewrite_candidates\": [],\n  \"non_reproducing_auto_closed\": 0,\n  \"non_reproducing_candidates_for_supersession\": 54\n}\n",
+  "stderr": ""
+}

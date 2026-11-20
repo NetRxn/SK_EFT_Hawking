@@ -1,0 +1,62 @@
+{
+  "task": "publication-complex-auxiliary-design-r1",
+  "parent": "publication-remediation",
+  "status": "PROVISIONAL_AWAITING_INDEPENDENT_PROSPECTIVE_REVIEW_AND_ROOT_ACCEPTANCE",
+  "candidate": "2c201cd00cd1d17e7665ea0a6711344abc1c1524",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-complex-auxiliary-design-r1.json",
+  "report": "/tmp/publication-complex-auxiliary-design-r1.md",
+  "original_authority": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+  "original_entire_98_lines_read": true,
+  "scope": "Complete finite complex Hermite auxiliary weight, genuine integrability against every multiindex monomial, all-multiindex coefficient identity and canonical formal exponential-series identity",
+  "not_proved_or_implemented": true,
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": [],
+    "task": "publication-complex-auxiliary-design-r1",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "acceptance_packages": [
+    "A explicit complex W and genuine all-monomial integrability",
+    "B all-index Hermite shift, factorial and sigma cancellation, finite complex coefficients",
+    "C all-order normalized Gaussian moments and canonical exp(Q) coefficient theorem",
+    "D actual integral-defined auxiliary series equals exp(Q)*P; nonvacuous controls and independent review"
+  ],
+  "pending_typed_searches": [
+    "arbitrary Gaussian moments and complex polynomial integrability by statement/type",
+    "existing affine theorem coercions and scalar-extension/finite Bochner sum types",
+    "descending-factorial zero and factorial cancellation",
+    "PowerSeries.exp/subst/HasSubst and MvPowerSeries coefficient-substitution/multinomial facts",
+    "polynomial embedding/support expansion/native formal multiplication"
+  ],
+  "controls_executed": false,
+  "proposed_controls": [
+    "empty dimension nonreal constant",
+    "P=1+iX-2X^2 at sigma=2 through beta4 and raw beta4=-48",
+    "mixed indices versus total-degree factorial/order",
+    "alpha greater than beta coordinatewise",
+    "P=iX^7 through beta9",
+    "nonunit sigma cancellation",
+    "unweighted positive Gaussian sign"
+  ],
+  "source_files_changed": [],
+  "outputs_owned": [
+    "/tmp/publication-complex-auxiliary-design-r1.md",
+    "/tmp/publication-complex-auxiliary-design-r1.json"
+  ],
+  "forbidden_actions_executed": [],
+  "downstream_open": [
+    "Eq4 source polynomial and truncation",
+    "Eq7 concrete Grassmann/coframe/nilpotent evaluation",
+    "source matrix and Berezin determinant orientation",
+    "compact link/Haar integration and actual finite-regulator exchanges",
+    "Eq11 derivative-of-weight insertions",
+    "Z nonzero for normalized observables",
+    "physical B3 and full source-response/state/domain/dynamics/transport"
+  ],
+  "claims_limits": "Static source design only; no missing-implementation conclusion before live typed discovery; no analytic infinite exponential integration interchange claimed.",
+  "final_continuity_exit_code": 0
+}

@@ -1,0 +1,15 @@
+{
+  "branch": "codex/publication-primary-custody-20261105",
+  "commit": "37dd9250420e4fb986e06bb9ab1776ed7b6a1856",
+  "parent": "38f5396223019b1e77de684551e8ef259c6dc521",
+  "all_three_worktree_and_committed_hashes_match": true,
+  "original_branch_untouched": true,
+  "primary_tracked_clean": true,
+  "hook_soundness_checks": "SKIPPED because tools could not run; no pass claimed",
+  "no_native_or_lease_admission": true,
+  "hashes": {
+    "REPAIR_DISPOSITION_MAP.md": "a1a2f0a0417aa9dfab6c37d3ef5fa5511feb32df5cfa9f7823228f7de380144c",
+    "L1_RETARDED_TRANSPORT_MATCHING.md": "4e16d9431b5c5b17ef16054d3a830c8f02ffd33dc7b05169c455b22db1befc83",
+    "l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a"
+  }
+}

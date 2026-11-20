@@ -1,0 +1,9 @@
+{
+  "r1_tex": "80d48ada62d9842f803d34732937b4fa4fb058fa4a753fa600000a63f04726bd",
+  "r2_tex": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+  "changes": [
+    "Named appendix hyperlink replaces empty unnumbered-section numeric reference",
+    "Reader-facing algebraic reproduction scope replaces execution-process vocabulary"
+  ],
+  "scientific_blocks": "All source/mathematical statements and their conditions unchanged"
+}

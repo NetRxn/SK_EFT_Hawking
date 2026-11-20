@@ -1,0 +1,50 @@
+# Current known merge-failure cohort — 6 November 2026
+
+Scientific/canonical candidate `42037383847cc7fa5a3e3761032456fe3050f653` was clean before and after both measurements. Of the exact 27 failures from the historical full-profile run at b21c206a8, **24 still fail and three now pass**. This is a diagnostic cohort, not a full-project pass, a count of failed bundles, or a new all-21 gate measurement. [Complete invocations, XML and combined differential](MAIN_MERGE_BLOCKERS_20261106_R1_EVIDENCE.zip) retain the evidence.
+
+The first invocation used default pytest markers: 23 failed, two passed, two were deselected. Only those two were then rerun with the actual merge profile's empty marker expression: one failed, one passed. No deselected test is counted as passed. Two actual source repairs now pass the stage-vocabulary and real dangling-blocked-by controls. The browser non-verdict-cell test also passes; this observation alone establishes no causal repair.
+
+The remaining actual blockers include apex claim grounding, missing manuscript use of registered Lean modules, long sentences, open-required/unattributed findings, handwritten tables, unresolved chain targets, numerical provenance and stale zero-headroom populations. Some populations decreased and need verified downward tightening; others grew and require actual repairs. Raising ceilings, hiding findings, deregistering still-used substrate, weakening source claims or calling a source-only wave review a merge certificate is not authorized.
+
+The [existing Lean delivery-route audit](LEAN_SOURCE_DELIVERY_ROUTE_R1.md) identifies an exact nine-module accepted import closure from actual remote main ce194cdc4; full C3 replaces its earlier C3-S source once independently accepted. Existing merge requirements remain full pytest, CI substrate validation, the four explicit CI-skip checks, native ExtractDeps, and an unchanged worktree. Same-source producer refresh and independent artifact review remain required. No new gating/routing machinery or general baseline waiver is introduced.
+
+ROOT is reusing the existing delivery worktree on `codex/publication-l1-original-eq7-main-20261106`, based on freshly read-back remote main ce194cdc4. The prior mixed draft branch at420373838 remains pushed. The same exact27-node baseline cohort on untouched main completed with25FAIL/2PASS, no errors/skips and a clean unchanged tree. The two passes were the LaTeX population test and browser non-verdict-cell test. Compared with that base, mixed420 repairs the stage-vocabulary and real dangling-blocked-by tests; its lower actual LaTeX-failure population creates downward-ratchet headroom rather than a new failed paper. These are per-test comparisons, not a full-suite or source-only-candidate verdict. Exact baseline receipts are in [the focused native archive](ORIGINAL_EQ7_MAIN_NATIVE_R1_EVIDENCE.zip). L1 remains lead; all original scientific and publication requirements remain owed.
+
+## Exact notebook input control on the current D8 draft
+
+On draft `74c5ad099b6800ebf41581e1909110d7c3cc94ca`, two isolated
+archives held the same notebook and `src/` bytes. The control reproduced
+the exact historical `FileNotFoundError` for `data/vestigial_mc`. A second
+copy ran all 12 code cells with the two genuine production files copied
+byte-for-byte from local custody. Both runs used the canonical
+`NotebookClient` settings and the delivery environment's Python kernel.
+The [replay script, two exit receipts, and input hashes](MAIN_MC_NOTEBOOK_PRODUCTION_REPLAY_R1.zip)
+contain no production data. The unchanged repository has no tracked
+copies of those files.
+
+The two inputs are the largest applicable production JSON in local
+custody, `vestigial_mc_20260330T164110.json`, and the fixed phase-diagram
+input `vestigial_mc_20260329T192611.json`. The first two figure producers
+select by file size today, while the third uses the fixed filename.
+A portable reproduction needs exact input custody and delivery to the
+expected path. The currently available notebook skip-cache fingerprint
+differs from this draft. The full notebook leg, hosted input delivery,
+other merge failures, and full merge qualification are still open.
+
+## Current draft diagnostic, 7 November
+
+The [exact 27-node rerun](MAIN_MERGE_BLOCKERS_20261107_R2_EVIDENCE.zip)
+on `3bfc51622` ran with the actual merge profile's empty marker expression.
+It recorded **6 passed, 21 failed**, with zero skips and errors. Compared
+with the earlier 3/24 diagnostic, three apex-grounding tests and the
+LaTeX population test now pass. The seeded dangling Blocked-by test
+detects the seed but now fails at its clean-baseline check because
+existing review documents still have unsupported lanes or severity
+markers. An exact transport of seven previously reviewed postimages
+plus four D1 Python lane corrections is independently under review.
+
+The test regenerated the catalog source stamp. The catalog bytes
+were identical to the input. The exact generated stamp was preserved
+in the archive and restored to the pinned tracked version after the
+test. A standalone authoritative native rebuild was outside this
+diagnostic. Full qualification remains open.

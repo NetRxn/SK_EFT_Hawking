@@ -578,6 +578,35 @@ def _definitional_record_grounding_shorts() -> frozenset:
     )
 
 
+def _formula_source_definitions(source: str, source_path: Path) -> list[tuple[str, int]]:
+    """Direct public definitions in source order, with definition-line offsets.
+
+    Parsing source does not import or execute formulas. Preserve the existing
+    metadata window at the definition line; decorators are not that window.
+    """
+    try:
+        tree = _ast.parse(source, filename=str(source_path))
+    except SyntaxError as exc:
+        raise ValueError(f'Cannot enumerate Formula definitions in {source_path}: {exc}') from exc
+    # Python source read_text normalizes newlines. Other Unicode line separators
+    # inside a string are not Python source-line boundaries.
+    offsets = [0] + [match.end() for match in re.finditer("\n", source)]
+    definitions, seen = [], {}
+    for node in tree.body:
+        if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            continue
+        if node.name.startswith('_'):
+            continue
+        if node.name in seen:
+            raise ValueError(
+                f'Duplicate public Formula identity {node.name!r} in {source_path}: '
+                f'lines {seen[node.name]} and {node.lineno}'
+            )
+        seen[node.name] = node.lineno
+        definitions.append((node.name, offsets[node.lineno - 1]))
+    return definitions
+
+
 @_memo_within_build
 def extract_formula_nodes() -> list[dict]:
     """Extract formula nodes from function definitions in formulas.py.
@@ -599,21 +628,10 @@ def extract_formula_nodes() -> list[dict]:
     resolvable = _lean_ref_resolution_index()
     defl_shorts = _definitional_record_grounding_shorts()
 
-    # Parse function definitions and their docstrings
-    pattern = re.compile(
-        r'^def\s+([a-z_][a-z0-9_]*)\s*\(',
-        re.MULTILINE,
-    )
-
+    # Structural source population; metadata extraction below remains unchanged.
     nodes = []
-    for match in pattern.finditer(source):
-        name = match.group(1)
-        # Skip private helpers
-        if name.startswith('_'):
-            continue
-
+    for name, func_start in _formula_source_definitions(source, formulas_path):
         # Extract docstring if present
-        func_start = match.start()
         lean_refs = []
         aristotle_refs = []
         source_refs = []
@@ -1425,6 +1443,7 @@ def extract_prose_claim_nodes() -> list[dict]:
 
 
 import ast as _ast
+import symtable as _symtable
 
 
 def _extract_imports(tree: _ast.AST) -> set[str]:
@@ -3371,7 +3390,7 @@ def extract_readiness_gate_nodes() -> list[dict]:
             if dark:
                 logger.warning(
                     "ReadinessGate: %s has %d UNMEASURED gate(s) — the evaluator "
-                    "read nothing, which is NOT the same as outstanding work: %s",
+                    "could not complete measurement; partial evidence may remain: %s",
                     paper, len(dark), ", ".join(dark))
     return nodes
 
@@ -4634,56 +4653,259 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
 
 
 def extract_imports_edges(node_ids: set) -> list[dict]:
-    """IMPORTS: Formula -> Formula (if one formula calls another, limited in Phase 1)."""
-    # Phase 1: detect direct calls from formulas.py source
+    """Bounded static Formula calls; not runtime reachability or dynamic aliases."""
     formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
     source = formulas_path.read_text()
+    eligible = {name for name, _ in _formula_source_definitions(source, formulas_path)}
+    tree = _ast.parse(source, filename=str(formulas_path))
+    try:
+        symbols = _symtable.symtable(source, str(formulas_path), "exec")
+    except SyntaxError as exc:
+        raise ValueError(f"Cannot analyze Formula call bindings in {formulas_path}: {exc}") from exc
+    functions = [n for n in tree.body
+                 if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef))
+                 and n.name in eligible]
 
-    # Get all formula function names
-    formula_names = set()
-    for match in re.finditer(r'^def\s+([a-z_][a-z0-9_]*)\s*\(', source, re.MULTILINE):
-        name = match.group(1)
-        if not name.startswith('_'):
-            formula_names.add(name)
+    class BindingFacts(_ast.NodeVisitor):
+        """Potential value writers in one evaluation scope, without executing code."""
+        def __init__(self, own_definitions=()):
+            self.own_definitions = set(own_definitions)
+            self.facts = {}
 
-    # Parse each function body for calls to other formula functions
-    func_pattern = re.compile(
-        r'^def\s+([a-z_][a-z0-9_]*)\s*\(.*?\n(?=^def\s|\Z)',
-        re.MULTILINE | re.DOTALL,
-    )
+        def record(self, name, kind, target=None):
+            if name:
+                self.facts.setdefault(name, set()).add((kind, target))
 
-    edges = []
-    seen = set()
-    for match in func_pattern.finditer(source):
-        caller = match.group(1)
-        if caller.startswith('_'):
+        def visit_Name(self, node):
+            if isinstance(node.ctx, (_ast.Store, _ast.Del)):
+                self.record(node.id, "other")
+
+        def visit_Import(self, node):
+            for alias in node.names:
+                self.record(alias.asname or alias.name.split(".")[0], "other")
+
+        def visit_ImportFrom(self, node):
+            same_module = ((node.level == 0 and node.module == "src.core.formulas")
+                           or (node.level == 1 and node.module == "formulas"))
+            for alias in node.names:
+                target = alias.name if same_module and alias.name in eligible else None
+                self.record(alias.asname or alias.name, "import", target)
+
+        def defaults(self, node):
+            for expression in (*node.args.defaults, *node.args.kw_defaults):
+                if expression is not None:
+                    self.visit(expression)
+
+        def visit_FunctionDef(self, node):
+            kind = "definition" if id(node) in self.own_definitions else "other"
+            self.record(node.name, kind, node.name if kind == "definition" else None)
+            for expression in node.decorator_list:
+                self.visit(expression)
+            self.defaults(node)
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+
+        def visit_Lambda(self, node):
+            self.defaults(node)
+
+        def visit_ClassDef(self, node):
+            self.record(node.name, "other")
+            for expression in node.decorator_list:
+                self.visit(expression)
+            # Generic headers have a separate type-parameter scope.
+            if not node.type_params:
+                for expression in (*node.bases, *(k.value for k in node.keywords)):
+                    self.visit(expression)
+
+        def visit_AnnAssign(self, node):
+            if node.value is not None or not isinstance(node.target, _ast.Name):
+                self.visit(node.target)
+            if node.value is not None:
+                self.visit(node.value)
+
+        def visit_TypeAlias(self, node):
+            self.visit(node.name)
+
+        def visit_ExceptHandler(self, node):
+            self.record(node.name, "other")
+            if node.type is not None:
+                self.visit(node.type)
+            for statement in node.body:
+                self.visit(statement)
+
+        def visit_MatchAs(self, node):
+            self.record(node.name, "other")
+            self.generic_visit(node)
+
+        visit_MatchStar = visit_MatchAs
+
+        def visit_MatchMapping(self, node):
+            self.record(node.rest, "other")
+            self.generic_visit(node)
+
+        def target_expressions(self, node):
+            if isinstance(node, (_ast.Tuple, _ast.List)):
+                for element in node.elts:
+                    self.target_expressions(element)
+            elif isinstance(node, _ast.Starred):
+                self.target_expressions(node.value)
+            elif isinstance(node, (_ast.Subscript, _ast.Attribute)):
+                self.visit(node.value)
+                if isinstance(node, _ast.Subscript):
+                    self.visit(node.slice)
+
+        def comprehension(self, node):
+            for generator in node.generators:
+                self.visit(generator.iter)
+                self.target_expressions(generator.target)
+                for condition in generator.ifs:
+                    self.visit(condition)
+            for expression in ((node.key, node.value) if isinstance(node, _ast.DictComp)
+                               else (node.elt,)):
+                self.visit(expression)
+
+        visit_ListComp = comprehension
+        visit_SetComp = comprehension
+        visit_DictComp = comprehension
+        visit_GeneratorExp = comprehension
+
+    module = BindingFacts(id(n) for n in functions)
+    module.visit(tree)
+    safe = {name for name in eligible
+            if module.facts.get(name) == {("definition", name)}}
+
+    def imported_target(facts):
+        if len(facts) == 1:
+            kind, target = next(iter(facts))
+            if kind == "import" and target in safe:
+                return target
+        return None
+
+    globals_by_name = {name: name for name in safe}
+    for name, facts in module.facts.items():
+        if name not in eligible:
+            target = imported_target(facts)
+            if target is not None:
+                globals_by_name[name] = target
+
+    tables = {}
+
+    def collect_tables(table):
+        if table.get_type() == "function" and ".0" not in table.get_parameters():
+            tables.setdefault((table.get_name(), table.get_lineno()), []).append(table)
+        for child in table.get_children():
+            collect_tables(child)
+
+    collect_tables(symbols)
+    edges, seen = [], set()
+
+    class Calls(_ast.NodeVisitor):
+        def __init__(self, caller, table, local):
+            self.caller, self.table, self.local = caller.name, table, local
+            self.type_params = {parameter.name for parameter in caller.type_params}
+            self.shadowed = set()
+
+        def resolve(self, name):
+            if name in self.shadowed:
+                return None
+            facts = self.local.facts.get(name, set())
+            if any(kind != "import" for kind, _ in facts):
+                return None
+            try:
+                symbol = self.table.lookup(name)
+            except KeyError:
+                # A generator-only global need not appear in its enclosing table.
+                symbol = None
+            if symbol is not None:
+                if symbol.is_parameter() or symbol.is_free() or symbol.is_nonlocal():
+                    return None
+                if symbol.is_imported():
+                    return None if symbol.is_declared_global() else imported_target(facts)
+                if symbol.is_assigned() or not symbol.is_global():
+                    # Inlined comprehensions can leave transient compiler-local
+                    # flags in the outer table. AST scopes and real writers still
+                    # distinguish these from an annotated or assigned outer local.
+                    if not (symbol.is_comp_iter() and not symbol.is_annotated() and not facts):
+                        return None
+            if name in self.type_params and not (symbol is not None and symbol.is_declared_global()):
+                return None
+            return globals_by_name.get(name)
+
+        def visit_Call(self, node):
+            target = self.resolve(node.func.id) if isinstance(node.func, _ast.Name) else None
+            key = (f"formula:{self.caller}", f"formula:{target}")
+            if (target is not None and target != self.caller
+                    and key[0] in node_ids and key[1] in node_ids and key not in seen):
+                seen.add(key)
+                edges.append({"source": key[0], "target": key[1], "type": "IMPORTS"})
+            self.generic_visit(node)
+
+        def visit_FunctionDef(self, node):
+            for expression in node.decorator_list:
+                self.visit(expression)
+            self.defaults(node)
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+
+        def defaults(self, node):
+            for expression in (*node.args.defaults, *node.args.kw_defaults):
+                if expression is not None:
+                    self.visit(expression)
+
+        def visit_Lambda(self, node):
+            self.defaults(node)
+
+        def visit_ClassDef(self, node):
+            if node.type_params:
+                raise ValueError("Cannot analyze Formula call bindings: nested generic class header is unsupported")
+            for expression in (*node.decorator_list, *node.bases, *(k.value for k in node.keywords)):
+                self.visit(expression)
+
+        def visit_AnnAssign(self, node):
+            self.visit(node.target)
+            if node.value is not None:
+                self.visit(node.value)
+
+        def visit_TypeAlias(self, node):
+            pass  # Its right-hand side is deferred, not this caller's execution.
+
+        def comprehension(self, node):
+            self.visit(node.generators[0].iter)
+            outer = self.shadowed
+            targets = {n.id for g in node.generators for n in _ast.walk(g.target)
+                       if isinstance(n, _ast.Name) and isinstance(n.ctx, _ast.Store)}
+            self.shadowed = outer | targets
+            try:
+                for index, generator in enumerate(node.generators):
+                    if index:
+                        self.visit(generator.iter)
+                    self.visit(generator.target)
+                    for condition in generator.ifs:
+                        self.visit(condition)
+                for expression in ((node.key, node.value) if isinstance(node, _ast.DictComp)
+                                   else (node.elt,)):
+                    self.visit(expression)
+            finally:
+                self.shadowed = outer
+
+        visit_ListComp = comprehension
+        visit_SetComp = comprehension
+        visit_DictComp = comprehension
+        visit_GeneratorExp = comprehension
+
+    for function in functions:
+        if function.name not in safe or f"formula:{function.name}" not in node_ids:
             continue
-        body = match.group(0)
-        caller_id = f'formula:{caller}'
-        if caller_id not in node_ids:
-            continue
-
-        # Strip leading docstring so we only search code, not docstring text
-        body_code = re.sub(r'""".*?"""', '', body, count=1, flags=re.DOTALL)
-
-        for callee in formula_names:
-            if callee == caller:
-                continue
-            # Look for callee( pattern in code-only text
-            if re.search(rf'\b{re.escape(callee)}\s*\(', body_code):
-                callee_id = f'formula:{callee}'
-                if callee_id in node_ids:
-                    edge_key = (caller_id, callee_id)
-                    if edge_key not in seen:
-                        seen.add(edge_key)
-                        edges.append({
-                            'source': caller_id,
-                            'target': callee_id,
-                            'type': 'IMPORTS',
-                        })
-
+        candidates = tables.get((function.name, function.lineno), [])
+        if len(candidates) != 1:
+            raise ValueError(f"Cannot analyze Formula call bindings: ambiguous scope for {function.name}")
+        local = BindingFacts()
+        for statement in function.body:
+            local.visit(statement)
+        calls = Calls(function, candidates[0], local)
+        for statement in function.body:
+            calls.visit(statement)
     return edges
-
 
 # ═══════════════════════════════════════════════════════════════════════
 # Aggregate edge extraction

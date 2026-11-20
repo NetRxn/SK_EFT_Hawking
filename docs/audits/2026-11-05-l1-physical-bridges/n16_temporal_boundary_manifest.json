@@ -1,0 +1,21 @@
+{
+  "archive": "n16_temporal_boundary_evidence.zip",
+  "bytes": 46069,
+  "members": 10,
+  "sha256": "c5f3b50b59155b96115853d6697a051ee34ba03303d7e7d812cc42331f17a53a",
+  "accepted_source_sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+  "parent_contract_checkpoint": "942c50adb2fef3633e28fff34e54c0d793854d80",
+  "files": {
+    "construction/l1-n16-temporal-boundary-identity-r1.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "review/l1-n16-temporal-boundary-math-review-r1.md": "ad74c8588114b319bd2e9cfdb5774fd08e30e6b12789bf96e401c83441bc806d",
+    "review/l1-n16-temporal-boundary-physics-review-r1.md": "156f924b78bb5dc852aa3224c906ce080ee2390652e8048672fd31935e2a3ff2",
+    "review/l1-n16-temporal-source-intake-r1.md": "9cb9ea05ed83353153f0825fae8b38e5597aa3d214a4bd69fbf902b28dd258a3",
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": "7b505fb137ba14f26dfcdad0243764397de770826bea72fa0f5f9d779752b9b2",
+    "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef",
+    "source/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+    "source/l1_extended_wick_checkerboard_control.py": "6b8c5b3ffe719b94319c29ddc3e84222c82f8f9ebdc6a19b9fd95529af44bef0",
+    "source/l1_full_action_reference.py": "0ad0fd402e18c7d13cc84f9d92d4820bfc7b2726033dc42aa7d79fb0bf5327b6"
+  },
+  "scope": "Independently accepted manual fullS4 N16 same-source temporal-boundary identity and completion criterion; no evaluated kernel/nonzeroZ/state/feasibility/native/publication acceptance"
+}

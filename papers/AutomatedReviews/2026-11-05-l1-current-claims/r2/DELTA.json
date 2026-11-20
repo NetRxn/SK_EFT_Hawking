@@ -1,0 +1,37 @@
+{
+  "r1_candidate_sha256": "66420557525e26ac9f876fe6c344e4b87ba5c20ece195678d99708c354d754b6",
+  "r2_candidate_sha256": "463f015a91ecb3b42d82afaca6af34f0b11596220efca0cba70be53e3e902fa2",
+  "manuscript_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+  "sentence_changes": [
+    {
+      "index": 69,
+      "id": "sentence:L1:formal-setup-and-result:6b3a489b",
+      "fields_changed": [
+        "agent_notes",
+        "chain_proposed",
+        "agent_run_id",
+        "meta"
+      ]
+    },
+    {
+      "index": 123,
+      "id": "sentence:L1:discussion:064e25cb",
+      "fields_changed": [
+        "agent_notes",
+        "agent_run_id",
+        "meta"
+      ]
+    }
+  ],
+  "all124_content_ids_quotes_spans_verdicts_unchanged": true,
+  "four_prior_blocker_ids_unchanged": [
+    "L1-H1-endpoint-attribution",
+    "L1-B3-physical-normalization",
+    "L1-physical-dynamics-transport",
+    "L1-fix-propagation"
+  ],
+  "automatic_closures": 0,
+  "visual_acceptance_pending": true,
+  "root_packet_check": "fresh=true before any other r2action",
+  "scope_note": "D3 factor/conditional wording repaired; physical endpoint-role claims and original full BUILD unchanged."
+}

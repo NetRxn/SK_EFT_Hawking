@@ -1,0 +1,31 @@
+SCOPED VERIFICATION — 10 path(s) changed.
+    docs/counts.json
+    docs/counts.tex
+    papers/L1/claims_review.json
+    papers/L1/paper_draft.aux
+    papers/L1/paper_draft.log
+    papers/L1/paper_draft.pdf
+    papers/L1/paper_draft.tex
+    src/core/formulas.py
+    tests/test_gravitational_waves.py
+    papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/
+
+  ── fast suite (tests/, default markers)
+     45 failed, 6783 passed, 8 skipped, 92 deselected, 7 warnings in 849.19s (0:14:09)
+  ── architecture_inventory_fresh
+       Completed in 0.2s
+  ── module_census_fresh
+       Completed in 0.4s
+  ── counts_fresh
+       Completed in 0.0s
+  ── bundle gates
+       Completed in 1.7s
+  ── working tree unchanged by this run
+     10 path(s) DIRTIED by the run itself: docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md, docs/review_finding_supersessions.json, papers/AutomatedReviews/2026-11-05-publication-computation-coverage/infra.md, papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/SCOPED_REVIEW.md, papers/L1/audit_log.jsonl, docs/audits/2026-10-17-publication-substance-construction/l1_k4_free_torus30_receipts.jsonl …
+     A step rewrote a tracked file or left a new one behind, and then passed. Commit the regenerated artifact, or fix the step that writes on read.
+
+FAILED: fast suite (tests/, default markers), architecture_inventory_fresh, bundle gates, working tree unchanged by this run
+
+⚠️  NOT CERTIFIED by this run:
+    - the Lean build and axiom closure (no lean/ change)
+    - the FULL `-m ''` suite and `--ci` floor — run --merge-gate for those

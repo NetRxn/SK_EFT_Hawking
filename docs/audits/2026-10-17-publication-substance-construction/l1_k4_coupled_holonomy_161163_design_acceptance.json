@@ -1,0 +1,26 @@
+{
+  "status": "ACCEPTED mathematical design and bounded local controls only",
+  "accepted_at_utc": "2026-11-05T15:33:53.896377+00:00",
+  "reviewed_report_sha256": "b9ccad542317211e6da55cac2dba62d2e46495691103d3839dbc206510491ccd",
+  "review_sha256": "61eea1082c0f4d2514e2d30a142cf4180d217674edf59a76006e19393559d6bd",
+  "archive_sha256": "8fb1a0b832e67893bebc45bcd854f61fb3097c7890bc91747fede83d3fa5a8cb",
+  "archive_members": 79,
+  "independent_bounded_commands": 11,
+  "root_bounded_intake_commands": 10,
+  "portable_accepted_words": 236,
+  "new_coefficients_accepted": [],
+  "next_required": [
+    "Separate actual implementation/source review using unchanged canonical scientific kernels",
+    "Actual nonidentity forest/source/action/spinor covariance readback and full prepared-row XOR1 with mask signs before fixed or pilot acceptance",
+    "All15-branch bounded direct/fixed controls with original roles and normalization",
+    "Original600cold/one60warm/665parent and120000row/3000000compatiblepair limits",
+    "Complete coefficient, independent reconstruction/replay, portable CLI and disjoint union acceptance"
+  ],
+  "open": [
+    "Full prepared graph and intermediate runtime feasibility",
+    "Fullk4/source-action ensemble/common partition",
+    "PhysicalB3 normalization/window,microscopic modes/matter coupling,transport/frequency/error",
+    "Broad/native/main/human/publication acceptance"
+  ],
+  "reproduction": "Archive preserves original absolute scratch paths and captured public scientific inputs; remote replay requires deliberate rebinding to a checkout at the recorded source. No portable evaluator or CLI acceptance is asserted."
+}

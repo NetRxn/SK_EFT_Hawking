@@ -1,0 +1,30 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  counts_fresh: counts.json / counts.tex are up-to-date vs. sources
+══════════════════════════════════════════════════════════════════════
+  ✓ staleness  —  fresh
+  ✓ summary  —  theorems=22851 (substantive=22825, placeholder=26) | modules=2047 | sorry=0 | papers=42 | aristotle_proved=313
+  ✓ mapping_row_agreement  —  3 PAPER_DRAFT_MAPPING.md count figure(s) agree with counts.tex
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  architecture_inventory_fresh: docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code
+══════════════════════════════════════════════════════════════════════
+  ✓ inventory_fresh  —  SURFACE_INVENTORY.md matches a fresh derivation (249 lines)
+  ✓ no_rosters_in_narratives  —  8 narrative doc(s) enumerate no registry as if complete
+  ✓ documents_answer_their_question  —  8 owned document(s) each declare the question README assigns them
+  ✓ no_counts_in_narratives  —  8 narrative doc(s) in architecture/ state no census count
+  ✓ doc_refs_resolve  —  263 path-like reference(s) across architecture/ all resolve (6 documented-absent refs exempt)
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  module_census_fresh: docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented module population is ratcheted
+══════════════════════════════════════════════════════════════════════
+  ✓ population  —  424 module(s) walked across src, scripts, notebooks/
+  ✓ census_fresh  —  MODULE_CENSUS.md matches a fresh derivation (420 described)
+  ✓ undocumented_modules  —  4 module(s) without a docstring, at or below the down-only ceiling of 4
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 3/3 checks passed
+  [32mALL CHECKS PASSED[0m
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.7s

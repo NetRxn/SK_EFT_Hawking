@@ -1,0 +1,20 @@
+{
+  "catalog_sha256": "77197b489bc16f6e6f61770dba3580f6a3d52efd779c50adeb6d837a4a01f18c",
+  "active_units": 128,
+  "predecessor_units": 123,
+  "human_state_byte_identical": true,
+  "audit_prior_prefix_unchanged": true,
+  "audit_events_appended": 1,
+  "writer_report": {
+    "ok": true,
+    "paper": "L1",
+    "reviewer_version": "claims-reviewer-v2",
+    "sentences_in_run": 128,
+    "tombstoned_sentences": [],
+    "tombstoned_count": 0,
+    "rewrite_candidates": [],
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates_for_supersession": 54
+  },
+  "stage_and_human_acceptance_changed": false
+}

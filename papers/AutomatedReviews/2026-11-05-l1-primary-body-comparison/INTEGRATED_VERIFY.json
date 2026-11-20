@@ -1,0 +1,6 @@
+{
+  "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from pathlib import Path; import re,json; from src.core.citations import CITATION_REGISTRY as R; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); bad=[\"bound with cluster and M87 strong-equivalence-principle data to render\",\"Every theory the 2017 sweep reached\",\"each Letter reports which coefficients survive\",\"extended the conclusion to Einstein-aether\"]; assert not any(x in s for x in bad), \"primary-body comparison retains unsupported causal/universal claims\"; keys=[\"BakerBellini2017\",\"CreminelliVernizzi2017\",\"SaksteinJain2017\",\"EzquiagaZumalacarregui2017\"]; state=json.loads(Path(\"docs/primary_sources_state.json\").read_text())[\"entries\"]; assert all(R[k][\"primary_source_path\"].endswith(\"/\"+k+\".pdf\") and state[k][\"tier_achieved\"]==\"arxiv-pdf\" and state[k][\"primary_source_path\"]==R[k][\"primary_source_path\"] for k in keys), \"four full bodies lack canonical custody\"; assert \"every class it names\" not in R[\"EzquiagaZumalacarregui2017\"][\"notes\"] and \"cluster + M87\" not in str(R[\"SaksteinJain2017\"][\"provides\"]), \"registry retains unsupported source inferences\"'",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

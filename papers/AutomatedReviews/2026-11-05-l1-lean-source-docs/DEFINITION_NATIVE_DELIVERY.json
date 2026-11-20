@@ -1,0 +1,267 @@
+{
+  "task": "l1-definition-doc-r3-wt1-apply",
+  "parent": "publication-remediation",
+  "packet": "l1-definition-doc-r3-wt1-apply-20261106.json",
+  "notebook_writer": "ROOT",
+  "base": "81fe61ba7fc3208584b88de9f33fcc7ff0d0d82c",
+  "commit": "bfeaadd2dc6568f1d76800d16445b8459bf872d3",
+  "before_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "source_sha256": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+  "nonblock_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+  "preservation": {
+    "nonblock_segments": 49,
+    "blocks": 48,
+    "changed_block_indices": [
+      2
+    ]
+  },
+  "outline": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"imports\": [\n    \"SKEFTHawking.Basic\",\n    \"SKEFTHawking.LinearizedEFE\",\n    \"Mathlib\"\n  ],\n  \"declarations\": [\n    {\n      \"name\": \"SKEFTHawking.GravitationalWaves\",\n      \"kind\": \"Ns\",\n      \"start_line\": 108,\n      \"end_line\": 677,\n      \"type_signature\": null,\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW\",\n      \"kind\": \"Thm\",\n      \"start_line\": 114,\n      \"end_line\": 123,\n      \"type_signature\": \"ℝ → ℝ → ℝ\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_at_chi_one\",\n      \"kind\": \"Thm\",\n      \"start_line\": 125,\n      \"end_line\": 128,\n      \"type_signature\": \"∀ (c : ℝ), c_GW 1 c = c\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_pos\",\n      \"kind\": \"Thm\",\n      \"start_line\": 130,\n      \"end_line\": 134,\n      \"type_signature\": \"∀ {χ_vest c : ℝ}, 0 < χ_vest → 0 < c → 0 < c_GW χ_vest c\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_deviation\",\n      \"kind\": \"Def\",\n      \"start_line\": 136,\n      \"end_line\": 138,\n      \"type_signature\": \"ℝ → ℝ\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_relative_deviation_eq\",\n      \"kind\": \"Thm\",\n      \"start_line\": 140,\n      \"end_line\": 155,\n      \"type_signature\": \"∀ {χ_vest c : ℝ},\\n        c ≠ 0 → (c_GW χ_vest c - c) / c = c_GW_deviation χ_vest\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_deviation_zero_iff_chi_one\",\n      \"kind\": \"Thm\",\n      \"start_line\": 157,\n      \"end_line\": 169,\n      \"type_signature\": \"∀ {χ_vest : ℝ},\\n        0 ≤ χ_vest → (c_GW_deviation χ_vest = 0 ↔ χ_vest = 1)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_deviation_strict_mono\",\n      \"kind\": \"Def\",\n      \"start_line\": 171,\n      \"end_line\": 179,\n      \"type_signature\": \"StrictMonoOn c_GW_deviation\\n        (Set.Ici 0)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"tolGW170817\",\n      \"kind\": \"Def\",\n      \"start_line\": 183,\n      \"end_line\": 189,\n      \"type_signature\": \"ℝ\",\n      \"children\": []\n    },\n    {\n      \"name\": \"LigoSatisfied\",\n      \"kind\": \"Def\",\n      \"start_line\": 191,\n      \"end_line\": 192,\n      \"type_signature\": \"ℝ → Prop\",\n      \"children\": []\n    },\n    {\n      \"name\": \"ligo_satisfied_at_chi_one\",\n      \"kind\": \"Def\",\n      \"start_line\": 194,\n      \"end_line\": 200,\n      \"type_signature\": \"LigoSatisfied (c_GW_deviation 1)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"c_GW_match_iff_chi_close_to_one\",\n      \"kind\": \"Thm\",\n      \"start_line\": 202,\n      \"end_line\": 232,\n      \"type_signature\": \"∀ {χ_vest : ℝ},\\n        0 ≤ χ_vest →\\n          (LigoSatisfied (c_GW_deviation χ_vest) ↔\\n            (1 - tolGW170817) ^ 2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817) ^ 2)\",\n      \"children\": []\n    }\n  ],\n  \"total_declarations\": 75\n}"
+      }
+    ],
+    "structuredContent": {
+      "imports": [
+        "SKEFTHawking.Basic",
+        "SKEFTHawking.LinearizedEFE",
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "name": "SKEFTHawking.GravitationalWaves",
+          "kind": "Ns",
+          "start_line": 108,
+          "end_line": 677,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "c_GW",
+          "kind": "Thm",
+          "start_line": 114,
+          "end_line": 123,
+          "type_signature": "ℝ → ℝ → ℝ",
+          "children": []
+        },
+        {
+          "name": "c_GW_at_chi_one",
+          "kind": "Thm",
+          "start_line": 125,
+          "end_line": 128,
+          "type_signature": "∀ (c : ℝ), c_GW 1 c = c",
+          "children": []
+        },
+        {
+          "name": "c_GW_pos",
+          "kind": "Thm",
+          "start_line": 130,
+          "end_line": 134,
+          "type_signature": "∀ {χ_vest c : ℝ}, 0 < χ_vest → 0 < c → 0 < c_GW χ_vest c",
+          "children": []
+        },
+        {
+          "name": "c_GW_deviation",
+          "kind": "Def",
+          "start_line": 136,
+          "end_line": 138,
+          "type_signature": "ℝ → ℝ",
+          "children": []
+        },
+        {
+          "name": "c_GW_relative_deviation_eq",
+          "kind": "Thm",
+          "start_line": 140,
+          "end_line": 155,
+          "type_signature": "∀ {χ_vest c : ℝ},\n        c ≠ 0 → (c_GW χ_vest c - c) / c = c_GW_deviation χ_vest",
+          "children": []
+        },
+        {
+          "name": "c_GW_deviation_zero_iff_chi_one",
+          "kind": "Thm",
+          "start_line": 157,
+          "end_line": 169,
+          "type_signature": "∀ {χ_vest : ℝ},\n        0 ≤ χ_vest → (c_GW_deviation χ_vest = 0 ↔ χ_vest = 1)",
+          "children": []
+        },
+        {
+          "name": "c_GW_deviation_strict_mono",
+          "kind": "Def",
+          "start_line": 171,
+          "end_line": 179,
+          "type_signature": "StrictMonoOn c_GW_deviation\n        (Set.Ici 0)",
+          "children": []
+        },
+        {
+          "name": "tolGW170817",
+          "kind": "Def",
+          "start_line": 183,
+          "end_line": 189,
+          "type_signature": "ℝ",
+          "children": []
+        },
+        {
+          "name": "LigoSatisfied",
+          "kind": "Def",
+          "start_line": 191,
+          "end_line": 192,
+          "type_signature": "ℝ → Prop",
+          "children": []
+        },
+        {
+          "name": "ligo_satisfied_at_chi_one",
+          "kind": "Def",
+          "start_line": 194,
+          "end_line": 200,
+          "type_signature": "LigoSatisfied (c_GW_deviation 1)",
+          "children": []
+        },
+        {
+          "name": "c_GW_match_iff_chi_close_to_one",
+          "kind": "Thm",
+          "start_line": 202,
+          "end_line": 232,
+          "type_signature": "∀ {χ_vest : ℝ},\n        0 ≤ χ_vest →\n          (LigoSatisfied (c_GW_deviation χ_vest) ↔\n            (1 - tolGW170817) ^ 2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817) ^ 2)",
+          "children": []
+        }
+      ],
+      "total_declarations": 75
+    },
+    "isError": false
+  },
+  "diagnostics": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"success\": true,\n  \"timed_out\": false,\n  \"items\": [],\n  \"failed_dependencies\": []\n}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "success": true,
+        "timed_out": false,
+        "items": [],
+        "failed_dependencies": []
+      }
+    },
+    "isError": false
+  },
+  "verification": [
+    {
+      "theorem": "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "theorem": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "theorem": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "theorem": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "theorem": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+          }
+        ],
+        "structuredContent": {
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "warnings": []
+        },
+        "isError": false
+      }
+    }
+  ],
+  "commit_receipt": {
+    "chunk_id": "e6e71f",
+    "wall_time_seconds": 0.000008958,
+    "exit_code": 0,
+    "original_token_count": 61,
+    "output": "(skeft-sync: worktree commit — leak-guard ran; skipping the main-oriented sync gate (lead re-syncs on merge))\n[worktree-wt1 bfeaadd2d] docs(lean): state gravitational wave speed law as adopted\n 1 file changed, 5 insertions(+), 4 deletions(-)\n"
+  },
+  "final_check": {
+    "chunk_id": "f3d93e",
+    "wall_time_seconds": 0.105472625,
+    "exit_code": 1,
+    "original_token_count": 78,
+    "output": "bfeaadd2dc6568f1d76800d16445b8459bf872d3\n81fe61ba7fc3208584b88de9f33fcc7ff0d0d82c\n{\n  \"fresh\": false,\n  \"changed\": [\n    \"owned-files\",\n    \"source\"\n  ],\n  \"task\": \"l1-definition-doc-r3-wt1-apply\",\n  \"meaning\": \"Reconciliation required; lead must inspect current inputs and explicitly issue a new revision.\"\n}\n"
+  },
+  "limits": "No build/integration/push/controller/metadata/ledger/notebook mutation or physical BUILD waiver. Expected authored packet drift awaits ROOT reconciliation."
+}

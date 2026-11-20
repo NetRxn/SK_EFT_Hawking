@@ -1,0 +1,14 @@
+{
+  "base_commit": "3c56f0c6d6c0785f2b9958ec9c136d8dd293a3d8",
+  "files": {
+    "papers/L1/paper_draft.tex": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
+    "papers/L1/paper_draft.pdf": "8280e139c420db9d12cf0408543b9eacc6c351ad843b2f8cfe92354f804c770a",
+    "papers/paper25_gravitational_waves/paper_draft.tex": "2f77450953f20000856b2b801aee99c4fcba452fe7ea1a7f7e76d1620d035aac",
+    "papers/paper25_gravitational_waves/paper_draft.pdf": "5d76822d5ea1cfca35656e88c16692029aa6651c3a5b3a5eab9608304a920c61",
+    "tests/test_gravitational_waves.py": "d7ea13b44e41d36327fa99699b02e96290fa40985c4a1b6aafb9a85729d9d38d",
+    "src/core/provenance.py": "eba5b4ed81cd21fba3ce78d281d3af60224a94c035dc36afadfb348087dc31ae",
+    "src/core/formulas.py": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9",
+    "docs/counts.json": "bea1bced45d59115a6097214a7914ee3fdcd9194f61e4afd26f987539de683b4",
+    "docs/counts.tex": "de30561297c0b40b5ea7c3d79a6f0a1fc59b82d64ed2eb33b66d0f9ddd784836"
+  }
+}

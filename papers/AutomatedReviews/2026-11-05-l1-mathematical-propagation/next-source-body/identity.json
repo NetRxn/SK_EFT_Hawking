@@ -1,0 +1,110 @@
+{
+  "BakerBellini2017": {
+    "registry": {
+      "authors": "Baker, T., Bellini, E., Ferreira, P. G., Lagos, M., Noller, J., Sawicki, I.",
+      "title": "Strong constraints on cosmological gravity from GW170817 and GRB 170817A",
+      "journal": "Phys. Rev. Lett.",
+      "volume": 119,
+      "page": "251301",
+      "year": 2017,
+      "doi": "10.1103/PhysRevLett.119.251301",
+      "arxiv": "1710.06394",
+      "doi_verified": true,
+      "inprep": false,
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.abstract.txt",
+      "used_in": [
+        "papers/L1/paper_draft.tex"
+      ],
+      "provides": [
+        "scalar-tensor / vector-tensor elimination from the c_GW bound",
+        "independent graviton-mass bound in bimetric gravity"
+      ],
+      "notes": "Sweep member covering the vector-tensor and bimetric classes. Cited by L1 to delimit what the 2017 sweep reached."
+    },
+    "pdf_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.pdf",
+    "sha256": "8db10502fed0af2ce62871daef14d28a2d3f449740156865b0d602cd903ba08c",
+    "bytes": 156600,
+    "pdfinfo": "Title:           Strong constraints on cosmological gravity from GW170817 and GRB 170817A.\nSubject:         \nKeywords:        \nAuthor:          I. Sawicki\nCreator:         LaTeX with hyperref package\nProducer:        dvips + GPL Ghostscript GIT PRERELEASE 9.22\nCreationDate:    Tue Oct 17 19:21:58 2017 CDT\nModDate:         Tue Oct 17 19:21:58 2017 CDT\nCustom Metadata: no\nMetadata Stream: yes\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           6\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       156600 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "CreminelliVernizzi2017": {
+    "registry": {
+      "authors": "Creminelli, P., Vernizzi, F.",
+      "title": "Dark Energy after GW170817 and GRB170817A",
+      "journal": "Phys. Rev. Lett.",
+      "volume": 119,
+      "page": "251302",
+      "year": 2017,
+      "doi": "10.1103/PhysRevLett.119.251302",
+      "arxiv": "1710.05877",
+      "doi_verified": true,
+      "inprep": false,
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.abstract.txt",
+      "used_in": [
+        "papers/L1/paper_draft.tex"
+      ],
+      "provides": [
+        "no-tuning criterion: c_GW unaffected on nearby cosmological solutions",
+        "Horndeski / beyond-Horndeski / DHOST operator relations"
+      ],
+      "notes": "Supplies the stability-under-nearby-solutions criterion that L1 contrasts with its own window-measure argument."
+    },
+    "pdf_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.pdf",
+    "sha256": "75068cfe7b5039b29e43fccae6276d1f572ac6aa9eef28cb61650f54cb211650",
+    "bytes": 130147,
+    "pdfinfo": "Title:           \nSubject:         \nKeywords:        \nAuthor:          \nCreator:         LaTeX with hyperref package\nProducer:        dvips + GPL Ghostscript GIT PRERELEASE 9.22\nCreationDate:    Thu Jun  7 19:30:52 2018 CDT\nModDate:         Thu Jun  7 19:30:52 2018 CDT\nCustom Metadata: no\nMetadata Stream: yes\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           5\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       130147 bytes\nOptimized:       no\nPDF version:     1.4\n"
+  },
+  "SaksteinJain2017": {
+    "registry": {
+      "authors": "Sakstein, J., Jain, B.",
+      "title": "Implications of the Neutron Star Merger GW170817 for Cosmological Scalar-Tensor Theories",
+      "journal": "Phys. Rev. Lett.",
+      "volume": 119,
+      "page": "251303",
+      "year": 2017,
+      "doi": "10.1103/PhysRevLett.119.251303",
+      "arxiv": "1710.05893",
+      "doi_verified": true,
+      "inprep": false,
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.abstract.txt",
+      "used_in": [
+        "papers/L1/paper_draft.tex"
+      ],
+      "provides": [
+        "c_GW bound combined with cluster + M87 SEP constraints",
+        "quartic-galileon exclusion; disformal photon-coupling bound"
+      ],
+      "notes": "The sweep member that combines the bound with independent astrophysical data rather than using it alone."
+    },
+    "pdf_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.pdf",
+    "sha256": "1538e145aa626598e04184dfc15ef34b1b6118e796f1d5c60e9d4a135da28adf",
+    "bytes": 1016046,
+    "pdfinfo": "Title:           \nSubject:         \nKeywords:        \nAuthor:          \nCreator:         LaTeX with hyperref package\nProducer:        pdfTeX-1.40.17\nCreationDate:    Tue Dec 19 19:48:30 2017 CST\nModDate:         Tue Dec 19 19:48:30 2017 CST\nCustom Metadata: yes\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           7\nEncrypted:       no\nPage size:       595.276 x 841.89 pts (A4)\nPage rot:        0\nFile size:       1016046 bytes\nOptimized:       no\nPDF version:     1.5\n"
+  },
+  "EzquiagaZumalacarregui2017": {
+    "registry": {
+      "authors": "Ezquiaga, J. M., Zumalacarregui, M.",
+      "title": "Dark Energy after GW170817: dead ends and the road ahead",
+      "journal": "Phys. Rev. Lett.",
+      "volume": 119,
+      "page": "251304",
+      "year": 2017,
+      "doi": "10.1103/PhysRevLett.119.251304",
+      "arxiv": "1710.05901",
+      "doi_verified": true,
+      "inprep": false,
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.abstract.txt",
+      "used_in": [
+        "papers/L1/paper_draft.tex"
+      ],
+      "provides": [
+        "broadest sweep coverage: Einstein-aether, Horava, Generalized Proca, TeVeS, MOND-like",
+        "GW-speed bound |c_g/c - 1| <= 5e-16"
+      ],
+      "notes": "L1 leans on this paper's closing enumeration: every class it names has a Lagrangian predicting a varying c_g, which is exactly what the kinematic vestigial identification lacks."
+    },
+    "pdf_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.pdf",
+    "sha256": "d60c659f707b1d5822ed5cd2b957081a77a3b9082221152163f346d5b2f5781d",
+    "bytes": 884307,
+    "pdfinfo": "Title:           \nSubject:         \nKeywords:        \nAuthor:          \nCreator:         LaTeX with hyperref package\nProducer:        pdfTeX-1.40.17\nCreationDate:    Tue Nov 21 19:31:41 2017 CST\nModDate:         Tue Nov 21 19:31:41 2017 CST\nCustom Metadata: yes\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           6\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       884307 bytes\nOptimized:       no\nPDF version:     1.5\n"
+  }
+}

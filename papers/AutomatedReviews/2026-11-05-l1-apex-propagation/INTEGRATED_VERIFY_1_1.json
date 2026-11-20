@@ -1,0 +1,6 @@
+{
+  "command": "python3 -c 'import json; from pathlib import Path; a=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text())[\"apex_theorems\"]; assert all(\"isolating\" not in x[\"claims\"] for x in a), \"apex metadata overstates exclusive falsifier scope\"; assert \"nonnegative\" in a[0][\"claims\"] and \"fixed\" in a[0][\"claims\"], \"missing theorem domain\"; assert \"\u2260 0\" in a[10][\"claims\"], \"missing actual relative-deviation carrier\"; assert \"10^14 times\" in a[13][\"claims\"], \"wrong exact width theorem scope\"'",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

@@ -1,0 +1,149 @@
+{
+  "F": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 172,
+    "distinct": 111,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D1": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 2,
+    "occurrences": 201,
+    "distinct": 170,
+    "missing_on_unmodified_candidate": 46
+  },
+  "D2": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 2,
+    "occurrences": 165,
+    "distinct": 133,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D3": {
+    "baseline_table_count": 16,
+    "candidate_table_count": 16,
+    "occurrences": 0,
+    "distinct": 0,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D4": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 1,
+    "occurrences": 22,
+    "distinct": 9,
+    "missing_on_unmodified_candidate": 1
+  },
+  "D5": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 154,
+    "distinct": 127,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D6": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 2,
+    "occurrences": 47,
+    "distinct": 43,
+    "missing_on_unmodified_candidate": 9
+  },
+  "D7": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 72,
+    "distinct": 52,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D8": {
+    "baseline_table_count": 4,
+    "candidate_table_count": 4,
+    "occurrences": 48,
+    "distinct": 41,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D9": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 3,
+    "occurrences": 195,
+    "distinct": 161,
+    "missing_on_unmodified_candidate": 12
+  },
+  "D10": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 1,
+    "occurrences": 97,
+    "distinct": 78,
+    "missing_on_unmodified_candidate": 7
+  },
+  "D11": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 178,
+    "distinct": 157,
+    "missing_on_unmodified_candidate": 0
+  },
+  "D12": {
+    "baseline_table_count": 20,
+    "candidate_table_count": 20,
+    "occurrences": 221,
+    "distinct": 182,
+    "missing_on_unmodified_candidate": 0
+  },
+  "L1": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 62,
+    "distinct": 47,
+    "missing_on_unmodified_candidate": 0
+  },
+  "L2": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 23,
+    "distinct": 22,
+    "missing_on_unmodified_candidate": 0
+  },
+  "L3": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 26,
+    "distinct": 24,
+    "missing_on_unmodified_candidate": 0
+  },
+  "I1": {
+    "baseline_table_count": 2,
+    "candidate_table_count": 2,
+    "occurrences": 329,
+    "distinct": 241,
+    "missing_on_unmodified_candidate": 0
+  },
+  "I2": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 193,
+    "distinct": 121,
+    "missing_on_unmodified_candidate": 0
+  },
+  "I3": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 305,
+    "distinct": 170,
+    "missing_on_unmodified_candidate": 0
+  },
+  "E1": {
+    "baseline_table_count": 29,
+    "candidate_table_count": 29,
+    "occurrences": 14,
+    "distinct": 10,
+    "missing_on_unmodified_candidate": 0
+  },
+  "E2": {
+    "baseline_table_count": 0,
+    "candidate_table_count": 0,
+    "occurrences": 16,
+    "distinct": 16,
+    "missing_on_unmodified_candidate": 0
+  }
+}

@@ -30,41 +30,10 @@ identification to one part in $10^{15}$ of its natural range}
 \date{\today}
 
 \begin{abstract}
-Several emergent-gravity programs identify the spin-2 graviton with
-the second-sound mode of a fermionic vestigial fluid, predicting a
-gravitational-wave propagation speed
-$\cGW = c\sqrt{\chivest}$ where $\chivest$ is the metric-channel
-susceptibility of the broken-symmetry phase. We formalize this
-identification and confront it with the multi-messenger
-GW170817~\cite{Abbott2017GW170817} bound
-$-3\times 10^{-15} \leq \dccap \leq +7\times 10^{-16}$
-(conservatively two-sided: $|\dccap| \leq 3\times 10^{-15}$). The
-result is sharp: over the natural susceptibility range
-$\chivest \in [0.1, 10]$ (a project-adopted order-unity
-naturalness window about the random-phase-approximation
-bubble-integral scale) the
-deviation $\dccap = \sqrt{\chivest} - 1$ sweeps $[-0.68, +2.16]$,
-vanishing only at $\chivest = 1$ and exceeding the GW170817 cap by
-$\sim 7\times 10^{14}$ at the endpoints. The
-GW170817-compatible window
-$\chivest \in [(1-\tau)^2,(1+\tau)^2]$ with $\tau = 3\times 10^{-15}$
-has measure $4\tau \approx 1.2\times 10^{-14}$, vanishingly small
-under any natural-range prior. The result is a Lean 4 formal proof
-(\texttt{GravitationalWaves.lean}, 32 theorems, zero \texttt{sorry},
-zero new axioms): a biconditional locating the compatible window plus
-two endpoint falsifier theorems witnessed at $\chivest \in \{0.1,
-10\}$, and the Phase~5y H1 underdetermination caveat. The compatible
-window is not disjoint from the natural range but strictly nested
-inside it, meeting it at $\chivest = 1$; the datum \emph{confines}
-$\chivest$ to that window, while no speed-of-light rescaling admits
-either endpoint. The identification therefore survives only on a
-sub-interval narrower than the natural range by more than 14 orders of
-magnitude. The constraint is local to the leading-
-order kinematic identification; we identify three avenues by which
-emergent-gravity programs may yet recover GW170817 compatibility
-(symmetry-driven $\chivest \to 1$ fixed point; distinct
-metric-channel identification decoupled from second sound;
-frequency-dependent $\chivest$ at higher derivative order).
+The conservative GW170817 cap $|\dccap|\le\tau=3\times10^{-15}$ confines $\chivest\ge0$ to $[(1-\tau)^2,(1+\tau)^2]$ under the assumed leading-order law $\cGW=c\sqrt{\chivest}$ and source-emission assumptions.
+Here $c$ is the electromagnetic reference speed; the free susceptibility $\chivest$ models normalized dimensionless metric response.
+The interval has width $4\tau$, contains $1$, and is over fourteen orders of magnitude narrower than adopted $[0.1,10]$.
+Microscopic mode, normalization and range are not derived; only this kinematic model is constrained.
 \end{abstract}
 
 \maketitle
@@ -73,114 +42,105 @@ frequency-dependent $\chivest$ at higher derivative order).
 \section{Introduction}
 \label{sec:intro}
 
-Emergent gravity from fermionic-condensate substrates has converged on
-a tantalizing kinematic identification: the spin-2 graviton of the
-broken-symmetry phase is the second-sound mode of the vestigial
-fluid. Volovik's 2024 vestigial-fluid review~\cite{Volovik2024Vestigial}
-proposes this directly; Volovik~\cite{Volovik2022Counting} earlier
-made the spin counting explicit (six Goldstone modes absorbed by the
-spin connection in the Akama--Diakonov--Wetterich
-formulation~\cite{Akama1978,Diakonov2011,VladimirovDiakonov2012,%
-HebeckerWetterich2003,Wetterich2022}; two propagating helicities
-remain, identified with $h_+, h_\times$). The hydrodynamic claim is
-that the propagation equation of these two modes is the second-sound
-wave equation.
+Spinor-gravity constructions use composite vielbeins built from
+fermions~\cite{Diakonov2011,HebeckerWetterich2003}.
+Volovik proposes a vestigial phase with metric order preceding a
+nonzero tetrad expectation~\cite{Volovik2024Vestigial}.
+His symmetry-breaking analysis distinguishes absorbed
+Nambu--Goldstone modes from the Higgs-sector gravitational-wave
+modes, whose counting also uses coordinate
+constraints~\cite{Volovik2022Counting}.
+Here we assume that a metric-channel excitation of such a substrate
+can be identified with a spin-2 second-sound graviton.
 
-\paragraph{Whose claim is Eq.~\eqref{eq:cGW}.} The \emph{identification}
-is Volovik's; the susceptibility-dependent speed is ours. He advances
-it in~\cite{Volovik2026SecondSound,Volovik2024VacuumDecay} --- not in
-the vestigial-gravity note~\cite{Volovik2024Vestigial}, which concerns
-the two-step transition --- and on his own de~Sitter two-fluid
-background the Landau formula yields $s_2 = c$ \emph{exactly},
-independent of $H$: a structural consequence of the stiff-matter
-equation of state $w_n = 1$, not a tunable parameter, and hence
-GW170817-compatible at leading order. He leaves the spin assignment
-open, describing a scalar mode; the spin-2 assignment above comes from
-the ADW Goldstone counting and is likewise ours. Transplanting the
-identification onto the ADW substrate, whose metric-channel
-susceptibility we compute independently and which does \emph{not} fix
-$\chivest$, is what produces a $\chivest$-dependent speed:
+\paragraph{Motivation and assumed speed law.}
+Volovik applies Landau two-fluid hydrodynamics to a de~Sitter
+state in~\cite{Volovik2026SecondSound}.
+The underlying thermodynamic framework treats the gravitational
+normal component as stiff matter~\cite{Volovik2024VacuumDecay}.
+Within that de~Sitter model, the Landau formula and the stiff-component
+thermodynamic relations give a second-sound speed $s_2=c$,
+independently of the de~Sitter Hubble parameter $H$.
+He discusses several possible graviton interpretations of this
+collective mode and leaves its type open.
+For the spin-2 substrate identification assumed here, we also assume
+the susceptibility-dependent speed law:
 \begin{equation}
   \cGW^2(\chivest) = c^2 \cdot \chivest, \qquad
   \cGW(\chivest) = c\sqrt{\chivest},
   \label{eq:cGW}
 \end{equation}
-where $\chivest$ is the metric-channel susceptibility of the
-vestigial phase. It is a \emph{free parameter} here, and constraining
-it is what this Letter does; the random-phase-approximation form our
-substrate models it with is set out in
-\texttt{VestigialSusceptibility.lean}, but no value of $\chivest$ is
-derived there or anywhere else in the project. The underlying
+where $\chivest$ is the dimensionless, normalized metric-channel
+response of the assumed vestigial substrate.
+It is a free parameter in this calculation.
+The random phase approximation (RPA) resummation models it using
+unevaluated bare susceptibility and coupling inputs, so that form
+alone supplies no numerical value of $\chivest$.
+The underlying
 lattice-fermion framework is the one whose unitarity Vergeles
-establishes~\cite{Vergeles2025}. The identification is appealing in its
-brevity. As established by the present project's Phase~5y H1
-deep-research finding, however, it has \emph{never} been derived as
-a propagating degree of freedom from first principles. The
-identification is \emph{kinematic}, not dynamical: it specifies the
-dispersion relation of an assumed mode without deriving the mode
-itself.
+establishes~\cite{Vergeles2025}. Equation~\eqref{eq:cGW} is an
+assumed kinematic speed law.
+We constrain its free susceptibility without deriving a propagating
+second-sound mode from a microscopic action, its propagator, or its
+coupling to matter. This missing dynamical bridge is a limitation of
+the present calculation, not an impossibility result.
 
 The 2017 binary-neutron-star merger
-GW170817~\cite{Abbott2017GW170817} placed an extraordinarily tight
-bound on $\cGW$: comparing the gravitational-wave arrival time at
-LIGO/Virgo against the gamma-ray-burst signal at Fermi/INTEGRAL,
-the multi-messenger collaboration constrained
-$-3 \times 10^{-15} \leq \dccap \leq +7 \times 10^{-16}$.
-Conservatively two-sided, $|\dccap| \leq \tau$ with
-$\tau = 3 \times 10^{-15}$.
+GW170817~\cite{Abbott2017GW170817} yielded a tight propagation
+constraint under the collaboration's conservative distance and
+emission-time assumptions. Comparing the gravitational-wave arrival
+time at LIGO/Virgo with the gamma-ray signal at Fermi/INTEGRAL gives
+$-3 \times 10^{-15} \leq \dccap \leq +7 \times 10^{-16}$
+under those assumptions. We use its conservative symmetric envelope,
+$|\dccap| \leq \tau$ with $\tau = 3 \times 10^{-15}$.
+This cap inherits the assumed source-emission window; alternative
+emission histories can weaken the inferred propagation constraint.
 
-This Letter formalizes Eq.~\eqref{eq:cGW}, places it head-to-head
-against GW170817, and reports the result. The conclusion is sharp:
-the leading-order Volovik identification survives GW170817 only on a
-sub-interval of the natural range $\chivest \in [0.1, 10]$ narrower
+Our assumed speed law satisfies the GW170817 bound only on a
+sub-interval of our adopted range $\chivest \in [0.1, 10]$ narrower
 than that range by more than 14 orders of magnitude. The
-GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has measure
-$\sim 4\tau$ in $\chivest$, vanishingly small under any natural-range
-prior, and sits strictly interior to $[0.1, 10]$ about the anchor
-$\chivest = 1$. The result is a fine-tuning constraint on one specific
+GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has width
+$4\tau$ in $\chivest$ and sits strictly interior to our adopted range
+$[0.1, 10]$ about the anchor $\chivest = 1$.
+Its relative width is $4\tau/9.9 \approx 1.2\times10^{-15}$;
+a probability mass additionally requires a specified prior. The result is a fine-tuning constraint on one specific
 kinematic identification, not a refutation of emergent
-gravity nor of the ADW program; we discuss three Phase~6 recovery
-paths in Sec.~\ref{sec:discussion}.
+gravity nor of the Akama--Diakonov--Wetterich (ADW) framework.
+Three possible mechanisms are discussed below.
 
 \paragraph{Relation to the 2017 constraint sweep.} Using GW170817 to
 eliminate a gravity model is not new. Within months of the detection,
-four back-to-back Letters established what the bound
-kills: Baker \emph{et al.}~\cite{BakerBellini2017} covered general
-scalar-tensor and vector-tensor theories and bounded the graviton mass
-in bimetric gravity; Creminelli and
-Vernizzi~\cite{CreminelliVernizzi2017} showed that avoiding tuning
-requires $\cGW$ to be unaffected on \emph{nearby} cosmological
-solutions, collapsing quartic and quintic beyond-Horndeski theories to a
-single function; Sakstein and Jain~\cite{SaksteinJain2017} combined the
-bound with cluster and M87 strong-equivalence-principle data to render
-the quartic galileon cosmologically irrelevant; and Ezquiaga and
-Zumalac\'arregui~\cite{EzquiagaZumalacarregui2017} extended the
-conclusion to Einstein-aether, Ho\v{r}ava, Generalized Proca and TeVeS.
+four Letters analyzed constraints on specified gravitational actions
+and cosmological models. Baker \emph{et al.}~\cite{BakerBellini2017}
+constrained scalar-tensor and vector-tensor theories and obtained a
+conditional graviton-mass bound in bimetric gravity. Creminelli and
+Vernizzi~\cite{CreminelliVernizzi2017} required luminal propagation
+to remain robust on nearby cosmological backgrounds to avoid tuning,
+reducing the three independent quartic and quintic beyond-Horndeski
+functions to one. Sakstein and Jain~\cite{SaksteinJain2017} combined
+the GW bound with cluster and stellar tests to constrain
+beyond-Horndeski parameters; their separate combination of GW and M87
+black-hole constraints made the covariant quartic galileon
+cosmologically irrelevant for the order-unity matter couplings
+considered. Ezquiaga and
+Zumalac\'arregui~\cite{EzquiagaZumalacarregui2017} also discussed
+constraints on GW-speed-modifying couplings in Einstein-aether,
+some sectors of Ho\v{r}ava gravity, and Generalized Proca theories,
+and the impact on TeVeS and MOND-like theories.
 
-The present result is not a further entry in that list, and the
-difference is structural rather than one of degree. Every theory the
-2017 sweep reached has a Lagrangian from which a varying $\cGW$ is
-\emph{derived}; the constraint therefore lands on operator coefficients,
-and each Letter reports which coefficients survive. The
-vestigial-second-sound identification has no such Lagrangian. As
-Sec.~\ref{sec:intro} notes, $\cGW = c\sqrt{\chivest}$ is asserted
-kinematically: the mode is assumed rather than derived, so there are no
-operator coefficients for the bound to constrain and nothing to tune.
-What the bound can do instead is fix $\chivest$ itself, and the content
-of this Letter is that it fixes $\chivest$ to a part in $10^{15}$ of
-the order-unity window the identification's own microscopic origin
-would predict --- a value that window contains, but does not favour. The
-2017 sweep constrained \emph{theories}; this constrains an
-\emph{identification}, which is why it is stated as a ratio of two
-interval widths rather than as a surviving region of parameter space.
+These analyses constrain specified actions, EFT operators and cosmological
+models under assumptions about backgrounds and matter coupling. This Letter
+instead constrains the susceptibility in the assumed
+$\cGW=c\sqrt{\chivest}$ identification. It supplies no microscopic
+Lagrangian for that identification and constrains no microscopic operator
+coefficients. Its roughly one-part-in-$10^{15}$ width comparison within the
+adopted order-unity window is neither a prediction of $\chivest$ nor a
+prior-independent probability.
 
-A corollary worth stating plainly: because the argument never uses a
-Lagrangian, it is insensitive to the operator-level escape routes those
-Letters catalogue. Conformal rescaling, coefficient compensation and
-restriction to Horndeski's simplest terms all act on terms that the
-kinematic identification does not have. The three recovery paths in
-Sec.~\ref{sec:discussion} are correspondingly different in kind, and
-each requires replacing the identification rather than repairing it.
+A microscopic realization must determine whether its operator-level
+mechanisms preserve or alter the assumed speed law and its applicability.
+The Discussion considers possible mechanisms; the finite-tolerance
+constraint alone derives none of them.
 
 %% ================================================================
 \section{Formal setup and result}
@@ -190,99 +150,111 @@ each requires replacing the identification rather than repairing it.
 Our substrate models the vestigial-phase metric-channel susceptibility
 by the RPA \emph{resummation}
 $\chi_{\rm RPA} = \chi_0/(1 - \gamma_\star \chi_0)$ in the standard
-Hertz--Millis convention, where $\chi_0$ is the bubble integral --- the
-two are distinct, and $\chi_{\rm RPA}$ is not itself a bubble integral.
-\texttt{VestigialSusceptibility.lean} formalizes that closed form and
-its stability properties; it evaluates neither $\chi_0$ nor
-$\gamma_\star$, so it fixes no numerical $\chivest$, which is why
+Hertz--Millis convention. Here $\chi_0$ is the bubble integral;
+$\chi_{\rm RPA}$ is the resummed response and $\gamma_\star$ the
+effective coupling; physical normalization remains undetermined.
+The formalized closed form establishes stability properties but
+evaluates neither $\chi_0$ nor $\gamma_\star$, so it fixes no
+numerical $\chivest$, which is why
 $\chivest$ enters Eq.~\eqref{eq:cGW} as a free parameter. The natural range
-$\chivest \in [0.1, 10]$ (in units of inverse $\Lambda_{\rm UV}^2$)
-is a \emph{project-adopted} naturalness window: the one-loop bubble
+$\chivest \in [0.1, 10]$
+is an \emph{adopted} naturalness window: the one-loop bubble
 normalization is $\mathcal{O}(\Lambda_{\rm UV}^2/16\pi^2)$ by
-dimensional analysis, and we take the $\pm 1$-decade window about
+dimensional analysis, where $\Lambda_{\rm UV}$ is the ultraviolet cutoff, and we take the $\pm 1$-decade window about
 the resulting unit-normalized central value. We emphasize the
-provenance: the window is a modeling choice of this project, not a
+provenance: the window is a modeling choice, not a
 published derivation: the Vergeles lattice
 analysis~\cite{Vergeles2025} establishes unitarity of the underlying
 Einstein--Cartan--Palatini lattice theory but does not itself
-compute $\chivest$ or assign it a range. The window matches the
-linearized-EFE wave's ADW microscopic-coefficient
-$\alpha_{\rm ADW} \in [0.1, 10]$ natural
-range~\cite{Roehm2026LinearizedEFE}, which we treat as the
-project-internal anchor for the order-of-magnitude prior.
+compute $\chivest$ or assign it a range. The comparison window also occurs in the companion study of the
+linearized Einstein equations~\cite{Roehm2026LinearizedEFE} for
+$\alpha_{\rm ADW}$, its free dimensionless coefficient multiplying an
+adopted induced-Newton baseline. We use that study's
+$\alpha_{\rm ADW}\in[0.1,10]$ range as an order-of-magnitude comparison,
+without identifying $\alpha_{\rm ADW}$ with $\chivest$ or deriving either range.
 
-\paragraph{The leading-order $\cGW$.} Equation~\eqref{eq:cGW} ships in
-\texttt{GravitationalWaves.lean} as
-\verb|c_GW(chi, c) := c * Real.sqrt(chi)|, with the
-positivity / monotonicity / anchor lemmas \verb|c_GW_pos|,
-\verb|c_GW_at_chi_one|, \verb|c_GW_deviation|,
-\verb|c_GW_deviation_strict_mono|.
+\paragraph{The leading-order $\cGW$.}
+Under the assumed law~\eqref{eq:cGW}, a positive susceptibility
+and physical reference speed $c>0$ give $\cGW>0$.
+For every $c\ne0$, the relative speed deviation is
+\[
+  \dccap(\chivest)
+  \equiv \frac{\cGW(\chivest)-c}{c}
+  = \sqrt{\chivest}-1.
+\]
+On the nonnegative domain this deviation is strictly increasing
+and vanishes if and only if $\chivest=1$. Thus unity is the exactly
+luminal anchor; finite-tolerance compatibility requires an interval
+rather than this single value.
 
-\paragraph{The GW170817 correctness-push.} Define
-$\dccap(\chivest) = \sqrt{\chivest} - 1$ and the predicate
-$\verb|LigoSatisfied|(\delta) \equiv |\delta| \leq \tau$. The
-correctness-push biconditional is
+\paragraph{Finite-tolerance compatibility.}
+Fix $\tau=3\times10^{-15}$ for the conservative symmetric cap.
 
-\begin{theorem}[\texttt{c\_GW\_match\_iff\_chi\_close\_to\_one}]
+\begin{theorem}[Finite-tolerance compatibility]
   \label{thm:bicond}
-  For $\chivest \geq 0$,
-  $\verb|LigoSatisfied|(\dccap(\chivest))
+  For $\chivest\geq0$,
+  $|\dccap(\chivest)|\leq\tau
   \;\Longleftrightarrow\;
-  \chivest \in [(1-\tau)^2, (1+\tau)^2]$.
+  \chivest\in[(1-\tau)^2,(1+\tau)^2]$.
 \end{theorem}
 
-The proof is a $\sqrt{\cdot}$/squaring round-trip via
-\verb|Real.sqrt_le_sqrt| and \verb|Real.sqrt_sq|, with
-\verb|nlinarith| supplied the hint
-$\sqrt{\chivest}^2 = \chivest$. The compatible $\chivest$
-window has width $\sim 4\tau = 1.2\times 10^{-14}$.
+Indeed, the cap is equivalent to
+$1-\tau\leq\sqrt{\chivest}\leq1+\tau$.
+Since $0<\tau<1$, both bounds are nonnegative, so squaring
+gives the stated interval. Conversely, monotonicity of the
+square root recovers the cap from these squared bounds.
 
-\paragraph{Natural-range fine-tuning.} The natural range $[0.1,10]$
-has width $9.9$ (\texttt{natural\_range\_width\_eq}); the
-GW170817-compatible window has width exactly $4\tau =
-1.2\times 10^{-14}$ (\texttt{ligo\_window\_width\_eq}) and is nested
-strictly inside it
-(\texttt{ligo\_window\_subset\_natural\_range}), not disjoint from it.
-Scaling the window up by $10^{14}$ still leaves it the narrower
-(\texttt{ligo\_window\_width\_lt\_natural\_range\_width\_by\_1e14}):
-that ratio, not a disjointness, is the fine-tuning claim.
-Two endpoint-falsifier theorems sharpen the exclusion of the extremes.
+Every compatible susceptibility therefore satisfies
+\[
+  0.1<(1-\tau)^2\leq\chivest\leq(1+\tau)^2<10.
+\]
+The compatible interval contains $\chivest=1$ and has nonzero width exactly
+$(1+\tau)^2-(1-\tau)^2=4\tau=1.2\times10^{-14}$.
+The adopted range has width $9.9$, and the strict comparison is
+\[
+  10^{14}\bigl[(1+\tau)^2-(1-\tau)^2\bigr]<9.9.
+\]
+This is a comparison of interval widths within an adopted domain.
+It supplies no probability without a prior: under a uniform prior
+on $[0.1,10]$, the compatible interval has probability mass
+$4\tau/9.9$.
 
-\begin{theorem}[\texttt{natural\_lower\_violates\_ligo}]
+\paragraph{Endpoint checks.}
+The endpoints provide quantitative checks of the confinement.
+
+\begin{theorem}[Lower endpoint]
   \label{thm:falsifier-lower}
-  At $\chivest = 0.1$, $\dccap = \sqrt{0.1} - 1 \approx -0.6838$,
-  hence $|\dccap|/\tau \approx 2.28\times 10^{14}$ and
-  \verb|LigoSatisfied| is false.
+  At $\chivest=0.1$, $\dccap=\sqrt{0.1}-1\approx-0.6838$,
+  hence $|\dccap|/\tau\approx2.28\times10^{14}$ and
+  the conservative symmetric cap is violated.
 \end{theorem}
 
-\begin{theorem}[\texttt{natural\_upper\_violates\_ligo}]
+\begin{theorem}[Upper endpoint]
   \label{thm:falsifier-upper}
-  At $\chivest = 10$, $\dccap = \sqrt{10} - 1 \approx +2.1623$,
-  hence $|\dccap|/\tau \approx 7.21\times 10^{14}$ and
-  \verb|LigoSatisfied| is false.
+  At $\chivest=10$, $\dccap=\sqrt{10}-1\approx+2.1623$,
+  hence $|\dccap|/\tau\approx7.21\times10^{14}$ and
+  the conservative symmetric cap is violated.
 \end{theorem}
 
-The proofs use $\sqrt{1/10} \leq \sqrt{1/4} = 1/2$ and
-$\sqrt{10} \geq \sqrt{4} = 2$, both via \verb|Real.sqrt_le_sqrt|
-and \verb|Real.sqrt_sq|, closed by \verb|linarith|. These are
-\emph{decidable} inequalities at the level of Lean's real-number
-type. The bundled corollary
-\verb|vestigial_natural_range_violates_ligo| asserts both endpoints
-fail \verb|LigoSatisfied| simultaneously.
+The exclusions already follow from
+$\sqrt{1/10}\leq\sqrt{1/4}=1/2$ and
+$\sqrt{10}\geq\sqrt{4}=2$.
+Both endpoints therefore fail simultaneously, while the finite
+interval in Theorem~\ref{thm:bicond} remains compatible.
+Figure~\ref{fig:cGW} shows this distinction.
 
-The identification hypothesis itself is refuted pointwise rather than
-only at the observable:
-\verb|H_VestigialModeIsGraviton_fails_at_natural_lower| and
-\verb|H_VestigialModeIsGraviton_fails_at_natural_upper| refute it at the
-two endpoints, and
-\verb|H_VestigialModeIsGraviton_fails_at_zero| and
-\verb|H_VestigialModeIsGraviton_fails_at_quarter| refute it at
-$\chivest \in \{0, 1/4\}$, which are outside the natural range and
-establish that the failure is not an endpoint artefact. The one value
-that survives is the singleton:
-\verb|ligo_satisfied_at_chi_one| proves \verb|LigoSatisfied| holds at
-$\chivest = 1$, and \verb|c_GW_deviation_zero_iff_chi_one| makes that
-the exact biconditional.
+\paragraph{Reference-speed independence of the endpoint constraints.}
+The endpoint exclusion also applies directly to the relative
+deviation of the speed itself:
+\[
+  \left|\frac{\cGW(\chivest)-c}{c}\right|>\tau,
+  \qquad
+  \chivest\in\{0.1,10\},\quad c\ne0.
+\]
+This includes the physical domain $c>0$ and follows from the
+relative-deviation identity above. Changing $c$ therefore
+cannot make either endpoint compatible under the assumed law.
+
 
 \begin{figure}[t]
   \centering
@@ -290,149 +262,222 @@ the exact biconditional.
   \caption{\textbf{Headline result.} The
   $\dccap = \sqrt{\chivest} - 1$ deviation across the natural
   $\chivest \in [0.1,10]$ range (pale blue band, dashed blue border)
-  versus the GW170817~\cite{Abbott2017GW170817} multi-messenger cap
-  $|\dccap| \leq 3\times 10^{-15}$ (amber, drawn at $\dccap = 0$ ---
+  versus the conservative symmetric envelope of the
+  GW170817~\cite{Abbott2017GW170817} multi-messenger constraint,
+  $|\dccap| \leq 3\times 10^{-15}$ (amber, drawn at $\dccap = 0$ because
   the cap's own width is far below one pixel at this scale). Over the
   natural range $\dccap$ sweeps $[-0.68, +2.16]$, exceeding the cap by
   $\sim 10^{14}\times$ \emph{at the endpoints} (orange callouts) and
   vanishing at $\chivest = 1$. The compatible $\chivest$ window
-  $[(1-\tau)^2,(1+\tau)^2]$ is $10^{14}$ times narrower than the
-  natural range and so renders as the single gold star --- note that it
-  sits \emph{inside} the band, not beside it: the datum confines
-  $\chivest$, it does not exclude the range. Lean witnesses:
-  \texttt{ligo\_confines\_chi\_vest\_within\_natural\_range},
-  \texttt{ligo\_window\_subset\_natural\_range},
-  \texttt{vestigial\_natural\_range\_violates\_ligo}.}
+  $[(1-\tau)^2,(1+\tau)^2]$ has width $4\tau = 1.2\times10^{-14}$,
+  compared with the adopted range's width $9.9$. Its finite extent is
+  unresolved at this scale; the gold star marks its anchor $\chivest=1$,
+  not a singleton compatible set. The window sits \emph{inside} the band:
+  the datum confines $\chivest$, it does not exclude the range.}
   \label{fig:cGW}
 \end{figure}
 
-\paragraph{Tracked-hypothesis bundle.} Per the project's discipline
-for non-derived identifications, we bundle the structural properties
-of ``the vestigial mode is the graviton'' into a Lean Prop with
-three independently load-bearing conjuncts:
-\begin{equation*}
-  \verb|H_VestigialModeIsGraviton|(\chivest)
-  \equiv \chivest > 0
-  \wedge \verb|LigoSatisfied|(\dccap(\chivest))
-  \wedge |\dccap(\chivest)| < 1/2,
-\end{equation*}
-demanding positivity (P1), GW170817 compatibility (P2), and
-sub-half-deviation $|\dccap| < 1/2$ as P3'. P3' is genuinely
-independent of P1 (e.g.\ $\chivest = 1/10$ satisfies P1 with
-$|\dccap| \approx 0.684 \not< 1/2$). The bundle is discharged at
-$\chivest = 1$ (\texttt{H\_VestigialModeIsGraviton\_at\_one}) and
-\emph{four} explicit falsifier theorems prove non-vacuity:
-\verb|*_fails_at_natural_lower| (P2),
-\verb|*_fails_at_natural_upper| (P2),
-\verb|*_fails_at_zero| (P1), and
-\verb|*_fails_at_quarter| (P3'; at $\chivest = 1/4$ the deviation is
-exactly $\dccap = -1/2$, saturating the bound and isolating P3'
-independence). The bundle's support over the natural-range prior has
-measure $4\tau \approx 1.2\times 10^{-14}$ --- vanishingly small, but
-non-empty, and containing $\chivest = 1$ --- and that is the
-load-bearing falsifiability claim. (The
-original Wave-2 P3 = $\forall c{>}0,\,\cGW(\chivest, c) > 0$ was
-removed in the 2026-04-25 post-Wave-2 audit as redundant given P1;
-P3' replaces it with a load-bearing quantitative constraint per the
-project's preemptive-strengthening discipline.)
-
-\paragraph{Phase~5y H1 caveat as a Lean endpoint theorem.} The
-Phase 5y H1 deep research established that the Volovik identification
-is not a \emph{derivation}: there is no first-principles bound fixing
-the graviton-mode normalization in terms of the second-sound DOF.
-We formalize this caveat as the endpoint theorem
-\texttt{natural\_endpoints\_violate\_ligo\_window}: for $\chivest$
-at either natural-range endpoint $\{0.1, 10\}$, no $c$-rescaling
-gives a GW170817-compatible $\dccap$. The frame-independent form
-\texttt{natural\_endpoints\_violate\_ligo\_for\_every\_c}
-quantifies over all $c > 0$ explicitly, resting on
-\texttt{c\_GW\_relative\_deviation\_eq}. Both concern the two
-endpoints only; neither excludes interior values, and $\chivest = 1$
-satisfies the cap (\texttt{ligo\_satisfied\_at\_chi\_one}).
+\paragraph{Physical scope.}
+This two-point exclusion leaves the compatible interior interval
+intact. Neither it nor the $c$-free endpoint statement quantifies
+over microscopic actions, propagators or matter couplings, so
+neither establishes the absence or impossibility of a dynamical
+derivation. A physical application still requires the response
+normalization and domain, the physical state, a propagating
+tensor mode relative to the same matter/light reference, and
+controlled transport and frequency matching with units and
+error bounds.
 
 %% ================================================================
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{What this rules out.} GW170817 does not exclude the
-leading-order vestigial-second-sound identification outright: it
-survives at $\chivest = 1$. What it rules out is the identification as
-a \emph{generic} consequence of the natural range. Eq.~\eqref{eq:cGW}
-requires $\chivest = 1 \pm 3\times 10^{-15}$, a fine-tuning so extreme
-it cannot follow from a generic UV theory --- so any surviving version
-of the identification owes an account of why $\chivest$ sits exactly
-at unity.
+The conservative symmetric cap confines the assumed leading-order
+identification to $\chivest\in[(1-\tau)^2,(1+\tau)^2]$.
+Its endpoints $1\pm2\tau+\tau^2$ allow susceptibility offsets of
+approximately $\pm6\times10^{-15}$ for a speed-deviation tolerance
+of $\pm3\times10^{-15}$. Exact luminality anchors this finite
+interval at $\chivest=1$; the measurement does not require an exact
+fixed point or exclude generic ultraviolet theories.
 
-\paragraph{What this does not rule out.} Three Phase~6 paths remain
-open:
-\begin{enumerate}
-\item \textbf{Symmetry-driven $\chivest \to 1$ fixed point.} If a
-deep-IR symmetry (e.g.\ Lorentz invariance of the emergent metric
-sector) makes $\chivest = 1$ an exact fixed point of the RG flow, the
-fine-tuning is structural rather than tuned. The present evidence
-most favours this path: Volovik's own background returns $s_2 = c$
-exactly, i.e.\ $\chivest = 1$, structurally. The value GW170817
-selects is thus the value his construction already produces --- the
-datum corroborates his result and indicts our substrate's failure to
-reproduce it, not the identification. Phase~6 should examine
-whether such a fixed point is realized in the ADW broken phase.
-\item \textbf{Distinct metric-channel identification.} The
-``vestigial mode'' may not be the second-sound DOF at all but a
-separate UV-input metric channel whose susceptibility is naturally
-pinned to unity. This was floated in~\cite{Volovik2022Counting} and
-reads as the more likely interpretation under the Phase~5y H1
-negative-evidence result. Phase~6e (full nonlinear emergent action)
-is the natural venue for the disambiguation.
-\item \textbf{Frequency-dependent $\chivest$.} Eq.~\eqref{eq:cGW} is
-the leading term in a derivative expansion. If $\chivest$ varies
-with frequency, the leading-order constraint could in principle be
-relaxed by a near-cancellation in the LIGO band. The
-SK--EFT dispersion correction is the leading frequency dependence in
-the present framework, and this path is \emph{not} closed --- what we
-can say is conditional.
-\texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
-takes $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ as a
-\emph{hypothesis} and proves that under it the correction at the
-$100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance.
-It proves nothing about whether that bound holds: $10^{-30}$ is a
-Phase~6a scaffold value, chosen so the correction would sit well below
-the cap, and it is neither derived nor measured. So a
-placeholder-sized correction would not relax the constraint; a larger
-one is not excluded. The general form is
-\texttt{dispersion\_within\_ligo\_iff}, a biconditional exchanging the
-correction's tolerance for $|\gamma| \leq \mathrm{tol}/\omega$;
+Three possible mechanisms illustrate the unresolved microscopic choices.
+First, a deep-infrared symmetry, such as Lorentz invariance of the
+emergent metric sector, could make unity an exact fixed point of the
+renormalization-group flow. Such a mechanism would place $\chivest$
+inside the compatible interval through symmetry; whether it occurs
+in the ADW broken phase remains unproved. Second, a distinct
+ultraviolet-input metric channel could replace the second-sound
+identification and have dynamics that pin its susceptibility to unity.
+This is a model-building proposal to be investigated through the
+nonlinear emergent action. The missing dynamical bridge supplies no
+reason to prefer it. The finite-tolerance result derives neither
+mechanism.
+
+Third, frequency dependence or a compensating correction in the LIGO
+band could modify the assumed frequency-independent law~\eqref{eq:cGW}.
+The product ansatz $\delta_{\rm disp}=\gamma\omega$ is algebraic,
+not a derived microscopic derivative expansion. Its formal probe
+$\omega=100$ requires a frequency convention and unit normalization
+before it can represent $100\,\mathrm{Hz}$.
+The proposed $\gamma=\Gamma_H/\cGW^2$ is unmatched: the same-symbol
+horizon damping rate in the acoustic setting establishes no physical
+identification with this metric-channel parameter.
+The chosen placeholder $|\gamma|\leq10^{-30}$ bounds the correction
+below the cap at that numerical probe; it is neither measured nor
+derived, and the physical correction could be larger. This bounds
+only $\delta_{\rm disp}$, not the total deviation.
+In an additive model, an oppositely signed correction can restore
+compatibility for offsets just outside the cap. The full additive
+exclusion criterion, near-boundary restoration argument and supporting
+checks are given in \hyperref[sec:support]{the appendix}.
+Deriving the dissipative parameter and the normalization from microscopic
+dynamics remains open.
+
+\paragraph{Comparison with the induced Newton coupling.}
+The in-preparation companion study~\cite{Roehm2026LinearizedEFE}
+uses the emergent Newton-coupling parameterization
+$G_{\rm N,emerg}=\alpha_{\rm ADW}\,12\pi/(N_f\Lambda_{\rm UV}^2)$,
+where $N_f$ is a fermion-species-count parameter. In units $\hbar=c=1$,
+the observed unreduced Planck mass is
+$M_{\rm Pl}=(G_{\rm N,obs})^{-1/2}$, with $G_{\rm N,obs}$ the observed
+Newton constant. At the adopted cutoff $\Lambda_{\rm UV}=M_{\rm Pl}$,
+the exact algebraic match condition is
+$\alpha_{\rm ADW}^{\star}=N_f/(12\pi)$.
+For the companion's stated count choices, the reported rounded matching values span
+$[0.40,1.27]$, inside its adopted $[0.1,10]$ range. Its kernel's Dirac-count
+convention and these Weyl-count choices require reconciliation before this
+comparison supplies a physical Standard Model normalization.
+
+The companion proves the matching locus and properties of a candidate
+coefficient function; it does not extract the microscopic coefficient that
+selects the locus. That coefficient and $\chivest$ describe distinct response
+normalizations. Our adopted interval contains unity but derives no value of
+$\chivest$. The GW170817 cap confines this parameter to the much narrower
+compatible interval without supplying a microscopic selection mechanism.
+
+\paragraph{Physical implication.}
+Under the assumed speed law and source-emission conditions, GW170817
+selects a narrow finite interval of normalized susceptibility,
+not a singleton. The adopted comparison range is no derived physical
+prior, and its width ratio supplies no probability without a prior.
+A physical realization still requires the actual response normalization
+and domain, the physical state, and a propagating tensor mode relative
+to the same matter/light reference, together with controlled frequency
+and transport matching, units and error bounds.
+The interval constrains the stated mathematical model while leaving
+its microscopic realization open.
+
+
+\appendix
+\section{Supporting formal results and reproducibility}
+\label{sec:support}
+
+This appendix gives the auxiliary predicate and frequency-correction
+checks used to delimit the Letter's conditional interval result.
+It preserves their domains and counterexamples; none supplies the
+missing microscopic mode, response normalization or physical matching.
+At the fixed $\tau=3\times10^{-15}$, write
+$\verb|LigoSatisfied|(\delta)\equiv|\delta|\leq\tau$.
+
+\subsection{Predicate audit and counterexamples}
+The proposed identification imposes positivity (P1), compatibility
+with the cap (P2), and sub-half-deviation (P3'):
+\[
+  \begin{aligned}
+    &\verb|H_VestigialModeIsGraviton|(\chivest)\\
+    &\quad\equiv
+      \chivest>0
+      \;\wedge\;\verb|LigoSatisfied|(\dccap(\chivest))\\
+    &\qquad\wedge\;|\dccap(\chivest)|<1/2.
+  \end{aligned}
+\]
+These three clauses are not independent.
+At the fixed tolerance, P2 implies P3' because $\tau<1/2$.
+On the nonnegative domain, Theorem~\ref{thm:bicond} also places
+every P2-compatible susceptibility in a strictly positive interval,
+so P1 holds there. Consequently, the complete compatible set for
+these conditions is precisely that same finite interval, including
+the anchor $\chivest=1$.
+
+Four counterexamples distinguish compatibility from positivity
+alone. The endpoints $0.1$ and $10$ refute the conjunction through
+failure of P2. At zero, P1 fails; this point lies outside the
+adopted range. At the interior point $\chivest=1/4$,
+$\dccap=-1/2$: P1 holds, but P2 and the strict P3' inequality
+both fail. The quarter-point example therefore shows that P1
+alone does not imply P3'. These counterexamples do not establish
+independence of the three clauses or isolate a uniquely failing
+clause. The corresponding definitions and algebraic results are
+recorded in \texttt{GravitationalWaves.lean}, Sections~1--4.
+
+
+\subsection{Illustrative frequency correction and additive bound}
+Equation~\eqref{eq:cGW} is
+an assumed frequency-independent kinematic law.
+A frequency-dependent susceptibility or a compensating correction
+in the LIGO band is a possible phenomenological extension.
+We consider the algebraic ansatz $\delta_{\rm disp}=\gamma\omega$,
+without asserting that it is the leading term of a matched
+microscopic derivative expansion.
+The formal probe is the real number $\omega=100$.
+Interpreting it as a $100\,\mathrm{Hz}$ band requires a physical frequency
+convention and unit normalization. Identifying $\gamma=\Gamma_H/\cGW^2$
+introduces a proposed, unmatched dissipative parameter $\Gamma_H$ in this
+metric channel. The horizon damping rate denoted by the same symbol in the
+acoustic setting does not establish that physical identification.
+Under the assumed coefficient bound $|\gamma|\leq10^{-30}$,
+$|\delta_{\rm disp}|$ at this numerical probe is below the
+GW170817 tolerance.
+The adopted $10^{-30}$ is a placeholder chosen to keep the
+correction below the cap; it is neither derived nor measured.
+In the further additive model
+$\delta_{\rm tot}=\delta_0+\delta_{\rm disp}$, with
+$\delta_0=\sqrt{\chivest}-1$, that assumed coefficient bound gives
+$|\delta_{\rm disp}|\leq B=10^{-28}$ at $\omega=100$.
+The reverse triangle inequality then excludes restoration of
+$|\delta_{\rm tot}|\leq\tau$ whenever $|\delta_0|>\tau+B$.
+Offsets just outside $\pm\tau$ can nevertheless become compatible
+through an oppositely signed correction within this bound.
+Larger corrections are not excluded by the placeholder theorem.
+Deriving $\Gamma_H$ and the normalization of this ansatz from
+microscopic dynamics remains open.
+
+For a positive numerical probe $\omega$,
+\texttt{dispersion\_within\_ligo\_iff} gives
+$|\gamma\omega|\leq\tau\iff|\gamma|\leq\tau/\omega$ at the fixed
+GW170817 tolerance $\tau$, bounding the correction alone.
 \texttt{dispersion\_correction\_abs\_bound},
 \texttt{dispersion\_correction\_linear\_in\_gamma} and
-\texttt{dispersion\_correction\_zero\_at\_no\_dissipation} fix its
-magnitude, additivity and no-dissipation limit. A derivation of
-$\Gamma_H$ from a microscopic matching is open.
-\end{enumerate}
+\path{dispersion_correction_zero_at_no_dissipation} describe
+the product's magnitude, additivity in $\gamma$ and zero-coefficient
+limit.
 
-\paragraph{Comparison to the linearized-EFE wave.} The companion
-linearized-EFE wave~\cite{Roehm2026LinearizedEFE} ships an
-emergent-gravity identification \emph{compatible} with observation at
-the natural-range level: the Sakharov--Adler form
-$G_{\rm N,emerg} = \alpha_{\rm ADW} \cdot 12\pi/(N_f \Lambda_{\rm UV}^2)$
-at $\Lambda_{\rm UV} = M_{\rm Pl}$ produces
-$\alpha_{\rm ADW}^\star \in [0.40, 1.27]$ for SM $N_f$, sitting
-inside the natural range $[0.1,10]$. The asymmetry between the two
-waves is a feature of the program: the linearized-EFE
-$G_{\rm N,emerg}$ depends on the Sakharov--Adler kernel computed at
-the linearized level, where the relevant scale is $M_{\rm Pl}$;
-$\cGW$ depends on the metric-channel susceptibility, where the
-relevant scale is the dimensionless $\chivest$ which the natural
-range happens to pin around 1 only by coincidence. GW170817 sees
-the latter, and its bound is too tight to absorb the natural-range
-spread.
+\path{vestigial_dispersion_below_ligo_at_inspiral_peak} records the
+conditional bound at the numerical probe used above.
 
-\paragraph{Reproducibility.} The result is reproducible in two
+
+\subsection{Theorem provenance and recorded validation}
+The finite-interval theorem is
+\path{c_GW_match_iff_chi_close_to_one}; the lower and upper endpoint
+results are \path{natural_lower_violates_ligo} and
+\path{natural_upper_violates_ligo}. The endpoint statement for every
+real $c\ne0$ is \path{natural_endpoints_violate_ligo_for_every_c}.
+The RPA formalization discussed in the Letter is
+\path{VestigialSusceptibility.lean}; its unevaluated inputs remain
+necessary for physical normalization.
+
+The following software and proof records support reproducibility of
+the stated algebraic calculation. They establish neither the microscopic
+response normalization nor a physical mode or state.
+
+The result is reproducible in two
 layers. The Lean layer is \texttt{GravitationalWaves.lean} (32
 theorems, zero \texttt{sorry}, zero new axioms, zero
 \texttt{maxHeartbeats} overrides) at the project's pinned
 Mathlib4 commit; the Python layer is \texttt{src/gravitational\_waves/}
-with 49 \texttt{pytest} cases cross-checking every numeric quoted
+with 89 \texttt{pytest} cases cross-checking every numeric quoted
 in the abstract and figure caption. The headline figure
-(\texttt{src/core/visualizations.py:fig\_c\_GW\_vs\_ligo\_constraint})
+(\path{src/core/visualizations.py:fig_c_GW_vs_ligo_constraint})
 and its underlying numerics are committed-pinned.
 
 %% ================================================================
@@ -449,14 +494,14 @@ J.~Low Temp.\ Phys.\ \textbf{207}, 127 (2022);
 DOI: 10.1007/s10909-022-02694-z.
 
 \bibitem{Volovik2026SecondSound}
-G.~E.~Volovik, ``Massless graviton in de Sitter as second sound,''
-arXiv:2601.00639 (2026). \emph{The source of the
-second-sound--graviton identification; derives $s_2 = c$ exactly and
-leaves the graviton type open.}
+G.~E.~Volovik, ``Massless graviton in de Sitter as second sound in
+two-fluid hydrodynamics,'' arXiv:2601.00639v1 (2026).
+\emph{Derives luminal second sound within its de~Sitter two-fluid
+model and discusses possible graviton interpretations.}
 
 \bibitem{Volovik2024VacuumDecay}
 G.~E.~Volovik, ``From Landau two-fluid model to de Sitter Universe,''
-arXiv:2410.04392 (2024).
+arXiv:2410.04392v11 (2025).
 
 \bibitem{Akama1978}
 K.~Akama, Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978);
@@ -512,8 +557,7 @@ DOI: 10.1103/PhysRevLett.119.251304.
 \bibitem{Roehm2026LinearizedEFE}
 J.~G.~Roehm, ``Linearized Einstein Equations from
 Anderson--Higgs Tetrad Condensation'',
-\emph{SK--EFT-Hawking project, in preparation}, 2026
-(\texttt{papers/paper23\_linearized\_efe/}).
+\emph{in preparation} (2026).
 
 \end{thebibliography}
 

@@ -1,0 +1,11 @@
+{
+  "broad_source": "87ae47bfdfd1b2ed3b395ead1d40cca9b1d72f31",
+  "retry_head": "574386304efe05dff98d60ff61240836aa776b4a",
+  "code_and_tests_unchanged_since_broad": true,
+  "fixture_tests_passed": 5,
+  "seconds": 1.02,
+  "host_access": "Process metadata and localhost binding available; temporary fixture repositories only",
+  "live_lean_slots_used": false,
+  "native_or_dependency_qualification": false,
+  "original_broad_failures_waived": false
+}

@@ -1,0 +1,158 @@
+{
+  "verdict": "ACCEPT direct controls and independent fixed fullgraph78/80; no unrestricted pilot authorized or run",
+  "fixed": {
+    "78": {
+      "branches": 15,
+      "nonempty": 5,
+      "structural_empty": 10,
+      "full38_factor_tables_equal_to_independent_reference": true,
+      "all_center_gamma_weights_equal_original_L": true,
+      "offdiagonal_prepared_branches": 15,
+      "offdiagonal_nonempty": 5,
+      "offdiagonal_solve_run": false,
+      "all_author_raws_weights_divisors_equal": true,
+      "coefficient_fixed_only": [
+        144077858347683625,
+        110163365312383083545100288
+      ],
+      "peak": 684,
+      "cold_seconds": 6.582983083091676,
+      "whole15_warm_seconds": 0.04852020798716694,
+      "parent_seconds": 6.699098333017901,
+      "actual_exit": 0
+    },
+    "80": {
+      "branches": 15,
+      "nonempty": 5,
+      "structural_empty": 10,
+      "full38_factor_tables_equal_to_independent_reference": true,
+      "all_center_gamma_weights_equal_original_L": true,
+      "offdiagonal_prepared_branches": 15,
+      "offdiagonal_nonempty": 5,
+      "offdiagonal_solve_run": false,
+      "all_author_raws_weights_divisors_equal": true,
+      "coefficient_fixed_only": [
+        144077858347683625,
+        110163365312383083545100288
+      ],
+      "peak": 684,
+      "cold_seconds": 6.657713999971747,
+      "whole15_warm_seconds": 0.04865200002677739,
+      "parent_seconds": 6.782089958083816,
+      "actual_exit": 0
+    }
+  },
+  "xor1_all15_raw_weight_divisor_covariance": true,
+  "direct": [
+    {
+      "kind": "both-source-identity",
+      "per_gamma": 4,
+      "raw_scale": 192,
+      "remapped_sources": 4,
+      "shared_source_explicit": true
+    },
+    {
+      "activated_offdiag_terms": 67,
+      "joint_scalar_controls": 28,
+      "kind": "joint-conditional-curvature",
+      "nonidentity_shared_forest_covariance": true,
+      "scope": "Haar-coordinate independence only; Grassmann graph remains coupled",
+      "square_component_pairs": 21,
+      "square_samples": 21,
+      "torus_patterns": 7,
+      "word": 78
+    },
+    {
+      "activated_offdiag_terms": 67,
+      "joint_scalar_controls": 28,
+      "kind": "joint-conditional-curvature",
+      "nonidentity_shared_forest_covariance": true,
+      "scope": "Haar-coordinate independence only; Grassmann graph remains coupled",
+      "square_component_pairs": 21,
+      "square_samples": 21,
+      "torus_patterns": 7,
+      "word": 80
+    },
+    {
+      "anchors": [
+        0,
+        1
+      ],
+      "centers": [
+        0,
+        1
+      ],
+      "full_polynomial_equalities": 10,
+      "gamma_cases": 5,
+      "kind": "two-center-fixed-edge"
+    },
+    {
+      "anchors": [
+        0,
+        1
+      ],
+      "centers": [
+        0,
+        1
+      ],
+      "full_polynomial_equalities": 36,
+      "kind": "opposite-center-live-probe",
+      "nonzero": 36,
+      "offdiagonal_probes": [
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          5
+        ]
+      ]
+    },
+    {
+      "kind": "direct-controls-complete",
+      "pair_cap": 3000000,
+      "row_cap": 120000,
+      "seconds": 30.04719179100357,
+      "unrestricted_coefficients_run": false
+    }
+  ],
+  "direct_actual_exit": {
+    "command": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "-B",
+      "/tmp/l1-connected-core-review-direct.py"
+    ],
+    "actual_exit": 0,
+    "timeout": false,
+    "parent_seconds": 30.147256499971263,
+    "parent_bound": 665,
+    "cold_bound": 600,
+    "whole_warm_bound": null
+  },
+  "principal16_source_hashes_unchanged": true,
+  "source_sha256": "d5244fb68dbb9f10fd098a1b0e7f94679bfed53c43e0eb2271aed0031b64f68f",
+  "files_sha256": {
+    "/tmp/l1-connected-core-review-direct.out": "4be23c0f1fbdc9c2061421dce42346d938f41f0a920c7a34485328d3e9c4931e",
+    "/tmp/l1-connected-core-review-direct.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-connected-core-review-direct.exit.json": "6ebe1657e6d13837c1ab6b4e8b423415084174c73cdd638453fb5a8b43aad708",
+    "/tmp/l1-connected-core-review-fixed78.out": "1d00e58a615c1ff2eac5383a3dda51ed840a721057772cbfdff031e21839d20f",
+    "/tmp/l1-connected-core-review-fixed78.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-connected-core-review-fixed78.exit.json": "c2553c6ee48ca23c22b180daffd128d788b7dc97148d76a6e4b4652a61d5ff2b",
+    "/tmp/l1-connected-core-review-fixed80.out": "e4e3c09dcb4c6b1f30534b19f67375d084b348e9dcbc5ecbfe47931ef89d7642",
+    "/tmp/l1-connected-core-review-fixed80.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-connected-core-review-fixed80.exit.json": "ca49feee2234f7515eb0b15e515c8c1b64763ad80c42d30e57ccb9ff77e7033e",
+    "/tmp/l1-connected-core-review-direct.py": "83956dfe93cc01f50d83ad2376a2f2bb8d60a18d0efa2de71985edab75ed98b9",
+    "/tmp/l1-connected-core-review-fixed.py": "2c8ad2bd0d56216600ed607cd701a012272a40d2224f4953c8d1762368edbd04",
+    "/tmp/l1-connected-core-review-driver.py": "636c04d9fe3af178d8db17a39c4d13e0c7eddbfeb5b488b1276a30e644d3fc93"
+  },
+  "portable_scope": 230,
+  "remaining_coefficients": 42,
+  "full_k4_commonZ_physical_B3": "OPEN",
+  "scope_limits": [
+    "No unrestricted gamma preparation or coefficient",
+    "Offdiagonal restrictions checked as complete prepared factor tables, not scalar solves",
+    "Joint forest covariance tested for original five-face holonomies; Spin/Grassmann covariance uses existing accepted convention",
+    "No candidate/Git/notebook writes"
+  ]
+}

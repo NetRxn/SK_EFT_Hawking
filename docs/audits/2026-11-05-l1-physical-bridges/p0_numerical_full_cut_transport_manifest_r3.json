@@ -1,0 +1,245 @@
+{
+  "schema": "l1-full-cut-transport-evidence/v1",
+  "parent": "acb34ee7d99d55703a19dc2f7cbdeaa666e717cc",
+  "candidate_sha256": "b9bc1e82ab2f1eef802fa07738b93babe79dcf2d820759d09c040142f7153a1f",
+  "scope": "scoped manual actual math/source ACCEPT; ROOT intake pending; no code/run/positivephysics acceptance",
+  "archive": {
+    "path": "docs/audits/2026-11-05-l1-physical-bridges/p0_numerical_full_cut_transport_evidence_r3.zip",
+    "bytes": 230097,
+    "sha256": "a91a45dd69c15ae32b6677891a5fa0fced7e27c9078c3c5b40f65a984887b685",
+    "members": {
+      "accepted-inputs/N16_TEMPORAL_BOUNDARY_IDENTITY.md": {
+        "bytes": 17461,
+        "sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49"
+      },
+      "accepted-inputs/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK.md": {
+        "bytes": 14283,
+        "sha256": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e"
+      },
+      "accepted-inputs/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md": {
+        "bytes": 4366,
+        "sha256": "10cfa7207a3a42884a847869c05073cc94bd84f133183e46df4fde74aad6f495"
+      },
+      "accepted-inputs/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": {
+        "bytes": 24144,
+        "sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab"
+      },
+      "accepted-inputs/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": {
+        "bytes": 30710,
+        "sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38"
+      },
+      "accepted-inputs/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": {
+        "bytes": 22289,
+        "sha256": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468"
+      },
+      "accepted-inputs/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": {
+        "bytes": 23504,
+        "sha256": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65"
+      },
+      "authority/numerical-plan-r2.md": {
+        "bytes": 81352,
+        "sha256": "7e9c1988ad9490277ccfed7034668a6f02daf2189a96d5244edea19cfb1be2e8"
+      },
+      "authority/objective-before-result.md": {
+        "bytes": 3517,
+        "sha256": "929f670ddc2c49c2bd6234b515dae81b9761f820803a53c8c9e7615f45cd0878"
+      },
+      "authority/own-branch-Phase6a-before-result.md": {
+        "bytes": 93926,
+        "sha256": "1632510e75e79689bdf540466cd02d667d95da9639a4adf93f7fd2a118a845e3"
+      },
+      "authority/primary-custody.json": {
+        "bytes": 888,
+        "sha256": "a3bbe6e57b39301b90a97555a8d4991dd14a53edcdec62ed27ee6d8efec3ce5a"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT.md": {
+        "bytes": 28755,
+        "sha256": "b9bc1e82ab2f1eef802fa07738b93babe79dcf2d820759d09c040142f7153a1f"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_ACCEPTANCE.md": {
+        "bytes": 5058,
+        "sha256": "048b44bf2b4fb1f92190faf7626db3b686541c572bc66317c39dda505e029fdb"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R1.md": {
+        "bytes": 14443,
+        "sha256": "f664e61644c0dd6f39e329986c54e33f561e6193b720bbda3a850f98ee1ea970"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R2.md": {
+        "bytes": 9927,
+        "sha256": "378b689e1a4e60d4b8ce9c25b7f9aca260ade3cc9f260c1760420fe2800b0cab"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R3.md": {
+        "bytes": 8683,
+        "sha256": "9db2b3ad5e77dc1bbf55f8bedf2c142f55e39ffdf8857084816933fe09b30ec9"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md": {
+        "bytes": 4108,
+        "sha256": "40783309c6c2b7eb507bff9ca387e9ecffbdb69d09c6d5ba60713cc78f4aeb19"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROPOSAL.md": {
+        "bytes": 7006,
+        "sha256": "b8afb928bdd82a45ee3e496d8f4795fd4123d3c4c38889b6d22aaa9e13ef5ba5"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_MATH_REVIEW_R1.md": {
+        "bytes": 11194,
+        "sha256": "24d8f3d731a86f6487e25bdbb710807eaf5e2ad0e6419036fa061edb471f5225"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_SOURCE_REVIEW_R1.md": {
+        "bytes": 7526,
+        "sha256": "8ba59dd675b1fe97c1ae243af39b4dc635aea2546795385928ef15a3fb9e0cdd"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R1.md": {
+        "bytes": 23991,
+        "sha256": "4ed038920655a9fa48356f09c04502fe6d124db30dce989a06d8198f4b28d4b0"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R2.md": {
+        "bytes": 28331,
+        "sha256": "efce52888beca0f68a2701117f0d3d878aa1c26c8fecec9c3f35245f6e0114a3"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R1.md": {
+        "bytes": 12851,
+        "sha256": "612a98954e05bc06fc097dd5aa5d54b1332cb3e620e6c0772d601b19f0db17ac"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R2.md": {
+        "bytes": 9293,
+        "sha256": "7f6cf4ac8cdefaf5f9ce37b17bb611ecfaefd74740eea651b66b35ee6eabe121"
+      },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R3.md": {
+        "bytes": 7851,
+        "sha256": "3a4f15dc6facfc61c78acf26c26a181217f457135f80188d12faee69e062b389"
+      },
+      "continuity/l1-p0-n0-full-cut-actual-math-r1.json": {
+        "bytes": 11957,
+        "sha256": "70b65464fcbbb4b3ee0083bffd2f6a69fa078cea543b1ca579a326b7646ac855"
+      },
+      "continuity/l1-p0-n0-full-cut-actual-math-r2.json": {
+        "bytes": 12776,
+        "sha256": "738ad1996110f57e461f8edf3ced353cc32f338b6f0c05f88c188c89b8fa7edd"
+      },
+      "continuity/l1-p0-n0-full-cut-actual-math-r3.json": {
+        "bytes": 13573,
+        "sha256": "c1f7e395a934ee74bc04ee76bb7ba3ad30aa24656308324c78d6ae63c3e997fc"
+      },
+      "continuity/l1-p0-n0-full-cut-actual-source-r1.json": {
+        "bytes": 11951,
+        "sha256": "53a625694386446963560c82ba750880fb8825507e72d3a1693264e9814d7674"
+      },
+      "continuity/l1-p0-n0-full-cut-actual-source-r2.json": {
+        "bytes": 12770,
+        "sha256": "44f85bd53e464fc046c547a258093d0f97570b6aa4ad7d0006a656ded268c32f"
+      },
+      "continuity/l1-p0-n0-full-cut-actual-source-r3.json": {
+        "bytes": 13567,
+        "sha256": "5df9684749179f2c278468eeeda5347bf5ef3cfc246da0c210be1f2c3965da8e"
+      },
+      "continuity/l1-p0-n0-full-cut-prospective-math-r1.json": {
+        "bytes": 10602,
+        "sha256": "d023354c0c1d0e2a87776217d833f9198125154a7b64cae9b876c15f7ec767d7"
+      },
+      "continuity/l1-p0-n0-full-cut-prospective-source-r1.json": {
+        "bytes": 10596,
+        "sha256": "fd8cae845cec14dc3ba2a17f336da38043b9ceb967847f87b49e64f18ab19809"
+      }
+    }
+  },
+  "exact_copies": {
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_PROPOSAL.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-transport-prospective-r1.md",
+      "sha256": "b8afb928bdd82a45ee3e496d8f4795fd4123d3c4c38889b6d22aaa9e13ef5ba5"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_MATH_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-prospective-math-r1.md",
+      "sha256": "24d8f3d731a86f6487e25bdbb710807eaf5e2ad0e6419036fa061edb471f5225"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_SOURCE_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-prospective-source-r1.md",
+      "sha256": "8ba59dd675b1fe97c1ae243af39b4dc635aea2546795385928ef15a3fb9e0cdd"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R1.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-transport-result-r1.md",
+      "sha256": "4ed038920655a9fa48356f09c04502fe6d124db30dce989a06d8198f4b28d4b0"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R2.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-transport-result-r2.md",
+      "sha256": "efce52888beca0f68a2701117f0d3d878aa1c26c8fecec9c3f35245f6e0114a3"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-transport-result-r3.md",
+      "sha256": "b9bc1e82ab2f1eef802fa07738b93babe79dcf2d820759d09c040142f7153a1f"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-actual-math-r1.md",
+      "sha256": "f664e61644c0dd6f39e329986c54e33f561e6193b720bbda3a850f98ee1ea970"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R1.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-actual-source-r1.md",
+      "sha256": "612a98954e05bc06fc097dd5aa5d54b1332cb3e620e6c0772d601b19f0db17ac"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R2.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-actual-math-r2.md",
+      "sha256": "378b689e1a4e60d4b8ce9c25b7f9aca260ade3cc9f260c1760420fe2800b0cab"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R2.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-actual-source-r2.md",
+      "sha256": "7f6cf4ac8cdefaf5f9ce37b17bb611ecfaefd74740eea651b66b35ee6eabe121"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R3.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-actual-math-r3.md",
+      "sha256": "9db2b3ad5e77dc1bbf55f8bedf2c142f55e39ffdf8857084816933fe09b30ec9"
+    },
+    "P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R3.md": {
+      "source": "/private/tmp/l1-p0-n0-full-cut-actual-source-r3.md",
+      "sha256": "3a4f15dc6facfc61c78acf26c26a181217f457135f80188d12faee69e062b389"
+    }
+  },
+  "accepted_inputs": {
+    "N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65",
+    "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+    "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK.md": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e",
+    "NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md": "10cfa7207a3a42884a847869c05073cc94bd84f133183e46df4fde74aad6f495"
+  },
+  "objective_before_sha256": "929f670ddc2c49c2bd6234b515dae81b9761f820803a53c8c9e7615f45cd0878",
+  "numerical_plan_sha256": "7e9c1988ad9490277ccfed7034668a6f02daf2189a96d5244edea19cfb1be2e8",
+  "primary_custody": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Diakonov2011.pdf",
+      "bytes": 270355,
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf",
+      "bytes": 140946,
+      "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf",
+      "bytes": 1756894,
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "full_text_copied": false
+    }
+  ],
+  "paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROPOSAL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_PROSPECTIVE_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_RESULT_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_MATH_REVIEW_R3.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_SOURCE_REVIEW_R3.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/p0_numerical_full_cut_transport_evidence_r3.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/p0_numerical_full_cut_transport_manifest_r3.json",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md",
+    "docs/roadmaps/Phase6a_Roadmap.md"
+  ]
+}

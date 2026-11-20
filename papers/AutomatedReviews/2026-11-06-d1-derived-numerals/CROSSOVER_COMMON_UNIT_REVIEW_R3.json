@@ -1,0 +1,67 @@
+{
+  "task": "d1-common-unit-crossover-review-r3",
+  "disposition": "ACCEPT_MANUAL_MATH_SOURCE_CONSTRUCTION_ONLY",
+  "source_commit": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "cumulative_packet_head": "5ffb68b3ac298b211b320fc172f13a8f887050b6",
+  "input_hashes": {
+    "/tmp/d1-crossover-normalization-construction-r1.md": "1103543b08474470731cca8bec1266d7489890fca547bfeea9f65988f362ec94",
+    "/tmp/d1-crossover-normalization-construction-r1.json": "0c9a7b930a6e456cff9331e3e1a4d9327e4e7d02c563f36a46aff094b79079ff",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/d1-common-unit-crossover-review-r3.json": "2ee1de8fa69e678bd1cbba365f82197eb32a1661cb6d50c5c1dc5d1c11bed5a0"
+  },
+  "verified_committed_source_pins": {
+    "src/wkb/connection_formula.py": "fcfdf40af49f211a03422fb37d5087828f69ecf72b9dcd0b7f94b4fa1cab21a4",
+    "src/wkb/spectrum.py": "04dd00f3ea02f0931ac7f95772abebb1b64c990903d2db2053e848d3cb8cdf4e",
+    "src/wkb/bogoliubov.py": "7f037c752c74c9d85881d5db63f7340daf918ee1cd9c0f7a27fd1c327e705803",
+    "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+    "src/second_order/wkb_analysis.py": "227da6446ec3dc8050d8ef747ba6f804a52f6fd95305e7c96cdd32b092777141",
+    "scripts/gen_d1_hierarchy_table.py": "8a8c15b7e00c7dcb7e9f47d0e09ba79d8a16e8c1c8153852b4c8bc8966feb845"
+  },
+  "additional_committed_source_pins": {
+    "papers/D1/paper_draft.tex": "2769eeaa832647cdc2aa9d8ff566fe577fe5454acc650834142df6cc7b9b19ed",
+    "lean/SKEFTHawking/HawkingUniversality.lean": "ca2f53b7ef1926ee633f9b5df824582cc8ebdca15b4bae4460c5b3ea84fd8188",
+    "papers/AutomatedReviews/2026-11-06-d1-derived-numerals/OPERATING_POINT_R1.json": "d06a90dd7ad91367f514c354ce977ba0b175fef2e0c78f136ba009ea30d5b1b0"
+  },
+  "retained_receipt_hash_verified": true,
+  "all_retained_rows_independently_recomputed": true,
+  "arithmetic_comparison_relative_tolerance": 2e-14,
+  "proof_dispositions": {
+    "on_shell_second_order_cancellation": "ACCEPT_REAL_EXPRESSION",
+    "factory_third_order_quartic": "ACCEPT_SUPPLIED_COEFFICIENTS",
+    "modified_unitarity_normalization": "ACCEPT",
+    "three_temperature_distinction": "ACCEPT",
+    "common_unit_quintic": "ACCEPT",
+    "unique_positive_root": "ACCEPT",
+    "analytic_bracket": "ACCEPT",
+    "half_cutoff_unsuppressed_branch": "ACCEPT_FOR_RETAINED_FACTORIES",
+    "brightness_ratio_at_root": "ACCEPT"
+  },
+  "consumer_limits": [
+    "compute_spectrum defaults to5TH below all three crossovers",
+    "perturbative_spectrum omits gamma3 as well as noise/UV",
+    "JSON relative_retained_quartic_bound equals epsilon, a conservative bound",
+    "decimal endpoints are not outward-rounded certificates",
+    "real cancellation is not bit-exact floating evaluation certification"
+  ],
+  "missing_loadbearing_hypothesis_in_stated_scope": false,
+  "clarified_factory_hypothesis": "D>0 for positive finite physical cutoff; verified all retained instances",
+  "implementation": "NOT_APPLIED_OR_REVIEWED",
+  "wider_migration": "HOLD",
+  "original_physical_BUILD": "OPEN_FULL_STRENGTH",
+  "canonical_closure": "NOT_PERFORMED",
+  "project_code_or_native_run": false,
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": [],
+    "task": "d1-common-unit-crossover-review-r3"
+  },
+  "written_files": [
+    "/tmp/d1-common-unit-crossover-review-r3.md",
+    "/tmp/d1-common-unit-crossover-review-r3.json"
+  ],
+  "repository_files_touched": [],
+  "markdown_sha256": "f02063e7f562b6572b240b4b56bd9a0c9444304697a3ef500bab55109477a913"
+}

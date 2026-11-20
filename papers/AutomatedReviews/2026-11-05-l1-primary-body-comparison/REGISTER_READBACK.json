@@ -1,0 +1,2454 @@
+{
+  "writer": "existing source_acquisition_register.py",
+  "current_rows": [
+    {
+      "key": "Adler1982",
+      "holding": "metadata",
+      "bundles": [
+        "L3"
+      ],
+      "bears": true,
+      "why": "signal",
+      "signals": [
+        "param:GRAV.ALPHA_ADW_SAKHAROV_DEFAULT",
+        "param:GRAV.SAKHAROV_COEFFICIENT"
+      ],
+      "route": "unassessed",
+      "priority": "P0",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/RevModPhys.54.729"
+    },
+    {
+      "key": "BB84",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": true,
+      "why": "curated",
+      "signals": [
+        "formulas.py"
+      ],
+      "route": "open",
+      "priority": "P0",
+      "reason": "Referenced by formulas.py.",
+      "route_note": "Bennett and Brassard 1984 was republished open access in Theoretical Computer Science 560 (2014) 7-11. Fetch task, not a budget item.",
+      "doi": ""
+    },
+    {
+      "key": "Mather1982",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": true,
+      "why": "curated",
+      "signals": [
+        "param:MATHER_1982_GRADIENT_REDUCTION"
+      ],
+      "route": "repository",
+      "priority": "P0",
+      "reason": "Supplies MATHER_1982_GRADIENT_REDUCTION (0.30). The convention -- whether the quoted 30% is a PSD or an amplitude reduction -- is UNRESOLVED because the body has never been read, and D12:498 discloses that in prose. The body settles it; the abstract cannot.",
+      "route_note": "John Mather is NASA; try NASA ADS full-text scan and the NASA Technical Reports Server before Optica purchase. Applied Optics 21(6) 1125-1129, 1982.",
+      "doi": "10.1364/AO.21.001125"
+    },
+    {
+      "key": "PDG2024",
+      "holding": "abstract",
+      "bundles": [
+        "D3"
+      ],
+      "bears": true,
+      "why": "curated",
+      "signals": [
+        "param:EW.M_H_GEV",
+        "param:EW.M_TOP_GEV",
+        "param:EW.Y_TOP"
+      ],
+      "route": "open",
+      "priority": "P0",
+      "reason": "Supplies EW.M_H_GEV and EW.M_TOP_GEV.",
+      "route_note": "Review of Particle Physics is fully open access at pdg.lbl.gov. No purchase under any circumstances -- if this is still unheld it is a fetch task, not a budget item.",
+      "doi": "10.1103/PhysRevD.110.030001"
+    },
+    {
+      "key": "Rokhlin1952",
+      "holding": "none",
+      "bundles": [
+        "L2"
+      ],
+      "bears": true,
+      "why": "curated",
+      "signals": [],
+      "route": "repository",
+      "priority": "P0",
+      "reason": "Has a bibitem in D2 but NO cached text. D2's section 5.5 quotes the statement of Rokhlin's theorem (16 | sigma for closed smooth spin 4-manifolds) from its standard formulation, unverified against the original. The theorem is universally standard, so the risk is attribution fidelity rather than correctness.",
+      "route_note": "Doklady Akad. Nauk SSSR 84 (1952) 221. Russian-language 2-page announcement. A standard English secondary source (MilnorHusemoller1973, or Kirby's Topology of 4-Manifolds) discharges the statement better than the original does -- prefer that over acquiring the Doklady note.",
+      "doi": ""
+    },
+    {
+      "key": "Sakharov1968",
+      "holding": "none",
+      "bundles": [
+        "D3",
+        "F",
+        "L3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Unruh1981",
+      "holding": "metadata",
+      "bundles": [
+        "D1",
+        "E1",
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.46.1351"
+    },
+    {
+      "key": "ABP1967",
+      "holding": "none",
+      "bundles": [
+        "D2",
+        "L2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Adams1974",
+      "holding": "none",
+      "bundles": [
+        "D2",
+        "L2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Adler1980",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.44.1567"
+    },
+    {
+      "key": "Akama1978",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1143/PTP.60.1900"
+    },
+    {
+      "key": "AndersonBFP2013",
+      "holding": "none",
+      "bundles": [
+        "D1",
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "BardeenCarterHawking1973",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF01645742"
+    },
+    {
+      "key": "Claude2023",
+      "holding": "metadata",
+      "bundles": [
+        "D1",
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevB.107.174507"
+    },
+    {
+      "key": "Estrecho2021",
+      "holding": "metadata",
+      "bundles": [
+        "D1",
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.126.075301"
+    },
+    {
+      "key": "Finazzi2012",
+      "holding": "metadata",
+      "bundles": [
+        "E1",
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.85.124027"
+    },
+    {
+      "key": "Hawking1971",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.26.1344"
+    },
+    {
+      "key": "Hawking1972",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF01877517"
+    },
+    {
+      "key": "Hawking1975",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF02345020"
+    },
+    {
+      "key": "Hietala2020VOQC",
+      "holding": "abstract",
+      "bundles": [
+        "D6",
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1145/3434318"
+    },
+    {
+      "key": "Israel1986",
+      "holding": "metadata",
+      "bundles": [
+        "F",
+        "L3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.57.397"
+    },
+    {
+      "key": "KitaevShenVyalyi2002",
+      "holding": "none",
+      "bundles": [
+        "D4",
+        "D8"
+      ],
+      "bears": false,
+      "why": "curated",
+      "signals": [],
+      "route": "textbook",
+      "priority": "P1",
+      "reason": "Textbook, background citation.",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Lewis2021VerifQC",
+      "holding": "abstract",
+      "bundles": [
+        "D6",
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1145/3624483"
+    },
+    {
+      "key": "Polyakov1978",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0370-2693(78)90737-2"
+    },
+    {
+      "key": "ReshetikhinTuraev1991",
+      "holding": "metadata",
+      "bundles": [
+        "D4",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF01239527"
+    },
+    {
+      "key": "Weinberg1989",
+      "holding": "metadata",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/RevModPhys.61.1"
+    },
+    {
+      "key": "Witten1989",
+      "holding": "metadata",
+      "bundles": [
+        "D4",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF01217730"
+    },
+    {
+      "key": "coqq2022",
+      "holding": "abstract",
+      "bundles": [
+        "D10",
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P1",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1145/3571222"
+    },
+    {
+      "key": "ADW2019",
+      "holding": "metadata",
+      "bundles": [
+        "D5"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.99.105009"
+    },
+    {
+      "key": "AaronsonGottesman2004",
+      "holding": "abstract",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevA.70.052328"
+    },
+    {
+      "key": "AharonovArad2011",
+      "holding": "abstract",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1088/1367-2630/13/3/035019"
+    },
+    {
+      "key": "Alberti1983",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "AlphaProof2025",
+      "holding": "metadata",
+      "bundles": [
+        "I1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1038/s41586-025-09833-y"
+    },
+    {
+      "key": "AnantramDatta1996",
+      "holding": "none",
+      "bundles": [
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "ArnoldMcLerran1987",
+      "holding": "metadata",
+      "bundles": [
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.36.581"
+    },
+    {
+      "key": "Berry1984",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1098/rspa.1984.0023"
+    },
+    {
+      "key": "Berry1989",
+      "holding": "none",
+      "bundles": [
+        "D1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Bhatia1997",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Blanter2000",
+      "holding": "none",
+      "bundles": [
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "BlochSiegert1940",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRev.57.522"
+    },
+    {
+      "key": "BoldoLaxMilgram2016",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Brylinski2002",
+      "holding": "abstract",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "CallenWelton1951",
+      "holding": "none",
+      "bundles": [
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Carter1971",
+      "holding": "metadata",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.26.331"
+    },
+    {
+      "key": "Caves1982",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Choi1975",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "ChristensenDuff1978",
+      "holding": "metadata",
+      "bundles": [
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0370-2693(78)90857-2"
+    },
+    {
+      "key": "Davies1990",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Degenne2025Kernels",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "DemboZeitouni1998LDT",
+      "holding": "none",
+      "bundles": [
+        "I3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "DolanGrady1982",
+      "holding": "metadata",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.25.1587"
+    },
+    {
+      "key": "EchenimMhalla2021",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Eddington1919",
+      "holding": "abstract",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1098/rsta.1920.0009"
+    },
+    {
+      "key": "FalascoEsposito2025RMP",
+      "holding": "metadata",
+      "bundles": [
+        "I3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/RevModPhys.97.015002"
+    },
+    {
+      "key": "FordFulkerson1956",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "FouresBruhat1952",
+      "holding": "metadata",
+      "bundles": [
+        "I1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF02392131"
+    },
+    {
+      "key": "FukuiHatsugaiSuzuki2005",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1143/JPSJ.74.1674"
+    },
+    {
+      "key": "Gabor1946",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1049/ji-3-2.1946.0074"
+    },
+    {
+      "key": "GellMannOakesRenner1968",
+      "holding": "metadata",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRev.175.2195"
+    },
+    {
+      "key": "Gerace2012",
+      "holding": "metadata",
+      "bundles": [
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevB.86.144505"
+    },
+    {
+      "key": "Grisins2016",
+      "holding": "metadata",
+      "bundles": [
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevB.94.144518"
+    },
+    {
+      "key": "GrossJackiw1972",
+      "holding": "metadata",
+      "bundles": [
+        "L2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.6.477"
+    },
+    {
+      "key": "Haldane1988",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.61.2015"
+    },
+    {
+      "key": "HashinShtrikman1962",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1063/1.1728579"
+    },
+    {
+      "key": "HashinShtrikman1963",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0022-5096(63)90060-7"
+    },
+    {
+      "key": "Hawking1975CMP",
+      "holding": "metadata",
+      "bundles": [
+        "L3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF02345020"
+    },
+    {
+      "key": "HawkingPenrose1970",
+      "holding": "abstract",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1098/rspa.1970.0021"
+    },
+    {
+      "key": "Heading1962",
+      "holding": "none",
+      "bundles": [
+        "D1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Helstrom1976",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "InonuWigner1953",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Irwin1995",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1063/1.113674"
+    },
+    {
+      "key": "Israel1967",
+      "holding": "metadata",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRev.164.1776"
+    },
+    {
+      "key": "Jacquet2022",
+      "holding": "abstract",
+      "bundles": [
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1140/epjd/s10053-022-00477-5"
+    },
+    {
+      "key": "Jacquet2023QNM",
+      "holding": "metadata",
+      "bundles": [
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.130.111501"
+    },
+    {
+      "key": "Kailath1967",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1109/TCOM.1967.1089532"
+    },
+    {
+      "key": "KaratzasShreve1991BMSC",
+      "holding": "none",
+      "bundles": [
+        "I3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Kitaev1997",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "KlinkhamerManton1984",
+      "holding": "metadata",
+      "bundles": [
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.30.2212"
+    },
+    {
+      "key": "KobayashiNomizu1963",
+      "holding": "none",
+      "bundles": [
+        "I1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "LeCam1986",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/978-1-4612-4946-7"
+    },
+    {
+      "key": "Lean4",
+      "holding": "abstract",
+      "bundles": [
+        "D5"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/978-3-030-79876-5_37"
+    },
+    {
+      "key": "LeanLJ2025",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1080/00268976.2025.2539421"
+    },
+    {
+      "key": "LiPaulson2018",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "LjungstromMortberg2024",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "LuccioliDegenne2024",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "MaxwellGarnett1904",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1098/rsta.1904.0024"
+    },
+    {
+      "key": "MeiburgLessaSoldati2025",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Milton2002",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1017/CBO9780511613357"
+    },
+    {
+      "key": "Nguyen2015",
+      "holding": "metadata",
+      "bundles": [
+        "E1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.114.036402"
+    },
+    {
+      "key": "Nielsen1981a",
+      "holding": "metadata",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0550-3213(81)90361-8"
+    },
+    {
+      "key": "Nielsen1981b",
+      "holding": "metadata",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0550-3213(81)90524-1"
+    },
+    {
+      "key": "Niemeier1973",
+      "holding": "metadata",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0022-314X(73)90068-1"
+    },
+    {
+      "key": "Onsager1944",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Penrose1965",
+      "holding": "metadata",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.14.57"
+    },
+    {
+      "key": "RashidHasan2017",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "ReadRezayi1999",
+      "holding": "abstract",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevB.59.8084"
+    },
+    {
+      "key": "Reuss1929",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1002/zamm.19290090104"
+    },
+    {
+      "key": "RevuzYor1999CMSM",
+      "holding": "none",
+      "bundles": [
+        "I3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Robinson1975",
+      "holding": "metadata",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.34.905"
+    },
+    {
+      "key": "Romatschke2010",
+      "holding": "none",
+      "bundles": [
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Stelle1977",
+      "holding": "abstract",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevD.16.953"
+    },
+    {
+      "key": "SvetitskyYaffe1982",
+      "holding": "metadata",
+      "bundles": [
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0550-3213(82)90172-9"
+    },
+    {
+      "key": "TKNN1982",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.49.405"
+    },
+    {
+      "key": "Uhlmann1976",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "UnruhCBO2025",
+      "holding": "abstract",
+      "bundles": [
+        "D12"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Verlinde1988",
+      "holding": "metadata",
+      "bundles": [
+        "D4"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1016/0550-3213(88)90603-7"
+    },
+    {
+      "key": "Viermann2022",
+      "holding": "metadata",
+      "bundles": [
+        "D1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1038/s41586-022-05313-9"
+    },
+    {
+      "key": "Voigt1889",
+      "holding": "abstract",
+      "bundles": [
+        "D11"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1002/andp.18892741206"
+    },
+    {
+      "key": "Wald1984",
+      "holding": "metadata",
+      "bundles": [
+        "I1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.7208/chicago/9780226870373.001.0001"
+    },
+    {
+      "key": "Watrous2018",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "WernerState1989",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Witten1982",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Zaremba1999",
+      "holding": "none",
+      "bundles": [
+        "D1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "bakalov2001",
+      "holding": "none",
+      "bundles": [
+        "I2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1090/ulect/021"
+    },
+    {
+      "key": "buttiker1986",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.57.1761"
+    },
+    {
+      "key": "compcert",
+      "holding": "metadata",
+      "bundles": [
+        "I1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1145/1538788.1538814"
+    },
+    {
+      "key": "datta1995",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1017/CBO9780511805776"
+    },
+    {
+      "key": "denHollander2000LDPs",
+      "holding": "none",
+      "bundles": [
+        "I3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "diFrancesco1997",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "curated",
+      "signals": [],
+      "route": "textbook",
+      "priority": "P2",
+      "reason": "Textbook (Conformal Field Theory), background citation.",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "efron1982",
+      "holding": "none",
+      "bundles": [
+        "I2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1137/1.9781611970319"
+    },
+    {
+      "key": "egno2015",
+      "holding": "none",
+      "bundles": [
+        "I2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1090/surv/205"
+    },
+    {
+      "key": "gksl1976",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1063/1.522979"
+    },
+    {
+      "key": "hohenbergKohn1964",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRev.136.B864"
+    },
+    {
+      "key": "isabelleCBO",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "kassel1995",
+      "holding": "none",
+      "bundles": [
+        "I2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/978-1-4612-0783-2"
+    },
+    {
+      "key": "kato1995",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/978-3-642-66282-9"
+    },
+    {
+      "key": "landauer1957",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1147/rd.13.0223"
+    },
+    {
+      "key": "leanQI2025",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "levy1979",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1073/pnas.76.12.6062"
+    },
+    {
+      "key": "lieb1983",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1002/qua.560240302"
+    },
+    {
+      "key": "lindblad1976",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1007/BF01608499"
+    },
+    {
+      "key": "meirWingreen1992",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1103/PhysRevLett.68.2512"
+    },
+    {
+      "key": "reedSimon2",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "sel4",
+      "holding": "metadata",
+      "bundles": [
+        "I1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": "10.1145/1629575.1629596"
+    },
+    {
+      "key": "survey2021",
+      "holding": "none",
+      "bundles": [
+        "D10"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "turaev2010",
+      "holding": "none",
+      "bundles": [
+        "I2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "unassessed",
+      "priority": "P2",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026D2",
+      "holding": "none",
+      "bundles": [
+        "F",
+        "L2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026D3",
+      "holding": "none",
+      "bundles": [
+        "F",
+        "L3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026D4",
+      "holding": "none",
+      "bundles": [
+        "D2",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026E1",
+      "holding": "none",
+      "bundles": [
+        "D1",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026E2",
+      "holding": "none",
+      "bundles": [
+        "D1",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026I1",
+      "holding": "none",
+      "bundles": [
+        "D1",
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026Modular",
+      "holding": "none",
+      "bundles": [
+        "D3",
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026Strategy",
+      "holding": "none",
+      "bundles": [
+        "F",
+        "I3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "CompanionCompilation",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "CompanionFaultTolerance",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "CompanionStochastic",
+      "holding": "none",
+      "bundles": [
+        "D9"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026D1",
+      "holding": "none",
+      "bundles": [
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026D5",
+      "holding": "none",
+      "bundles": [
+        "F"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026GrapheneDeep",
+      "holding": "none",
+      "bundles": [
+        "E2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026I2",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026L2",
+      "holding": "none",
+      "bundles": [
+        "D2"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026LinearizedEFE",
+      "holding": "none",
+      "bundles": [
+        "L1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026TQC",
+      "holding": "none",
+      "bundles": [
+        "D3"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "Roehm2026Wave16",
+      "holding": "none",
+      "bundles": [
+        "D1"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "RoehmD4Topological",
+      "holding": "none",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "RoehmD6FaultTolerant",
+      "holding": "none",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "RoehmD8Compilation",
+      "holding": "none",
+      "bundles": [
+        "D4"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    },
+    {
+      "key": "RoehmD9Certification",
+      "holding": "none",
+      "bundles": [
+        "D8"
+      ],
+      "bears": false,
+      "why": "-",
+      "signals": [],
+      "route": "internal",
+      "priority": "\u2014",
+      "reason": "",
+      "route_note": "",
+      "doi": ""
+    }
+  ],
+  "current_gap_count": 159,
+  "prior_tracked_register_gap_count": 164,
+  "owned_four_acquisitions": [
+    "BakerBellini2017",
+    "CreminelliVernizzi2017",
+    "SaksteinJain2017",
+    "EzquiagaZumalacarregui2017"
+  ],
+  "L1_cited_key_set_unchanged_from_970": true,
+  "only_changed_bundle_tex": [
+    "papers/L1/paper_draft.tex"
+  ],
+  "additional_removed_stale_row": {
+    "key": "VladimirovDiakonov2012",
+    "reason": "not cited in any current bundle; source usage unchanged from base970, not removed by this replacement",
+    "holding_still": "metadata",
+    "acquisition_credit": false
+  },
+  "P1_reordering": "existing writer refresh; no count change or new acquisition credited",
+  "scope": "Derived current usage/holdings, not full scientific acceptance or five acquisitions"
+}

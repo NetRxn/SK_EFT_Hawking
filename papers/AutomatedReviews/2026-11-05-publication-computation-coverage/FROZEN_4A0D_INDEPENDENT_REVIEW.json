@@ -1,0 +1,364 @@
+{
+  "packet": "publication-4a0d-qualification-review-r1.json",
+  "first_check_exit": 0,
+  "first_check_fresh": true,
+  "check_exit": 0,
+  "checks": {},
+  "junit_archive": {
+    "sha256": "b34965a007dba91f8c4281f9aded04977ee4e8347f6e907812de025062a30d35",
+    "member": "l1-4a0d-fast.xml",
+    "bytes": 997888,
+    "sha256_member": "c5d61aa5bc4fa3463858a477ea1496cb60a86c66992346d06614d0290bb25e42",
+    "crc32": 4031517832
+  },
+  "case_comparison": {
+    "old_cases": 7161,
+    "current_cases": 7196,
+    "counts": {
+      "skipped": 8,
+      "passed": 7159,
+      "failed": 29
+    },
+    "five_fixed": [
+      [
+        "tests.test_d5_citations.TestExemptionIsClaimedNotInferred",
+        "test_seeding_AWAY_a_declaration_turns_the_check_RED"
+      ],
+      [
+        "tests.test_d5_citations.TestExemptionIsClaimedNotInferred",
+        "test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt"
+      ],
+      [
+        "tests.test_d5_citations.TestExemptionIsClaimedNotInferred",
+        "test_the_undeclared_ceiling_has_ZERO_headroom"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_target_resolves_to_every_file_it_names_and_only_real_ones[SK_EFT_Hawking/src/core/formulas.py-expected4]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_no_missing_from_registry"
+      ]
+    ],
+    "new35_allpass": [
+      [
+        "tests.test_architecture_claims",
+        "test_adr012_logical_repository_prefix_denotes_active_checkout"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-basename]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-directory]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-foreign]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-missing]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-other-prefix]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-prefixed-traversal]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-symlink]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[canonical-traversal]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-basename]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-directory]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-foreign]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-missing]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-other-prefix]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-prefixed-traversal]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-symlink]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_refusals[managed-traversal]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_spellings_compose_and_deduplicate[canonical]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_checkout_target_spellings_compose_and_deduplicate[managed]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_target_aliases_preserve_lane_and_concurrent_file_partition[canonical]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_active_target_aliases_preserve_lane_and_concurrent_file_partition[managed]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_logical_prefix_never_falls_back_to_foreign_copy[canonical]"
+      ],
+      [
+        "tests.test_orchestrate",
+        "test_logical_prefix_never_falls_back_to_foreign_copy[managed]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[None-empty]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[None-missing]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[None-nonempty]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[no-source-empty]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[no-source-missing]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[no-source-nonempty]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[success-empty]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[success-missing]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_path_contract_retains_real_missing_and_empty_failures[success-nonempty]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_state_is_active_checkout_local[no-source]"
+      ],
+      [
+        "tests.test_phase6i_wave1",
+        "test_cache_state_is_active_checkout_local[success]"
+      ],
+      [
+        "tests.test_workspace_resolver",
+        "test_external_named_managed_checkout_reaches_shared_workspace"
+      ]
+    ],
+    "same8_skip_identities": true,
+    "current29_failure_records_exact": true,
+    "no_new_failure_identities": true
+  },
+  "source_receipt": {
+    "exit_code": 1,
+    "actual_parent_wall_seconds": 633.9138540830463,
+    "head_before": "4a0d736866adb4cdc006d6835f2895254bc942cb",
+    "head_after": "4a0d736866adb4cdc006d6835f2895254bc942cb",
+    "status_before": "",
+    "status_after": "",
+    "same_head": true,
+    "clean_after": true,
+    "command": [
+      "uv",
+      "run",
+      "python",
+      "-m",
+      "pytest",
+      "-q",
+      "--junitxml=/tmp/l1-4a0d-fast.xml"
+    ],
+    "stdout_sha256": "2194ba92d5fe6f777bd25588145b4a99b885df3163b80f1cc59c5aed145f7172"
+  },
+  "junit_suite_attributes": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "29",
+      "skipped": "8",
+      "tests": "7196",
+      "time": "631.449",
+      "timestamp": "2026-11-05T06:13:38.912659-06:00",
+      "hostname": "NetRxn.local"
+    }
+  ],
+  "exact_copies": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_FAST_DRIVER.py",
+      "original": "/tmp/l1-4a0d-fast-driver.py",
+      "bytes": 1577,
+      "sha256": "0baf7960a68aa56b3d23dc0b49ae0a05b89fc53a28959bb7a47049d17314a7ff"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_FAST.txt",
+      "original": "/tmp/l1-4a0d-fast.txt",
+      "bytes": 141070,
+      "sha256": "2194ba92d5fe6f777bd25588145b4a99b885df3163b80f1cc59c5aed145f7172"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_FAST_EXIT.json",
+      "original": "/tmp/l1-4a0d-fast.exit.json",
+      "bytes": 497,
+      "sha256": "9780b4d9d5e44fcde8d930cd8d4ae489e300177c365555b1b8e7710a2332cec4"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_FAST_PREFLIGHT.json",
+      "original": "/tmp/l1-4a0d-fast.preflight.json",
+      "bytes": 304,
+      "sha256": "1eb942d4cabaf04ae50f7a2b2b1ec208e230e82c71abcbac84a206dae0f7fd58"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_FAST_VERIFICATION.json",
+      "original": "/tmp/l1-4a0d-fast-verification.json",
+      "bytes": 64145,
+      "sha256": "33d683434f75c5acbfdfe4fdc24d8a90419691defac5406ff9a69431367402e7"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_GATE_READBACK.json",
+      "original": "/tmp/l1-4a0d-gate-readback.json",
+      "bytes": 405091,
+      "sha256": "67187716cd74423084eefa449b250adfc977fd5e0b978e8505c24da221a9da74"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_GRAPH_STDOUT.txt",
+      "original": "/tmp/l1-4a0d-canonical-graph.out",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_GRAPH_STDERR.txt",
+      "original": "/tmp/l1-4a0d-canonical-graph.err",
+      "bytes": 13026,
+      "sha256": "16411b383fe5e2fd0b53a5391a36d04414b46df3a214fb67cc0ee689b7aa6e58"
+    }
+  ],
+  "gates": {
+    "codes": [
+      "D1",
+      "D10",
+      "D11",
+      "D12",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "E1",
+      "E2",
+      "F",
+      "I1",
+      "I2",
+      "I3",
+      "L1",
+      "L2",
+      "L3"
+    ],
+    "count": 231,
+    "counts": {
+      "passed": 159,
+      "open": 28,
+      "blocked": 25,
+      "needs-recheck": 19
+    },
+    "changes": [
+      {
+        "id": "gate:D1:CitationIntegrity",
+        "before": "blocked",
+        "now": "passed"
+      },
+      {
+        "id": "gate:D3:CitationIntegrity",
+        "before": "blocked",
+        "now": "passed"
+      },
+      {
+        "id": "gate:D4:CitationIntegrity",
+        "before": "blocked",
+        "now": "passed"
+      },
+      {
+        "id": "gate:D9:CitationIntegrity",
+        "before": "blocked",
+        "now": "passed"
+      },
+      {
+        "id": "gate:E1:CitationIntegrity",
+        "before": "blocked",
+        "now": "passed"
+      }
+    ],
+    "newly_green": [],
+    "graph_meta": {
+      "built_at": "2026-11-05T12:12:16.650612+00:00",
+      "source_hash": "f05067d944cb41f5",
+      "node_count": 51059,
+      "edge_count": 18756
+    },
+    "graph_sha256": "eca47323540a60fe116986ee77fd91106aaeef1907b7a5a5a650b9a2d998a4fe",
+    "original_graph_bytes": 87572189,
+    "graph_machine_local": true,
+    "fingerprint_limited": true,
+    "diagnostic_annotation": "Initial diagnostic accidentally printed links while excluding nonexistent edges key; no graph/file/evaluation mutation or new measurement resulted. Corrected readback uses explicit meta/nodes and canonical bundle roster."
+  },
+  "separate_explicit_slow": {
+    "cases": 89,
+    "allpass": true,
+    "junit_sha256": "1258bfe63ba4d268515b9520971b280b4d11fd00fc6c8a50c51bf1dbd7cd3f09",
+    "orphan_cases": [
+      [
+        "tests.test_phase6i_wave1",
+        "test_extract_missing_bibkeys_emits_no_orphans"
+      ]
+    ],
+    "scope": "separate affected-scope measurement; broad92deselected remain excluded"
+  },
+  "verdict": "ACCEPT exact frozen4a0d RED qualification evidence; no broader acceptance",
+  "limitations": [
+    "Fullgraph source fingerprint is limited; full graph hash binds captured machine-local artifact, not complete source/runtime inputs",
+    "Readback includes machine-local readiness state and timestamps; not native/runtime/security/human/publication acceptance",
+    "JUnit omits deselected identities;92 remains stdout-reported default exclusion, not passes",
+    "Matching failure identities do not prove unchanged causes or waive29 failures",
+    "Scientific portable234 unchanged; failed79 pilot yields no coefficient"
+  ],
+  "required_corrections": []
+}

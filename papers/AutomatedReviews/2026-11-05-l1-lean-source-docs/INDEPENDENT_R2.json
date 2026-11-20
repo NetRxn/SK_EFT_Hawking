@@ -1,0 +1,40 @@
+{
+  "verdict": "ACCEPT",
+  "scope": "Independent source/math/Abbott-primary documentation review only; not native/build/project/publication acceptance",
+  "reviewed_at_utc": "2026-11-05T23:21:41.379149+00:00",
+  "proposal_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "base_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+  "non_block_comment_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+  "non_block_segments_byte_identical": true,
+  "block_comments": 48,
+  "changed_blocks": 11,
+  "manifest_operations": 21,
+  "r2_delta_operations": 4,
+  "both_manifest_paths_reconstruct_r2": true,
+  "controls_independently_executed": {
+    "1.1": {
+      "original": "FAIL",
+      "rejected_r1": "FAIL",
+      "r2": "PASS"
+    },
+    "1.2": {
+      "original": "FAIL",
+      "rejected_r1": "FAIL",
+      "r2": "PASS"
+    },
+    "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md:1.2": {
+      "original": "FAIL",
+      "rejected_r1": "PASS",
+      "r2": "PASS"
+    },
+    "papers/AutomatedReviews/2026-11-05-l1-reader-results/L1.md:1.2": {
+      "original": "FAIL",
+      "rejected_r1": "PASS",
+      "r2": "PASS"
+    }
+  },
+  "r1_preserved_sha256": "695e955a1e7d90db84969dd0677bdb8da3dccc327b4f4d4e90926571aeff3fba",
+  "required_corrections": [],
+  "native": "Not run or claimed. Earlier original-source baseline evidence is distinct.",
+  "physical_BUILD": "Unchanged and owed. No global missing-physics claim, scientific scope reduction, theorem weakening or axiom/API change."
+}

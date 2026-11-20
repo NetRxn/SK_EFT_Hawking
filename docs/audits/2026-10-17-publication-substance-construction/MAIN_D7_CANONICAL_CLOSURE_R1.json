@@ -1,0 +1,21 @@
+{
+  "scope": "Only the independently reviewed stale D7 test regression; no proof or publication closure",
+  "closure": {
+    "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+    "status": "fixed",
+    "evidence": "Current-source seven-path composition independently ACCEPTed after actual D7 manuscript, Lean declaration, built-index and resolver verification with all three phantom negatives preserved. Independent scoped68PASS/1SKIP; genuine citation failure remains visible. Full review and byte manifest preserved in docs/audits/2026-10-17-publication-substance-construction/MAIN_EXISTING_REPAIRS_COMPOSITION_REVIEW_R1.md and its evidence archive. This closes only the stale D7 citation regression, not proof substance or publication readiness.",
+    "superseded_by": null,
+    "date": "2026-11-06",
+    "commit": "d9de91d6b",
+    "verified_by": {
+      "command": "uv run --no-sync python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+      "declared": "uv run --no-sync python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-06"
+    }
+  },
+  "writer_stdout": "\u2713 wrote 1 record(s): review:2026-10-15-d7-current-theorem-regression:infra:1.1\n",
+  "writer_stderr": "",
+  "all_prior_ledger_entries_deep_equal": true
+}

@@ -1,0 +1,23 @@
+# Bounded L1 catalog rebase r2
+
+The new packet checked fresh=true before any other r2 action. The current L1 manuscript SHA256 remains224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2. All124 current content IDs, quotes, line spans and verdicts are unchanged. Original r1 artifacts remain immutable. Only the caption/provenance assessment metadata at unit69 and unit123 changes, together with scoped propagation disposition/evidence metadata. Four prior blocker identities and all historical reconciliation remain; automatic closures remain zero.
+
+Read the actual current visualizations.py/FigureSpec, D3 adjacent prose and source-Paper25 diff, original figure findings, repaired control receipts and ROOT's PHYSICS_TESTS.txt. Compared the supplied actual before/after Plotly JSON: every trace x/y/fill/fillcolor/type matches exactly; layout shapes and axis ranges match exactly. The sole mode change is trace1 (zero-indexed cap trace), None to lines. Source diff confirms styling/text/layout changes, with no new physics law. All four current PNG consumers have identical SHA256cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976. This is source-data/custody verification, not visual acceptance.
+
+The actual FigureSpec now cites Abbott Eq.(1) with conservative-envelope qualification. Actual printed page6 section4.1 is the correct locator; r1 evidence mistakenly wrote page7. Its equation identity was correct. D3 now gives the conditional squared interval, center1+tau^2 and half-width2tau. Its caption limits order-unity offsets to the highlighted adopted window, correcting the whole-axis implication. The source-Paper25 diff adds four existing notation macros and replaces unsupported Greek typesetting in a section title and function expression; no scientific statement is changed by that diff.
+
+ROOT's three original figure structural controls are recorded GREEN. ROOT's scoped physics receipt says81 passed in0.07s. This r2 reviewer did not rerun physics, compile, inspect actual rendered pages, invoke native science/Lean tools or certify visual acceptance. Independent figure-render/source acceptance remains pending. Source-only Lean qualifications and incomplete discovery remain as in r1.
+
+Original B3 normalization/derived-window, microscopic action/propagator/matter and transport/frequency matching BUILDs remain open. D3 adopted endpoint physical-regime assertions and source-Paper25 old scientific wording remain outside this limited repair. The specific D3 factor/conditional wording mismatch no longer reproduces, but receives only a candidate scoped disposition; it is not silently closed and the propagation blocker remains.
+
+## Exhaustive numerical acceptance beyond the 81-case count
+
+NUMERIC_COVERAGE_GAPS.md retains the original acceptance requirement. Needed evidence is an exhaustive current abstract/caption literal/output manifest bound to manuscript hash; exact reference arithmetic for adopted decimal tau/endpoints, squared interval and width4tau=1.2e-14, adopted width9.9, strict>14-order ratio and anchor; held Abbott Eq.(1) to symmetric-envelope mapping; independent high-precision endpoint deviations with explicit two-decimal rounding assertions for[-0.68,+2.16]; and actual producer/PNG/render input/label custody. Existing81-case assertions provide substantial family/precision support but do not substitute for that complete mapping. Scientific derivation of adopted parameters is a separate BUILD. Do not discharge acceptance by narrowing or deleting the manuscript claim.
+
+## Candidate and checks
+
+claims_review.json is validated by the existing sentence_state.py CLI:ok=true,124sentences. DELTA.json enumerates the exact changed record fields and preserved identities. plot-data-comparison.json records the actual before/after comparisons. source_manifest.json pins current inspected inputs and ROOT receipts. No canonical ingestion, tracked writer/Git/notebook mutation, finding closure or human-state action was performed. All r2 writes are under /tmp/l1-current-claims-review-20261105-r2.
+
+## CONTRADICTIONS BETWEEN THE BRIEF AND THE SOURCES
+
+The brief's shorthand “susceptibility halfwidth2tau+tau²” is the maximum offset from unity, not the geometric interval half-width. Actual repaired D3 correctly gives center1+tau² and half-width2tau; L1's offsets from unity are±2tau+tau². The source wins and the candidate records the exact geometry. Structural GREEN and byte-identical consumer propagation do not themselves certify actual rendered acceptance; the candidate explicitly leaves that independent review pending. Original exhaustive numerical and physical BUILD acceptance requirements are retained without automatic closure.

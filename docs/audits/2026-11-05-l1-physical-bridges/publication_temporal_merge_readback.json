@@ -1,0 +1,24 @@
+{
+  "premerge": "556b8ee48cfa7fcd9902999687f1452c4ae5dea5",
+  "incoming": "7f8cf17b443e23fd253ab59be3047bb23c69c60e",
+  "merge": "752d7eacfea1007fb83dc1d1820171c7084ad0e0",
+  "parents": [
+    "556b8ee48cfa7fcd9902999687f1452c4ae5dea5",
+    "7f8cf17b443e23fd253ab59be3047bb23c69c60e"
+  ],
+  "checks": {
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_ACCEPTANCE.md": true,
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_MATH_REVIEW_R1.md": true,
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_PHYSICS_REVIEW_R1.md": true,
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_evidence.zip": true,
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_manifest.json": true,
+    "papers/L1/paper_draft.tex_unchanged": true,
+    "papers/L1/bundle_metadata.json_unchanged": true,
+    "papers/L1/claims_review.json_unchanged": true,
+    "papers/L1/prose_state.json_unchanged": true,
+    "papers/L1/audit_log.jsonl_unchanged": true,
+    "docs/review_finding_supersessions.json_unchanged": true
+  },
+  "scope": "First manual source identity only; no scientific evaluation, native, closure or gate acceptance"
+}

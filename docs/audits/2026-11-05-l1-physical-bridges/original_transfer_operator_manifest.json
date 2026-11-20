@@ -1,0 +1,23 @@
+{
+  "archive": "original_transfer_operator_evidence.zip",
+  "bytes": 317712,
+  "members": 12,
+  "sha256": "0805b7ca9da0d0654ccbc052fc7a42700a21f1e5178d65f62ae4d8c3b3f632aa",
+  "accepted_source_sha256": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+  "parent_scientific_checkpoint": "93338ee2490177b5f7c1d363d217fba05da68a13",
+  "files": {
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "charter/publication-Phase6a-945baa478.md": "7c08089484b7a87b88856bbaefe9eadad19278e4a79cc0f083aee2c355720629",
+    "construction/l1-original-transfer-operator-r1.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "parent/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "parent/metric_operator_dictionary_evidence.zip": "dbc859eda69d5377730a3f725380e23f457b565517aefca1ec99895a363c751a",
+    "parent/metric_operator_dictionary_manifest.json": "0e1d3331ba59f1b298ef99ae80b2597d806cc1034978359a35530356dff4be79",
+    "review/l1-original-transfer-math-review-r1.md": "07392e89618501145d58927923821b949c04f907e490c36bcdb4d7852fd79048",
+    "review/l1-original-transfer-physics-review-r1.md": "4b3e57690477ef85fad02659e6ecbe76e5365e715059b15345e1cd8d1be66253",
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef",
+    "source/primary-source-pins-r1.json": "ccbd72a9660d45779e1a464a4e2c75ea715c2733563c2f2f256ea04ab866c433"
+  },
+  "scope": "Independent manual constructive exact original compact N16 transfer/source operator representation, finite-rank two-step kernel, periodic supertrace/compared APtrace and full metric/contact vertices. Auxiliary Hilbert space only; no physical state/adjoint/CAR/model choice, Zvalue,c0/N4, evaluation/native or publication closure."
+}

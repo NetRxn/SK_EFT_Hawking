@@ -1,0 +1,38 @@
+{
+  "archive": "original_nonregular_boundary_design_evidence.zip",
+  "sha256": "324b33256a368a826c0acb1b675169d87561eb69a6680fbb50f749f120c7a9d4",
+  "bytes": 681500,
+  "members": 19,
+  "r2_brief_sha256": "6722bb6ea2e55e42f521f6ff137a1c358dcb9c7425b03913e66316fb52961a62",
+  "intake_sha256": "981801bd594e89c92c1a1cb8552a4e83a8cc8cac9025a2b8c156259d4d68d2d1",
+  "parent_checkpoint": "fc5bf408ab22f31f11c5ece471f679be9a674052",
+  "canonical_copies": {
+    "l1-nonregular-boundary-primary-intake-r1.md": "NONREGULAR_BOUNDARY_RESEARCH.md",
+    "l1-nonregular-boundary-prospective-brief-r2.md": "ORIGINAL_NONREGULAR_BOUNDARY_BRIEF.md",
+    "l1-nonregular-boundary-brief-architecture-review-r2.md": "ORIGINAL_NONREGULAR_BOUNDARY_ARCHITECTURE_REVIEW_R2.md",
+    "l1-nonregular-boundary-brief-source-review-r2.md": "ORIGINAL_NONREGULAR_BOUNDARY_SOURCE_REVIEW_R2.md"
+  },
+  "files": {
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/NEXT_ORIGINAL_CONSTRUCTION_DESIGN.md": "0a95627a2be738fba1a713b522b6adca2ecbfcc9723a55178d39eef448853b6d",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+    "accepted/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "brief/l1-nonregular-boundary-prospective-brief-r2.md": "6722bb6ea2e55e42f521f6ff137a1c358dcb9c7425b03913e66316fb52961a62",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "history/l1-nonregular-boundary-brief-architecture-review-r1.md": "b7cd776de9c1d4d78960a147a30edbe52658fa3caa1421d4d1b7c0142f9b3aaa",
+    "history/l1-nonregular-boundary-brief-source-review-r1.md": "36707c63b25d813264361c37c780132e42147358ef846efda6ce1bcf29a55cb5",
+    "history/l1-nonregular-boundary-prospective-brief-r1.md": "ae389b5a13ab2a45d553775bdd4b3697855547033931415fc9e85f5efb133e02",
+    "parent/next_original_construction_design_evidence.zip": "0fd991e315ff7d616755a8f42722f61cd47b6ba464e8f7431fadcea6084d4ff2",
+    "parent/next_original_construction_design_manifest.json": "3ac57f35788462fbd7d9efaf2c574d6cc94bc8beb24a6a0daedc464a2dcce38d",
+    "research/l1-nonregular-boundary-primary-intake-r1.md": "981801bd594e89c92c1a1cb8552a4e83a8cc8cac9025a2b8c156259d4d68d2d1",
+    "research/l1-nonregular-research-scope-r1.md": "928b270946ff28f7560584f72ced782d1c7efda90ffd1e535d14c1142985175f",
+    "review/l1-nonregular-boundary-brief-architecture-review-r2.md": "d8a5a9794744c1504d2dc18c258543b0cd75618d7ca820539b8bd5f3de237321",
+    "review/l1-nonregular-boundary-brief-source-review-r2.md": "54cbdfb038ade895e5a03c0d11a55a56f753af801e6fa77caa101e6ab4bf68bb",
+    "source/nonregular-primary-custody-r1.json": "e4866f1e07bb604669ed1efe19c61a37cd9cc9eee67941c48f34fab3c02e004c"
+  },
+  "outcome": "Dual-reviewed prospective manual original-constraint/quantum-identity/C2 prerequisite design; no current derivation or physical-state implementation",
+  "scope": "Research/design deliverable only; no state/positivity/W1 closure, changed model/acceptance, runtime or slot admission"
+}

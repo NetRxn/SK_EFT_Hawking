@@ -1,0 +1,68 @@
+[
+  {
+    "mode": "baseline",
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "/tmp/l1-numeric-acceptance-author-20261105-r2/control-baseline.py"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "log": "/tmp/l1-numeric-acceptance-author-20261105-r2/baseline.log"
+  },
+  {
+    "mode": "source-corrected",
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "/tmp/l1-numeric-acceptance-author-20261105-r2/control-source-corrected.py"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "log": "/tmp/l1-numeric-acceptance-author-20261105-r2/source-corrected.log"
+  },
+  {
+    "mode": "wrong-cap",
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "/tmp/l1-numeric-acceptance-author-20261105-r2/control-wrong-cap.py"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "log": "/tmp/l1-numeric-acceptance-author-20261105-r2/wrong-cap.log"
+  },
+  {
+    "mode": "swapped-star",
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "/tmp/l1-numeric-acceptance-author-20261105-r2/control-swapped-star.py"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "log": "/tmp/l1-numeric-acceptance-author-20261105-r2/swapped-star.log"
+  },
+  {
+    "mode": "rounded-deviation",
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "/tmp/l1-numeric-acceptance-author-20261105-r2/control-rounded-deviation.py"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "log": "/tmp/l1-numeric-acceptance-author-20261105-r2/rounded-deviation.log"
+  },
+  {
+    "mode": "restored",
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "/tmp/l1-numeric-acceptance-author-20261105-r2/control-restored.py"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "log": "/tmp/l1-numeric-acceptance-author-20261105-r2/restored.log"
+  }
+]

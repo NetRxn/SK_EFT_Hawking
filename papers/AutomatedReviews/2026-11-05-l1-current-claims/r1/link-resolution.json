@@ -1,0 +1,870 @@
+[
+  {
+    "sentence": "sentence:L1:abstract:9a3de8fb",
+    "kind": "formula",
+    "target": "c_GW_from_chi_vest",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:abstract:275ad002",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:abstract:600cc132",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:abstract:7597e1a0",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:62514176",
+    "kind": "citation",
+    "target": "Diakonov2011",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:62514176",
+    "kind": "citation",
+    "target": "HebeckerWetterich2003",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:5f9fdcc4",
+    "kind": "citation",
+    "target": "Volovik2024Vestigial",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:0240691b",
+    "kind": "citation",
+    "target": "Volovik2022Counting",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:8b4bfa65",
+    "kind": "citation",
+    "target": "Volovik2026SecondSound",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:3aa1767b",
+    "kind": "citation",
+    "target": "Volovik2024VacuumDecay",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:f764373d",
+    "kind": "citation",
+    "target": "Volovik2026SecondSound",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:f764373d",
+    "kind": "citation",
+    "target": "Volovik2024VacuumDecay",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:67b7c8dd",
+    "kind": "citation",
+    "target": "Volovik2026SecondSound",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:d6013bba",
+    "kind": "formula",
+    "target": "c_GW_from_chi_vest",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:36969d20",
+    "kind": "theorem",
+    "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:introduction:36969d20",
+    "kind": "theorem",
+    "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_sign_stable",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:introduction:64da36f6",
+    "kind": "citation",
+    "target": "Vergeles2025",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:162806f2",
+    "kind": "formula",
+    "target": "c_GW_from_chi_vest",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:555a000d",
+    "kind": "citation",
+    "target": "Abbott2017GW170817",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:cd2d9076",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:3f462fe0",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:ec137388",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:c1128f8a",
+    "kind": "citation",
+    "target": "BakerBellini2017",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:eb1c2e4c",
+    "kind": "citation",
+    "target": "CreminelliVernizzi2017",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:92113836",
+    "kind": "citation",
+    "target": "SaksteinJain2017",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:c55144cc",
+    "kind": "citation",
+    "target": "EzquiagaZumalacarregui2017",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:e17de389",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:1277ae3f",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:introduction:5bda7b0e",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:06a02fb4",
+    "kind": "theorem",
+    "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:98b2e23b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:c1c2c986",
+    "kind": "theorem",
+    "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:7cde98b1",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:fe4a081e",
+    "kind": "citation",
+    "target": "Vergeles2025",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:e189cdda",
+    "kind": "citation",
+    "target": "Roehm2026LinearizedEFE",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:e189cdda",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:4e8fd97b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_pos",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:4e8fd97b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_at_chi_one",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:4e8fd97b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_deviation_strict_mono",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3cd70eb8",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "resolves": true,
+    "decl_kind": "def"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3cd70eb8",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6bb21996",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6bb21996",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "resolves": true,
+    "decl_kind": "def"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6bb21996",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:b63f73a8",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:aa870922",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:aa870922",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:aa870922",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:aa870922",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:ed33e4c6",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:ed33e4c6",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:207942fe",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:207942fe",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "resolves": true,
+    "decl_kind": "def"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:207942fe",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0b2b6094",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0b2b6094",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "resolves": true,
+    "decl_kind": "def"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0b2b6094",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:675ab7d2",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:675ab7d2",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:d8b52fd1",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:d8b52fd1",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "resolves": true,
+    "decl_kind": "def"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3868a57b",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3868a57b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3868a57b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3868a57b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:3868a57b",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6cfe0344",
+    "kind": "parameter",
+    "target": "GW.CHI_VEST_NATURAL_LOWER",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6cfe0344",
+    "kind": "parameter",
+    "target": "GW.CHI_VEST_NATURAL_UPPER",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:e18ae283",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:e8ff11e9",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_deviation_zero_iff_chi_one",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6b3a489b",
+    "kind": "citation",
+    "target": "Abbott2017GW170817",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:6b3a489b",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:9dbf0010",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:928d4e3e",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:9b5a8e88",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:c566aed6",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:2d57174c",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:2d57174c",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:2d57174c",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:2d57174c",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:bbf37c66",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:bbf37c66",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "resolves": true,
+    "decl_kind": "def"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:bbf37c66",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:41d63d4f",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:152de090",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:152de090",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_at_one",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:ea26e7aa",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:90db9920",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:8a067e2e",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:cb1ca595",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:de4a9473",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:de4a9473",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:f7fc4a81",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:f7fc4a81",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:formal-setup-and-result:f7fc4a81",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:c7c68df6",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:d3026983",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:443b79a2",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:6a138e73",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:175a78b5",
+    "kind": "formula",
+    "target": "c_GW_deviation_from_c",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:8e4393e7",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:285b31f4",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:bc5f96cb",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:9c6744da",
+    "kind": "formula",
+    "target": "dispersion_correction_from_GammaH",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:a19165ab",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.vestigial_dispersion_below_ligo_at_inspiral_peak",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:a19165ab",
+    "kind": "parameter",
+    "target": "GW.GAMMA_H_VESTIGIAL_DEFAULT",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:8b6e85b5",
+    "kind": "parameter",
+    "target": "GW.GAMMA_H_VESTIGIAL_DEFAULT",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:4fc7e3f3",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.dispersion_correction_abs_bound",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:4fc7e3f3",
+    "kind": "parameter",
+    "target": "GW.GAMMA_H_VESTIGIAL_DEFAULT",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:e1ed18a0",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.dispersion_correction_abs_bound",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:e63a56f8",
+    "kind": "parameter",
+    "target": "GW.C_GW_TWO_SIDED_CAP",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:d0e426a2",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.vestigial_dispersion_below_ligo_at_inspiral_peak",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:e1a97170",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:67db304d",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.dispersion_correction_abs_bound",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:67db304d",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.dispersion_correction_linear_in_gamma",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:67db304d",
+    "kind": "theorem",
+    "target": "SKEFTHawking.GravitationalWaves.dispersion_correction_zero_at_no_dissipation",
+    "resolves": true,
+    "decl_kind": "theorem"
+  },
+  {
+    "sentence": "sentence:L1:discussion:7caeb5ce",
+    "kind": "citation",
+    "target": "Roehm2026LinearizedEFE",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:7caeb5ce",
+    "kind": "formula",
+    "target": "G_N_emergent",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:c987e539",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  },
+  {
+    "sentence": "sentence:L1:discussion:0c438d3f",
+    "kind": "hypothesis",
+    "target": "H_VestigialModeIsGraviton",
+    "resolves": true,
+    "decl_kind": null
+  }
+]

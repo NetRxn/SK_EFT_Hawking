@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "scripts/close_finding.py",
+    "--doc",
+    "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md",
+    "--section",
+    "1.1",
+    "--status",
+    "fixed",
+    "--evidence",
+    "Independent complete14-apex source and existing-registry review accepts nine exact metadata claim corrections preserving all stronger proof scope and all other metadata bytes; separate source documentation1.2 stays OPEN and ROOT-owned.",
+    "--commit",
+    "366fe4109d33df4f6337b498c0e2817d3859a7b6",
+    "--verify",
+    "python3 -c 'import json; from pathlib import Path; a=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text())[\"apex_theorems\"]; assert all(\"isolating\" not in x[\"claims\"] for x in a), \"apex metadata overstates exclusive falsifier scope\"; assert \"nonnegative\" in a[0][\"claims\"] and \"fixed\" in a[0][\"claims\"], \"missing theorem domain\"; assert \"\u2260 0\" in a[10][\"claims\"], \"missing actual relative-deviation carrier\"; assert \"10^14 times\" in a[13][\"claims\"], \"wrong exact width theorem scope\"'",
+    "--superseded-by",
+    "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INDEPENDENT_REVIEW.md"
+  ],
+  "returncode": 0,
+  "stdout": "\u2713 wrote 1 record(s): review:2026-11-05-l1-apex-propagation:L1:1.1\n",
+  "stderr": ""
+}

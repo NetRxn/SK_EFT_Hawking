@@ -1,0 +1,20 @@
+{
+  "exit_code": 1,
+  "actual_parent_wall_seconds": 626.2948340410367,
+  "head_before": "16fde9b0803019d55d0b10250fed52e6258c1d42",
+  "head_after": "16fde9b0803019d55d0b10250fed52e6258c1d42",
+  "status_before": "",
+  "status_after": "",
+  "same_head": true,
+  "clean_after": true,
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "--junitxml=/tmp/l1-16fde9-fast.xml"
+  ],
+  "stdout_sha256": "f414be5061e23956d8ecf1bfcc6761c1b1d61fec56814744bc501c8bd9299ff7"
+}

@@ -1,0 +1,6 @@
+L1: OK  pages=4 overfull=0 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0
+    artifacts kept: /var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-L1-7xo65kdt
+paper25_gravitational_waves: OK  pages=5 overfull=0 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0
+    artifacts kept: /var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-paper25_gravitational_waves-jrjewsq9
+
+2/2 bundle(s) passed the compile gate

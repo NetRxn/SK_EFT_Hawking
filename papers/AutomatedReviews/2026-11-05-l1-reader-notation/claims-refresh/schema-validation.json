@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "scripts/sentence_state.py",
+    "validate",
+    "/tmp/l1-reader-notation-claims-20261105-r1/claims_review.json"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"ok\": true, \"path\": \"/private/tmp/l1-reader-notation-claims-20261105-r1/claims_review.json\", \"sentences\": 123, \"reviewer_version\": \"claims-reviewer-v2\"}\n",
+  "stderr": ""
+}

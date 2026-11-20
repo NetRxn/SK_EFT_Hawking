@@ -1,0 +1,66 @@
+[
+  {
+    "argv": [
+      "uv",
+      "run",
+      "python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_build_graph.py::TestStructuralFormulaPopulation"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "6b9b62ee5b8250adec43fe34f9a82d6780a6969c6eda7976ed78a5c276f8552b",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": ".......                                                                  [100%]\n7 passed in 2.88s\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_readiness_gate_evaluators.py::TestG4DeclaredTypedCoverage"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "e91c1c5a8fb57a43edfde636642293fbf633d475d53327a9b3edf4cdb0bdb834",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": ".......................                                                  [100%]\n23 passed in 0.03s\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_readiness_submission_gate.py"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "219c883e8a6342e96c8601106d1d395810da82b83194a4a0aa8249e344a39278",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": ".........................                                                [100%]\n25 passed in 0.03s\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_architecture_inventory.py"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "e99bca05d04f7c23ebea3560b43cd214a934306777d9ac31da097896d6c96612",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": ".........................................................                [100%]\n57 passed in 3.15s\n",
+    "stderr": ""
+  }
+]

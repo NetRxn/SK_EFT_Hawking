@@ -1,0 +1,5 @@
+Pinned delivery candidate:5a5d36fed74a83dcf4746e95b8f7673309e11d27
+Unchanged verify_scope.py --merge-gate full-suite phase:
+63 failed, 7053 passed, 46 skipped, 7 warnings, 52 errors in 1565.07s (0:26:05)
+Profile remains live in validate --ci --no-memo. This is not a terminal full-profile verdict.
+The115entry pytest cache matches the failure/error count; it is diagnostic node IDs, not full tracebacks or root-cause classification.

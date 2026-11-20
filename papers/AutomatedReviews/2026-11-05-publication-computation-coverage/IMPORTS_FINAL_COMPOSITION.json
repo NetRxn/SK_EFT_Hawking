@@ -1,0 +1,32 @@
+{
+  "verdict": "ACCEPT FINAL BOUNDED COMPOSITION",
+  "packet": "publication-imports-final-composition-r1.json",
+  "initial_packet_fresh": true,
+  "authorized_doc_corrections_reconciled": true,
+  "accepted_hashes": {
+    "scripts/build_graph.py": "df32bfede07cf4177d11017c7783177772fb8be5495d58a5036550cfba593ccb",
+    "tests/test_build_graph.py": "522c6898ef8ce5e02400cd0b052ba970abd45b59f21575fc61e7772e4b87c35f",
+    "docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md": "3e81f812a246519c8ce5eb57ae02322f94412b299b9ebb070cf8d28ce2d93626",
+    "docs/adrs/ADR-009-validation-suite-modularization.md": "8ed2383c80cca2edaac9453b608b268b25665ebeb6d880f054ad7a5f008e27bc",
+    "docs/superpowers/specs/2026-10-19-g4-declared-population-design.md": "bda9e6bf179ea6c60c455ced2290bc8f36542fe22e45ee40fca5cd88cb2447d7",
+    "docs/superpowers/plans/2026-10-19-g4-declared-population.md": "acabb1cbe00f6b79ad41bf1e835f90941c51cf2008d812dfc5778252018d9859",
+    "docs/counts.json": "0b24f39741c687d3d08642146c79e6be50e650c859cb76f4f27d414b413bbbf3",
+    "docs/counts.tex": "35c8c99525245be8e17a5ad118509f09ac8009a258d77fcebe66f16a32f421ee",
+    "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/infra.md": "009bffcaa388b82595ad9b3103411da80a72cd52293b78a1ca92e69d4461f2f6",
+    "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/SCOPED_REVIEW.md": "1bab19b83bcb55be393d77307f94e1c2004045084cb8f814d0543bae1c58d941",
+    "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/IMPORTS_IMPLEMENTATION.md": "2a2faf0336b4a63c928cda0116c5b9f456841646c8a292c639ac9ffe9af6e2e4"
+  },
+  "archived_reviews_and_receipts_exact": true,
+  "consumer_xml_cases": 163,
+  "whole_module_result": "130 passed, 1 skipped, 15 deselected",
+  "count_delta": {
+    "pytest_cases": 51,
+    "all_other_typed_values_conserved": true
+  },
+  "diff_check_passed": true,
+  "new_tests_or_scientific_compute_run": false,
+  "remaining_scoped_findings": [],
+  "canonical_closure_pending_source_checkpoint_and_writer": true,
+  "science_main_full_native_publication_acceptance": false,
+  "candidate_mutated_by_reviewer": false
+}

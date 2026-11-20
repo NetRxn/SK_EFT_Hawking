@@ -1,0 +1,55 @@
+{
+  "all12original_receipt_bytes_exact": true,
+  "all60branches_exact": true,
+  "archive_sha256": {
+    "l1_extended_offset_witness_k4_two_square_protected_torus.py": "764dabd1629e82bbe835343ccb4385438c09aafd107ad75b9d4577e67180fe3b",
+    "l1_k4_protected_torus4_portable_control.json": "8e55f8051dd5ab0fae2041466258dd16c7295e1ec77bfcd4703bc9855442593e",
+    "l1_k4_protected_torus4_portable_exit.json": "b9b6545400eb55a481da24a30f9a64605dfc453867c2b1968e7f56262dbac123",
+    "l1_k4_protected_torus4_receipts.jsonl": "fa61551b31b12bb6ada26b1986c115be2298ad377b66fb729a5db4ffbef72739",
+    "l1_k4_protected_torus4_review.md": "a91dc9e1a3a1d91953fa26b1a9cd3d7d62f3314d4698333bd0fb85dbf9a3ba64",
+    "l1_k4_protected_torus4_verification.json": "b6f79144b096e7f697694deaac1ace5b0eadc0a98a99d6e344d1e97b28878739"
+  },
+  "covariance_pairs": [
+    [
+      191,
+      238
+    ],
+    [
+      202,
+      239
+    ]
+  ],
+  "full_k4_closed": false,
+  "indices": [
+    191,
+    202,
+    238,
+    239
+  ],
+  "mixed_axis_subtotal": [
+    1016884898158927659939,
+    562949953421312
+  ],
+  "original_receipt_hashes": {
+    "/tmp/l1-next50-author-pilot.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-next50-author-pilot.exit.json": "dbdbc93955d85ea1d86621c9a09eae53b023d9db1bf721d84f74dcaa0f2dc54f",
+    "/tmp/l1-next50-author-pilot.out": "514c9d9dce6ce94dd9db9b633a5327044401a059273666f744e56faf91f17f79",
+    "/tmp/l1-next50-author-word202.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-next50-author-word202.exit.json": "561bd3cb4523f145adba66eb6cb2c315109b06cc4a6e87f77640c114e4ccd831",
+    "/tmp/l1-next50-author-word202.out": "839e2a3433d1dd5c308168198d9665e977f4a6a318102e1b9e92f33134e9c6ad",
+    "/tmp/l1-next50-author-word238.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-next50-author-word238.exit.json": "ff78965d19c76a290ff8186b054aa9d33556b7a8e14b3338884ca6783d37858a",
+    "/tmp/l1-next50-author-word238.out": "414ff756e2773aa01ce32417b9372e966faed330c6d312d9b2d706b337902b37",
+    "/tmp/l1-next50-author-word239.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-next50-author-word239.exit.json": "6e0b7e5d3c051ce455ccd9b3c567134d9010b40bad5803b07228bf67e17873ac",
+    "/tmp/l1-next50-author-word239.out": "d26a06f63c0632931863f4ba2fa0f9ef4e8f4f7a0015c763bdc66accb3bed9b9"
+  },
+  "physical_B3_closed": false,
+  "portable_accepted_selected_k4": 226,
+  "principal_binding_match": true,
+  "residual_mixed_axis": 18,
+  "residual_same_axis": 28,
+  "residual_words": 46,
+  "source_sha256": "764dabd1629e82bbe835343ccb4385438c09aafd107ad75b9d4577e67180fe3b",
+  "status": "PASS-portable-archive-selected4"
+}

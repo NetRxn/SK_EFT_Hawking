@@ -1,0 +1,13 @@
+{
+  "scope": "Rejected R1 author sources and actual rendered evidence, not final acceptance",
+  "files": {
+    "D3/paper_draft.tex": "a8887aba59cf2ea16ad8a0505ef8544b1420d6a4ac81190639f1a47969a0027c",
+    "D3/bundle_metadata.json": "69771c9a28d4ad46cc90abf7e92c56a8d09c2010ffdb2b4770aad99688b17c17",
+    "D3/paper_draft.pdf": "961833b9eb33a331fac6f5a9c864b6b5593a3a0ab3619219635f051bcbab6953",
+    "Paper25/paper_draft.tex": "e70adab5df808dc5e8bd7247b245381ec7b2b3452fe058ee1678d2fb6e24de0b",
+    "Paper25/paper_draft.pdf": "7a7af251cb66768c15f40702e2fbcf08bfdf5dfdf1cd43314dad9c277951fe60",
+    "D3/compile.log": "d67855ec066a920f217132c2885553235ef46e05899c100d90a598b7a31ba428",
+    "Paper25/compile.log": "70331eb5f952cf35407016621eed1395c9c2ab7d744388d4c27ecd23d7592dd2"
+  },
+  "archive_sha256": "f5f89c738c298f8f5e2d6a92c2971e17730726365c046970d3bfc13a0c1ecbdd"
+}

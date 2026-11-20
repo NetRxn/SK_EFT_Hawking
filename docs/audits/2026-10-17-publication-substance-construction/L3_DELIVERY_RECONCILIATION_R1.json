@@ -1,0 +1,464 @@
+{
+  "scope": "READ_ONLY historical/source/finding reconciliation; no implementation, tests, builds, graph import, Lean/LSP, slot/controller or stage acceptance",
+  "candidate_commit": "8ad1411526b8b8d5b49e9f3b9993b8083ec887d9",
+  "research_commit": "f905a2873a32269c3d21651abb2b64825a212c3d",
+  "initial_packet_check": {
+    "command": "python3 scripts/codex_continuity.py check /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l3-historical-acceptance-reconciliation-r1.json",
+    "exit_code": 0,
+    "result": {
+      "fresh": true,
+      "changed": []
+    }
+  },
+  "final_packet_check": {
+    "command": "python3 scripts/codex_continuity.py check /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l3-historical-acceptance-reconciliation-r1.json",
+    "exit_code": 1,
+    "result": {
+      "fresh": false,
+      "changed": [
+        "source"
+      ],
+      "task": "l3-historical-acceptance-reconciliation-r1",
+      "meaning": "Reconciliation required; lead must inspect current inputs and explicitly issue a new revision."
+    }
+  },
+  "final_head": "8ad1411526b8b8d5b49e9f3b9993b8083ec887d9",
+  "final_status": " M lean/lean_deps.json.hash\n",
+  "committed_index_sha256": "942279d0b9a4480b6396acd0717a1709a763aeee1a74289bfefbdb41d0664e6d",
+  "committed_declarations": [
+    {
+      "autogen": false,
+      "axiom_deps_core": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "axiom_deps_project": [],
+      "kind": "theorem",
+      "module": "SKEFTHawking.BHThermodynamicsFourLaws",
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.delta_ADW_nonzero_iff_alpha_ADW_ne_one",
+      "name_deps_extracted": true,
+      "name_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition.delta_consistent_with_ansatz",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_UV",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.α_ADW",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_pos"
+      ],
+      "name_deps_timed_out": false,
+      "structure_fields": [],
+      "type": "∀ (b : SKEFTHawking.BHThermodynamicsFourLaws.BHData) (p : SKEFTHawking.BHThermodynamicsFourLaws.ADWParams)\n  (T_H0 dT_dt_evap delta : Real),\n  SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition b p T_H0 dT_dt_evap delta → Iff (Ne delta 0) (Ne p.α_ADW 1)",
+      "type_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.α_ADW",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams"
+      ],
+      "value_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition.delta_consistent_with_ansatz",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_UV",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.α_ADW",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_pos"
+      ]
+    },
+    {
+      "autogen": false,
+      "axiom_deps_core": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "axiom_deps_project": [],
+      "kind": "theorem",
+      "module": "SKEFTHawking.BHThermodynamicsFourLaws",
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_alpha_ADW_dependence",
+      "name_deps_extracted": true,
+      "name_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_UV",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.α_ADW",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_pos"
+      ],
+      "name_deps_timed_out": false,
+      "structure_fields": [],
+      "type": "∀ (p : SKEFTHawking.BHThermodynamicsFourLaws.ADWParams),\n  Real.instLT.lt 1 p.α_ADW → Real.instLT.lt 0 (instHMul.hMul (instHSub.hSub p.α_ADW 1) p.Λ_UV)",
+      "type_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_UV",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.α_ADW",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams"
+      ],
+      "value_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_UV",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.α_ADW",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams.Λ_pos"
+      ]
+    },
+    {
+      "autogen": false,
+      "axiom_deps_core": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "axiom_deps_project": [],
+      "kind": "theorem",
+      "module": "SKEFTHawking.BHThermodynamicsFourLaws",
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion",
+      "name_deps_extracted": true,
+      "name_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify_Schwarzschild_iff",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition.evap_dT_dt_below",
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime.Schwarzschild",
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime.ADWExtremality",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData.M",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify_ADWExtremality_iff",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition.evap_dT_dt_above",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify",
+        "SKEFTHawking.BHThermodynamicsFourLaws.M_c"
+      ],
+      "name_deps_timed_out": false,
+      "structure_fields": [],
+      "type": "∀ (b : SKEFTHawking.BHThermodynamicsFourLaws.BHData) (p : SKEFTHawking.BHThermodynamicsFourLaws.ADWParams)\n  (T_H0 dT_dt_evap delta : Real),\n  SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition b p T_H0 dT_dt_evap delta →\n    And\n      (Eq (SKEFTHawking.BHThermodynamicsFourLaws.classify b p)\n          SKEFTHawking.BHThermodynamicsFourLaws.Regime.Schwarzschild →\n        Real.instLT.lt 0 dT_dt_evap)\n      (Eq (SKEFTHawking.BHThermodynamicsFourLaws.classify b p)\n          SKEFTHawking.BHThermodynamicsFourLaws.Regime.ADWExtremality →\n        Real.instLT.lt dT_dt_evap 0)",
+      "type_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData",
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime.Schwarzschild",
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime.ADWExtremality",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify"
+      ],
+      "value_deps_project": [
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify_Schwarzschild_iff",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition.evap_dT_dt_below",
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime.Schwarzschild",
+        "SKEFTHawking.BHThermodynamicsFourLaws.Regime.ADWExtremality",
+        "SKEFTHawking.BHThermodynamicsFourLaws.BHData.M",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify_ADWExtremality_iff",
+        "SKEFTHawking.BHThermodynamicsFourLaws.ADWParams",
+        "SKEFTHawking.BHThermodynamicsFourLaws.H_RegimePartition.evap_dT_dt_above",
+        "SKEFTHawking.BHThermodynamicsFourLaws.classify",
+        "SKEFTHawking.BHThermodynamicsFourLaws.M_c"
+      ]
+    },
+    {
+      "autogen": false,
+      "axiom_deps_core": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "axiom_deps_project": [],
+      "kind": "theorem",
+      "module": "SKEFTHawking.CrooksAnalogHawking.SKEFTHorizonBridge",
+      "name": "SKEFTHawking.CrooksAnalogHawking.noetherEntropyDensity_nonneg_of_SKEFTAxioms",
+      "name_deps_extracted": true,
+      "name_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.reflection_pos",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.dynamical_KMS",
+        "SKEFTHawking.SKDoubling.SKAction.lagrangian",
+        "SKEFTHawking.CrooksAnalogHawking.noetherEntropyDensity_eq_beta_imL",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS.i3_zero",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms",
+        "SKEFTHawking.GloriosoLiu.hasDynamicalKMS",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyDensity",
+        "SKEFTHawking.SKDoubling.FirstOrderCoeffs",
+        "SKEFTHawking.SKDoubling.firstOrderAction"
+      ],
+      "name_deps_timed_out": false,
+      "structure_fields": [],
+      "type": "∀ (action : SKEFTHawking.SKDoubling.SKAction) (β : Real),\n  Real.instLE.le 0 β →\n    SKEFTHawking.GloriosoLiu.SKEFTAxioms action β →\n      Exists fun c =>\n        And\n          (∀ (f : SKEFTHawking.SKDoubling.SKFields),\n            Eq (action.lagrangian f) ((SKEFTHawking.SKDoubling.firstOrderAction c).lagrangian f))\n          (And (SKEFTHawking.SKDoubling.FirstOrderKMS c β)\n            (∀ (f : SKEFTHawking.SKDoubling.SKFields),\n              Real.instLE.le 0 (SKEFTHawking.GloriosoLiu.noetherEntropyDensity c β f)))",
+      "type_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS",
+        "SKEFTHawking.SKDoubling.SKAction.lagrangian",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyDensity",
+        "SKEFTHawking.SKDoubling.FirstOrderCoeffs",
+        "SKEFTHawking.SKDoubling.firstOrderAction"
+      ],
+      "value_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.reflection_pos",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.dynamical_KMS",
+        "SKEFTHawking.SKDoubling.SKAction.lagrangian",
+        "SKEFTHawking.CrooksAnalogHawking.noetherEntropyDensity_eq_beta_imL",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS.i3_zero",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms",
+        "SKEFTHawking.GloriosoLiu.hasDynamicalKMS",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyDensity",
+        "SKEFTHawking.SKDoubling.FirstOrderCoeffs",
+        "SKEFTHawking.SKDoubling.firstOrderAction"
+      ]
+    },
+    {
+      "autogen": false,
+      "axiom_deps_core": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "axiom_deps_project": [],
+      "kind": "theorem",
+      "module": "SKEFTHawking.GloriosoLiu.LocalSecondLaw",
+      "name": "SKEFTHawking.GloriosoLiu.Glorioso_Liu_local_second_law",
+      "name_deps_extracted": true,
+      "name_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.reflection_pos",
+        "SKEFTHawking.GloriosoLiu.zeroEntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.divergence",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms"
+      ],
+      "name_deps_timed_out": false,
+      "structure_fields": [],
+      "type": "∀ (action : SKEFTHawking.SKDoubling.SKAction) (β : Real),\n  SKEFTHawking.GloriosoLiu.SKEFTAxioms action β →\n    Exists fun J => ∀ (f : SKEFTHawking.SKDoubling.SKFields), Real.instLE.le 0 (SKEFTHawking.GloriosoLiu.divergence J f)",
+      "type_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.divergence",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms"
+      ],
+      "value_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.reflection_pos",
+        "SKEFTHawking.GloriosoLiu.zeroEntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.divergence",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms"
+      ]
+    },
+    {
+      "autogen": false,
+      "axiom_deps_core": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "axiom_deps_project": [],
+      "kind": "theorem",
+      "module": "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+      "name": "SKEFTHawking.GloriosoLiu.entropy_current_exists",
+      "name_deps_extracted": true,
+      "name_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.dynamical_KMS",
+        "SKEFTHawking.SKDoubling.SKAction.lagrangian",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyCurrent",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent.density",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms",
+        "SKEFTHawking.GloriosoLiu.hasDynamicalKMS",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyDensity",
+        "SKEFTHawking.SKDoubling.FirstOrderCoeffs",
+        "SKEFTHawking.SKDoubling.firstOrderAction"
+      ],
+      "name_deps_timed_out": false,
+      "structure_fields": [],
+      "type": "∀ (action : SKEFTHawking.SKDoubling.SKAction) (β : Real),\n  SKEFTHawking.GloriosoLiu.SKEFTAxioms action β →\n    Exists fun J =>\n      Exists fun c =>\n        And\n          (∀ (f : SKEFTHawking.SKDoubling.SKFields),\n            Eq (action.lagrangian f) ((SKEFTHawking.SKDoubling.firstOrderAction c).lagrangian f))\n          (And (SKEFTHawking.SKDoubling.FirstOrderKMS c β)\n            (Eq J.density (SKEFTHawking.GloriosoLiu.noetherEntropyDensity c β)))",
+      "type_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+        "SKEFTHawking.SKDoubling.SKAction.lagrangian",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent.density",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyDensity",
+        "SKEFTHawking.SKDoubling.FirstOrderCoeffs",
+        "SKEFTHawking.SKDoubling.firstOrderAction"
+      ],
+      "value_deps_project": [
+        "SKEFTHawking.SKDoubling.SKAction",
+        "SKEFTHawking.SKDoubling.FirstOrderKMS",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms.dynamical_KMS",
+        "SKEFTHawking.SKDoubling.SKAction.lagrangian",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyCurrent",
+        "SKEFTHawking.SKDoubling.SKFields",
+        "SKEFTHawking.GloriosoLiu.EntropyCurrent.density",
+        "SKEFTHawking.GloriosoLiu.SKEFTAxioms",
+        "SKEFTHawking.GloriosoLiu.hasDynamicalKMS",
+        "SKEFTHawking.GloriosoLiu.noetherEntropyDensity",
+        "SKEFTHawking.SKDoubling.FirstOrderCoeffs",
+        "SKEFTHawking.SKDoubling.firstOrderAction"
+      ]
+    }
+  ],
+  "selected_canonical_closures": [
+    {
+      "row": 215,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:1.1",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "BLOCKER: Reall2024ThirdLawBPS L3 bibitem cited arXiv:2412.05678 (an unrelated algebraic-geometry paper by Will Traves). Registry has correct arxiv 2410.11956 + DOI 10.1103/PhysRevD.110.124059 + title 'A third law of black hole mechanics for supersymmetric black holes and a quasi-local mass-charge inequality'. L3 bibitem corrected to use registry-canonical title + arXiv ID + Phys. Rev. D 110, 124059 (2024) venue + DOI. The error was lift-time bibitem-retypesetting drift: registry was correct, paper27 was correct, only L3 author-rewrite introduced the regression.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 216,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:1.2",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "BLOCKER: Kirklin2024GSLAllOrders L3 bibitem had fabricated title 'All orders generalised second law from holographic information theory'. Registry has correct title 'Generalised second law beyond the semiclassical regime' + JHEP 07, 192 (2025) + DOI 10.1007/JHEP07(2025)192 + arXiv 2412.01903. L3 bibitem corrected. Same lift-time-retypesetting failure mode as 1.1.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 217,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:1.3",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "BLOCKER: KehleUnger2022ThirdLaw L3 bibitem had wrong title 'Extremal black hole formation as a counterexample to the third law'. Registry + paper27 have correct title 'Gravitational collapse to extremal black holes and the third law of black hole thermodynamics' + JEMS 2024 + DOI 10.4171/JEMS/1591 + arXiv 2211.15742. L3 bibitem corrected with full venue. Same lift-time-retypesetting failure mode.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 218,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:2.1",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "BLOCKER (CrossPaperConsistency): L3 \\Ladw macro expanded to \\Lambda_{\\rm ADW} but paper27 (line 13) and Lean BHThermodynamicsFourLaws.lean expand to \\Lambda_{\\rm UV} (the Lean ADWParams structure has field `Λ_UV` at line 449 of the structure definition). Same physical quantity, two names — load-bearing for cross-paper consistency. Fix: changed L3 \\newcommand{\\Ladw} to expand to \\Lambda_{\\rm UV}. Now matches paper27/Lean exactly.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 219,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:5.1",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "BLOCKER: L3 prose listed 4 fabricated falsifier names (negative_M_c_via_parameter_inversion / classifier_vs_functional_disagreement / delta_ADW_neq_zero_at_alpha_ADW_one / classifier_non_decidability) that don't exist in BHThermodynamicsFourLaws.lean. Actual Lean falsifiers: falsifier_acoustic_decay_form (line 628), falsifier_schwarzschild_heating (line 660), falsifier_third_law_form (line 688), falsifier_alpha_ADW_dependence (line 723). L3 §Tracked-hypothesis bundle rewritten to cite the four actual falsifier names with correct semantic descriptions per the Lean source.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 220,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:6.1",
+        "status": "open",
+        "superseded_by": null,
+        "evidence": "BLOCKER (NarrativeGrounding): L3 third-law parenthetical labeled as '(κ → 0 at finite proper time)' — that is the VIOLATION form, not Israel's law. Israel's strong third law forbids κ → 0 at finite time; it requires extremal horizon formation only in infinite affine time. Fix: rewrote parenthetical to 'Israel's strong form: κ → 0 attainable only at infinite affine time; equivalently, no extremal-horizon formation in finite proper time'. Aligns with paper27 line 388 ('preserving the Israel 1986 strong third law'). ⚠️ REOPENED 2026-07-31 by `validate.py --check recurrence_reopens_closures` (D11 Stage-13 round-12 finding 4.2): a LATER review of the same bundle raises this finding and it is open there. The later review is the evidence; this closure is what became false. It stood because until today the recurrence check used a 30-character common-prefix threshold against a corpus whose maximum achieved prefix is 17, so it could never fire.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 221,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:6.2",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "REQUIRED (NarrativeGrounding): L3 H_RegimePartition prose described as 2-conjunct existential. Actual Lean structure (BHThermodynamicsFourLaws.lean line 443-449) is a 5-field Prop structure: M_c_form_consistent / T_H0_pos / evap_dT_dt_above / evap_dT_dt_below / delta_consistent_with_ansatz. Five mutually-independent fields per anti-pattern audit. L3 §Tracked-hypothesis bundle rewritten with the 5-field display equation matching the Lean structure exactly.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 222,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:6.3",
+        "status": "fixed",
+        "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
+        "evidence": "REQUIRED (NarrativeGrounding): L3 called Eq. (Tacoustic) exponential the 'leading-order approximation', but Balbinot 2005 leading order is linear-in-t (Eq. Tsonic) with rational t~1/T³ asymptotics. The exponential form is an analytic alias used by the Lean module for the strict-decreasing claim, NOT Balbinot's leading order. Fix: rewrote the BEC-acoustic-branch paragraph to clarify (a) Balbinot 2005 leading order is linear-in-t with rational asymptote; (b) the exponential is the Lean module's analytic anchor / alias preserving strict-decreasing structure; (c) src/wkb/backreaction.py evolves the full coupled-ODE system (not the exponential), with line 449 explicitly noting the exponential is an analytic anchor.",
+        "date": "2026-05-01"
+      }
+    },
+    {
+      "row": 1179,
+      "record": {
+        "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:6.1",
+        "status": "fixed",
+        "evidence": "STALE. The parenthetical already states Israel's third law the right way round — kappa to 0 attainable only at infinite affine time — and the defective form is absent at HEAD, confirmed against git show. The following clauses are consistent with it. No edit made.",
+        "superseded_by": null,
+        "date": "2026-08-15",
+        "supersedes_inert_open": true
+      }
+    },
+    {
+      "row": 1229,
+      "record": {
+        "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:1.1",
+        "status": "fixed",
+        "evidence": "Re-verified from the full primary sources before changing anything; the pilot is right on both halves. JV-1998 (PRD 58, 064021) is a planar soliton in BULK 3He-A whose horizon exists ONLY above c_perp (Sec.V \"The horizons appear in the moving soliton if v > c_perp\"; Eq. (5.2)); Eq. (5.7) carries sqrt(1 - c_perp^2/v^2), so kappa -> 0 and T_H -> 0 as back-reaction slows the soliton toward c_perp FROM ABOVE, and Sec.VIII (\"cools as it evaporates and approaches an extremal black hole\") therefore AGREES with the equations. Read in the arXiv TeX (JacobsonVolovik1998.source/EventHorIn3He13Unix.tex lines 408, 452-453, 525-527, 707-713) and cross-checked in the published PDF Sec.VIII. The heating reasoning belongs to JK-2002, whose THIN FILM moves at v < c_perp with horizons at c(x_h) = +/- v and T_H(v) = T_H(0)(1 - v^2/c_perp^2) rising to the NON-ZERO T_H(0) = hbar c_perp / 2 pi d as radiation slows the wall (bhbu.tex lines 507, 550, 596-616, 652-654). The two 3He-A systems had been swapped. FIXED in fe154d98: BHThermodynamicsFourLaws.lean gains an \"Attribution correction (2026-08-15)\" docstring section retracting the claimed inconsistency and stating the soliton mechanism, and its References block moves JV-1998 to \"a second cooling case, not a contrast case\" with JK-2002 named as the sole heating contrast; CITATION_REGISTRY JacobsonVolovik1998 and JacobsonKoike2002 provides/notes rewritten accordingly. Blast radius closed in the same commit: paper27 Sec.\"The contrast case\" no longer lumps JV-1998 in and gains a paragraph putting the soliton on the cooling branch; the BH_THERMODYNAMICS_PARAMS reference block in src/core/constants.py; docs/roadmaps/Phase6a_Roadmap.md Wave-5 anchor block and item O.3 both carry a dated superseding note. Lean side is DOCSTRING-ONLY: lean_deps.json has no docstring field, the module elaborates with zero diagnostics, and regime_partition_criterion still verifies on {propext, Classical.choice, Quot.sound} - no theorem statement changed. Verify strengthened in 5a1f5167 from the filed absence-only form, which a deletion would have satisfied.",
+        "superseded_by": null,
+        "date": "2026-08-15",
+        "commit": "fe154d98",
+        "verified_by": {
+          "command": "cd \"$REPO\" && ! grep -q \"inconsistent with the same paper\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean && grep -q \"sits on the cooling side, with Balbinot 2005\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; jv=C['JacobsonVolovik1998']; p=' '.join(jv['provides']); jk=' '.join(C['JacobsonKoike2002']['provides']); assert 'COOLING branch' in p and 'Eq. (5.7)' in p and 'ONLY for v >' in p, 'JV-1998 not restated as the cooling soliton'; assert 'JacobsonKoike2002' in jv['notes'], 'the swap is not named'; assert 'THIN-FILM' in jk and 'NON-ZERO' in jk, 'JK-2002 not restated as the sole heating contrast'\"",
+          "declared": "cd \"$REPO\" && ! grep -q \"inconsistent with the same paper\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean && grep -q \"sits on the cooling side, with Balbinot 2005\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; jv=C['JacobsonVolovik1998']; p=' '.join(jv['provides']); jk=' '.join(C['JacobsonKoike2002']['provides']); assert 'COOLING branch' in p and 'Eq. (5.7)' in p and 'ONLY for v >' in p, 'JV-1998 not restated as the cooling soliton'; assert 'JacobsonKoike2002' in jv['notes'], 'the swap is not named'; assert 'THIN-FILM' in jk and 'NON-ZERO' in jk, 'JK-2002 not restated as the sole heating contrast'\"",
+          "exit_code": 0,
+          "enforced": true,
+          "run_at": "2026-08-15"
+        }
+      }
+    },
+    {
+      "row": 1230,
+      "record": {
+        "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:1.2",
+        "status": "fixed",
+        "evidence": "Re-verified from the full TeX source; the pilot is right. Balbinot-Fagnocchi-Fabbri PRD 71, 064019 is not a condensate result. Abstract: \"an acoustic black hole formed in a Laval nozzle under the assumption that the motion of the fluid is one-dimensional\". Sec.IV, acusticpap.tex line 540: \"Let us further assume the sound velocity c constant\" - Eq. (Tsonic) is derived from that constant-c profile. Sec.\"The fate of the acoustic black hole\", lines 1021-1023, verbatim: \"In a similar way one can treat sonic black holes formed by a Bose-Einstein condensate [garayvisser]. The major difference comes from the fact that the sound velocity c is not constant, but proportional to rho^(1/2). This will be discussed elsewhere.\" (The file is ISO-8859 encoded, so a plain grep silently returns nothing on it - use grep -a with LC_ALL=C.) FIXED in fe154d98: the label is gone from BHThermodynamicsFourLaws.lean, src/bh_thermodynamics/{__init__,acoustic_evolution,four_laws_data,falsifier_checks}.py and src/core/citations.py, and the scope that replaces it is stated positively in the Lean overview, the Balbinot2005PRD registry entry, the acoustic_evolution module docstring, src/core/constants.py and papers/L3/bundle_metadata.json apex claims. Blast radius beyond the filed locations: D3 Sec.6 and F both attributed T_H(v) = T_H(0)(1 - v^2/c_perp^2) - the Jacobson-Koike HEATING law - to Balbinot as the anchor for the COOLING branch, sourced from a SECOND registry entry, Balbinot2005 (PRL 94, 161302, gr-qc/0405096), whose provides read \"BEC analog Hawking T_H(v) = T_H(0)(1 - v^2/c_perp^2) ... cooling-toward-extremality\" with primary_source_path and doi_verified both None. Three wrong claims on an entry no held source had ever backed. Both drafts now name Balbinot for the cooling sign and Jacobson-Koike for the thin-film contrast, and that registry entry carries no equation-level claim pending acquisition of gr-qc/0405096. Also corrected: the shipped figure trace name, axis title and page title in src/core/visualizations.py (re-rendered into figures/, papers/L3/figures/ and papers/paper27_.../figures/), the review_figures.py caption, src/wkb/backreaction.py (whose condensate evolution is the project OWN computation - the 2005 papers supply the sign, not the condensate equations), tests/test_bh_thermodynamics.py, docs/roadmaps/Phase6a_Roadmap.md, docs/RESEARCH_STATUS_OVERVIEW.md, papers/D3/SYNTHESIS_BRIEF.md and the claims-reviewer bundle prompt that instructed reviewers to expect a condensate anchor. Deliberately untouched: the APSEta/ modules substrate label, which is this project OWN condensate rather than a Balbinot attribution, and the dated review/audit records. No theorem statement changed. Verify strengthened in 5a1f5167 to reach the PRL entry and to assert the replacement scope, which the filed absence-only form did neither.",
+        "superseded_by": null,
+        "date": "2026-08-15",
+        "commit": "fe154d98",
+        "verified_by": {
+          "command": "cd \"$REPO\" && ! grep -rq \"BEC-acoustic\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean src/bh_thermodynamics src/core/citations.py && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; import src.bh_thermodynamics.acoustic_evolution as m; b=C['Balbinot2005PRD']; s=' '.join(b['provides'])+' '+b['notes']; assert 'Laval nozzle' in s and 'CONSTANT' in s and 'discussed elsewhere' in s, 'Balbinot constant-c scope + condensate deferral not recorded'; assert 'v^2/c_perp^2' not in ' '.join(C['Balbinot2005']['provides']), 'the PRL entry still attributes the Jacobson-Koike heating law to Balbinot'; assert 'not a Bose-Einstein-condensate result' in m.__doc__, 'python mirror does not record the scope'\"",
+          "declared": "cd \"$REPO\" && ! grep -rq \"BEC-acoustic\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean src/bh_thermodynamics src/core/citations.py && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; import src.bh_thermodynamics.acoustic_evolution as m; b=C['Balbinot2005PRD']; s=' '.join(b['provides'])+' '+b['notes']; assert 'Laval nozzle' in s and 'CONSTANT' in s and 'discussed elsewhere' in s, 'Balbinot constant-c scope + condensate deferral not recorded'; assert 'v^2/c_perp^2' not in ' '.join(C['Balbinot2005']['provides']), 'the PRL entry still attributes the Jacobson-Koike heating law to Balbinot'; assert 'not a Bose-Einstein-condensate result' in m.__doc__, 'python mirror does not record the scope'\"",
+          "exit_code": 0,
+          "enforced": true,
+          "run_at": "2026-08-15"
+        }
+      }
+    }
+  ],
+  "missing_from_committed_index_only": [
+    "regime_partition_profile_criterion",
+    "G_N_emerg_eval_mul_M_c_eq_inv_cutoff",
+    "schwarzschild_fixed_G_firstLaw"
+  ],
+  "interpretation": "Missing from this committed population only; preserved research has actual proofs. No global absence conclusion or current execution acceptance. ROOT separately reconciles native generated drift.",
+  "next_publication_repair": "Review and compose exact accepted profile/cutoff source and prerequisites from preserved L3 branch; retain local affine/nozzle scope and physical four-laws charter; qualify actual integrated extraction, reconcile existing 2.2 Verify semantically and close 2.2/2.4 through existing writer only after independent acceptance.",
+  "actual_commands": [
+    "python3 scripts/codex_continuity.py check /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l3-historical-acceptance-reconciliation-r1.json",
+    "git status --short",
+    "git rev-parse HEAD",
+    "git log -5 --format=%H\\ %s -- papers/L3 lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+    "git diff --name-status 8ad1411526b8b8d5b49e9f3b9993b8083ec887d9 f905a2873a32269c3d21651abb2b64825a212c3d -- lean/SKEFTHawking papers/L3",
+    "git show f905a2873:papers/L3/change_log.md",
+    "git show f905a2873:lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+    "git show --stat --oneline 5d2d829ea",
+    "git show --stat --oneline b1a90e49c",
+    "git show --stat --oneline f905a2873",
+    "git show 8ad14115:lean/lean_deps.json",
+    "git show 8ad14115:docs/review_finding_supersessions.json"
+  ],
+  "additional_read_operations": "cat/nl/sed/rg/wc/ls of assigned packet, authorities, notebook, roadmap, cumulative queue/reconciliation, strategy/mapping, L3 draft/metadata, actual historical and Aug15 findings, Lean source and existing /tmp report names; Python stdlib JSON/committed-blob inspection only. No project imports. Full commands appear in tool transcript."
+}

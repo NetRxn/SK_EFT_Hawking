@@ -1,0 +1,17 @@
+{
+  "source_sha256": "ffb651c528b22d256b05e8a5ea5118ff3d6fb5bf917d00cd9544b25daccfb396",
+  "source_bytes": 3490,
+  "author_scope": "Exact all-polynomial standard Gaussian IBP theorem and actual integrability/weighted helpers",
+  "author_diagnostics": "Clean matching wt1 LSP; all3theorems standard axioms only; actual raw receipts archived",
+  "independent_acceptance": "PENDING",
+  "authoritative_build": "PENDING",
+  "archive_sha256": "413e0020cd5fc113e23b73c3364b17ffc38824fbbfcf68e2a78c98f3c53eb604",
+  "members": {
+    "l1-GaussianPolynomialIBP-r1.lean": "ffb651c528b22d256b05e8a5ea5118ff3d6fb5bf917d00cd9544b25daccfb396",
+    "l1-gaussian-polynomial-ibp-wt1-r1.md": "0db30be43e0739ac2d41c6371a765e0ae01f8fac18daa74c680ed56e4679ac3e",
+    "l1-gaussian-polynomial-ibp-wt1-r1.json": "85289056388b575e377b5785b02d7b0a508d56c246005045ed50d50005983f27",
+    "l1-gaussian-polynomial-ibp-brief-r1.md": "1f4a22a94c94d5714c5f6839040552928917ce4699e5bbf3c573e2dca2b5615d"
+  },
+  "publication_or_physical_BUILD_closure": false,
+  "runtime_correction": "Original read-only lease used exact commit SHA; absorb requires current branch name. Preserve this exact proof remotely, withdraw only owned untracked file back to recorded no-change baseline, release clean lease, acquire/prepare same4fca on current primary branch, reapply exact source. No reset/reclaim or lease edits."
+}

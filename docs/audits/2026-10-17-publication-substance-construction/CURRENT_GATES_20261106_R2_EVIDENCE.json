@@ -1,0 +1,33 @@
+{
+  "source_commit": "1dc710e9185411ca86c794b75b95e86552e7610b",
+  "measurement": "2026-11-06T14:13:03.849365+00:00",
+  "archive_sha256": "d955e324a389ab14906202e9599ef0dde01c10e30a704ef014fb773602f63836",
+  "members": [
+    {
+      "name": "l1-main-1dc-canonical-graph-r1.json",
+      "sha256": "87a89954473e6c92a294fcf8e86d4f66d1c4b8e536c6a413e2be60d9e22d8171",
+      "bytes": 87810720
+    },
+    {
+      "name": "l1-main-1dc-canonical-graph-r1.result.json",
+      "sha256": "edc3b76461f9a0b83a1b40f826c87b0a2cefa0c37d058a6b9e16131d5f3926d6",
+      "bytes": 343
+    },
+    {
+      "name": "l1-main-1dc-canonical-graph-r1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "l1-main-1dc-canonical-graph-r1.stderr",
+      "sha256": "f19c34b22e9c83293162c693a0d677b038c2771f0e3345c8df35ca5a1ed5a307",
+      "bytes": 13033
+    },
+    {
+      "name": "l1-main-8b-gate-readback-r1.json",
+      "sha256": "c868dab81ced7599e19e8a4d180df811815d0803a3b5821553c4b6a2213ef746",
+      "bytes": 404572
+    }
+  ],
+  "readback_sha256": "b6dbb69ed930686234ef8ca6f5f92194d80ad33e12f3457df4f7a21f780733df"
+}

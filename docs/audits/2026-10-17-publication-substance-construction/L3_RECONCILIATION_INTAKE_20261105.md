@@ -1,0 +1,7 @@
+# L3 read-only reconciliation intake
+
+ROOT accepts the explorer report as a pinned source/history/finding reconciliation, not new mathematical, native, stage, main or publication acceptance. It prevents reassigning the accepted Ricci/symmetry/nondegeneracy source work and identifies the remaining analytic metric-path/box-premise and distinct original physical four-laws obligations. No L3 repair or priority change is made here. Future execution needs fresh source/owner/slot/LSP reconciliation.
+
+The assigned970 L3 files remained unchanged while ROOT edited L1. Researchf905a2873 and scopedmaincandidatea34eb6b08 remain separate source populations. ROOT additionally checked localmain90e39dc7 is a single isolated Navier–Stokes research commit abovece194cdc4; GitHub PR113 metadata still reports remote main basece194cdc4. Local main is not silently treated as remote main or integrated here. The original report's qualified local-main observation remains unchanged. Exact current root sources/native builds for later execution remain owed.
+
+ROOT subsequently fetched both exactf905a2873a32269c3d21651abb2b64825a212c3d and a34eb6b08fb85e43f3d5e5071f45db6a8e7ebf57 through the GitHub connector and verified matching returned commit SHA/canonical URLs. Both candidates are recoverable remotely; this verifies object availability only, not current branch tips, native builds, integration or publication acceptance.

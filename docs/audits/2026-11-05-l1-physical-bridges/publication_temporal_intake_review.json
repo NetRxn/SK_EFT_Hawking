@@ -1,0 +1,134 @@
+{
+  "verdict": "ACCEPT exact incoming7f8cf17b443e23fd253ab59be3047bb23c69c60e for ordinary history-preserving merge at first manual source-level milestone scope",
+  "incoming": "7f8cf17b443e23fd253ab59be3047bb23c69c60e",
+  "direct_parent_contract": "942c50adb2fef3633e28fff34e54c0d793854d80",
+  "publication_adoption": "0d45d43d395fc2b1ef524e7ba7baeeba85e08f23",
+  "head": "556b8ee48cfa7fcd9902999687f1452c4ae5dea5",
+  "continuity_packet": "l1-n16-temporal-intake-r1.json",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "checks": {
+    "head556_exact": true,
+    "clean_candidate": true,
+    "incoming_direct_parent942": true,
+    "adoption_second_parent942": true,
+    "adoption_is_candidate_ancestor": true,
+    "six_exact_added_files": true,
+    "git_blob:docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_ACCEPTANCE.md": true,
+    "git_blob:docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "git_blob:docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_MATH_REVIEW_R1.md": true,
+    "git_blob:docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_PHYSICS_REVIEW_R1.md": true,
+    "git_blob:docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_evidence.zip": true,
+    "git_blob:docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_manifest.json": true,
+    "archive_pin": true,
+    "exact_member_set": true,
+    "safe_unique_members": true,
+    "crc": true,
+    "member:construction/l1-n16-temporal-boundary-identity-r1.md": true,
+    "expanded:construction/l1-n16-temporal-boundary-identity-r1.md": true,
+    "member:review/l1-n16-temporal-boundary-math-review-r1.md": true,
+    "expanded:review/l1-n16-temporal-boundary-math-review-r1.md": true,
+    "member:review/l1-n16-temporal-boundary-physics-review-r1.md": true,
+    "expanded:review/l1-n16-temporal-boundary-physics-review-r1.md": true,
+    "member:review/l1-n16-temporal-source-intake-r1.md": true,
+    "expanded:review/l1-n16-temporal-source-intake-r1.md": true,
+    "member:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "expanded:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "member:source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": true,
+    "expanded:source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": true,
+    "member:source/PHYSICAL_MATCHING_DECOMPOSITION.md": true,
+    "expanded:source/PHYSICAL_MATCHING_DECOMPOSITION.md": true,
+    "member:source/l1_direct_b_haar.py": true,
+    "expanded:source/l1_direct_b_haar.py": true,
+    "member:source/l1_extended_wick_checkerboard_control.py": true,
+    "expanded:source/l1_extended_wick_checkerboard_control.py": true,
+    "member:source/l1_full_action_reference.py": true,
+    "expanded:source/l1_full_action_reference.py": true,
+    "archive_top_identical:N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "archive_top_identical:N16_TEMPORAL_BOUNDARY_MATH_REVIEW_R1.md": true,
+    "archive_top_identical:N16_TEMPORAL_BOUNDARY_PHYSICS_REVIEW_R1.md": true,
+    "unique_original_source:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "source_parent_exact:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "unique_original_source:source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": true,
+    "source_parent_exact:source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": true,
+    "unique_original_source:source/PHYSICAL_MATCHING_DECOMPOSITION.md": true,
+    "source_parent_exact:source/PHYSICAL_MATCHING_DECOMPOSITION.md": true,
+    "unique_original_source:source/l1_direct_b_haar.py": true,
+    "source_parent_exact:source/l1_direct_b_haar.py": true,
+    "unique_original_source:source/l1_extended_wick_checkerboard_control.py": true,
+    "source_parent_exact:source/l1_extended_wick_checkerboard_control.py": true,
+    "unique_original_source:source/l1_full_action_reference.py": true,
+    "source_parent_exact:source/l1_full_action_reference.py": true,
+    "both_reviews_pin_actual_identity": true,
+    "manifest_contract_parent": true,
+    "identity321_lines": true,
+    "adopted_queue_first_milestone": true
+  },
+  "check_count": 55,
+  "failed_checks": [],
+  "original_git_receipts": {
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_ACCEPTANCE.md": {
+      "sha256": "3e23795d4d7c07877bb591a27d955acfbec64531835909e47f4364c421b9265b",
+      "bytes": 4000
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md": {
+      "sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+      "bytes": 17461
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_MATH_REVIEW_R1.md": {
+      "sha256": "ad74c8588114b319bd2e9cfdb5774fd08e30e6b12789bf96e401c83441bc806d",
+      "bytes": 12314
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_PHYSICS_REVIEW_R1.md": {
+      "sha256": "156f924b78bb5dc852aa3224c906ce080ee2390652e8048672fd31935e2a3ff2",
+      "bytes": 8673
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_evidence.zip": {
+      "sha256": "c5f3b50b59155b96115853d6697a051ee34ba03303d7e7d812cc42331f17a53a",
+      "bytes": 46069
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_temporal_boundary_manifest.json": {
+      "sha256": "ac07ab1deeb2916adcd2976a62eb9a071b047208e84c088741d46fb8dfaf307f",
+      "bytes": 1744
+    }
+  },
+  "original_archive_manifest": {
+    "archive": "n16_temporal_boundary_evidence.zip",
+    "bytes": 46069,
+    "members": 10,
+    "sha256": "c5f3b50b59155b96115853d6697a051ee34ba03303d7e7d812cc42331f17a53a",
+    "accepted_source_sha256": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "parent_contract_checkpoint": "942c50adb2fef3633e28fff34e54c0d793854d80",
+    "files": {
+      "construction/l1-n16-temporal-boundary-identity-r1.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+      "review/l1-n16-temporal-boundary-math-review-r1.md": "ad74c8588114b319bd2e9cfdb5774fd08e30e6b12789bf96e401c83441bc806d",
+      "review/l1-n16-temporal-boundary-physics-review-r1.md": "156f924b78bb5dc852aa3224c906ce080ee2390652e8048672fd31935e2a3ff2",
+      "review/l1-n16-temporal-source-intake-r1.md": "9cb9ea05ed83353153f0825fae8b38e5597aa3d214a4bd69fbf902b28dd258a3",
+      "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+      "source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": "7b505fb137ba14f26dfcdad0243764397de770826bea72fa0f5f9d779752b9b2",
+      "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "06b34017b1e872959300e978eb8b5de435ebd2a34742779532c5e7f936ae60ef",
+      "source/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+      "source/l1_extended_wick_checkerboard_control.py": "6b8c5b3ffe719b94319c29ddc3e84222c82f8f9ebdc6a19b9fd95529af44bef0",
+      "source/l1_full_action_reference.py": "0ad0fd402e18c7d13cc84f9d92d4820bfc7b2726033dc42aa7d79fb0bf5327b6"
+    },
+    "scope": "Independently accepted manual fullS4 N16 same-source temporal-boundary identity and completion criterion; no evaluated kernel/nonzeroZ/state/feasibility/native/publication acceptance"
+  },
+  "source_parent_paths": {
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "source/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md",
+    "source/PHYSICAL_MATCHING_DECOMPOSITION.md": "docs/audits/2026-11-05-l1-physical-bridges/PHYSICAL_MATCHING_DECOMPOSITION.md",
+    "source/l1_direct_b_haar.py": "docs/audits/2026-10-17-publication-substance-construction/l1_direct_b_haar.py",
+    "source/l1_extended_wick_checkerboard_control.py": "docs/audits/2026-10-17-publication-substance-construction/l1_extended_wick_checkerboard_control.py",
+    "source/l1_full_action_reference.py": "docs/audits/2026-10-17-publication-substance-construction/l1_full_action_reference.py"
+  },
+  "contradictions": [],
+  "first_obligation_met": "Actual full-source two-interface temporal boundary identity, all-boundary-index and integration completion criterion, complete source mixed-second contacts, explicit geometric graded reflection and K*S^-1 pairing on physical even gauge-invariant half-algebra image; exact-source independent mathematical/physics acceptance. This is a completed first manual identity construction, not merely an assessment.",
+  "remaining": "No evaluated kernel, nonzeroZ, Hermiticity/positivity/thermal-state certificate, physical source/matter interpretation or reconstruction, fullW1/continuum/large-volume/source-selected limit, B3 normalization/window, tensor/lightcone/transport or publication closure. N4 fulltensor remains Executor-owned OPEN. Future execution requires separate proposal/source/resource/DATA admission.",
+  "actions": "Read-only Git/hash/ZIP/CRC/JSON/text and continuity checks, only /tmp reports written. No scientific imports/evaluation/test/control/support/compile/contraction, Lean/native/process/slot or Git/source/notebook writes.",
+  "final_continuity": {
+    "fresh": true,
+    "changed": []
+  }
+}

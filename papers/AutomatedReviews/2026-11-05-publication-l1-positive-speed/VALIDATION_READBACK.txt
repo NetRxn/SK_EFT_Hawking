@@ -1,0 +1,66 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  spelled_out_census_figures: Census figures spelled out in words are frozen and may only shrink
+══════════════════════════════════════════════════════════════════════
+  [33m⚠[0m summary  —  67 spelled-out census figure(s) across 20 of 64 draft(s) (ceiling 71, may only fall) — 4 below; lower SPELLED_CENSUS_CEILING in the same commit
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  review_verify_is_one_command: Every `Verify:` line is a single runnable command and nothing else
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  279 `Verify:` line(s) checked, 56 carrying anything other than a single backticked command
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  bundle_prose_em_dash_free: No bundle draft contains an em-dash in prose a reader will see
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  21 bundle draft(s) scanned, 79 em-dash(es) in reader-visible prose (target 0; en-dashes are mandatory and deliberately untouched)
+  ✗ F  —  2 em-dash(es) on 1 line(s) across 1 file(s); first at papers/F/paper_draft.tex:1071 — 'deficit), or --- for the vestigial graviton --- conditionally, absent'
+  ✗ D2  —  32 em-dash(es) on 31 line(s) across 1 file(s); first at papers/D2/paper_draft.tex:88 — 'inputs --- a local--global statement for indefinite forms and level-one'
+  ✗ D3  —  2 em-dash(es) on 2 line(s) across 1 file(s); first at papers/D3/paper_draft.tex:1364 — 'first conjunct of the bridge theorem --- code distance positive if and only if'
+  ✗ D7  —  2 em-dash(es) on 1 line(s) across 1 file(s); first at papers/D7/paper_draft.tex:673 — 'on one bond --- a 4-cycle assembled entirely from arity-2 factors --- so the'
+  ✗ D10  —  35 em-dash(es) on 31 line(s) across 1 file(s); first at papers/D10/paper_draft.tex:47 — 'report it alongside two further formalized layers ---'
+  ✗ L1  —  5 em-dash(es) on 5 line(s) across 1 file(s); first at papers/L1/paper_draft.tex:63 — 'it in~\\cite{Volovik2026SecondSound,Volovik2024VacuumDecay} --- not in'
+  ✗ E1  —  1 em-dash(es) on 1 line(s) across 1 file(s); first at papers/E1/paper_draft.tex:170 — 'profile-dependent quantity --- it is the single value carried by this'
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  bundle_reader_facing_voice: No bundle draft narrates its own process to the reader — neither its correction history nor its unfinished diligence
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  21 bundle draft(s) scanned, 6 passage(s) narrating the paper's own process to the reader — its correction history, or a source it cites without having read (target 0; a correction belongs in change_log.md, and an unread source is repaired by acquiring it, not by dropping the disclosure — ADR-014)
+  ✗ D2  —  1 self-narrating passage(s); first at papers/D2/paper_draft.tex:139 — an account of what an earlier draft of this text said: 'earlier version of this'
+  ✗ D12  —  5 self-narrating passage(s); first at papers/D12/paper_draft.tex:405 — a disclosure that the text of a cited source was never read: 'have not inspected its text'
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  bundle_todo_free_before_green: No bundle carrying an unresolved work marker records a Stage-13 green
+══════════════════════════════════════════════════════════════════════
+  [33m⚠[0m drafting  —  11 bundle(s) carry work markers and are correctly NOT green (this is allowed): D1=7, D2=2, D4=6, D5=6, D6=1, D8=2, D9=3, E1=1, E2=1, I1=9, I2=3
+  ✓ gate  —  no bundle records a Stage-13 green while carrying a work marker
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  architecture_inventory_fresh: docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code
+══════════════════════════════════════════════════════════════════════
+  ✗ inventory_fresh  —  SURFACE_INVENTORY.md is STALE — the system's surface changed and the census did not. First divergence at line 164: tracked '## Hooks — 7' vs derived '## Hooks — 6'. Run `uv run python scripts/architecture_inventory.py --write`.
+  ✓ no_rosters_in_narratives  —  8 narrative doc(s) enumerate no registry as if complete
+  ✓ documents_answer_their_question  —  8 owned document(s) each declare the question README assigns them
+  ✓ no_counts_in_narratives  —  8 narrative doc(s) in architecture/ state no census count
+  ✗ doc_refs_resolve  —  reference(s) naming a file that does not exist — a rename or deletion the prose did not follow: ['END_TO_END_MAP.md: temporary/working-docs/sentence_kg_schema_delta.md']
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 2/6 checks passed (2 warnings)
+  [31mSOME CHECKS FAILED[0m
+
+  [31m✗ SUBSTRATE (1):[0m architecture_inventory_fresh
+  [33m● PAPER CORPUS (3):[0m bundle_prose_em_dash_free, bundle_reader_facing_voice, review_verify_is_one_command
+    These concern the paper corpus, not the Lean/Python substrate. A Lean-only wave
+    cannot have caused them — see docs/architecture/VALIDATION_GATE_TOPOLOGY.md §2.
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.6s
