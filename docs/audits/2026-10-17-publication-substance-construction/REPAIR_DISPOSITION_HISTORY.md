@@ -3154,3 +3154,9 @@ Publication ROOT verified and absorbed donor `d6c4cf874` as `e2a858bcf`. Both in
 The compact preparation and positive open-step instrument retain the original unaveraged coherent amplitudes and the required source witnesses. The same coefficient-adjoint periodic cycle density gives exact expectation `-1/(2Z)` on the constant/top projector at the accepted positive-Z point. The positive coherent-history construction preserves complex insertions through relative visibility. Its normalization operator has a negative eigenvalue. The physical periodic state, observable adjoint, causal evolution, metric/source and matter matching remain open.
 
 ROOT commissioned an original-derived observable, adjoint and boundary map or a positive spectral realization, with explicit metric and matter insertions and independent review of original time-step and periodic matching. The paired witness tests and the negative projector must be addressed on the proposed physical algebra. This intake does not close a publication gate.
+
+### L1 exact independent closure of cases 29–31
+
+All three archived seven-factor parents, all 27 inverse lifts and all 27 exact terminal replays passed independent review. The ordinary sparse joins and alternate triangle pivots reproduced the exact raw Gaussian numerators and normalized fractions. The two equal outer subtotals for 29 and 31 are supported by distinct verified inputs.
+
+The [closure archive](L1_N16_C0_CASES29_31_CLOSURE_R1.zip) retallies 36 accepted cases to exact partial scalar `-2563684902511986217246695/2596148429267413814265248164610048 + 0i`. Fresh extraction verified 392 checksums and reproduced both retallies. The remaining indices are 33–35 and 37–45. Each has a reproducible seven-factor parent at the current row cap. The full child, coefficient, physical susceptibility and publication acceptance remain open.
