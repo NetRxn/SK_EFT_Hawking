@@ -67,6 +67,7 @@ import validate as v  # noqa: E402
 
 #: Check functions imported BY NAME (not via `_CHECKS`) by ten test files.
 EXPECTED_CHECK_FUNCTIONS = [
+    "check_architecture_inventory_fresh",
     "check_atlas_integrity",
     "check_axiom_count_prose_consistency",
     "check_bundle_consistency",
@@ -534,9 +535,43 @@ class TestTexQuoteReferencesAreExtracted:
         toks = self._tokens(src)
         assert any(t.startswith("AnalogHawkingDemarcation.") for t in toks), toks
 
+    @pytest.mark.parametrize("src", [
+        r"`analog\_hawking\_quantum\_advantage\_demarcation'",
+        r"\texttt{analog\_hawking\_quantum\_advantage\_demarcation}",
+        r"\verb|analog_hawking_quantum_advantage_demarcation|",
+    ])
+    def test_phantom_citation_forms_remain_unresolved(self, src):
+        from validation.checks.prose_lean_refs import (
+            _load_lean_name_index, _resolve_prose_ref,
+        )
+        phantom = "analog_hawking_quantum_advantage_demarcation"
+        assert phantom in self._tokens(src)
+        assert _resolve_prose_ref(phantom, _load_lean_name_index()) == "ABSENT"
+
     def test_d7_no_longer_cites_a_nonexistent_theorem(self):
-        import pathlib, re
-        d7 = (pathlib.Path(__file__).resolve().parents[1]
-              / "papers/D7/paper_draft.tex").read_text()
-        assert "analog\\_hawking\\_quantum\\_advantage\\_demarcation" not in d7
-        assert "analog\\_hawking\\_simulable\\_iff\\_fourCycleFree" in d7
+        import re
+        from validation._tex import unescape_tex_identifier
+        from validation.checks.prose_lean_refs import (
+            _load_lean_name_index, _resolve_prose_ref,
+        )
+
+        root = Path(__file__).resolve().parents[1]
+        d7 = (root / "papers/D7/paper_draft.tex").read_text()
+        phantom = "analog_hawking_quantum_advantage_demarcation"
+        current = "analog_hawking_fourCycleFree_demarcation"
+
+        # Both TeX-escaped quotes and plain names in verbatim theorem blocks
+        # must reject the retired citation.
+        assert phantom not in unescape_tex_identifier(d7)
+        assert re.search(
+            r"\\begin\{verbatim\}\s*theorem\s+" + re.escape(current) + r"\b",
+            d7,
+        ), "D7 must cite its current headline declaration in the theorem block"
+
+        index = _load_lean_name_index()
+        qualified = "SKEFTHawking.AnalogHawkingDemarcation." + current
+        assert qualified in index["names"]
+        lean = (root / "lean/SKEFTHawking/AnalogHawkingDemarcation.lean").read_text()
+        assert re.search(r"^theorem\s+" + re.escape(current) + r"\b", lean, re.MULTILINE)
+        assert _resolve_prose_ref(current, index, deep=False) == "OK"
+        assert _resolve_prose_ref(phantom, index) == "ABSENT"

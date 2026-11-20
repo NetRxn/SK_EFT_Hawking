@@ -1,0 +1,7 @@
+# NJL solver readback and R6 reproduction
+
+The declared NJL solver verification on `1aff6ef5` passed all 120 tests in `tests/test_tetrad_gap.py` and `tests/test_tetrad_gap_solver.py`. The older full fast run measures a different, earlier table-only checkpoint.
+
+The critical R6 finding is reproducible against the current reference checker. A scratch D3 draft used the historical display from `963e2c64^` asserting a universal result over the interval, with only the attribution replaced by the current exact declaration `SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c`. The production prose reference checker scanned one candidate and returned zero unresolved references and a pass. The declaration index has exactly one such name and its elaborated type restricts the premise to an `Or` of two endpoint equalities. The current unmodified D3 manuscript already states the endpoint scope correctly.
+
+This control identifies the missing correspondence check while eliminating the historical renamed identifier as a confounder. It exercises the name resolver and does not assess other gates. ADR-004 R6 owns the structural comparison. Its implementation should reuse the existing reference and declaration-index machinery and reject the historical interval attribution with the current exact declaration name. The scratch control did not modify the manuscript, registry, Lean source or finding ledger.

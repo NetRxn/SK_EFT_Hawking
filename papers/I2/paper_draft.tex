@@ -46,22 +46,22 @@ non-negatively correlated data. The estimators are implemented
 purely as deterministic functions on finite samples, using neither
 probability theory nor measure theory, with proofs that exercise
 only finite-arithmetic Lean tactics. \textbf{(2)
-\texttt{lean-tensor-categories}}: a 27-module library
+\texttt{lean-tensor-categories}} is a 27-module library
 (1233 declarations across theorems, definitions,
-structures, classes, and inductives) covering the categorical
+structures, classes, and inductives). It covers the categorical
 hierarchy
 (Pivotal $\to$ Spherical $\to$ Balanced $\to$ Ribbon $\to$
-Semisimple $\to$ Fusion $\to$ Modular), Hopf-algebra extensions
+Semisimple $\to$ Fusion $\to$ Modular) and Hopf-algebra extensions
 (Quasitriangular bialgebras, Ribbon Hopf algebras, the standard
 quantum groups $U_q(\mathfrak{sl}_2)$, $U_q(\widehat{\mathfrak{sl}}_2)$,
-$U_q(\mathfrak{sl}_3)$), nine decidable algebraic number fields
+$U_q(\mathfrak{sl}_3)$). It also covers nine decidable algebraic number fields
 (including $\mathbb{Q}(\sqrt{2})$, $\mathbb{Q}(\sqrt{5})$,
 $\mathbb{Q}(\zeta_5)$, $\mathbb{Q}(\zeta_{16})$ and a
 \texttt{ComputableAdjoinRoot}-style bridge to Mathlib's abstract
-\texttt{AdjoinRoot} planned for atomic upstream PR), and concrete
-modular-tensor-category instances ($\mathrm{SU}(2)_k$ fusion at
+\texttt{AdjoinRoot} planned for atomic upstream PR). Its concrete
+modular-tensor-category instances include $\mathrm{SU}(2)_k$ fusion at
 $k=1{\ldots}5$, $\mathrm{SU}(3)_k$ at $k=1, 2$, the Ising MTC, and
-the Fibonacci MTC).
+the Fibonacci MTC.
 The library formalizes a non-trivial Hopf algebra ($U_q(\mathfrak{sl}_2)$,
 together with its affine variant $U_q(\widehat{\mathfrak{sl}}_2)$
 and the rank-2 case $U_q(\mathfrak{sl}_3)$),

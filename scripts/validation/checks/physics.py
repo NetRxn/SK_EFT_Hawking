@@ -417,6 +417,33 @@ def _parse_latex_number(cell: str):
         return None
 
 
+def read_d1_floor_prose(paper_path):
+    """Read live D1 prose with its generated spectral-floor scalars inlined."""
+    import re
+
+    from validation._tex import _strip_tex_comments
+
+    text = _strip_tex_comments(paper_path.read_text(encoding="utf-8"))
+    pattern = re.compile(r"\\input\{tables/(bec_floor_[^{}]+)\.tex\}")
+    if not pattern.search(text):
+        return text
+
+    from scripts.render_paper_tables import _load_spec, _render_scalar
+
+    specs = _load_spec(paper_path.parent / "tables.py")["scalars"]
+
+    def read_scalar(match):
+        key = match[1]
+        if key not in specs:
+            raise ValueError(f"unknown D1 floor scalar {key}")
+        actual = (paper_path.parent / "tables" / f"{key}.tex").read_text(encoding="utf-8")
+        if actual != _render_scalar(specs[key]):
+            raise ValueError(f"D1 floor scalar {key} differs from canonical render")
+        return _strip_tex_comments(actual).strip()
+
+    return pattern.sub(read_scalar, text)
+
+
 @register_check("d1_hierarchy_table",
                 "D1 BEC hierarchy table + crossover match the canonical evaluator")
 def check_d1_hierarchy_table() -> CheckResult:
@@ -462,12 +489,36 @@ def check_d1_hierarchy_table() -> CheckResult:
         return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
 
     # --- (1) The three BEC table rows -----------------------------------
-    tbl = _re.search(
-        r"\\label\{tab:hierarchy\}.*?\\begin\{tabular\}(.*?)\\end\{tabular\}",
-        text, _re.DOTALL)
+    from validation._tex import _strip_tex_comments
+    label = r"\label{tab:hierarchy}"
+    source = _strip_tex_comments(text)
+    if source.count(label) != 1:
+        return CheckResult(passed=False, error="expected one D1 hierarchy label")
+    table_source = source.split(label, 1)[1].lstrip()
+    include = r"\input{tables/hierarchy.tex}"
+    if table_source.startswith(include):
+        include_path = paper_path.parent / "tables" / "hierarchy.tex"
+        if not include_path.is_file():
+            return CheckResult(passed=False, error="D1 hierarchy include missing")
+        from scripts.paper_tables import render_table
+        from scripts.render_paper_tables import _load_spec
+
+        try:
+            spec = _load_spec(paper_path.parent / "tables.py")
+            expected = render_table(spec["tables"]["hierarchy"]).encode("utf-8")
+            actual = include_path.read_bytes()
+        except Exception as exc:
+            return CheckResult(passed=False, error=f"D1 hierarchy render failed: {exc}")
+        exact = actual == expected
+        details.append(Detail("hierarchy.generated", exact,
+                              "bound table matches canonical render" if exact else
+                              "bound table differs from canonical render"))
+        all_pass = all_pass and exact
+        table_source = _strip_tex_comments(actual.decode("utf-8")).lstrip()
+    tbl = _re.match(
+        r"\\begin\{tabular\}(.*?)\\end\{tabular\}", table_source, _re.DOTALL)
     if not tbl:
-        return CheckResult(passed=False,
-                           error="tab:hierarchy tabular block not found in D1 draft")
+        return CheckResult(passed=False, error="D1 hierarchy table not bound to label")
     body = tbl.group(1)
     rows = [r for r in body.split(r"\\") if "&" in r]
 
@@ -523,7 +574,11 @@ def check_d1_hierarchy_table() -> CheckResult:
         r"\\delta_\{?\\rm\s+diss\}?\s*=\s*([^$]+?)\s*\$?\s*gives\s*"
         r"\$?\\omega_\\times\s*\\simeq\s*([\d.]+)\\,\s*T_\{?\\rm\s+eff\}?",
         _re.DOTALL)
-    matches = list(cross_re.finditer(text))
+    try:
+        crossover_prose = read_d1_floor_prose(paper_path)
+    except Exception as exc:
+        return CheckResult(passed=False, error=f"D1 floor scalar binding failed: {exc}")
+    matches = list(cross_re.finditer(crossover_prose))
     if not matches:
         details.append(Detail(
             "crossover.present", False,
@@ -576,6 +631,9 @@ def check_f_hierarchy_claims() -> CheckResult:
     corrected sentences PASS. The polariton (−19 %) and graphene (−2.8 %)
     values are deliberately NOT matched here: they belong to other
     platforms/modules and would false-positive against the Heidelberg row.
+    The spectral-floor item must carry the complete thermal Planck law,
+    its dressed-temperature definition and the crossover's leading and
+    result scales; numerical proximity to a bare-T_H coefficient is insufficient.
     """
     import re as _re
     import math as _math
@@ -627,33 +685,57 @@ def check_f_hierarchy_claims() -> CheckResult:
         details.append(Detail(label, ok, msg))
         all_pass = all_pass and ok
 
-    # Crossover sentence: ω_× = T_H ln(1 + 1/δ_diss) ≈ Y T_H.
-    #
-    # ⚠️ SUPERSEDED FORM: this required `ln(2/δ_diss)` and asserted Y against a
-    # re-derived `log(2.0 / δ_diss)`. Both were wrong by exactly ln 2 — the FDR
-    # floor is δ_diss, not δ_diss/2, because the halving is already inside
-    # `WKBConnection.noise_floor_eq_delta_diss` (`noiseFloor p = Gamma_H/kappa`).
-    # The sibling `d1_hierarchy_table` carried the identical defect, so the two
-    # gates corroborated each other while both were wrong, and a Stage-13
-    # REQUIRED that flagged it in May 2026 went unclosed three times because
-    # fixing the papers would have turned both gates red.
-    #
-    # Y is now compared against the evaluator's own `omega_cross_over_TH`, so
-    # the formula lives in exactly one place and this check cannot drift from it.
-    cm = _re.search(
-        r"\\ln\\!?\s*\\left\(\s*1\s*\+\s*1/\\delta_\{\\mathrm\{diss\}\}\s*\\right\)"
-        r"\s*\\approx\s*([\d.]+)\\,\s*T_H", text)
+    # Bind the physical law and units within the actual spectral-floor item.
+    # The legacy omega_cross_over_TH key is omega_x/T_eff, not omega_x/T_H.
+    # Numeric proximity at the unchanged tolerance cannot decide that identity.
+    from validation._tex import _strip_tex_comments
+
+    visible = _strip_tex_comments(text)
+    floor_items = list(_re.finditer(
+        r"\\item\s+\\textbf\{Spectral floor at\b.*?(?=\\item\b|\\end\{enumerate\}|\Z)",
+        visible, _re.DOTALL))
+    floor_text = floor_items[0].group(0) if len(floor_items) == 1 else ""
+    compact = _re.sub(r"\s+", "", floor_text)
+    identities = [
+        ("heidelberg.planck",
+         r"$\left(e^{\omega/T_{\rm eff}(\omega)}-1\right)^{-1}$"),
+        ("heidelberg.thermal_scale",
+         r"$T_{\rm eff}(\omega) = \kappa_{\rm eff}(\omega)/(2\pi)$"),
+        ("heidelberg.bare_scale", r"$T_H = \kappa/(2\pi)$"),
+        ("heidelberg.noise_floor",
+         r"$n_{\mathrm{noise}} = \delta_k/2 = (2\Gamma_H/\kappa)/2 = \Gamma_H/\kappa = \delta_{\mathrm{diss}}$"),
+    ]
+    for label, identity in identities:
+        ok = _re.sub(r"\s+", "", identity) in compact
+        details.append(Detail(label, ok,
+                              "expected thermal/floor identity present" if ok else
+                              "expected identity missing or wrong in the unique spectral-floor item"))
+        all_pass = all_pass and ok
+
+    # Require the entire equality, including its leading thermal factor and
+    # result units, rather than matching a logarithm followed by any close value.
+    prefix = _re.sub(r"\s+", "",
+        r"$\omega_\times = T_{\rm eff}(\omega_\times) \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right) \approx")
+    suffix = _re.sub(r"\s+", "", r"\, T_{\rm eff}(\omega_\times)$")
+    cm = _re.search(_re.escape(prefix) + r"([\d.]+)" + _re.escape(suffix), compact)
     if not cm:
         details.append(Detail(
             "heidelberg.crossover", False,
-            "expected ω_× = T_H ln(1 + 1/δ_diss) ≈ Y T_H sentence not found. NOTE: "
-            "the ln(2/δ_diss) form is SUPERSEDED and incorrect; if the draft still "
-            "carries it, the draft is what must change."))
+            "expected omega_x = T_eff(omega_x) ln(1 + 1/delta_diss) "
+            "approximately Y T_eff(omega_x) in the unique spectral-floor item; "
+            "bare T_H, a halved floor or a partial/mixed-scale law is not this observable"))
         all_pass = False
     else:
         y_ok, y_msg = _rel_ok(float(cm.group(1)), heid["omega_cross_over_TH"])
         details.append(Detail("heidelberg.crossover", y_ok, y_msg))
         all_pass = all_pass and y_ok
+
+    heading = _re.search(
+        r"\$\\omega_\\times\\simeq([\d.]+)\\,T_\{\\rmeff\}\$forHeidelberg", compact)
+    heading_ok, heading_msg = _rel_ok(float(heading.group(1)) if heading else None,
+                                    heid["omega_cross_over_TH"])
+    details.append(Detail("heidelberg.crossover_heading", heading_ok, heading_msg))
+    all_pass = all_pass and heading_ok
 
     return CheckResult(passed=all_pass, details=details)
 

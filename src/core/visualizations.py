@@ -3112,97 +3112,66 @@ def fig_kappa_scaling_physical():
 
 
 def fig_polariton_regime_map():
-    """Fig 47: Polariton Tier 1 regime map — Gamma_pol/kappa vs cavity lifetime.
+    """Polariton decay versus lifetime for measured and projected Paris cavities.
 
-    Shows the three cavity quality regimes (intractable, borderline,
-    perturbative/excellent) as colored regions, with the three Paris
-    polariton configurations marked. Includes the BEC platforms for
-    comparison (all deep in the perturbative regime).
+    The 0.1 line is the adopted weak-dissipation criterion. Background bands
+    indicate qualitative decay scales, not independently proved validity domains.
     """
     from src.experimental.polariton_predictions import polariton_regime_map
     from src.core.constants import POLARITON_PLATFORMS
 
     regime = polariton_regime_map()
-
-    # Regime boundaries
-    tau_range = np.logspace(-12, -9, 100)  # 1 ps to 1 ns
-    # Consume κ from canonical POLARITON_PLATFORMS (Pipeline Invariant 3).
-    # All three Paris_* entries share the same Falque-smooth-horizon κ = 7e10
-    # s⁻¹ post Phase 5u Wave 4. Previously hardcoded 5e10 here — that value
-    # was stale relative to constants.py after 2026-04-13.
-    kappa = POLARITON_PLATFORMS['Paris_long']['kappa']  # s^-1
-    gamma_over_kappa = 1.0 / (tau_range * kappa)
-
+    kappa = POLARITON_PLATFORMS['Paris_long']['kappa']
+    tau_range = np.logspace(-12, -9, 200)
     fig = go.Figure()
-
-    # Background regime bands — colorblind-safe palette
-    # (project discipline: no red/green pairings; steel-blue/amber gradient).
-    # Stage 9 r1 fixed red/green palette; r2 caught hrect annotation_position
-    # ("top left" / "inside top right") rendering labels above their rect on log
-    # scale. r3 fix: drop hrect annotations and place explicit add_annotation at
-    # each band's geometric mean (log-scale center) on the right side, away from
-    # the upper-left legend.
-    fig.add_hrect(y0=1.0, y1=10, fillcolor="rgba(70,70,70,0.18)", line_width=0)
-    fig.add_hrect(y0=0.1, y1=1.0, fillcolor="rgba(241,143,1,0.18)", line_width=0)
-    fig.add_hrect(y0=0.03, y1=0.1, fillcolor="rgba(46,134,171,0.13)", line_width=0)
-    fig.add_hrect(y0=0.001, y1=0.03, fillcolor="rgba(46,134,171,0.25)", line_width=0)
-
-    # Place band labels via Scatter mode="text" at the geometric-mean y of each
-    # band on the right edge of the τ-axis. This guarantees data-space placement
-    # on the log y-axis (plotly's add_annotation w/ inside-position is unreliable
-    # for hrect on log axes).
-    _band_x = 950.0  # near right edge of the [1, 1000] log τ-axis; text extends left
-    _band_ys = [3.16, 0.316, 0.0548, 0.00548]  # geom mean of each band
-    _band_labels = ["Intractable", "Borderline", "Perturbative (Tier 1)", "Excellent"]
+    for low, high, color in [
+        (1.0, 10.0, "rgba(70,70,70,0.12)"),
+        (0.1, 1.0, "rgba(241,143,1,0.12)"),
+        (0.01, 0.1, "rgba(46,134,171,0.12)"),
+    ]:
+        fig.add_hrect(y0=low, y1=high, fillcolor=color, line_width=0)
     fig.add_trace(go.Scatter(
-        x=[_band_x] * 4, y=_band_ys, mode="text",
-        text=_band_labels, textposition="middle left",
-        textfont=dict(size=11, family=FONT['family'], color="rgba(40,40,40,0.85)"),
+        x=tau_range * 1e12, y=1.0 / (tau_range * kappa),
+        mode="lines", name="Lifetime trajectory",
+        line=dict(color="grey", width=2, dash="dot"), showlegend=False,
+    ))
+    fig.add_hline(y=0.1, line=dict(color=COLORS['dispersive'], dash="dash"))
+    tau_criterion_ps = 1e12 / (0.1 * kappa)
+    fig.add_trace(go.Scatter(
+        x=[tau_criterion_ps], y=[0.1], mode="markers",
+        marker=dict(symbol="x", color="black", size=10), showlegend=False,
+        name="Weak-dissipation criterion crossing",
+    ))
+    labels = {
+        'Paris_standard': ('Standard (measured)', 'circle', 'top right'),
+        'Paris_long': ('Long (projected)', 'diamond-open', 'top left'),
+        'Paris_ultralong': ('Ultralong (projected)', 'diamond-open', 'bottom left'),
+    }
+    for name, (label, symbol, position) in labels.items():
+        data = regime[name]
+        fig.add_trace(go.Scatter(
+            x=[data['tau_cav_ps']], y=[data['Gamma_pol_over_kappa']],
+            mode="markers+text", name=label, text=[label], textposition=position,
+            marker=dict(size=12, color=COLORS['dispersive'], symbol=symbol,
+                        line=dict(width=2)), textfont=dict(size=12), showlegend=False,
+        ))
+    # Text traces preserve data-space placement on logarithmic axes.
+    fig.add_trace(go.Scatter(
+        x=[900, 900, 900], y=[5, 0.5, 0.018], mode="text",
+        text=["Strong decay", "Intermediate decay", "Weak decay"],
+        textposition="middle left", textfont=dict(size=12, color="grey"),
         showlegend=False, hoverinfo="skip",
     ))
-
-    # Polariton platforms
-    regime_colors = {
-        'intractable': COLORS['dissipative'],
-        'borderline': COLORS['Trento'],
-        'perturbative': COLORS['dispersive'],
-        'excellent': COLORS['Steinhauer'],
-    }
-
-    for name, data in regime.items():
-        color = regime_colors.get(data['tier1_regime'], 'grey')
-        fig.add_trace(go.Scatter(
-            x=[data['tau_cav_ps']],
-            y=[data['Gamma_pol_over_kappa']],
-            mode="markers+text",
-            name=name.replace('_', ' '),
-            marker=dict(size=12, color=color, symbol="diamond"),
-            text=[f"  {name.split('_')[1]}"],
-            textposition="middle right",
-            textfont=dict(size=11),
-        ))
-
-    # Reference line: Gamma_pol/kappa = 1/tau*kappa
-    fig.add_trace(go.Scatter(
-        x=tau_range * 1e12,
-        y=gamma_over_kappa,
-        mode="lines",
-        name="Γ_pol/κ = 1/(τκ)",
-        line=dict(color="grey", width=1, dash="dot"),
-        showlegend=False,
-    ))
-
-    apply_layout(fig,
-        height=450, width=700,
-        title=dict(text="<b>Polariton Tier 1 Regime Map</b>", font=TITLE_FONT),
-        xaxis_title="Cavity lifetime τ [ps]",
-        yaxis_title="Γ<sub>pol</sub> / κ",
-        xaxis_type="log",
-        yaxis_type="log",
-        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
-    )
-    fig.update_yaxes(range=[np.log10(0.001), np.log10(10)])
-
+    apply_layout(fig, height=500, width=700,
+        title=dict(text="<b>Polariton decay and cavity lifetime</b>", font=TITLE_FONT),
+        xaxis=dict(title="Cavity lifetime τ [ps]", type="log", range=[0, 3], dtick=1),
+        yaxis=dict(title="Γ<sub>pol</sub> / κ", type="log", range=[-2, 1], dtick=1),
+        margin=dict(l=75, r=25, t=55, b=135))
+    fig.add_annotation(x=0.5, y=-0.34, xref="paper", yref="paper",
+        text=f"κ = {kappa:.1e} s⁻¹; adopted criterion Γ<sub>pol</sub>/κ &lt; 0.1"
+             f" requires τ &gt; {tau_criterion_ps:.0f} ps<br>"
+             "Shading: qualitative decay scales; projected cavities are not measurements",
+        showarrow=False, font=dict(size=12, family=FONT['family']))
     return fig
 
 
@@ -5367,10 +5336,12 @@ def fig_e8_cartan_heatmap() -> go.Figure:
 
 
 def fig_tetrad_gap_curve() -> go.Figure:
-    """Order parameter Δ*(G) vs coupling G: the gap equation phase transition.
+    """Numerical scalar NJL roots through r=4; failures propagate.
 
-    Shows the bifurcation at G = G_c: Δ = 0 for G < G_c, then Δ*(G) rises
-    continuously for G > G_c (second-order transition).
+    Lambda=pi,N_f=2 and400 source samples are retained. The canonical
+    solver uses a checked log-domain bracket rather than a cutoff cap.
+    Above-cutoff continuation is not physical UV validation or an ADW
+    derivation; solver/test evidence and asset freshness remain separate.
     """
     from src.core.formulas import tetrad_critical_coupling_integral, tetrad_gap_solution
 
@@ -5387,7 +5358,7 @@ def fig_tetrad_gap_curve() -> go.Figure:
     fig.add_trace(go.Scatter(
         x=G_ratios, y=Delta_values / Lambda,
         mode='lines', line=dict(color=COLORS['dispersive'], width=3),
-        name='Δ*(G) / Λ',
+        name='NJL model root / Λ',
     ))
 
     # Critical coupling marker
@@ -5396,20 +5367,20 @@ def fig_tetrad_gap_curve() -> go.Figure:
         showarrow=False, font=dict(size=13, family=FONT['family'], color=COLORS['dissipative']))
 
     # Phase labels
-    fig.add_annotation(x=0.4, y=0.1, text="<b>Pre-geometric</b><br>Δ = 0",
+    fig.add_annotation(x=0.4, y=0.1, text="<b>Trivial scalar output</b><br>Δ = 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
-    fig.add_annotation(x=2.5, y=0.6, text="<b>Tetrad condensed</b><br>Δ > 0",
+    fig.add_annotation(x=2.5, y=0.6, text="<b>Nonzero scalar output</b><br>Δ > 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
 
     apply_layout(fig, height=450, width=650,
-        title=dict(text="<b>Tetrad Gap Equation: Order Parameter vs Coupling</b>",
+        title=dict(text="<b>Numerical NJL Model Roots</b>",
                    font=TITLE_FONT),
         xaxis=dict(title="G / G<sub>c</sub>", range=[0, 4]),
-        yaxis=dict(title="Δ* / Λ", range=[0, 1.1]),
+        yaxis=dict(title="Δ / Λ"),
         legend=dict(x=0.02, y=0.98))
 
     fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
-        text="G<sub>c</sub> = 8π²/(N<sub>f</sub>Λ²) — first explicit tetrad gap equation (NJL-ADW correspondence)",
+        text="Separate scalar fixed-point model; numerical continuation is not physical UV validation or an ADW derivation.",
         showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
     return fig
 
@@ -5449,54 +5420,46 @@ def fig_tetrad_gap_integral() -> go.Figure:
 
 
 def fig_stimulated_hawking_spectrum() -> go.Figure:
-    """Stimulated Hawking gain G(ω) vs frequency: amplification peaks at low ω.
+    """Canonical saturated-greybody gain versus omega/kappa_eff.
 
-    Shows the exponential suppression G(ω) = 1/(exp(2πω/κ) - 1) with
-    annotations for the optimal probe window and 5σ detection threshold.
+    Normalized frequency absorbs the adopted effective surface gravity; this
+    plot adds no dispersion model. The detection annotation assumes the ideal
+    shot-noise SNR model and is not a measured apparatus noise budget.
     """
-    from src.core.formulas import stimulated_hawking_spectrum
-    from src.core.constants import POLARITON_PLATFORMS
+    from src.core.formulas import stimulated_hawking_spectrum, stimulated_hawking_gain
 
-    kappa = POLARITON_PLATFORMS['Paris_long']['kappa']
-    data = stimulated_hawking_spectrum(kappa, n_points=300)
-
+    # The canonical function is scale invariant in omega/kappa. With unit
+    # kappa its frequency coordinate is directly omega/kappa_eff.
+    data = stimulated_hawking_spectrum(1.0, n_points=300, omega_max_ratio=1.6)
+    half_gain_ratio = np.log(3) / (2 * np.pi)
     fig = go.Figure()
-
     fig.add_trace(go.Scatter(
-        x=data['omega_over_kappa'], y=data['gain'],
-        mode='lines', line=dict(color=COLORS['dispersive'], width=3),
-        name='G(ω) — stimulated gain',
+        x=data['omega_over_kappa'], y=data['gain'], mode='lines',
+        line=dict(color=COLORS['dispersive'], width=3), name='Saturated-greybody gain',
     ))
-
-    # Single-shot 5σ gain threshold: G = 0.5 (equivalently N_probe = 25/G² = 100
-    # probe photons per mode). Crossed at the universal frequency
-    # ω/κ = ln(3)/(2π) ≈ 0.175. Stage 10 claims-review (2026-05-04) caught
-    # prior G = 0.01 / 10⁴-photons drift — at G(ω)=1/(exp(2πω/κ)−1), ω/κ=0.175
-    # gives G=0.5 not 0.01; G=0.01 is at ω/κ≈0.734.
-    fig.add_hline(y=0.5, line=dict(color=COLORS['dissipative'], width=1, dash='dot'))
-    fig.add_annotation(x=1.0, y=0.7, text="G = 0.5 (5σ with 100 probe photons / mode)",
-        showarrow=False, font=dict(size=10, family=FONT['family'], color=COLORS['dissipative']))
-
-    # Optimal probe window
+    fig.add_hline(y=0.5, line=dict(color=COLORS['dissipative'], width=1.5, dash='dot'))
+    fig.add_trace(go.Scatter(
+        x=[half_gain_ratio], y=[stimulated_hawking_gain(half_gain_ratio, 1.0)],
+        mode='markers', marker=dict(color=COLORS['dissipative'], size=9),
+        name='Half gain', showlegend=False,
+    ))
+    fig.add_annotation(x=half_gain_ratio, y=np.log10(0.5),
+        text="G = 1/2 at ln(3)/(2π) ≈ 0.175", ax=130, ay=-35,
+        arrowhead=2, font=dict(size=12))
     fig.add_vrect(x0=0, x1=0.3, fillcolor=COLORS['dispersive'], opacity=0.08,
-        annotation_text="optimal probe window", annotation_position="top left",
-        annotation_font=dict(size=10))
-
-    # Stage 9 round 2: tighten x-range to [0, 1.6] (data ends near 1.5; round 1
-    # flagged ~50% blank whitespace beyond) and add bottom margin so the
-    # subtitle sits below the "ω/κ" axis title rather than colliding with it.
-    apply_layout(fig, height=480, width=650,
-        title=dict(text="<b>Stimulated Hawking Gain Spectrum</b>",
-                   font=TITLE_FONT),
-        xaxis=dict(title="ω / κ", range=[0, 1.6]),
-        yaxis=dict(title="G(ω)", type="log", range=[-4, 1]),
-        margin=dict(b=110),
-        legend=dict(x=0.55, y=0.95))
-
-    fig.add_annotation(x=0.5, y=-0.22, xref='paper', yref='paper',
-        text=f"T_H = {data['T_H_K']*1e3:.1f} mK | κ = {kappa:.0e} s⁻¹ | "
-             "Grisins PRB 94, 144518 (2016); Burkhard arXiv:2511.12339 (2025)",
-        showarrow=False, font=dict(size=9, family=FONT['family'], color='gray'))
+        line_width=0)
+    fig.add_annotation(x=0.02, y=0.98, xref='paper', yref='paper',
+        text="Shading: adopted working band<br>Lower edge unspecified",
+        xanchor='left', yanchor='top', showarrow=False, font=dict(size=12))
+    apply_layout(fig, height=500, width=700,
+        title=dict(text="<b>Stimulated Hawking gain: Γ ≡ 1 model</b>", font=TITLE_FONT),
+        xaxis=dict(title="ω / κ<sub>eff</sub>", range=[0, 1.6]),
+        yaxis=dict(title="G(ω)", type="log", range=[-4.5, 1.5], dtick=1),
+        margin=dict(l=75, r=25, t=55, b=135), showlegend=False)
+    fig.add_annotation(x=0.5, y=-0.34, xref='paper', yref='paper',
+        text="Ideal shot-noise model: G = 1/2 gives SNR = 5 for 100 probe photons/mode in one shot"
+             "<br>Requires calibrated transfer and in-band noise; no measured sensitivity claimed",
+        showarrow=False, font=dict(size=12, family=FONT['family']))
     return fig
 
 
@@ -8903,7 +8866,7 @@ def fig_log_correction_signature():
 
 
 def fig_T_H_evolution_regime_partition():
-    """Phase 6a Wave 5: T_H(t) evaporation regime partition.
+    """Hawking temperature evolution in the two evaporation regimes.
 
     Plots the time-evolution of Hawking temperature under Hawking-radiation
     backreaction in two regimes:
@@ -9015,7 +8978,7 @@ def fig_T_H_evolution_regime_partition():
         go.Scatter(
             x=alpha_grid, y=delta_grid,
             mode="lines",
-            line=dict(color=COLORS["steel_blue"], width=3),
+            line=dict(color="rgba(60,60,60,0.9)", width=3, dash="dashdot"),
             name="δ_ADW = (α_ADW − 1)·Λ_UV",
             showlegend=False,
         ),
@@ -9057,6 +9020,7 @@ def fig_T_H_evolution_regime_partition():
             ),
             font=TITLE_FONT,
         ),
+        legend=dict(x=0.02, y=0.98, xanchor="left", yanchor="top"),
         height=600,
         width=1100,
         margin=dict(t=110, b=80),
@@ -14466,19 +14430,18 @@ def fig_d8_alphabet_dimension_map() -> go.Figure:
     Schematic: which gate alphabets are kernel-verified at which dimension
     SU(d), color-coded by the mechanism that supplies density. Blue =
     sub-alphabet / per-qubit route; amber = essential non-Clifford resource
-    (the Phase 6z T-free CCZ-essential route). All entries kernel-pure.
+    (the T-free CCZ-essential route).
     """
     blue = COLORS["steel_blue"]
     amber = COLORS["amber"]
     # (alphabet label, dimension d, mechanism color, note)
     rows = [
-        ("Fibonacci anyons",          2, blue,  "golden-ratio trace"),
-        ("Clifford+T",                2, blue,  "Niven: √2·sin(π/8)"),
+        ("Clifford+T",                2, blue,  "√2·sin(π/8)"),
         ("Read–Rezayi SU(2)₅",        2, blue,  "Chebyshev T₇"),
         ("Read–Rezayi SU(2)₇",        2, blue,  "triple-angle"),
-        ("Trapped-ion (MS)",          4, blue,  "Brylinski–Brylinski"),
-        ("Clifford+T (3-qubit)",      8, blue,  "Aaronson–Gottesman (CCZ over-complete)"),
-        ("Clifford+CCZ (literal)",    8, amber, "T-free — CCZ essential"),
+        ("Trapped-ion (MS)",          4, blue,  "π/2 entangler on even grid"),
+        ("Clifford+CCZ (with T)",      8, blue,  "H, T, CNOT density"),
+        ("Clifford+CCZ (T-free)",    8, amber, "CCZ essential"),
     ]
     dims = [2, 4, 8]
     dim_x = {2: 0, 4: 1, 8: 2}
@@ -14489,26 +14452,27 @@ def fig_d8_alphabet_dimension_map() -> go.Figure:
             x=[dim_x[d]], y=[y], mode="markers+text",
             marker=dict(size=26, color=color, line=dict(width=1.5, color="#333")),
             text=[f"  {note}"], textposition="middle right",
-            textfont=dict(size=11, color="#333"),
+            textfont=dict(size=20, color="#333"),
             cliponaxis=False,  # let row notes extend into the right margin without truncation
             hovertext=[f"{label} — SU({d}) — {note}"], hoverinfo="text",
             showlegend=False,
         ))
         fig.add_annotation(x=-0.55, y=y, text=label, showarrow=False,
-                           xanchor="right", font=dict(size=12, color="#222"))
+                           xanchor="right", font=dict(size=20, color="#222"))
     fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
-        marker=dict(size=14, color=blue), name="density from sub-alphabet / per-qubit route"))
+        marker=dict(size=14, color=blue), name="Sub-alphabet or per-qubit density"))
     fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
-        marker=dict(size=14, color=amber), name="non-Clifford resource essential (T-free CCZ)"))
+        marker=dict(size=14, color=amber), name="Essential CCZ"))
     fig.update_xaxes(tickvals=[0, 1, 2], ticktext=["SU(2)", "SU(4)", "SU(8)"],
-                     range=[-2.4, 2.7], title="target group dimension",
+                     range=[-2.4, 2.7], title="Target group",
                      showgrid=True, gridcolor="#eee", zeroline=False)
     fig.update_yaxes(range=[-0.7, len(rows) - 0.3], showticklabels=False,
                      showgrid=False, zeroline=False)
     fig.update_layout(
-        title="D8 Fig. 1 — Kernel-verified universal compilation: alphabet × dimension coverage",
+        title="Alphabet and target-group coverage",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
-        height=520, width=1060, margin=dict(l=210, r=300, t=110, b=60),
+        height=540, width=1060, margin=dict(l=245, r=230, t=110, b=80),
+        font=dict(size=20),
         plot_bgcolor="white",
     )
     return fig
@@ -14560,6 +14524,54 @@ def fig_d8_su8_density_duality() -> go.Figure:
         title="Two complementary density mechanisms for SU(8)",
         height=500, width=900, margin=dict(l=30, r=30, t=90, b=30),
         plot_bgcolor="white", showlegend=False,
+    )
+    return fig
+
+
+def fig_d8_length_comparison() -> go.Figure:
+    """D8 word-length bounds on their respective theorem error coordinates.
+
+    Ross–Selinger displays the increment above its symbolic overhead N₃.
+    Its curve is conditional on grid success. The three coordinates do
+    not furnish a common error metric.
+    """
+    # SolovayKitaevLengthBound.skLength_at_skLevel_polylog_le
+    epsilon_0 = 1 / (8 * 1024**2)
+    epsilon = np.geomspace(epsilon_0, 1e-14, 100)
+    balanced_bound = SK_LENGTH_CONST * np.log(1 / epsilon)**SK_LENGTH_EXPONENT
+
+    k = np.arange(16, 97)
+    inverse_two_k = np.exp2(-k.astype(float))
+    # LogLengthHeadline.rossSelinger_log_length_explicit
+    grid_precision = (1 + np.sqrt(2)) * np.sqrt(inverse_two_k)
+    grid_increment = 8 * k
+    # KMMUniversal.kmm_universal_headline
+    state_error_sq = 9 * (2 * inverse_two_k**2 + 2 * np.sqrt(2) * inverse_two_k)
+    ancilla_bound = 50400 * k + 812
+
+    fig = make_subplots(
+        rows=1, cols=3, horizontal_spacing=0.13,
+        subplot_titles=("Balanced commutator", "Ross–Selinger grid", "KMM synthesis"),
+    )
+    for col, x, y, xlabel, ylabel, color in (
+        (1, epsilon, balanced_bound, "Target ε", "Word length bound", COLORS["steel_blue"]),
+        (2, grid_precision, grid_increment, "Column precision δ", "Bound − N₃", COLORS["amber"]),
+        (3, state_error_sq, ancilla_bound, "Squared state error", "Word length bound", COLORS["steel_blue"]),
+    ):
+        fig.add_trace(go.Scatter(x=x, y=y, mode="lines", line=dict(color=color, width=3)),
+                      row=1, col=col)
+        fig.update_xaxes(type="log", autorange="reversed", title_text=xlabel, row=1, col=col)
+        fig.update_yaxes(title_text=ylabel, row=1, col=col)
+    for col, exponents in enumerate(((-7, -10, -13), (-3, -8, -13), (-4, -14, -24)), 1):
+        fig.update_xaxes(
+            tickvals=[10.0**power for power in exponents],
+            ticktext=[f"10<sup>{power}</sup>" for power in exponents],
+            tickangle=0, row=1, col=col,
+        )
+    fig.update_annotations(font=dict(size=24))
+    fig.update_layout(
+        width=1200, height=450, showlegend=False, template="plotly_white",
+        font=dict(size=24), margin=dict(l=115, r=35, t=65, b=100),
     )
     return fig
 

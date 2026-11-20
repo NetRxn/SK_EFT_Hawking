@@ -1231,7 +1231,11 @@ def check_bundle_lean_module_coverage() -> CheckResult:
             continue
         # `\_` -> `_` so an escaped identifier matches its declared form; then drop
         # commented-out LaTeX, which is not part of the published claim.
-        body = _strip_tex_comments(tex.read_text(errors="replace").replace("\\_", "_"))
+        body = "\n".join(
+            _strip_tex_comments(source.read_text(errors="replace").replace("\\_", "_"))
+            for source in _H.draft_input_closure(tex, live_input_root=tex.parent)
+            if source.suffix == ".tex" and source.is_file()
+        )
         owned = _declarations_by_module()
 
         def _reached(m: str) -> bool:
@@ -1306,12 +1310,12 @@ def check_bundle_lean_module_coverage() -> CheckResult:
         n_ghost = sum(len(v) for v in unbuilt.values())
         details.append(Detail(
             "unbuilt", True,
-            f"{n_ghost} of those, across {len(unbuilt)} bundle(s), resolve to NO module "
-            f"in the Lean build and so can never be repaid by citing them — they are "
-            f"registrations of substrate that was planned and not built "
-            f"({'; '.join(f'{c}: {len(v)}' for c, v in sorted(unbuilt.items()))}). "
-            f"Repay by removing the registration, not by writing prose about them "
-            f"(TODO-D50)", warning=True))
+            f"{n_ghost} of those, across {len(unbuilt)} bundle(s), do not resolve "
+            f"under their registered names in the current Lean declaration index "
+            f"({'; '.join(f'{c}: {', '.join(v)}' for c, v in sorted(unbuilt.items()))}). "
+            "Reconcile the original lift, exact declarations, imports and built "
+            "dependencies before changing a registration or concluding that "
+            "substrate is missing (TODO-D50)", warning=True))
 
     # ⚠️ **DEREGISTRATIONS ARE REPORTED ON EVERY RUN, INCLUDING A GREEN ONE.** That is
     # half of what makes dropping a dependency *visible* rather than silent: the ledger
@@ -1622,6 +1626,195 @@ _SELF_NARRATION = (
 # reviewer catches them, and a pattern is added THEN, with a measurement behind it.
 
 
+# Whole declaration lines only, and only at the canonical generated input.
+_SENTENCE_COUNT_DECL_RE = re.compile(
+    r"^[ \t]*\\newcommand(?:"
+    r"\{\\[A-Za-z]+\}\{[0-9]+\}|"
+    r"\{\\(?:sorrypercent|reusePercent)\}\{[0-9]+\.[0-9]+\}|"
+    r"\{\\leantoolchain\}\{[0-9]+\.[0-9]+\.[0-9]+\}|"
+    r"\{\\(?:mathlibrev|physlibrev)\}\{[0-9a-f]{8}\})[ \t]*$",
+    re.MULTILINE,
+)
+_SENTENCE_MACRO_RE = re.compile(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?")
+_CAPTION_OR_LITERAL_RE = re.compile(
+    r"(?<!\\)\\(?:caption\*?(?![A-Za-z])|begin\{(lstlisting|verbatim\*?|minted|thebibliography)\}"
+    r"|(?P<verb>verb\*?|lstinline\*?)(?![A-Za-z]))"
+)
+_CAPTION_GROUP_TOKEN_RE = re.compile(r"\\.|[{}\[\]]", re.DOTALL)
+
+
+def _caption_group_end(body: str, start: int, opening: str, closing: str) -> int | None:
+    stack = [closing]
+    for m in _CAPTION_GROUP_TOKEN_RE.finditer(body, start + 1):
+        token = m.group()
+        if token == "{" or (token == opening and stack[-1] == closing):
+            stack.append("}" if token == "{" else closing)
+        elif token == stack[-1]:
+            stack.pop()
+            if not stack:
+                return m.end()
+    return None
+
+
+_LISTING_OPENER_SUFFIX_RE = re.compile(r"[ \t]*(?:\[language=[A-Za-z0-9+_-]*\])?[ \t]*")
+_LISTING_LAYOUT_VALUES = {
+    "basicstyle": re.compile(r"\\ttfamily\\small"),
+    "breaklines": re.compile(r"true|false"),
+    "frame": re.compile(r"single|none"),
+    "extendedchars": re.compile(r"true|false"),
+    "literate": re.compile(
+        r"(?:\s*\{[^{}\s\\]\}\{(?:\{\\\^o\}|"
+        r"\$(?:\\mathbb\{R\}|[_^](?:[0-9n]|\{[0-9n]\})|=|"
+        r"\\(?:beta|sigma|theta|alpha|to|otimes|leq|geq|neq|simeq|langle|rangle|"
+        r"mu|nu|vdash|varepsilon|lambda|Lambda|Delta|zeta))\$)\}[ \t]*1)+\s*"
+    ),
+}
+
+def _plain_listing_settings(sources: list[str]) -> bool:
+    """Refuse projection when explicit listing setup may add reader prose."""
+    for source in sources:
+        if re.search(r"\\(?:lstdefinestyle|lstnewenvironment|lstMakeShortInline|"
+                     r"AtBeginEnvironment|BeforeBeginEnvironment|lst@AddToHook)\b", source):
+            return False
+        for setting in re.finditer(r"\\lstset\b\s*", source):
+            start = setting.end()
+            if source[start:start + 1] != "{":
+                return False
+            end = _caption_group_end(source, start, "{", "}")
+            if end is None:
+                return False
+            i = start + 1
+            while i < end - 1:
+                key = re.match(r"\s*([A-Za-z]+)\s*=", source[i:end - 1])
+                if not key or key.group(1) not in _LISTING_LAYOUT_VALUES:
+                    return False
+                i += key.end()
+                value_start = i
+                while i < end - 1 and source[i] != ",":
+                    if source[i] == "{":
+                        next_i = _caption_group_end(source, i, "{", "}")
+                        if next_i is None or next_i >= end:
+                            return False
+                        i = next_i
+                    elif source[i] == "\\":
+                        i += 2
+                    else:
+                        i += 1
+                if not _LISTING_LAYOUT_VALUES[key.group(1)].fullmatch(
+                        source[value_start:i].strip()):
+                    return False
+                i += 1
+    return True
+
+
+def _sentence_inline_literal_end(body: str, match: re.Match[str]) -> int | None:
+    start = match.end()
+    line_end = body.find("\n", start)
+    if line_end < 0:
+        line_end = len(body)
+    if match.group("verb").startswith("lstinline") and body[start:start + 1] == "[":
+        end = _caption_group_end(body, start, "[", "]")
+        if end is None or end >= line_end:
+            return None
+        start = end
+    delimiter = body[start:start + 1]
+    if not delimiter or delimiter.isspace() or delimiter.isalpha():
+        return None
+    if delimiter == "{" and match.group("verb").startswith("lstinline"):
+        end = _caption_group_end(body, start, "{", "}")
+        return end if end is not None and end <= line_end else None
+    end = body.find(delimiter, start + 1, line_end)
+    return end + 1 if end >= 0 else None
+
+
+def _sentence_strip_comments(source: str) -> str:
+    """Protect literal percent signs before applying the shared comment lexer."""
+    from validation._tex import _strip_tex_comments
+
+    lines = []
+    for line in source.split("\n"):
+        parts = []
+        cursor = 0
+        for match in _CAPTION_OR_LITERAL_RE.finditer(line):
+            if match.start() < cursor or not match.group("verb"):
+                continue
+            prefix = line[cursor:match.start()]
+            if _strip_tex_comments(prefix) != prefix:
+                break  # An ordinary TeX comment precedes this apparent command.
+            end = _sentence_inline_literal_end(line, match)
+            if end is None:
+                continue
+            parts.extend((prefix, line[match.start():end].replace("%", "％")))
+            cursor = end
+        parts.append(line[cursor:])
+        lines.append("".join(parts))
+    return _strip_tex_comments("\n".join(lines))
+
+
+def _sentence_prose_projection(body: str, *, plain_listings: bool = False) -> str:
+    """Keep caption text in its own unit without interpreting listing contents."""
+    chunks = []
+    cursor = search = 0
+    while m := _CAPTION_OR_LITERAL_RE.search(body, search):
+        search = m.end()
+        if m.group("verb"):
+            search = _sentence_inline_literal_end(body, m) or search
+            continue
+        if env := m.group(1):
+            if env == "thebibliography":
+                body = body[:m.start()]
+                break
+            end = re.search(r"(?m)^[ \t]*\\end\{" + re.escape(env) + r"\}[ \t]*$",
+                            body[search:])
+            if end is None:
+                break
+            line_start = body.rfind("\n", 0, m.start()) + 1
+            line_end = body.find("\n", search)
+            if (env == "lstlisting" and plain_listings and line_end >= 0
+                    and not body[line_start:m.start()].strip()
+                    and _LISTING_OPENER_SUFFIX_RE.fullmatch(body[search:line_end])):
+                chunks.extend((_SENTENCE_MACRO_RE.sub(" ", body[cursor:line_start]), ". "))
+                cursor = search + end.end()
+            elif env == "lstlisting" and line_end >= 0:
+                # An ineligible listing remains measurable. Separate its caption
+                # from code and surrounding prose when the option body is clear.
+                option = re.match(r"[ \t]*\[[ \t]*caption[ \t]*=[ \t]*\{",
+                                  body[search:line_end])
+                if option:
+                    start = search + option.end() - 1
+                    stop = _caption_group_end(body, start, "{", "}")
+                    if stop is not None and stop <= line_end:
+                        chunks.extend((
+                            _SENTENCE_MACRO_RE.sub(" ", body[cursor:search]), ". ",
+                            re.sub(r"\\[A-Za-z]+\*?", " ", body[start + 1:stop - 1]),
+                            ". ",
+                        ))
+                        cursor = stop
+            search += end.end()
+            continue
+        start = search
+        while start < len(body) and body[start].isspace():
+            start += 1
+        if body[start:start + 1] == "[":
+            end = _caption_group_end(body, start, "[", "]")
+            if end is None:
+                continue
+            start = end
+            while start < len(body) and body[start].isspace():
+                start += 1
+        if body[start:start + 1] != "{":
+            continue
+        end = _caption_group_end(body, start, "{", "}")
+        if end is None:
+            continue
+        caption = body[start + 1:end - 1]
+        chunks.extend((_SENTENCE_MACRO_RE.sub(" ", body[cursor:m.start()]),
+                       ". ", re.sub(r"\\[A-Za-z]+\*?", " ", caption), ". "))
+        cursor = search = end
+    chunks.append(_SENTENCE_MACRO_RE.sub(" ", body[cursor:]))
+    return "".join(chunks)
+
+
 @register_check("bundle_sentence_length",
                 "No bundle draft grows its stock of sentences a reader must re-read to parse")
 def check_bundle_sentence_length() -> CheckResult:
@@ -1653,7 +1846,6 @@ def check_bundle_sentence_length() -> CheckResult:
     # (audit QI-11) and reintroducing it there would revive the false H2
     # obligation that removal note describes.
     from bundle_registry import BUNDLE_CODES
-    from validation._tex import _strip_tex_comments
     details: List[Detail] = []
     over60 = 0
     over100: list[tuple[str, int]] = []
@@ -1666,11 +1858,15 @@ def check_bundle_sentence_length() -> CheckResult:
         scanned += 1
         srcs, gaps = _reader_visible_sources_and_gaps(draft)
         unscannable.extend(f"{code}: {g}" for g in gaps)
-        for src in srcs:
-            body = _strip_tex_comments(src.read_text(encoding="utf-8", errors="ignore"))
-            body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
+        sources = [_sentence_strip_comments(src.read_text(encoding="utf-8", errors="ignore"))
+                   for src in srcs]
+        plain_listings = _plain_listing_settings(sources)
+        for src, body in zip(srcs, sources, strict=True):
+            body = body.split(r"\begin{document}", 1)[-1]
+            if src == _H.DOCS_DIR / "counts.tex":
+                body = _SENTENCE_COUNT_DECL_RE.sub("", body)
             body = _rows_as_sentences(body)
-            body = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?", " ", body)
+            body = _sentence_prose_projection(body, plain_listings=plain_listings)
             for sent in re.split(r"(?<=[.!?])\s+", body):
                 n = len(sent.split())
                 if n > 60:
@@ -3381,9 +3577,10 @@ _CLAIM_NUMERAL_RE = re.compile(r"(?<![\w.^])(\d+\.\d+|\d{2,})(?![\w])")
 #: that no machine-readable statement in their chain carries, and that can only be
 #: strengthened. Lower it by restating the claim over what the theorem proves, or by
 #: proving the quantity; never by widening the noise list above.
-APEX_CLAIM_NUMERAL_CEILING = 31
+APEX_CLAIM_NUMERAL_CEILING = 29
 
-#: Down-only floor on how many apex claims this check actually SCORES.
+#: Minimum scored apex population: increase to retain full measured coverage.
+#: A decrease requires a named population withdrawal or measurement rationale.
 #:
 #: MEASURED 2026-08-15: **639**, every declared apex across all 21 bundles, all of which
 #: resolve.
@@ -3411,7 +3608,8 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: SAME declaration hours earlier; it was the ONE apex the two bundles shared, so the
 #: E1/E2 overlap is now zero — which is what the 2026-08-08 rejected-merge adjudication
 #: wants and had not got. Measured 634 across the 21 bundles before lowering.
-APEX_CLAIMS_SCORED_FLOOR = 634
+#: 636 -> 638 (2026-11-03): D8 registers both Read–Rezayi compiler theorems.
+APEX_CLAIMS_SCORED_FLOOR = 638
 
 
 @register_check(
@@ -3637,7 +3835,7 @@ _APEX_VACUITY_DISCLOSURE_RE = re.compile(
 #: re-derived and PRINTED BY NAME on every run, disclosed and undisclosed alike, and no
 #: per-declaration exemption key exists to grant. Lower it by strengthening the theorem or
 #: by withdrawing the apex; never by adding a name anywhere.
-APEX_VACUITY_CEILING = 20
+APEX_VACUITY_CEILING = 19
 
 #: …of which the bundle's own `claims` string does not SAY the declaration is thin.
 #: **A RATCHET — it may only fall.**
@@ -3649,7 +3847,7 @@ APEX_VACUITY_CEILING = 20
 #: ceiling and NOT out of `APEX_VACUITY_CEILING` — so being honest is never room to add
 #: another. Remediation is per bundle and needs the draft read beside the metadata:
 #: `papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md`.
-APEX_UNDISCLOSED_VACUITY_CEILING = 15
+APEX_UNDISCLOSED_VACUITY_CEILING = 14
 
 
 @register_check(
@@ -3845,7 +4043,7 @@ def check_apex_claims_not_vacuous() -> CheckResult:
 
     # EVERY flagged row, by name, on every run. This is what makes the two ceilings
     # ratchets rather than suppression: nothing leaves the population, and a reader of
-    # the output can see exactly which twenty-one rows the number is made of.
+    # the output can see exactly which flagged rows the number is made of.
     for code, short, registers, disc in flagged:
         details.append(Detail(
             "apex_content_free", True,

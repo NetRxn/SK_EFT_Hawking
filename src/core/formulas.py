@@ -128,7 +128,7 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
 #: The dispersive coefficient c₁ in δ_disp = −c₁·D².
 #:
 #: ⚠️ THIS IS A DECLARED PROJECT NORMALIZATION, NOT A DERIVED CONSTANT.
-#: No source derives it, and no universal value exists — see
+#: The quadratic law is also adopted for these applications — see
 #: ``dispersive_correction`` below and PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 #: Sourced from ``constants.EFT_PARAMS`` (Invariant #2) and re-exported here so
 #: that no consumer — module, script, test, Lean docstring or manuscript table —
@@ -138,65 +138,42 @@ DISPERSIVE_C1 = _EFT_PARAMS['DISPERSIVE_C1']
 
 def dispersive_correction(D):
     """
-    Dispersive correction to the effective Hawking temperature.
+    Adopted phenomenological fractional shift of the Hawking temperature.
 
     δ_disp = -c₁ · D²,  c₁ = DISPERSIVE_C1 = π/6
 
-    where D = κξ/c_s is the adiabaticity parameter.
+    where D = κξ/c_s is the adiabaticity parameter. Both this quadratic
+    functional form and its coefficient are modelling choices for the
+    applications here, not a physical derivation from the cited literature.
 
-    ⚠️ PROVENANCE — WHAT IS AND IS NOT ESTABLISHED.
+    Coutant & Weinfurtner, PRD 97, 025005 (2018; arXiv:1707.09651v2),
+    analyze a weak-dispersive KdV model with co-propagating coupling
+    neglected. For their specified profile, the low-frequency temperature
+    ratio is tanh(π q_r), with an exponentially small smooth-limit departure
+    (Eqs. 39–40). This does not establish a nonzero leading D² temperature
+    term or map that profile's parameters to a particular device's local D.
 
-    The D² SCALING is supported. Coutant & Weinfurtner (PRD 2017) obtain
-    analytic expressions in the KdV approximation and find the leading
-    correction to the effective temperature scales as O(ξ²κ²/c_s²) = O(D²)
-    in the adiabatic regime. That is a PARAMETRIC O(·) result.
+    Coutant & Parentani, PRD 90, 121501(R) (2014; arXiv:1402.2514v2), obtain
+    β_ω = exp(-πω/κ) α_ω for their near-horizon locally linear solution
+    within a weak-dispersion momentum-space WKB approximation that neglects
+    left-mover mixing. Their validity region and profile-perturbation
+    analysis must accompany this result; it is not an exact global
+    all-orders statement about arbitrary profiles.
 
-    The COEFFICIENT c₁ = π/6 is NOT derived anywhere, and no universal value
-    exists. A near-horizon Hamilton-Jacobi computation shows why. With
-    ω = (v(x)+c_s)k + (c_sξ²/8)k³ and x(u) = Σ c_n uⁿ the inverse profile
-    series, the tunneling exponent is 2π·Res_{k=0}[x dk], and only the terms
-    n ≡ 1 (mod 3) survive the residue:
+    Corley & Jacobson, PRD 54, 1568 (1996), report profile-dependent fitted
+    powers in a numerical robustness study. Neither that result nor
+    Finazzi & Parentani 2012 derives the law implemented here.
 
-        Res = ω·(c₁ᵖ - 4β c₄ᵖ ω² + 21 β² c₇ᵖ ω⁴ + ...),   β = c_sξ²/8
-
-    (cᵖ are the PROFILE series coefficients, not this module's c₁). The
-    leading term c₁ᵖ = 1/κ reproduces T_H = κ/2π exactly. The FIRST dispersive
-    term is -4β c₄ᵖ ω³: cubic in ω, so it is a non-thermal distortion rather
-    than a temperature rescaling, and its size is set by c₄ᵖ — a fourth-order
-    datum of the velocity profile. There is no universal number multiplying D².
-
-    That is not merely our own argument. Coutant & Parentani (PRD 90,
-    121501(R), 2014; arXiv:1402.2514) solve the near-horizon quartic-dispersion
-    mode equation for a locally linear profile v ≈ -1 + κx and obtain
-    β_ω = e^{-πω/κ}α_ω EXACTLY, i.e. T = κ/2π with NO D² correction at all at
-    that order. A nonzero correction appears in their §IV only once the
-    profile departs from linear (v = v₀ + δv), and is then set by δv — the
-    profile. Del Porro, Liberati & Schneider (arXiv:2406.14603) derive
-    κ(α) = κ_KH(1 ± (3/8)α²) for a specific tanh profile in a DIFFERENT
-    parameter α = Ω/Λ, and state in terms that its coefficient "depends
-    crucially on the specific geometry".
-
-    Corley & Jacobson (PRD 54, 1568, 1996) agrees: it is a NUMERICAL study
-    reporting fitted powers (T_H/k₀)^p with p ≈ 3 and 2 for smooth profiles at
-    two temperatures and p ≈ 1 for kinked ones — the power ITSELF is
-    profile-dependent. It contains no D² law and no π/6. Do NOT cite it, or
-    Finazzi & Parentani 2012, as the source of this coefficient.
-
-    π/6 is therefore fixed HERE, by definition, as the project's O(1)
-    normalization, and every statement about δ_disp in this repository and in
-    the manuscripts is a statement about that definition. The Lean
-    definition ``KappaScaling.dispersiveCorrection`` carries the same number.
+    The evaluator and Lean definition KappaScaling.dispersiveCorrection
+    share the adopted expression. Their bounds and quadratic factorization
+    are statements about that definition. Rescaling c₁ changes its values
+    and can move the crossover with dissipation; preserving a quadratic
+    form does not establish unchanged physical ordering.
 
     Lean: dispersive_correction_bound (KappaScaling.lean), bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
-    Source: SCALING — Coutant & Weinfurtner, PRD 2017 (parametric O(D²), KdV,
-            adiabatic regime). COEFFICIENT — project normalization; see
-            PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
-    Robustness (NOT the coefficient): Corley & Jacobson, PRD 54, 1568 (1996);
-            Coutant & Parentani, PRD 90, 121501(R) (2014).
-            ⚠️ NOT "PRD 89, 124004" — that is an unrelated Kerr-Newman-NUT
-            paper; the misprint is still live at HawkingUniversality.lean:54,
-            WKBAnalysis.lean:175 and papers/D1/paper_draft.tex:561.
+    Source standing: adopted parametrization; see
+        PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 
     Args:
         D: adiabaticity parameter (dimensionless)
@@ -979,8 +956,9 @@ def kappa_scaling_dispersive(kappa, xi, c_s):
 
     δ_disp(κ) = -(π/6) · (ξ·κ/c_s)²
 
-    At fixed BEC material properties (ξ, c_s constant), the dispersive
-    correction scales quadratically with kappa: |δ_disp| ∝ κ².
+    At fixed BEC material properties (ξ, c_s constant), this adopted
+    correction scales quadratically with kappa: |δ_disp| ∝ κ². This is
+    factorization of the defined ansatz, not a derived physical scaling law.
 
     This is equivalent to dispersive_correction(D) with D = ξκ/c_s.
 
@@ -1037,10 +1015,10 @@ def kappa_scaling_crossover(gamma_1, gamma_2, xi):
     Below κ_cross: dissipative correction dominates (linear in κ).
     Above κ_cross: dispersive correction dominates (quadratic in κ).
 
-    This crossover provides the experimental handle for the κ-scaling
-    test: measuring the spectrum at multiple κ values reveals the
-    transition from linear to quadratic scaling, confirming the EFT
-    prediction structure.
+    This is the crossover of the adopted correction definitions. A κ sweep
+    can test those model dependences; the algebra alone does not establish
+    a physical transition or its experimental accessibility. Changing the
+    adopted dispersive coefficient moves the crossover.
 
     Derivation: Set |δ_disp| = δ_diss:
         (π/6)(ξκ/c_s)² = (γ₁+γ₂)κ/c_s²
@@ -1273,9 +1251,9 @@ def dispersive_hawking_correction(D):
     """
     Dispersive correction to effective Hawking temperature, as a RATIO.
 
-    κ_eff/κ = 1 + δ_disp = 1 - c₁·D² + O(D⁴),  D = ξκ/c_s.
+    κ_eff/κ = 1 + δ_disp = 1 - c₁·D²,  D = ξκ/c_s.
 
-    This is the same physics as ``dispersive_correction``, expressed as the
+    This is the same adopted ansatz as ``dispersive_correction``, expressed as the
     ratio κ_eff/κ rather than as the fractional shift δ_disp. It DELEGATES to
     that function and does not restate the coefficient — Invariant #1, one
     home per formula.
@@ -1288,8 +1266,8 @@ def dispersive_hawking_correction(D):
     all three Lean modules. The duplicate is removed rather than reconciled.
     See papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
 
-    For the standing of c₁ itself — a declared project normalization, not a
-    derived or universal constant — read ``dispersive_correction``.
+    For the standing of both the adopted form and normalization,
+    read ``dispersive_correction``.
 
     Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean);
           KappaScaling.dispersiveCorrection carries the same π/6.
@@ -2375,132 +2353,269 @@ def tetrad_density_of_states(p, d=4):
     return c_d.get(d, 1 / (4 * np.pi**2)) * p**(d - 1)
 
 
-def tetrad_gap_integral(Delta, Lambda, N_f=1, d=4):
+def _tetrad_njl_real(value, name, *, positive=False):
+    """Admit finite Real inputs only if binary64 preserves nonzero magnitude.
+
+    Original negatives are rejected before conversion. Original nonzero
+    values converted to zero are refused, not reclassified as legitimate
+    zero. Both true zero encodings and Fraction(0) remain nonnegative;
+    representable positive subnormals are allowed without a magnitude cutoff.
+    Input-domain/representation refusals use ValueError; later numerical
+    or output failures retain ArithmeticError in the calling routines.
     """
-    Gap integral I(Δ) = ∫₀^Λ ρ(p)/(p² + Δ²) dp.
+    import numbers
+    if isinstance(value, (bool, np.bool_)) or not isinstance(value, numbers.Real):
+        raise ValueError(f"{name} must be a finite real scalar")
+    original = value
+    if original < 0 or (positive and original == 0):
+        qualifier = "positive" if positive else "nonnegative"
+        raise ValueError(f"{name} must be finite and {qualifier}")
+    try:
+        converted = float(original)
+    except (ValueError, OverflowError) as exc:
+        raise ValueError(f"{name} must be representable as a finite float") from exc
+    if not np.isfinite(converted):
+        raise ValueError(f"{name} must be representable as a finite float")
+    if original != 0 and converted == 0:
+        raise ValueError(f"{name} nonzero input is not representable as a nonzero float")
+    return converted
 
-    For d=4 with c₄ = 1/(4π²):
-      I(Δ) = c₄/2 · [Λ² - Δ² · ln(1 + Λ²/Δ²)]  when Δ > 0
-      I(0) = c₄ · Λ²/2 = Λ²/(8π²)
 
-    The critical coupling is G_c = 1/(N_f · I(0)) = 8π²/(N_f · Λ²),
-    matching the Coleman-Weinberg V_eff derivation exactly.
+def _tetrad_njl_count(value, name):
+    if isinstance(value, (bool, np.bool_)) or not isinstance(value, (int, np.integer)) or value < 1:
+        raise ValueError(f"{name} must be a positive integer")
+    return int(value)
+
+
+def _tetrad_njl_inputs(Lambda, N_f, d):
+    if isinstance(d, (bool, np.bool_)) or not isinstance(d, (int, np.integer)):
+        raise ValueError("d must be an integer")
+    if d != 4:
+        raise NotImplementedError("Gap integral only implemented for d=4")
+    return (_tetrad_njl_real(Lambda, "Lambda", positive=True),
+            _tetrad_njl_real(N_f, "N_f", positive=True))
+
+
+def _tetrad_njl_product(numerators, denominators, label):
+    """Scale positive finite factors before ldexp; refuse zero/overflow outputs."""
+    import math
+    mantissa, exponent = 1.0, 0
+    for factor in numerators:
+        m, e = math.frexp(factor)
+        mantissa *= m
+        exponent += e
+    for factor in denominators:
+        m, e = math.frexp(factor)
+        mantissa /= m
+        exponent -= e
+    try:
+        value = math.ldexp(mantissa, exponent)
+    except OverflowError as exc:
+        raise ArithmeticError(f"{label} is not representable") from exc
+    if not np.isfinite(value) or value <= 0:
+        raise ArithmeticError(f"{label} is not a representable positive float")
+    return value
+
+
+def _tetrad_njl_positive_from_log(log_value, label):
+    import math
+    if not np.isfinite(log_value) or not (
+        np.log(np.nextafter(0.0, 1.0)) <= log_value <= np.log(np.finfo(float).max)
+    ):
+        raise ArithmeticError(f"{label} is not representable")
+    value = math.exp(log_value)
+    if not np.isfinite(value) or value <= 0:
+        raise ArithmeticError(f"{label} is not a representable positive float")
+    return value
+
+
+def _tetrad_njl_log_L(log_z):
+    """log[z log(1+1/z)], used on the small/moderate-z branch."""
+    if log_z <= 0:
+        small = np.exp(log_z) if log_z >= np.log(np.nextafter(0.0, 1.0)) else 0.0
+        inner = -log_z + np.log1p(small)
+    else:
+        inner = np.log1p(np.exp(-log_z))
+    return float(log_z + np.log(inner))
+
+
+def _tetrad_njl_log_B(log_z):
+    """Cancellation-safe log B(z); inverse-z alternating tail for z>=2."""
+    if log_z < np.log(2.0):
+        log_l = _tetrad_njl_log_L(log_z)
+        l_value = np.exp(log_l) if log_l >= np.log(np.nextafter(0.0, 1.0)) else 0.0
+        value = float(np.log1p(-l_value))
+    else:
+        inverse = np.exp(-log_z) if log_z <= -np.log(np.nextafter(0.0, 1.0)) else 0.0
+        total, power = 1.0, 1.0
+        for n in range(1, 128):
+            power *= -inverse
+            total += 2.0 * power / (n + 2)
+            next_bound = 2.0 * abs(power) * inverse / (n + 3)
+            if next_bound <= np.finfo(float).eps * abs(total):
+                value = float(-log_z - np.log(2.0) + np.log(total))
+                break
+        else:
+            raise ArithmeticError("NJL inverse-z series failed its tail budget")
+    if not np.isfinite(value) or value > 0:
+        raise ArithmeticError("NJL normalized integral is invalid")
+    return value
+
+
+def _tetrad_njl_log_integral(Delta, Lambda):
+    if Delta == 0:
+        return float(2 * np.log(Lambda) - np.log(8 * np.pi**2))
+    # A representable direct ratio avoids subtracting nearly equal large logs.
+    import math
+    try:
+        ratio = Delta / Lambda
+    except OverflowError:
+        ratio = float("inf")
+    log_z = (2 * math.log(ratio) if 0 < ratio < float("inf")
+             else 2 * (math.log(Delta) - math.log(Lambda)))
+    return float(2 * math.log(Lambda) - math.log(8 * np.pi**2)
+                 + _tetrad_njl_log_B(log_z))
+
+
+def tetrad_gap_integral(Delta, Lambda, N_f=1, d=4):
+    """Positive d=4 NJL scalar integral, independent of supplied N_f.
+
+    I(Delta)=Lambda^2 B((Delta/Lambda)^2)/(8 pi^2), B(z)=int_0^1 u/(u+z)du.
+    I(0)=Lambda^2/(8 pi^2); no absolute Delta guard. Stable complements and
+    an inverse-z series avoid the old large-ratio subtraction. A nonzero
+    mathematical result that cannot be represented raises ArithmeticError.
+    Inputs are finite real scalars, Delta>=0, Lambda,N_f>0; bools rejected.
+    This model shares a threshold with the separate regulated potential,
+    not its positive stationary roots or a microscopic ADW derivation.
 
     Lean: gapIntegral_pos, gapIntegral_strictAnti (TetradGapEquation.lean)
     Aristotle: 79e07d55
-    Source: NJL-ADW correspondence, deep research Phase-5c Q3, Q6
-
-    Args:
-        Delta: Gap parameter (≥ 0)
-        Lambda: UV cutoff (> 0)
-        N_f: Number of Dirac fermion species (default 1)
-        d: Spacetime dimension (default 4)
-
-    Returns:
-        I(Δ) — the gap integral value
+    Source: Stipulated d=4 NJL scalar kernel with rho(p)=p^3/(4 pi^2).
     """
-    c4 = 1 / (4 * np.pi**2)
-    if d != 4:
-        raise NotImplementedError("Gap integral only implemented for d=4")
-    if Delta < 1e-15:
-        return c4 * Lambda**2 / 2
-    return c4 / 2 * (Lambda**2 - Delta**2 * np.log(1 + Lambda**2 / Delta**2))
+    Delta = _tetrad_njl_real(Delta, "Delta")
+    Lambda, N_f = _tetrad_njl_inputs(Lambda, N_f, d)
+    if Delta == 0:
+        return _tetrad_njl_product((Lambda, Lambda), (8 * np.pi**2,), "I(0)")
+    return _tetrad_njl_positive_from_log(_tetrad_njl_log_integral(Delta, Lambda), "I(Delta)")
 
 
 def tetrad_gap_operator(Delta, G, Lambda, N_f=1, d=4):
-    """
-    Gap operator f_G(Δ) = G · N_f · Δ · I(Δ).
+    """Undivided scalar NJL operator G*N_f*Delta*I(Delta).
 
-    The gap equation Δ = f_G(Δ) is a fixed-point problem.
-    - Trivial solution Δ = 0 always exists.
-    - Nontrivial Δ > 0 exists iff G > G_c = 1/(N_f · I(0)).
+    Zero Delta or zero G gives zero after input validation. Positive outputs
+    are log-scaled; unrepresentable results raise, rather than false zero.
+    This is a stipulated scalar model, not a derived gravitational response.
 
     Lean: gapOperator_self_map (TetradGapEquation.lean)
     Aristotle: 79e07d55
-    Source: NJL-ADW correspondence, deep research Phase-5c Q3
-
-    Args:
-        Delta: Gap parameter (≥ 0)
-        G: Four-fermion coupling constant (> 0)
-        Lambda: UV cutoff (> 0)
-        N_f: Number of Dirac fermion species (default 1)
-        d: Spacetime dimension (default 4)
-
-    Returns:
-        f_G(Δ) — image of Δ under the gap operator
+    Source: Stipulated d=4 NJL scalar kernel with rho(p)=p^3/(4 pi^2).
     """
-    return G * N_f * Delta * tetrad_gap_integral(Delta, Lambda, N_f, d)
+    Delta = _tetrad_njl_real(Delta, "Delta")
+    G = _tetrad_njl_real(G, "G")
+    Lambda, N_f = _tetrad_njl_inputs(Lambda, N_f, d)
+    if Delta == 0 or G == 0:
+        return 0.0
+    log_value = np.log(G) + np.log(N_f) + np.log(Delta) + _tetrad_njl_log_integral(Delta, Lambda)
+    return _tetrad_njl_positive_from_log(log_value, "gap operator")
 
 
 def tetrad_critical_coupling_integral(Lambda, N_f=1, d=4):
-    """
-    Critical coupling from the integral formulation: G_c = 1/(N_f · I(0)).
+    """Representable positive scalar threshold 8*pi^2/(N_f*Lambda^2).
 
-    For d=4: G_c = 1/(N_f · Λ²/(8π²)) = 8π²/(N_f · Λ²).
-
-    This matches the Coleman-Weinberg V_eff derivation exactly —
-    the c₄ = 1/(4π²) coefficient accounts for angular integration,
-    Dirac trace, and HS normalization consistently.
+    Mantissa/exponent scaling avoids premature product overflow/underflow.
+    Nonrepresentable results raise ArithmeticError. Agreement with the
+    regulated model concerns this coefficient only, not full potentials,
+    positive roots, normalization derivation or physical ADW equivalence.
 
     Lean: criticalCoupling_pos (TetradGapEquation.lean)
     Aristotle: 79e07d55
-    Source: deep research Phase-5c Q3, Q6; Vladimirov-Diakonov PRD 86, 104019
-
-    Args:
-        Lambda: UV cutoff (> 0)
-        N_f: Number of Dirac fermion species (default 1)
-        d: Spacetime dimension (default 4)
-
-    Returns:
-        G_c — critical coupling for tetrad condensation
+    Source: Stipulated d=4 NJL scalar kernel with rho(p)=p^3/(4 pi^2).
     """
-    I0 = tetrad_gap_integral(0, Lambda, N_f, d)
-    return 1.0 / (N_f * I0)
+    Lambda, N_f = _tetrad_njl_inputs(Lambda, N_f, d)
+    return _tetrad_njl_product((8 * np.pi**2,), (N_f, Lambda, Lambda), "G_c")
 
 
 def tetrad_gap_solution(G, Lambda, N_f=1, d=4, tol=1e-12, max_iter=1000):
-    """
-    Solve the gap equation Δ = G · N_f · Δ · I(Δ) by fixed-point iteration.
+    """Bracketed positive scalar NJL root, with explicit finite-precision refusal.
 
-    For G > G_c: returns the nontrivial solution Δ* > 0.
-    For G ≤ G_c: returns 0 (trivial solution is unique).
+    The represented canonical G_c defines the binary critical convention:
+    G==G_c (or G==0) returns zero. Unequal inputs within 32 eps relative
+    threshold distance raise; normal representable G_c is required. This
+    guard band is a numerical policy, not a proved exact threshold test.
+    Resolved subcritical G returns zero. Resolved supercritical G never
+    silently returns zero, a capped cutoff or an unchecked midpoint.
 
-    The iteration Δ_{n+1} = f_G(Δ_n) converges when started from Δ_0 ~ Λ
-    in the supercritical regime (G > G_c).
+    B(z)=int_0^1 u/(u+z)du and r=G/G_c give a positive root below r/2.
+    A widened upper bracket z=r has r*B(r)<1/2, retaining a strict sign
+    margin. Lower z=(h/4)^2 with h=1-1/r follows L(z)<2sqrt(z).
+    Bisection in log z requires actual finite strict endpoint signs and
+    BOTH |log-equation residual|<=tol and log-interval width<=tol.
+    For r<=2 use log L-log h; otherwise use -log r-log B. These have
+    different conditioning; neither alone is an absolute gap-error bound.
+    Rounded output is rechecked for residual/rounding displacement. Invalid
+    brackets, stagnation, exhaustion and unrepresentable outputs raise
+    ArithmeticError. tol is in (0,1), max_iter a positive integer.
+    No arbitrary strong-coupling cap or physical UV/ADW validity is implied.
 
     Lean: gap_nontrivial_exists, gap_trivial_unique_subcritical (TetradGapEquation.lean)
     Aristotle: 79e07d55
-    Source: deep research Phase-5c Q6 (IVT + Banach contraction architecture)
-
-    Args:
-        G: Four-fermion coupling (> 0)
-        Lambda: UV cutoff (> 0)
-        N_f: Number of Dirac fermion species (default 1)
-        d: Spacetime dimension (default 4)
-        tol: Convergence tolerance
-        max_iter: Maximum iterations
-
-    Returns:
-        Δ* — gap equation solution (0 if subcritical)
+    Source: Stipulated d=4 NJL scalar kernel with rho(p)=p^3/(4 pi^2).
     """
-    G_c = tetrad_critical_coupling_integral(Lambda, N_f, d)
-    if G <= G_c:
+    G = _tetrad_njl_real(G, "G")
+    Lambda, N_f = _tetrad_njl_inputs(Lambda, N_f, d)
+    tol = _tetrad_njl_real(tol, "tol", positive=True)
+    if tol >= 1:
+        raise ValueError("tol must be below one")
+    max_iter = _tetrad_njl_count(max_iter, "max_iter")
+    if G == 0:
         return 0.0
+    G_c = tetrad_critical_coupling_integral(Lambda, N_f, d)
+    if G_c < np.finfo(float).tiny:
+        raise ArithmeticError("normal G_c required for threshold accuracy")
+    if G == G_c:
+        return 0.0
+    distance = abs(G - G_c) / max(G, G_c)
+    if distance <= 32 * np.finfo(float).eps:
+        raise ArithmeticError("coupling side unresolved within threshold guard band")
+    if G < G_c:
+        return 0.0
+    difference = G - G_c
+    log_r = (float(np.log1p(difference / G_c)) if difference <= G_c
+             else float(np.log(G) - np.log(G_c)))
+    log_h = float(np.log(-np.expm1(-log_r)))
+    lo, hi = 2 * (log_h - np.log(4.0)), log_r
+    initial_lo, initial_hi = lo, hi
 
-    # Bisection on g(Δ) = f_G(Δ)/Δ - 1 = G·N_f·I(Δ) - 1
-    # g(0+) = G·N_f·I(0) - 1 > 0 (since G > G_c)
-    # g(Λ) < 0 for large enough Λ (I(Λ) → 0 as Δ → ∞)
-    lo, hi = 1e-10 * Lambda, Lambda
+    def relation(log_z):
+        value = (_tetrad_njl_log_L(log_z) - log_h if log_r <= np.log(2.0)
+                 else -log_r - _tetrad_njl_log_B(log_z))
+        if not np.isfinite(value):
+            raise ArithmeticError("nonfinite NJL root residual")
+        return float(value)
+
+    f_lo, f_hi = relation(lo), relation(hi)
+    if not (f_lo < 0 < f_hi):
+        raise ArithmeticError("NJL root lacks a strict numerical sign bracket")
     for _ in range(max_iter):
-        mid = (lo + hi) / 2
-        g_mid = G * N_f * tetrad_gap_integral(mid, Lambda, N_f, d) - 1.0
-        if abs(g_mid) < tol:
-            return mid
-        if g_mid > 0:
-            lo = mid
+        mid = lo + (hi - lo) / 2
+        f_mid = relation(mid)
+        if hi - lo <= tol and abs(f_mid) <= tol:
+            Delta = _tetrad_njl_positive_from_log(np.log(Lambda) + mid / 2, "positive gap")
+            actual_log_z = 2 * (np.log(Delta) - np.log(Lambda))
+            if not (initial_lo <= actual_log_z <= initial_hi):
+                raise ArithmeticError("rounded gap left initial bracket")
+            if abs(actual_log_z - mid) > tol or abs(relation(actual_log_z)) > tol:
+                raise ArithmeticError("rounded gap fails requested accuracy budget")
+            return Delta
+        if mid == lo or mid == hi:
+            raise ArithmeticError("NJL floating bracket stalled before convergence")
+        if f_mid <= 0:
+            lo, f_lo = mid, f_mid
         else:
-            hi = mid
-    return (lo + hi) / 2
+            hi, f_hi = mid, f_mid
+        if not (f_lo <= 0 <= f_hi):
+            raise ArithmeticError("NJL numerical bracket lost its signs")
+    raise ArithmeticError("NJL root iteration budget exhausted")
 
 
 # ════════════════════════════════════════════════════════════════════

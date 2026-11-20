@@ -1,0 +1,17 @@
+# Independent D8 generated-table migration review
+
+**Disposition.** The working candidate is suitable for a scoped table-migration checkpoint against `c880151f`. I found no mandatory migration defect. The existing Table II overlap remains a typesetting defect for a publication layout review. This disposition covers source conservation, routing and generated-file bindings. It does not close D8 figure findings or establish scientific, Stage 9 or publication acceptance.
+
+- An independent read-only comparison extracted the four original tabular blocks from `git show c880151f:papers/D8/paper_draft.tex`. After removing standalone horizontal-rule commands, the current generated tabular blocks match line for line, including column alignment, headers and 29 rows (results 14, alphabets 6, mechanisms 3, reusable 6). Substituting the original blocks back into the four current include sites reproduces the complete original manuscript byte for byte. Thus captions, labels, float placement declarations, conditions and cross-references are preserved. The standard renderer changes the rule treatment from one explicit `\colrule` to `\hline` above and below the header and beneath the last row.
+- The candidate test renders all four specs using the canonical engine and requires full generated-file equality. It also binds each expected generated include directly after the corresponding label and ruledtabular wrapper. `applied.xml` records 37 passes with zero failures, errors or skips. The scratch control passed in the original case and failed at the include assertion after swapping the mechanisms include to results. The planner adds this same binding test once when any of the manuscript, spec, four generated files, renderer driver or engine input changes. Counts metadata changes the pytest population by one, from 7144 to 7145, plus the generation timestamp.
+- I compared the canonical candidate PDF from `compile.stdout` with the earlier attribution compile PDF and inspected the tables. Tables I–IV retain pages 2, 5, 8 and 12. The rules shift some vertical coordinates slightly. The horizontal positions of the inspected headings match. The candidate and baseline logs report the same seven overfull widths in the same sequence, including the three table alignments at 64.95735, 12.57686 and 23.13358 pt. Table II already overlaps the right-column text on page 5 in the baseline raster. Tables III and IV already exceed their ruling width. The candidate compile receipt reports 13 pages, zero TeX errors and zero unresolved references.
+- SHA-256 for the canonical candidate PDF is `d598fe12b70c603af5d67eaeb1adc16b9934781ea0180b069439ad812904c9d8`, which matches the checkout PDF. The earlier canonical comparison PDF is `afe77f292a29675102795a42db43756708ef392ad294ba8e63f8aecc89699595`. Generated-file SHA-256 in alphabetic filename order follows.
+
+| Generated file | SHA-256 |
+| --- | --- |
+| alphabets.tex | f4c57663851451c287d4b25b9356921026423331cb8b448614f490e9b7b5da59 |
+| mechanisms.tex | ecccdaa8a94d051a26f93840a982c2cc5dd0c0e62b77e893610faf55ef05ca7d |
+| results.tex | 8c473554b4081477511b1b59f86a5da966bc7ae0f81483b1633f0f7600e528c0 |
+| reusable.tex | 9bf08a0fefec7540b26cb0498aed29766f60d406d3e465dda9c2de1e5375a80b |
+
+The continuity packet was fresh on entry. I inspected the supplied execution receipts and used Git readback, a read-only Python source comparison, Poppler extraction and rasterization, and SHA-256. I wrote only this report in the checkout.

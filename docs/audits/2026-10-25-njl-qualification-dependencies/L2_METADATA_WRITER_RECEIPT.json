@@ -1,0 +1,9 @@
+{
+  "first": [
+    "L2"
+  ],
+  "second": [],
+  "final_sha256": "96f05c59d7e364631e095b776e19b17f073726effc51740c72c7b9d9ef4cd9ce",
+  "matches_live_bytes": true,
+  "scope": "existing writer on isolated copy of HEAD metadata using canonical live aggregate"
+}

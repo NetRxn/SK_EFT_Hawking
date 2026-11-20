@@ -508,6 +508,16 @@ survived each pass — the correction-landed-at-one-site pattern, applied to a d
 record. A reader planning the prose agent's scope from this list would have built it
 twice.
 
+The sentence check treats a caption's mandatory body as a separate prose
+unit. Formatting inside that body preserves its text, and an optional short
+title does not replace the body. Literal code environments do not introduce
+active caption commands. Numeric, version and revision definitions in the canonical
+generated count input are declarations. The check retains other content
+in that input, and reads other included files normally. A closed listing with no prose or escape
+options separates prose units. The check retains listings with unsupported
+settings or ambiguous boundaries, and keeps prose on both sides measurable. The transitive input closure and missing-input
+refusal apply equally to captions and other prose.
+
 ### Phase 4 — Charter §2/§3 (section plan + figure plan), Gates 13/14, F-02/F-03
 
 **Why fourth.** The genuinely expensive authoring — 21 planned outlines and figure plans — and the

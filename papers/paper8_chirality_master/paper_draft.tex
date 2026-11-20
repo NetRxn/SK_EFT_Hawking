@@ -7,6 +7,7 @@
 \documentclass[aps,prd,twocolumn,superscriptaddress,showpacs]{revtex4-2}
 
 \usepackage{amsmath,amssymb,amsfonts}
+\newtheorem{theorem}{Theorem}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -150,17 +151,17 @@ fermion spectrum (equal left- and right-handed Weyl counts):
 \end{enumerate}
 
 In Lean~4, these are formalized as propositions in
-\texttt{GoltermanShamir.lean} (14~theorems, zero \texttt{sorry}). The
+\texttt{GoltermanShamir.lean} (\dtwoGoltermanShamirThms{}~theorems, zero \texttt{sorry}). The
 key formal structures are \texttt{LatticeHamiltonianData} (dimension $d$,
 bands $n$), \texttt{TranslationInvariant}, \texttt{FiniteRange}, and
 \texttt{WeylSpectrum} (defined in \texttt{LatticeHamiltonian.lean},
-28~theorems).
+\dtwoLatticeHamiltonianThms{}~theorems).
 
 \subsection{TPF evasion}
 
 The TPF construction~\cite{TPF2026} violates five of the nine conditions
 (C1, C2, I3, extra-dimensional, and C3 conditionally), as proved in
-\texttt{TPFEvasion.lean} (12~theorems). The machine-checked conjunction
+\texttt{TPFEvasion.lean} (\dtwoTpfEvasionThms{}~theorems). The machine-checked conjunction
 \texttt{tpf\_outside\_gs\_scope\_main} establishes that GS and TPF
 operate in genuinely different mathematical frameworks.
 
@@ -314,7 +315,7 @@ formalization.
 
 The Onsager algebra $\mathcal{O}$, discovered in the exact solution of the
 2D Ising model~\cite{Onsager1944}, is formalized in
-\texttt{OnsagerAlgebra.lean} (24~theorems). The
+\texttt{OnsagerAlgebra.lean} (\dtwoOnsagerAlgebraThms{}~theorems). The
 Dolan-Grady presentation~\cite{DolanGrady1982} uses two generators
 $A_0,A_1$ satisfying
 \begin{equation}
@@ -327,7 +328,7 @@ algebra $L(\mathfrak{sl}_2)$ are formalized as structural theorems.
 
 \subsection{Contraction to $\mathfrak{su}(2)$}
 
-In \texttt{OnsagerContraction.lean} (12~theorems), the In\"on\"u-Wigner
+In \texttt{OnsagerContraction.lean} (\dtwoOnsagerContractionThms{}~theorems), the In\"on\"u-Wigner
 contraction~\cite{InonuWigner1953} $\mathcal{O} \to \mathfrak{su}(2)$ is
 formalized. The rescaling $A_m \to \varepsilon\cdot A_m$,
 $G_n \to \varepsilon^2\cdot G_n$ with the commutator identity
@@ -365,7 +366,7 @@ order~2. In the GT Weyl doublet (Model~2), the two charges $Q_V$ (on-site)
 and $Q_A$ (non-on-site) generate the Onsager algebra on the lattice,
 which contracts to $SU(2)$ in the IR. This emanant $SU(2)$ carries the
 Witten anomaly, protecting gaplessness. This chain is formalized in
-\texttt{GTWeylDoublet.lean} (12~theorems):
+\texttt{GTWeylDoublet.lean} (\dtwoGtWeylDoubletThms{}~theorems):
 \begin{equation}
 \text{Onsager}\;\xrightarrow{\varepsilon\to0}\;\mathfrak{su}(2)
 \;\xrightarrow{\text{Witten}}\;\mathbb{Z}_2
@@ -380,7 +381,7 @@ with anomaly cancellation requiring $16n$ Majorana fermions.
 %=================================================================
 
 The three pillars are connected by bridge theorems formalized in
-\texttt{ChiralityWallMaster.lean} (16~theorems):
+\texttt{ChiralityWallMaster.lean} (\dtwoChiralityWallMasterThms{}~theorems):
 
 \begin{enumerate}
 \item \textbf{Pillar~1$\to$2 (GS$\to$GT):} The GT construction violates
@@ -455,7 +456,7 @@ the project now declares $\axiomcount{}$~axioms), supported by machine-checked
 The analogous statement is machine-verified in two lower dimensions:
 (i) in 1+1D via the 3450 K-matrix model (\texttt{VillainHamiltonian.lean}),
 and (ii) in 2+1D via the Fidkowski-Kitaev construction
-(\texttt{FKGappedInterface.lean}, 20~theorems)---a machine-checked
+(\texttt{FKGappedInterface.lean}, \dtwoFkGappedInterfaceThms{}~theorems)---a machine-checked
 proof that 8~Majorana fermions can be gapped to a unique ground state
 (spectral gap $\Delta=2$) while preserving symmetry.
 

@@ -20,7 +20,7 @@ Nothing else belongs here.
 | `src/adw/gap_equation.py` | Gap Equation Solver for ADW Tetrad Condensation. |
 | `src/adw/ginzburg_landau.py` | Ginzburg-Landau Phase Classification for ADW Tetrad Condensation, and the G/G_c phase diagram. Key result: the isotropic B-phase is the ground state throughout — the anisotropic A-phase is never favoured — as in weak-coupling He-3. |
 | `src/adw/hubbard_stratonovich.py` | Hubbard-Stratonovich Decomposition of the ADW 8-Fermion Interaction. |
-| `src/adw/tetrad_gap_solver.py` | Tetrad Gap Equation Solver — Integral Formulation. |
+| `src/adw/tetrad_gap_solver.py` | Scalar NJL gap curves with finite-precision failure propagation. |
 | `src/adw/tetrad_observables.py` | Tetrad and Metric Order Parameter Observables. |
 | `src/adw/wen_model.py` | Wen's Emergent QED from String-Net Condensation — the microscopic UV completion the ADW emergent-gravity programme rests on. |
 | `src/bbn/__init__.py` | Phase 6b Wave 1 — BBN unified constraint framework. |
@@ -381,8 +381,8 @@ Nothing else belongs here.
 | `notebooks/Phase5c_SU2kFusion_Technical.ipynb` | SU(2)_k Fusion Rules and Modular Data -- Technical Notebook — **Phase 5c, Wave 3** | SK-EFT Hawking Project |
 | `notebooks/Phase5d_MTC_Stakeholder.ipynb` | First Verified Modular Tensor Categories: What It Means for Quantum Computing — **Phase 5d Wave 4 — Stakeholder Summary** **Date:** April 2026 |
 | `notebooks/Phase5d_MTC_Technical.ipynb` | Phase 5d Wave 4: SU(2)_k MTC Instances — Technical Notebook — **Wave:** 5d-W4 (Ising + Fibonacci MTC) **Date:** April 2026 **Paper:** Paper 11 — *U_q(sl_2) in Lean 4* |
-| `notebooks/Phase5d_Polariton_Stakeholder.ipynb` | Polariton Hawking Radiation: What We Can Detect and How — **Phase 5d Wave 5 — Stakeholder Summary** **Date:** April 2026 |
-| `notebooks/Phase5d_Polariton_Technical.ipynb` | Phase 5d Wave 5: Polariton Hawking Radiation — Technical Notebook — **Wave:** 5d-W5 (Polariton Paper) **Date:** April 2026 **Paper:** Paper 12 — *Stimulated Hawking Radiation in Polariton BEC* |
+| `notebooks/Phase5d_Polariton_Stakeholder.ipynb` | Testing analog Hawking radiation in polariton fluids — The Paris-LKB experiment reported smooth acoustic horizons and measured excitation dispersions. The smooth-horizon gradient gives a nominal Hawking temperature scale. The calculations below illustrate a proposed stimulated measurement using the registered device parameters. |
+| `notebooks/Phase5d_Polariton_Technical.ipynb` | Polariton Hawking response: conditional technical notebook — **Scope:** Paris-LKB inputs and projected cavity lifetimes, using the canonical numerical functions. |
 | `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` | Can Gravity Emerge from Fermion Condensation? — In superconductors, electrons pair up below a critical temperature, forming a condensate that carries current without resistance. The **gap equation** predicts when this condensation occurs. |
 | `notebooks/Phase5d_TetradGap_Technical.ipynb` | Phase 5d: Tetrad Gap Equation — Technical Notebook — This notebook derives and solves the NJL-type gap equation for the tetrad VEV in the ADW mechanism — the first time this equation has been explicitly written down for the tetrad channel. |
 | `notebooks/Phase5e_BraidedMTC_Stakeholder.ipynb` | First Verified Braided Fusion Categories and Knot Invariants — **Phase 5e — Stakeholder Summary** **Date:** April 2026 |

@@ -1538,7 +1538,7 @@ REVIEW_CORPUS_DOC_FLOOR = 404
 #:
 #: A RATCHET: bundles hard-fail, legacy drafts are frozen and may only shrink. A NEW
 #: broken legacy draft FAILS; raising this needs a stated reason in the same commit.
-LEGACY_DRAFT_LATEX_BROKEN_CEILING = 14
+LEGACY_DRAFT_LATEX_BROKEN_CEILING = 10
 
 #: Legacy (non-bundle) drafts carrying a `\ref` whose `\label` exists nowhere in the
 #: draft's input closure — each renders as a literal `??` to a reader.
@@ -1600,7 +1600,7 @@ BIBITEM_TITLE_DRIFT_CEILING = 7
 #: pushes the count over this ceiling, turning the check red. **Lower this as entries are
 #: established; back-filling `citation_class` onto the residue to lower it reproduces the very
 #: defect it records.**
-CITATION_UNDECLARED_CLASS_CEILING = 78
+CITATION_UNDECLARED_CLASS_CEILING = 75
 
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
@@ -3005,7 +3005,8 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # `2026-06-08-2240-internal-adversarial:D2:9.1` predicted. Note that finding
 # asserted these literals "slip past count_literals"; measured against the
 # check they did not — all twelve matched, and removing them is the -12 here.
-COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper prose
+# Aristotle macro propagation removed two matched counts in Papers 4 and 9.
+COUNT_LITERAL_CEILING = 88       # hardcoded "N theorems/modules/sorry" in paper prose
 
 #: Census figures written in WORDS ("fourteen stages") rather than digits. **MAY ONLY
 #: FALL.** Measured 2026-08-15 over every `papers/*/paper_draft.tex`: 72 across 23 drafts,
@@ -3017,7 +3018,8 @@ COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper
 #: ratchet would push it far past 95 and force a re-baseline of a shared constant across
 #: drafts nobody is remediating, which is how a ceiling ends up raised to whatever a
 #: widened pattern produced. Two kinds, two constants, neither absorbing the other's debt.
-SPELLED_CENSUS_CEILING = 71
+# I1 now uses the generated manual-entry count.
+SPELLED_CENSUS_CEILING = 66
                                  # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
                                  # count literal from prose. Lowered in the same commit, per
                                  # the rule above — a ratchet that keeps headroom stops being one.
@@ -3066,7 +3068,7 @@ SIMP_PROJECTION_ALLOWLIST = frozenset({
 #: either. Two instruments on one population, which is this project's own rule.
 SIMP_PROJECTION_CEILING = 7
 
-NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}
+NUMERICAL_LITERAL_CEILING = 115  # inline unit-bearing values outside \input{tables/}
 
 #: Sentences over 100 words in bundle body prose (TODO-D7, the readability half).
 #:
@@ -3099,7 +3101,8 @@ NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tab
 #: 2026-08-11: 20 -> 18. I1's prose-reviewer restructuring split two over-100-word
 #: sentences while rewriting the abstract and merging sections. Repayment, not a
 #: measurement change — the instrument is the same one that produced the 20.
-SENTENCE_OVER_100_CEILING = 18
+#: 2026-11-03: 18 -> 4 after measuring the corrected prose projection.
+SENTENCE_OVER_100_CEILING = 4
 
 #: Advisory companion: sentences over 60 words. Reported, not gated — 60 words is
 #: long but defensible in a methods paragraph, and gating it would fire on correct

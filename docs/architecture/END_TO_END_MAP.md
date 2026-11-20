@@ -78,11 +78,12 @@ entirely unmechanized. **This is the single largest ungated seam in the map.**
 `except Exception: return None`, so an unreadable or absent roadmap is indistinguishable from
 one with nothing to say.
 
-⚠️ **Placement concern.** The graph schema is declared in `docs/KNOWLEDGE_GRAPH.md`, with a
-delta in `temporary/working-docs/sentence_kg_schema_delta.md` and a parallel edge table inside
-`docs/roadmaps/Phase5v_Roadmap.md`. The canonical statement of the graph's shape lives outside
-`docs/architecture/` — in a phase roadmap and a working doc — which is a plausible root cause
-of "we don't know our own system."
+**Schema ownership.** `docs/KNOWLEDGE_GRAPH.md` describes the graph. The authoritative
+node taxonomy is `scripts/build_graph.py::SHAPE_MAP`; authoritative edge types come from
+its existing per-edge extractors. [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md) derives
+the enumerable view from those sources. Historical working documents and phase roadmaps
+are not the current canonical schema; this map links the source owners rather than
+maintaining another taxonomy.
 
 ---
 

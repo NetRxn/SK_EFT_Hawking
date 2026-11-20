@@ -364,3 +364,66 @@ class TestWangBridge:
         total_weyl = sum(f['components'] for f in SM_FERMION_DATA.values())
         assert total_weyl == 16
         assert total_weyl % 16 == 0  # Z₁₆ anomaly-free
+
+
+class TestD2GeneratedTables:
+    @staticmethod
+    def _check():
+        from pathlib import Path
+        from scripts.paper_tables import render_table
+        from scripts.render_paper_tables import _load_spec
+        from scripts.validation._tex import _strip_tex_comments
+
+        d2 = Path(__file__).resolve().parents[1] / "papers/D2"
+        draft = _strip_tex_comments((d2 / "paper_draft.tex").read_text())
+        tables = _load_spec(d2 / "tables.py")["tables"]
+        assert set(tables) == {"branches", "z4"}
+        for name, spec in tables.items():
+            label = rf"\label{{tab:{name}}}"
+            assert draft.count(label) == 1
+            after = draft.split(label, 1)[1].lstrip()
+            wrapper = r"\begin{ruledtabular}"
+            assert after.startswith(wrapper)
+            after = after.removeprefix(wrapper).lstrip()
+            include = rf"\input{{tables/{name}.tex}}"
+            assert after.startswith(include)
+            assert after.removeprefix(include).lstrip().startswith(r"\end{ruledtabular}")
+            artifact = d2 / "tables" / f"{name}.tex"
+            assert artifact.read_bytes() == render_table(spec).encode("utf-8")
+        return d2
+
+    def test_actual_artifacts_and_bindings(self):
+        from seed_journal import seeded_mutation
+
+        d2 = self._check()
+        for rel, old, new in (
+            ("tables/z4.tex", "$-8$", "$-9$"),
+            ("tables/branches.tex", r"16\mathbb{Z}", r"15\mathbb{Z}"),
+            ("paper_draft.tex", r"\input{tables/z4.tex}", r"\input{tables/branches.tex}"),
+        ):
+            path = d2 / rel
+            source = path.read_text()
+            assert old in source
+            with seeded_mutation(path, source.replace(old, new, 1),
+                                 reason="D2 generated table parity or binding"):
+                with pytest.raises(AssertionError):
+                    self._check()
+            assert path.read_text() == source
+            self._check()
+
+    def test_framing_counts_all_weyl_components(self, monkeypatch):
+        from copy import deepcopy
+        from pathlib import Path
+        from scripts.render_paper_tables import _load_spec
+
+        path = Path(__file__).resolve().parents[1] / "papers/D2/tables.py"
+        rows = _load_spec(path)["tables"]["branches"]["rows"]
+        baseline = rows()
+        roster = deepcopy(SM_FERMION_DATA)
+        # Counterfactual: the neutrino remains one Weyl component but its
+        # charge is even, so it no longer contributes to the anomaly sum.
+        roster["nu_R_bar"]["B_minus_L"] = 0
+        monkeypatch.setitem(rows.__globals__, "SM_FERMION_DATA", roster)
+        observed = rows()
+        assert observed[0] != baseline[0]
+        assert observed[1:] == baseline[1:]

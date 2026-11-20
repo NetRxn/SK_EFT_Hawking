@@ -24,7 +24,8 @@ This file ships the C.1 entrywise diagonal-conjugation substrate. The downstream
 **complete** (Phase 6x′ Phase 2, 2026-05-30): Theorem 3.8 as the half-integer statement
 `channelRep_CCZ_isHalfInt` (`MukhopadhyayCCZChannelRep`, via the `CCZ = 1 − 2|111⟩⟨111|` trace
 decomposition rather than the literal four-`±1/2` row count), `hCCZ` = `channelSde2_ccz_le`
-(`MukhopadhyayHCCZ`), Lemma 3.10 = `channelRep_interp_isRat` (`ℤ[1/2]` entries), and the **unconditional**
+(`MukhopadhyayHCCZ`), the rational form of Lemma 3.10 = `channelRep_interp_isRat`
+(`ℚ` entries), and the **unconditional**
 `T^of(U) ≥ sde₂(Û)` = `channelSde2_le_toffoliCost` (`MukhopadhyayToffoliUnconditional`, discharging the
 `PARAMETRIC` hypotheses of `toffoliCost_ge_measure` at `μ = matrixSde2 ∘ channelRep`). Full Toffoli
 MINIMALITY (no shorter circuit; MITM / Conjecture 4.8) remains permanently out of scope.

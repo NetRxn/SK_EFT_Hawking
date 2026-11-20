@@ -397,7 +397,9 @@ TEX_INPUT_RE = re.compile(
     r"|\\includegraphics\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}")
 
 
-def draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
+def draft_input_closure(
+    tex: Path, _seen: set | None = None, *, live_input_root: Path | None = None
+) -> list[Path]:
     """Every file whose content can change this draft's compile outcome.
 
     Resolves ``\\input``/``\\include`` recursively (LaTeX's own ``.tex``-extension
@@ -419,6 +421,8 @@ def draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
     Consistent with this module's policy line — it resolves WHERE things are, and says
     nothing about what a stale or missing artifact MEANS. Each caller decides that.
     """
+    # Manuscript evidence follows uncommented inputs from the compilation cwd.
+    # Cache callers retain their conservative, over-inclusive closure.
     seen = _seen if _seen is not None else set()
     if tex in seen:
         return []
@@ -430,15 +434,19 @@ def draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
         return closure
     if _seen is None:  # top level only — siblings, not per-\input
         closure.extend(sorted(tex.parent.glob("*.bib")))
+    if live_input_root is not None:
+        from validation._tex import _strip_tex_comments
+
+        body = _strip_tex_comments(body)
     for m in TEX_INPUT_RE.finditer(body):
         ref = (m.group(1) or m.group(2) or "").strip()
         if not ref:
             continue
-        target = (tex.parent / ref).resolve()
+        target = ((live_input_root or tex.parent) / ref).resolve()
         if m.group(1) and not target.suffix:
             target = target.with_suffix(".tex")
         if m.group(1) and target.suffix == ".tex":
-            closure.extend(draft_input_closure(target, seen))
+            closure.extend(draft_input_closure(target, seen, live_input_root=live_input_root))
         else:
             closure.append(target)
     return closure

@@ -351,13 +351,11 @@ density). All Lean-only / D.4-sourceless.
   `channelRep_interp_isRat` (`MukhopadhyayChannelRep.lean` /
   `MukhopadhyayMatrixSde2.lean`); converse `cliffordOnly_not_dense`
   (`MukhopadhyayCliffordNotDense.lean`).
-- Primary sources: Solovay-Kitaev; Dawson-Nielsen (arXiv:quant-ph/0505030);
-  Kuperberg 2009; Boykin-Mor-Pulver-Roychowdhury-Vatan
-  (arXiv:quant-ph/9906054); Read-Rezayi (arXiv:cond-mat/9809384);
-  Brylinski-Brylinski (arXiv:quant-ph/0108062); Aaronson-Gottesman
-  (arXiv:quant-ph/0406196); Mukhopadhyay (arXiv:2401.08950);
-  Kliuchnikov-Maslov-Mosca (arXiv:1206.5236); Ross-Selinger
-  (arXiv:1403.2975). Each must resolve to a primary-source cache file.
+- Use the current D8 citation commands and bibliography as the source roster.
+  The [itemized D8 anchor readback](../audits/stage13_attribution_sweep_2026-06-10.md#d8)
+  records the available evidence and gaps. Verify exact primary-source passages
+  for each load-bearing attribution and treat project-authored summaries as
+  orientation.
 
 **Stage-13 anchors specific to D8:**
 - **Honest scope — SU(8) duality (load-bearing).** The Phase 6y SU(8)

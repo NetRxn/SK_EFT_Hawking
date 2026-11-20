@@ -272,48 +272,30 @@ def polariton_horizon_params() -> list[dict]:
 
 
 def polariton_platform_comparison() -> list[dict]:
-    """Platform feasibility comparison (Paper 12 Table 3). Uses Falque-
-    measured κ (smooth + steep) and projected cavity lifetimes.
-    """
-    import math
-    HBAR = 1.054571817e-34
-    K_B = 1.380649e-23
-
-    def _T_H_mK(k): return HBAR * k / (2 * math.pi * K_B) * 1000
-    def _T_H_nK(k): return HBAR * k / (2 * math.pi * K_B) * 1e9
-
-    kappa_smooth = 7.0e10
-    kappa_steep = 1.1e11
-    kappa_steinhauer = 290.0
-
-    def _feas(kt) -> str:
-        if kt == float('inf'):
-            return 'Confirmed'
-        if kt > 1:
-            return r'\textbf{Perturbative}'
-        return 'Borderline'
+    """Paper 12 cavity timescales, using the registered Paris device records."""
+    from src.core.constants import FALQUE_STEEP_HORIZON_KAPPA, POLARITON_PLATFORMS
+    from src.core.formulas import polariton_hawking_temperature
 
     rows = []
-    for name, tau_ps, kappa in [
-        ('Paris long (100~ps, projected)',       100.0, kappa_smooth),
-        ('Paris ultralong (300~ps, projected)',  300.0, kappa_smooth),
-        ('Paris standard (8~ps, Falque actual)',   8.0, kappa_smooth),
-        ('Paris steep-horizon reach',              8.0, kappa_steep),
-    ]:
-        kt = kappa * (tau_ps * 1e-12)
+    for label, key, override_kappa in (
+        ('Long (projected)', 'Paris_long', None),
+        ('Ultralong (projected)', 'Paris_ultralong', None),
+        ('Standard (measured)', 'Paris_standard', None),
+        ('Steep horizon', 'Paris_standard', FALQUE_STEEP_HORIZON_KAPPA),
+    ):
+        params = POLARITON_PLATFORMS[key]
+        kappa = params['kappa'] if override_kappa is None else override_kappa
         rows.append({
-            'platform':    name,
-            'T_H':         f'{_T_H_mK(kappa):.0f}~mK',
-            'tau':         f'{tau_ps:g}~ps',
-            'kappa_tau':   f'{kt:.2g}',
-            'feasibility': _feas(kt),
+            'platform': label,
+            'T_H': f'{polariton_hawking_temperature(kappa)*1e3:.0f}~mK',
+            'tau': f"{params['tau_cav']*1e12:g}~ps",
+            'decay_ratio': f"{params['Gamma_pol']/kappa:.3g}",
         })
     rows.append({
-        'platform':    'Steinhauer BEC',
-        'T_H':         f'{_T_H_nK(kappa_steinhauer):.2f}~nK',
-        'tau':         r'$\infty$',
-        'kappa_tau':   r'$\infty$',
-        'feasibility': _feas(float('inf')),
+        'platform': 'Steinhauer BEC',
+        'T_H': f'{polariton_hawking_temperature(290.0)*1e9:.2f}~nK',
+        'tau': '---',
+        'decay_ratio': '---',
     })
     return rows
 

@@ -159,7 +159,7 @@ Model with ν_R is anomaly free"* whose entire content is `dvd_refl 16`.
   `X = X` (`_THIN_HARD`). Live population 1 before the D2 repair below, 0 after.
 * **RATCHET `APEX_UNDISCLOSED_VACUITY_CEILING = 15`:** a flagged apex whose own `claims`
   string does not disclose the thinness.
-* **RATCHET `APEX_VACUITY_CEILING = 20`:** flagged apexes in total, so that disclosing one
+* **RATCHET `APEX_VACUITY_CEILING`:** flagged apexes in total, so that disclosing one
   never becomes room to add another.
 * **FLOOR:** the scored population, sharing ADR-015 D3's `APEX_CLAIMS_SCORED_FLOOR` rather
   than introducing a second floor over the identical set.
@@ -170,7 +170,7 @@ is what `VACUOUS_STATEMENT_BASELINE` does, and adding this measurement to it wou
 a detection into a permission. These ceilings remove nothing from any population: every
 flagged row is re-derived and **printed by name on every run**, the counts may only fall,
 and no per-declaration exemption key exists to grant. What the ceilings buy is the property
-the finding actually asked for — the number cannot grow while the twenty are remediated
+the finding actually asked for — the number cannot grow while the flagged apexes are remediated
 bundle by bundle.
 
 ### D5 — The escape from the ratchet is DISCLOSURE IN THE CLAIMS STRING, not an exemption

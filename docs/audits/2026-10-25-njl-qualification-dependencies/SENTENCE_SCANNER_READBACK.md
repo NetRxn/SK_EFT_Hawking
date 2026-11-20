@@ -1,0 +1,12 @@
+# Focused inline-literal scanner readback
+
+**Accept the r3 correction at the bounded scanner scope.** Both concrete r2 witnesses are covered by passing production tests. I found no new concrete regression in the reviewed derivative.
+
+- FIRST used the original `publication-njl-sentence-source-20261103-r3.json` packet. Exit 0, `fresh=true`, `changed=[]`. The complete live diff from `47e9ee5a` matched `scanner-inline-final.diff` exactly. Compared to `scanner-corrected.diff`, the source derivative is limited to inline literal matching and comment ordering, two production cases, and count-writer results. The earlier count-field grammar, listing value grammar, include and listing controls, planner route, thresholds and authority text are conserved.
+- The source recognizes bounded inline `\verb` and `\lstinline` spans before interpreting caption or bibliography markers in their payload. Its sentence-local comment wrapper protects literal percent signs before applying the existing comment lexer and checks that the candidate inline command is outside a TeX comment. The original generic word-treatment remains for those payloads. This readback covers the tested literal forms and known corpus.
+- Both new cases are present and passing in `scanner-inline-final.xml`. The real I3 draft is seeded before its bibliography through the existing journal. A literal `\lstinline|\caption{...}|` contributes zero and stays green. A real caption following `\verb|50%|` contributes exactly one and turns the gate red. Both verify exact original text and restored green. The XML has 16 sentence-class and 33 architecture cases, 49 total with zero failures, errors or skips. The retained final validator reports four over-100 across three bundles, longest 155, and 170 over-60 against advisory baseline 220.
+- The count outputs differ from r2 only in the generation timestamp and pytest census 7,132→7,134. Actual JSON/TeX hashes are `797c8884c26cc4617e150ba087a2e38dc25cf4c3147821854d3cb26e7d8e41` and `0b95cfd1a383f981bbbc6fd0b8348b14f2b0ef43aa5437124535ca07fc393715` respectively. `git diff --check` passed.
+
+This readback relies on the retained candidate execution. I did not run project tests, the scanner, or writers and did not modify candidate source, notebook or Git. The only owned write is this ignored report. Broader CI, manuscript science, and publication acceptance remain separate.
+
+FINAL used the original packet and returned exit 1, `fresh=false`, `changed=["owned-files"]` only.

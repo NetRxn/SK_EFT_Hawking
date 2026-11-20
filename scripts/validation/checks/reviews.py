@@ -932,7 +932,10 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
 #: 2026-08-11: 121 -> 109. I1's Stage-10 re-review replaced its `claims_review.json`,
 #: and the rewritten records resolve twelve links the previous pass left dangling.
 #: Repayment, not a predicate change.
-UNRESOLVED_CHAIN_LINK_CEILING = 109
+#: 2026-10-25: 109 -> 97. Exact known module IDs now resolve through the shared
+#: lookup. The actual population fell from 111 to 97, with all 2,313 links
+#: conserved; the fourteen repairs are module references, not new physics proofs.
+UNRESOLVED_CHAIN_LINK_CEILING = 97
 
 _LEAN_LINK_KINDS = frozenset({"theorem", "axiom", "lemma"})
 

@@ -143,18 +143,7 @@ which delegates a decidable computation to compiled code and adds a
 per-theorem axiom (Sec.~\ref{sec:ising}, Sec.~\ref{sec:trust}).}
 \label{tab:grades}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Grade & Meaning \\
-\colrule
-Theorem & A substantive statement, kernel-checked, no assumed hypothesis. \\
-Theorem (evaluated) & Substantive and correct, but discharged by
-  \texttt{native\_decide}; the trust base is the Lean compiler, not the kernel. \\
-Conditional & Substantive, kernel-checked, but consumes a hypothesis
-  the project has not discharged. \\
-Instance & Verified for named finite cases, not for a general object. \\
-Encoding & The statement unfolds to the definition it names; it fixes a
-  convention and proves nothing about it. \\
-\end{tabular}
+\input{tables/grades.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -409,16 +398,10 @@ balanced group-commutator recursion, in which each level replaces one
 approximation by five words and improves the error exponent from
 $\delta$ to $\delta^{3/2}$.
 
-% TODO: this project's citation cache attributes the specific exponent
-% log 5 / log(3/2) to Dawson-Nielsen 2006. Only the ABSTRACT of that paper
-% is held locally, and the abstract states the exponent as "c is
-% approximately 2", not approximately 3.97. The two are not reconcilable
-% from the abstract alone: 3.97 is the exponent of the basic balanced
-% recursion, and a value near 2 would reflect a sharper analysis. The prose
-% above therefore attributes the ALGORITHM and its recursion to
-% Dawson-Nielsen and states the exponent as the one this development
-% defines and proves, WITHOUT attributing that numerical value to them.
-% Acquire the full text and reconcile before making the attribution.
+Dawson and Nielsen obtain this gate-sequence length exponent in
+Eq.~(8) of Ref.~\cite{DawsonNielsen2006}. Their Eq.~(9) gives the
+separate classical runtime exponent $\log 3/\log(3/2)\approx 2.71$
+with a compressed output representation.
 
 \subsection{The constant is a number, not a symbol}
 
@@ -734,11 +717,10 @@ entries~\cite{Verlinde1988}. That is $4^3 = 64$ independent identities,
 discharged individually and then assembled. The same statement is proved
 at $k = 4$ over $125$ triples and at $k = 5$ over $216$.
 
-% TODO: Verlinde, Nucl. Phys. B 300, 360 (1988) is NOT in the local
-% primary-source cache. The citation above is a name attribution only;
-% Eq. (\ref{eq:verlinde-k3}) is stated as what our theorem proves and no
-% claim is made about that paper's contents. Acquire before asserting a
-% location.
+% Verlinde1988 is held as Crossref metadata only; no full body was acquired
+% or read in this package. The citation above is a name attribution only;
+% Eq. (\ref{eq:verlinde-k3}) states what our theorem proves and does not
+% claim a location or result checked against the unread body.
 
 The route is a single reduction lemma. Every column quotient in
 Eq.~\eqref{eq:verlinde-k3} carries exactly two powers of the overall
@@ -1491,7 +1473,7 @@ N.~Reshetikhin and V.~G.~Turaev,
 Invent.\ Math.\ \textbf{103}, 547 (1991).
 
 \bibitem{RoehmD8Compilation}
-J.~G.~Roehm,
+J.~Roehm,
 ``Kernel-verified universal quantum gate compilation:
 alphabet-agnostic Solovay--Kitaev across dimensions,''
 companion manuscript, in preparation (2026).

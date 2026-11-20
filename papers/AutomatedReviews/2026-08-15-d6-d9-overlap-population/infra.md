@@ -24,7 +24,7 @@ Jaccard 0.000**, concluding the merge case is dead.
 **Neither number refutes the other, because they measure different populations, and no document
 states which population the merge decision is supposed to turn on.**
 
-### What I measured, 2026-08-15
+**What I measured, 2026-08-15**
 
 | population | D6 | D9 | shared |
 |---|---|---|---|
@@ -38,7 +38,7 @@ from its prose. So the audit's figure is a **closure-level** measurement — dec
 from what each bundle names — while D6's redraft measured the **apex set**, and my first pass
 measured **literal prose references**. Three levels, three answers, all internally correct.
 
-### ⚠️ This exact claim has now defeated three separate measurers
+**⚠️ This exact claim has now defeated three separate measurers**
 
 `MEASUREMENTS.md` §M4(a) records the audit's own near-miss: *"My first measurement of this
 returned ZERO, and I nearly filed 'the audit is wrong.' D6 writes its references as `\verb`, which

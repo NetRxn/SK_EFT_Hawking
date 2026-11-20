@@ -294,6 +294,14 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 | `Lit-Search/Phase-*/primary-sources/<bibkey>.{pdf,abstract.txt,json}` | `back_fill_primary_sources.py` (`.pdf`/`.tex`/`.abstract.txt`) + `convert_inprep_citations.py` (self-deposit `.json` stubs) | **none** — additive; a cached source is never re-fetched. Per-bibkey fetch verdicts in the `docs/primary_sources_state.json` sidecar | **no** — an explicit acquisition run |
 
+**Git-hook catalog.** The existing inventory writer and freshness check own the
+metadata observation. The [D1–D5 design](../superpowers/specs/2026-10-20-architecture-inventory-worktree-design.md)
+binds Git's lookup to the target checkout and administrative context, preserves
+configured catalog membership and reports unreadable or foreign context explicitly.
+Stable logical locators keep private paths and hook bodies out of the census.
+Manifest registrations and on-disk metadata do not establish runtime activation.
+Current source, canonical baseline and actual-control review precede delivery.
+
 ⚠️ **`counts.json`'s key is a hybrid because an mtime-max is blind in one direction, and it
 shipped that way.** Deleting a file leaves every surviving file's mtime untouched, so the
 maximum does not move and the artifact reports fresh while publishing a count one too high —
@@ -526,11 +534,16 @@ human only asynchronously via harvest → System-2 register → `/debrief`.
 **Chain-of-backing** resolves every claims-reviewer sentence link against the live graph.
 `scripts/chain_canonicalize.py --report` is its instrument.
 
-`theorem-absent` means **a manuscript sentence names a Lean theorem that does not exist**.
-The population splits into genuine cases and artifacts, and the artifact half falls in four
-individually-fixable classes: kernel axioms that have no graph node though the
-claims-reviewer spec instructs agents to emit them; `module:` prefix double-mangling;
-by-design inductive-constructor filtering; and mis-tagged link kinds.
+`theorem-absent` means the current index/resolution path did not resolve a
+claims-review target. It does not establish substrate absence: reconcile source,
+semantic/LSP lookup, branches, imports and built dependencies before making that
+claim.
+The population splits into genuine cases and artifacts. Artifact cases include kernel
+axioms that have no graph node though the claims-reviewer spec instructs agents to emit
+them, by-design inductive-constructor filtering and mis-tagged link kinds. Canonical `module:` IDs must resolve by exact
+known module-node membership, without a second namespace prefix or declaration
+short-name fallback. Unknown typed module IDs remain unresolved. The graph edge
+producer and canonicalizer use the existing shared module lookup for this contract.
 
 Two genuine failure shapes are severe enough to name:
 
@@ -583,10 +596,11 @@ unresolvable links than the real resolver, because it could not resolve module t
 names or constant aliases. `tests/test_d5_reviews.py` asserts by AST that no resolution helper
 is defined here. **If resolution is wrong, fix `chain_canonicalize`; both consumers improve.**
 
-⚠️ **The ratchet is a do-not-grow guard, not a defect count.** `canonicalize_link` skips
-ambiguous short names — `zero` resolves to 12 candidates, `A` to 9, `F` to 8 — and counts them
-`theorem-absent`, so some fraction of the population is a name-resolution artifact rather than a
-missing theorem. Shrinking the count means either fixing a citation or disambiguating a name;
+⚠️ **The ratchet is a do-not-grow guard, not a defect count.** `canonicalize_link` returns
+SUGGESTED for ambiguous declaration names, and this particular counter includes
+only UNRESOLVABLE results. Ambiguity suggestions therefore do not contribute to
+its unresolved population; some counted failures can still be resolution
+artifacts rather than missing substrate. Shrinking the count means either fixing a citation or disambiguating a name;
 both are improvements.
 
 The rest of `--report`'s output — resolution classes, suggested retargets — still gates on
