@@ -4502,3 +4502,34 @@ pilots and two disposition records were the only delta. The review's
 R2 continuity check and fresh portable replay verified this intake.
 The whole dense contribution, full signed coefficient and physical
 publication acceptance remain open.
+
+
+### L1 original complement-bearing cap and sewing construction accepted
+
+ROOT accepted Executor donor `61890d11834a091c53991ee05e4a39046c792d60`
+for bounded research intake. Both actual independent reviewers accept
+the exact [cap and sewing construction](../2026-11-05-l1-physical-bridges/ORIGINAL_COMPLEMENT_CONNECTOR_ACCEPTANCE.md).
+ROOT checked all 18 evidence member lengths and hashes, ZIP integrity,
+the four archived current bodies against the donor, and all six archived
+predecessor paths against this checkpoint. The donor source files are
+carried without edits.
+
+The original complement maps have the unique bilinear dual on the
+full parity carrier. The independent original cap evaluates the
+complemented coefficient-adjoint composition to 1/16 and evaluates
+the raw composition to zero. The explicit cut maps prove both original
+seams and transport the exact original supertrace and denominator
+through all nine normalized ordered unit/force loops and their source
+contacts. A positive physical state, the ordered physical temporal
+insertion and the full earlier R3 classification remain open.
+
+Executor is preparing the prospective positive-extension brief. It
+prescribes the original marked temporal moments and normalized loop
+moments on a concrete operator system. Acceptance requires all actual
+linear relations and positive elements on the full carrier, with C2
+source compatibility. A failure certificate would be an original
+relation with an inconsistent moment or a positive element with a
+negative assigned moment. Either outcome has a bounded scope.
+Independent prospective review and a dimension and cost bound are
+pending. This is not evidence of a physical state, transport, a
+derived susceptibility window or G11 closure.
