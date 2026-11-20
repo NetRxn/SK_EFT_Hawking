@@ -4626,3 +4626,28 @@ preparation, 176.066525 s guard, 260.678319 s continuation and 23.52 s
 for both separate triangles. Independent work and original refusal
 details are in the archive. This timing covers Group 1261 only.
 Full signed coefficient, physical B3 and publication acceptance remain open.
+
+
+### L1 complete signed Group 1284
+
+The [independent complete review](L1_N16_C0_DENSE_GROUP1284_COMPLETE_R1.zip) has SHA-256
+`85efc3df3564b1243932cb8d1f39d70c6ea964760939825c990e1a9949004106`. ROOT checked all 166 manifest entries and
+matched every terminal to its original signed author result. Original
+ordinals 5 and 7 are exact prepared zeros. The six remaining ordinals
+match the native cap and each retained continuation. The original L4
+transient guard refusal depends on accumulation order. The independent
+review replayed the author order to confirm the exact refusal after
+5,209,791 visits. The independently evaluated original L0 triangle
+matches both author anchors across all 19,509,248 compatible products.
+
+The reduced inherited scalar is `71223544263666405774708842715/2 + 0i`.
+The original physical divisor is `2^132`. Its cover weight 192 adds
+`213670632790999217324126528145/170141183460469231731687303715884105728 + 0i`.
+Combined with the committed Group 1261 retally, the new subtotal is
+`-513444374129834693025267043030303989/87112285931760246646623899502532662132736 + 0i`.
+Fourteen representatives now have accepted values. The remaining 1,042
+include Groups 1278, 1296 and 1302 in component 98.
+
+Author measured preparation, guard, continuation and separate terminal
+components total 263.861660 s. Timings describe this single group.
+The full signed coefficient, physical B3 and publication work remain open.
