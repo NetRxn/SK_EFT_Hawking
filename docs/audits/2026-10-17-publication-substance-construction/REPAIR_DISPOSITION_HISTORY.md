@@ -3536,3 +3536,19 @@ R2. ROOT checked all 50 archive member hashes and confirmed byte identity
 for all 25 archived original and prior scientific artifacts against this
 publication branch. The six donor paths transfer intact.
 [Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_MIXED_ENDPOINT_KERNEL_ACCEPTANCE.md).
+
+
+### L1 group 128 opposite branch assignment 2
+
+All 28 disjoint values of G(0,2,0) cover 6,428,928 compatible products of the
+previously refused join. Twenty direct contractions, four sharded sparse
+triangles, and four disjoint 64-case refinements all terminate. The original
+normalization gives the exact signed real coefficient
+`761799400259723226207/1329227995784915872903807060280344576`
+and zero imaginary part. The two independent reviews cover 0–23 and 24–27
+respectively. Both bind every exact value to its original parent. Author and
+review arithmetic agree on all coordinates. [Signed ledger and review evidence](L1_N16_C0_DENSE_BRANCH1_LABEL2_R1.zip).
+
+The opposite first-index branch now has four of six complete assignments.
+Assignments 0 and 1 remain open. The representative group 672, full signed
+`c0`, physical B3 and final publication gates remain open.
