@@ -4681,3 +4681,49 @@ Groups 1296 and 1302 remain in component 98.
 Measured author components total 535.097885 s. The total includes
 48.683513 s for the original refused L6 attempt. The full signed
 coefficient and physical publication requirements remain open.
+
+
+### L1 complete signed Group 1296
+
+The [complete independent review](L1_N16_C0_DENSE_GROUP1296_COMPLETE_R1.zip) has SHA-256
+`80d27e17419c8437807aa7aecaf7fd6fbd39b3ec1a4ac6cc92e33ba79d8b299c`. ROOT verified all 232 archive members, unchanged
+numerical ledgers at acceptance, and all eight author and independent
+scalar records. Original terms 5 and 7 are exact prepared zeros.
+The six surviving guarded and retained runs match independently.
+The four third-anchor triangles match both author pivots over
+8,896,000, 8,847,360, 8,156,160 and 9,902,080 compatible products
+for original ordinals 0, 3, 4 and 6 respectively.
+
+The reduced inherited scalar is `-5872637019449797203339613440 + 0i`.
+The original physical divisor is `2^132` and cover weight 192.
+The weighted addition is
+`-68819965071677310976636095/332306998946228968225951765070086144 + 0i`.
+The exact current subtotal is
+`-513485372977056607969978623560172789/87112285931760246646623899502532662132736 + 0i`.
+Sixteen selected groups have accepted values and 1,040 remain.
+The final six live original terms in component 98 belong to Group 1302.
+
+The measured author components are 27.69 s preparation, 114.969176 s
+guarded work, 205.673690 s continuation and 28.76 s separate terminals.
+Their sum is 377.092866 s. Full signed coefficient and physical
+publication acceptance remain open.
+
+### L1 prospective positive comparison-state construction approved
+
+ROOT verified Executor donor `ad4bf3dbc68c482611935afc7dba20d6e99cbe5e`
+on its exact remote branch, all 27 evidence members and 12 unchanged
+predecessor source and evidence pins. Two independent prospective
+reviewers accepted the [fixed source design and symbolic
+readiness route](../2026-11-05-l1-physical-bridges/ORIGINAL_POSITIVE_OPERATOR_SYSTEM_PROSPECTIVE_STATUS.md).
+
+The addenda use original reality and the two-sided even support of every
+frozen operator and adjoint. The original top scaling gives a strict
+normalization mass gap above the fixed support dimension. The prospective
+candidate uses trace weight on the even common support and the remaining
+weight on the full identity block. It retains the original source plane,
+moments, adjoints and normalization without exhaustive matrix assembly.
+The original ordered temporal insertion, all-context physical state,
+physical product and adjoint, and B3 remain open. Executor has a fresh
+manual construction commission followed by independent actual
+mathematics and source review. The present handoff records design
+acceptance only.
