@@ -5005,3 +5005,50 @@ unit and ordering-sensitive pair controls. Physical product, positive
 state and adjoint, physical cut maps, original temporal insertion and
 the full B3 susceptibility remain open. This intake does not close
 finding 2.1 or qualify a publication or merge gate.
+
+
+### L1 complete signed component 14
+
+Groups 1442, 1468, 1488 and 1490 passed independent replay of all
+original terms. The four-group preparation archive, SHA-256
+`11a4aa7e219c2a727a8a118a9910a8665bef7ed135ebd5531b3d30d926cfb56b`, binds the 88 independently reproduced signed
+preparation tables and all eight original ordinal restrictions per group. Original ordinals 5 and 7 are exact
+empty-factor zeros in each group. Each terminal archive includes the
+shared preparation receipt. ROOT verified every terminal manifest
+entry and compared the signed scalars with the frozen author outputs.
+
+| Group | Exact weighted real contribution | Review SHA-256 | Manifest entries | Evidence |
+|---|---:|---|---:|---|
+| 1442 | `-835127130828064102623315/664613997892457936451903530140172288` | `4bb5f3cb7539096ab14bce8246c5f523e9910789451dbbc263a406f76200ef35` | 234 | [Independent review](L1_N16_C0_DENSE_GROUP1442_COMPLETE_R1.zip) |
+| 1468 | `-1099729724427818593470606177/10633823966279326983230456482242756608` | `7e7ea90328f84bfc04c5199585d47653f68be4637d8a8ce159e01b4d8971f2b4` | 187 | [Independent review](L1_N16_C0_DENSE_GROUP1468_COMPLETE_R1.zip) |
+| 1488 | `-7928183541148543624115569419/2658455991569831745807614120560689152` | `1d994e444bf45194fa0cd9e9201ae3e2963019786b6d45077767c6f347e323bd` | 210 | [Independent review](L1_N16_C0_DENSE_GROUP1488_COMPLETE_R1.zip) |
+| 1490 | `-7097474090495283928414711389/2658455991569831745807614120560689152` | `21642edab45338ee4002960cbd1e9abfef23f9d8fdc73a44bfbb9202dc1cb4e5` | 178 | [Independent review](L1_N16_C0_DENSE_GROUP1490_COMPLETE_R1.zip) |
+
+The [complete retally](L1_N16_C0_DENSE_COMPONENT14_COMPLETE_R1.zip) binds the accepted cover and all eight
+exact original representative values. The resulting component
+contribution is `-4273557448487678097080893911/664613997892457936451903530140172288 + 0i`. The cumulative subtotal over 31
+independently accepted representatives is `-511757827911197302160585011527992565/87112285931760246646623899502532662132736 + 0i`. The 1,025
+remaining representatives have a pre-sweep input proxy of 2,691,318,628
+rows. The proxy does not determine runtime.
+
+The full coefficient, physical susceptibility, canonical finding 2.1
+and publication gates remain open. This checkpoint accepts the complete
+component contribution within the original full calculation.
+
+
+### L1 exact shared intermediate and measured alternate traversal
+
+The [independent local-join review](L1_N16_C0_COMPONENT14_EXACT_LOCAL_JOIN_R1.zip) has SHA-256 `086091b52f2d6d132c832238f6425c8efb353315f21d7f845bcb7970ebd20ac3`.
+ROOT verified its 17 manifest entries. The rejected L0 pairs for original
+Groups 1488 and 1490 have equal signed operands, axes, denominators and
+all eight effective peer predicates. The complete replay visits
+1,711,360 products, with 1,688,320 peer-supported products. It gives
+376,960 identical signed rows at denominator 12. This equality applies
+to one intermediate. The original cuts, later continuations and full
+group scalars stay separate.
+
+The grouped traversal cleared the early 500,000-row cap but reached
+a later product guard at 14 factors after 64.62 seconds. The existing
+complete Group 1490 L0 solve took 54.38 seconds. The experiment supplies
+an exact reuse control and no measured end-to-end speedup. The existing
+route remains in use.
