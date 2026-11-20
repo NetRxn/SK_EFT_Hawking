@@ -262,6 +262,38 @@ prose / audit JSON     -->   (node + edge types  -->  /api/graph     -->  Parame
 
 Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types + Phase 5v Wave 10b sentence-level types (`Sentence`, `AuditEvent`, `ClaimCluster` + `BACKED_BY`, `LOGGED_BY`, `MEMBER_OF`). For the canonical type list always defer to `scripts/build_graph.py`. JSON-on-disk is the source of truth; PG+AGE is a rebuildable mirror, not a writer.
 
+### Graph cache freshness
+
+`scripts/provenance_dashboard.py::get_cached_graph` serves the same in-memory graph
+object while `_graph_fingerprint` matches. The key combines the last build's attempted
+file opens with imported repository Python source, file nanosecond mtime and size,
+and sorted ancestor-directory names. Repository inputs retain every ancestor;
+external inputs retain their immediate parent. This includes interest in missing
+inputs, so creating an input or filing a finding in a new dated directory can
+invalidate the cache. The existing proof-dependency cache uses the same fingerprint.
+
+Only a stat or directory-listing failure reporting `errno.ENOENT` denotes stable
+known absence. Missing files differ from successful empty files; missing directories
+differ from successful empty listings. Permission, descriptor-pressure, `ENOTDIR`
+and other unavailable observations produce fresh nonmatching entries and warnings.
+Class names and error-message text do not establish absence. No input is excluded
+because its directory is missing, and no cache directory needs to be created.
+
+Before recorded reads exist, after capture/finalization failure, or when the existing
+mtime predicate detects a write during the build, the key cannot match a previous
+key. Explicit verification actions can also invalidate the graph. The build remains
+serialized by the existing cache lock, and optional PG synchronization stays on its
+separate asynchronous path. These are cache freshness properties, not scientific
+verification or a readiness/closure decision.
+
+The key is an observation of metadata and names, not content hashing or an atomic
+filesystem snapshot. Same-size content edits with exactly unchanged nanosecond mtime
+and remove/recreate histories completed between observations may be invisible.
+Pure metadata reads outside the open recorder and symlink aliases/retargeting beyond
+the existing resolved watched paths remain coverage limits. The original real
+served-finding seam and cache identity/invalidation controls live in
+`tests/test_dashboard_graph_cache.py`.
+
 ## Files
 
 | File | Purpose |

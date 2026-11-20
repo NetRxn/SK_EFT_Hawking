@@ -16,6 +16,7 @@ Opens at http://localhost:8050 by default.
 """
 
 import argparse
+import errno
 import json
 import logging
 import os
@@ -412,10 +413,16 @@ def _graph_fingerprint() -> tuple:
     of each read file (immediate parent only, for files outside the repo).
     Cost ~12-23 ms.
 
+    Only reported ENOENT is stable known absence. Other stat/list errors add a
+    fresh nonmatching entry: unavailable I/O must not certify a previous graph.
+    Missing files differ from empty files, and missing directories differ from
+    successful empty listings. This remains a metadata/name key, not an atomic
+    filesystem snapshot or protection against same-size/same-mtime content edits.
+
     Returns a key containing a fresh `object()` — which can never equal a
     previously stored key — when no read set is available. That is the
     fail-safe: before the first build, and after any build whose reads could
-    not be recorded or that raced a concurrent write, the cache always misses.
+    not be recorded or whose mtime check detected a write, the cache always misses.
     ⛔ Deliberately not `None`. `_GRAPH_CACHE['fingerprint']` is also initialised
     to `None`, so a `None` key would rely on `get_cached_graph`'s separate
     `graph is not None` test to stop a cold cache reading as a hit. Do not delete
@@ -433,14 +440,23 @@ def _graph_fingerprint() -> tuple:
         try:
             st = os.stat(p)
             fp.append((p, st.st_mtime_ns, st.st_size))
-        except OSError:
-            # Absence must hash differently from an empty file, so that deleting
-            # a previously-read input invalidates rather than silently matching.
-            fp.append((p, 0, -1))
+        except OSError as exc:
+            if exc.errno == errno.ENOENT:
+                # A known missing file must differ from a successful empty file.
+                fp.append((p, 0, -1))
+            else:
+                logger.warning(
+                    "graph cache key: cannot stat %s (%s) — forcing a rebuild", p, exc)
+                fp.append((p, '<unstatable>', object()))
     for d in _READ_SET['dirs']:
         try:
             fp.append((d, tuple(sorted(os.listdir(d)))))
         except OSError as exc:
+            if exc.errno == errno.ENOENT:
+                # Missing ancestry is a valid stable observation, distinct from
+                # a successful empty listing and from unavailable I/O.
+                fp.append((d, '<missing>'))
+                continue
             # ⛔ NOT `()` — that is a LEGAL listing, so "could not read this
             # directory" would hash identically to "this directory is empty",
             # mirroring the impossible size -1 the file leg uses above. The

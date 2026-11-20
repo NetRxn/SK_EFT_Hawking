@@ -193,3 +193,17 @@ class TestStage13EvidenceKindWithholdsGreen:
         two sets drifted, a verdict the writer rejected could still show GREEN."""
         import record_review as rr
         assert br._KINDS_SUFFICIENT_FOR_GREEN == rr.KINDS_SUFFICIENT_FOR_GREEN
+
+
+def test_g4_absent_and_undeclared_cannot_measure_remain_distinct():
+    absent = {"id": "paper:unit", "type": "Paper", "meta": {"formulas": ["missing"]}}
+    empty = {"id": "paper:empty", "type": "Paper", "meta": {}}
+    graph = {"nodes": [absent, empty], "links": []}
+    idx = rg.GraphIndex(graph)
+    missing = rg._eval_computation_correctness(absent, idx)
+    undeclared = rg._eval_computation_correctness(empty, idx)
+    assert (missing.state, missing.measured) == ("blocked", False)
+    assert (undeclared.state, undeclared.measured) == ("open", False)
+    assert missing.blockers and not undeclared.blockers
+    assert rg.paper_aggregate_state([missing], "unit") == "red"
+    assert rg.paper_aggregate_state([undeclared], "empty") == "yellow"
