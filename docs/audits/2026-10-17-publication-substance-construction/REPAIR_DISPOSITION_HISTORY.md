@@ -3160,3 +3160,9 @@ ROOT commissioned an original-derived observable, adjoint and boundary map or a 
 All three archived seven-factor parents, all 27 inverse lifts and all 27 exact terminal replays passed independent review. The ordinary sparse joins and alternate triangle pivots reproduced the exact raw Gaussian numerators and normalized fractions. The two equal outer subtotals for 29 and 31 are supported by distinct verified inputs.
 
 The [closure archive](L1_N16_C0_CASES29_31_CLOSURE_R1.zip) retallies 36 accepted cases to exact partial scalar `-2563684902511986217246695/2596148429267413814265248164610048 + 0i`. Fresh extraction verified 392 checksums and reproduced both retallies. The remaining indices are 33–35 and 37–45. Each has a reproducible seven-factor parent at the current row cap. The full child, coefficient, physical susceptibility and publication acceptance remain open.
+
+### L1 exact independent closure of cases 33–35 and 38
+
+Four independent nine-cut audits and terminal replays verified all 36 inner values, including distinct captures and source indices. In each case the two triangle closures and two four-factor closures had separate, exact independent pivots or selected pairs. Reviewers checked full disjoint coverage of all four author shard sets and matched raw Gaussian sums and normalized fractions. Equal case 34 and 38 totals remain bound to different inputs. Earlier cap history is retained.
+
+The [closure archive](L1_N16_C0_CASES33_34_35_38_CLOSURE_R1.zip) gives the exact subtotal over 40 accepted outer terms, `-6998887093259411636707053/5192296858534827628530496329220096 + 0i`. Fresh extraction verified 582 checksums and reproduced raw-value checks and the cumulative retally. Cases 37 and 39–45 remain open. The full signed coefficient, physical susceptibility and publication gates remain open.
