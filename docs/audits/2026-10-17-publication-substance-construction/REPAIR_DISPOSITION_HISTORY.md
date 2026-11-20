@@ -4816,3 +4816,35 @@ a comparison state, with original all-context state, physical
 product/adjoint/domain, ordered temporal insertion and normalized
 susceptibility still open. This research intake does not close a
 publication finding or qualify a main integration.
+
+
+### L1 component 3 exact signed contractions
+
+Groups 158, 183, 201 each passed independent replay of all eight original
+assignments. Ordinals 1 and 3 have exact empty-factor zeros. The other
+six ordinals reproduce the exact signed author terminals, including
+the independent third traversal of each three-factor contraction.
+ROOT verified the archive manifests, compared each signed scalar to
+the frozen author receipts and recomputed each weighted result with
+source phase +1, physical divisor `16 * 4^64` and cover coefficient 192
+applied once.
+
+| Group | Exact weighted real contribution | Archive SHA-256 | Manifest entries | Evidence |
+|---|---:|---|---:|---|
+| 158 | `711336202659827192957135031/83076749736557242056487941267521536` | `bc80778acf012ee1432435d023874f4543fa7a63defeef5aae1df689dd6a1abe` | 185 | [Independent review](L1_N16_C0_DENSE_GROUP158_COMPLETE_R1.zip) |
+| 183 | `-6465491900303489002729395/83076749736557242056487941267521536` | `094bc1ad24c7d229164a82071d749829988823d6db7e8d625e740557102ef0d0` | 181 | [Independent review](L1_N16_C0_DENSE_GROUP183_COMPLETE_R1.zip) |
+| 201 | `65936891096681490245098035/5192296858534827628530496329220096` | `bff6dd3f2d0d5b013955498fe2fc865a915bbb60240607591fe46b584c50a0cf` | 210 | [Independent review](L1_N16_C0_DENSE_GROUP201_COMPLETE_R1.zip) |
+
+The cumulative signed subtotal is `-511599887798146473899863034856383733/87112285931760246646623899502532662132736 + 0i`. There are 22
+independently accepted representatives and 1,034 remaining in
+the 1,056-representative cover. The author component timings for Groups
+158, 183 and 201 are 592.99, 637.38 and 468.36 seconds
+respectively.
+Those totals include preparation, native execution, exact continuation
+and separate triangle evaluation. Groups 158 and 183 each include one
+triangle timed by the solver clock. These are measurements for the three
+frozen groups. A portfolio-wide completion rate remains unestablished.
+
+The full signed coefficient and the physical construction required by
+L1 finding 2.1 remain open. This checkpoint records reviewed numerical
+evidence and leaves the canonical publication finding open.
