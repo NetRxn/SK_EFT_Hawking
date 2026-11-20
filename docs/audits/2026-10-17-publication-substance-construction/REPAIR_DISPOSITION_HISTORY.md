@@ -4930,3 +4930,50 @@ The cumulative reviewed subtotal is
 There are 25 accepted representatives and 1,031 remaining. The remaining
 pre-sweep workload proxy is 2,705,452,157 rows. Full signed coefficient,
 physical susceptibility, finding 2.1 and publication readiness remain open.
+
+
+### L1 component 14 signed Groups 1416 and 1444
+
+Independent preparation reproduced both original eight-term rosters,
+252 source blocks per group and every signed prepared factor. Original
+ordinals 5 and 7 each have seven empty factors in each group. Both
+terminal reviews contain the exact independently verified preparation
+archive, SHA-256
+`4adadcf6f04d4c2fc6d5833d51c3446cdafe883a4584c0c7596211ec843c67ab`.
+All 36 live term comparisons for each of the three group pairs among
+1416, 1418 and 1444 have distinct total prepared support sizes. A
+factor permutation with bijective reindexing preserves that total.
+Broader source reductions remain open.
+
+| Group | Exact weighted real contribution | Review SHA-256 | Manifest entries | Review |
+|---|---:|---|---:|---|
+| 1416 | `-6154300048981422956445495/166153499473114484112975882535043072` | `f329e7106b4f259779fe905651596673048bd3b6d9e8bec75f8791b4b8b0f224` | 212 | [Evidence](L1_N16_C0_DENSE_GROUP1416_COMPLETE_R1.zip) |
+| 1444 | `4542596388594604888474689/166153499473114484112975882535043072` | `107cb1a7e64ed9fd9a2581bf2555134c6895828bfa20cf0913bbc9e34c3d1eec` | 193 | [Evidence](L1_N16_C0_DENSE_GROUP1444_COMPLETE_R1.zip) |
+
+ROOT verified both manifests and compared all signed terminals with the
+frozen author receipts. Group 1444 L6 reproduced the original native
+product refusal and used a capture-only retry that retained all 11
+factors and unchanged limits. Independent triangle traversals matched
+both original author interval covers on 4,569,984 products for L0 and
+9,737,472 for L2. Summed measured author components were 491.350105
+seconds for Group 1416 and 559.961354 seconds for Group 1444.
+
+The cumulative subtotal over 27 accepted representatives is
+`-511256348714237792633407929037530357/87112285931760246646623899502532662132736 + 0i`.
+The 1,029 remaining representatives have a pre-sweep row proxy of
+2,701,048,451. Four selected groups remain in component 14. These
+group measurements leave the full coefficient and physical gate open.
+
+### L1 PR126 exact fast-suite differential
+
+The [draft evidence filing](https://github.com/NetRxn/SK_EFT_Hawking/pull/126)
+at `8596d6f9bde47595049e2c45590707023c0da17f` and its exact current
+main base `a912c5542d897c22ac8d4cdec07649a4872215a6` each reported
+6,919 passed, 64 failed, 11 skipped and 92 deselected on the default
+fast suite in isolated checkouts using the same installed environment.
+All 6,989 executed test outcomes and all 64 failure IDs matched.
+The two checkouts were clean after both runs. A focused read-only
+rerun of seven primary-source cache failures passed all seven on
+both revisions through the canonical local corpus. The original
+full fast-suite results remain recorded. No candidate-only failure
+was observed. Full merge qualification remains due.
