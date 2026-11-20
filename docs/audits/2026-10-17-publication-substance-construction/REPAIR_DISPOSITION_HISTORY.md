@@ -3260,3 +3260,9 @@ The next tested cap family reaches seven factors and has a nine-coordinate inner
 The [case 24 closure](L1_N16_C0_COMPLEMENTARY_CASE24_R1.zip) and [case 25 closure](L1_N16_C0_COMPLEMENTARY_CASE25_R1.zip) independently verify two original cuts, all 18 inner contributions, 20 inverse lifts and 32 author triangle shard intervals. Alternate-pivot contractions reproduce the exact signed totals from the distinct inputs. The cumulative **26/48** subtotal is `-3085519862209686833583/5192296858534827628530496329220096 + 0i`. A fresh extraction reproduced both retallies and their precursor bindings.
 
 The case 24 archive also records all 24 author row-cap frontiers for outer cases 24–47. The recorded files match checked SHA256s, original conditioning, seven remaining factors and four cap-count families. The author inputs can be regenerated from the original committed selector-1 separator. This inventory preserves all remaining starts and confers no acceptance on unevaluated scalars. Full tuple 0, group, profile and publication gates remain open.
+
+### L1 N16 complementary cases 26 and 28
+
+The [two-case closure](L1_N16_C0_COMPLEMENTARY_CASES26_28_R1.zip) verifies distinct selector-1 inputs, 20 inverse lifts, 18 signed inner values and 32 disjoint triangle shard intervals. The exact subtotal over cases 0–26 and 28 is `-677626082107890295133187/5192296858534827628530496329220096 + 0i`. The twenty missing indices are explicit in the retally. A fresh archive extraction reproduced the exact total and all four author shard stacks.
+
+The case 25 review audit displayed 8, the number of shards, in the projected-pair column for slices 5 and 6. Its verified roster and review table give 394,752 projected pairs per slice. Case 26 distinguishes these counts in the audit output, and the frozen case 25 evidence is preserved with this clarification. The exact values and coverage checks are unaffected.
