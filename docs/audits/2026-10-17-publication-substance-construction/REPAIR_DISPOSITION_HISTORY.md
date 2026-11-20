@@ -4048,3 +4048,78 @@ first and mixed source tests, and the exact open-kernel witness
 requirement. Independent actual mathematics and source review follows
 the constructor's result. Physical product, state, adjoint and source
 matching remain original acceptance requirements.
+
+
+### L1 first-touch substitution in the original signed sweep
+
+The [portable substitution trial](L1_N16_C0_FIRST_TOUCH_SUBSTITUTION_R1.zip)
+uses the existing two ordered quotient sweeps. At the exact first
+positions shared by the earlier batch analysis, it verifies that both
+operands are still their original immutable inputs. The key contains
+both ordered raw input-table keys plus the closed common physical axes.
+On a miss the original forward quotient runs first, followed by its
+reverse on the amended outputs. On a hit both exact output factors
+replace the original operands at that same sweep position. All other
+operations use the original function and order.
+
+The original uncached frontiers for Groups 672, 786 and 934 are pinned
+in the receipt. Every group reproduced all 88 signed tables with their
+original axes, denominators and values. Group 786 was selected because
+it shares nine eligible keys with Group 672. Those nine hits avoided
+195,896 of its 23,853,717 guarded input-row visits, about 0.82 percent
+of that proxy. Groups 672 and 934 had no hits in this run. Peak RSS was
+2.49 GB with 450,232 retained output row references across all three
+groups. Observed sweep durations were 34.03, 35.71 and 63.41 seconds
+under overlapping activity. The trial establishes exact propagation
+of this reuse through the original sweep. End-to-end speedup and full-coefficient work remain unmeasured. The
+numerical implementation is a scratch prototype.
+
+### L1 temporal-source endpoint and open-kernel result reviewed
+
+The [accepted source-lift and open-kernel result](../2026-11-05-l1-physical-bridges/ORIGINAL_TEMPORAL_Q00_SOURCE_LIFT_ACCEPTANCE.md)
+comes from Executor donor `6ffc9db4c59a7762c892bac8afb90bf415e6f1fa`.
+Publication intake verified all 29 portable manifest entries and all
+twelve prior source bodies against this checkout. Both actual
+independent reviewers accept the bounded R1 result at
+SHA-256 `e608cd0bf1f7bdbad615120bfeafbe7aa9ee2b2e330758c33429f567302a2af4`.
+The mathematics report is
+`3c8e0a1e41edb01f802b860115e6c4dc70215b7c870d4a75d4f39ca83492e707`
+and source report is
+`ac54118fd93056c198b5c9e7ac7c9d464e154472a14eb53038dddfd342af24ff`.
+Both specified endpoint constraints fail their regular first source
+lifts. On the original open-kernel test, the first residual coefficients
+are `i/4` and `-1/4`, and the mixed residual coefficients are
+`-g_2/2` and `-i g_2/2`, in outgoing then incoming order. Keeping
+the two unscaled forces gives corrected identities in the original
+matching algebra. The next physical milestone needs a derived product,
+state, adjoint and maps for those retained forces with the reverse and
+normalized periodic identities. Kinetic (30)–(31), B3 susceptibility and publication gates remain open.
+
+
+### L1 complete original maximum-row Group 934 signed value
+
+The [portable exact Group 934 archive](L1_N16_C0_DENSE_GROUP934_COMPLETE_R1.zip)
+binds all eight disjoint original assignments back to the prepared
+source in the earlier dense-reuse pilot. Independent replays verify
+each original signed input lift, guarded cap and terminal. Three
+assignments have three-factor triangle closures, including independent
+signed recomputations. The others reach exact axis-empty factors.
+Assignment 2 is negative, and the retally preserves its original sign.
+
+The signed raw total is
+`20031797206255971086207078635455772038507960915456597864027783168 + 0i`
+at inherited factor denominator
+`10925963483957527547486875425536212992`.
+Independent retally derives the original phase +1 and occupation
+prefactor `1/(16*4^64)` from the pinned source profile driver.
+The exact normalized contribution is
+`938707161584627385661337370873/2787593149816327892691964784081045188247552 + 0i`.
+
+The eight recorded original conditioned guard processes sum to about
+504 seconds, and the post-cap and author terminal checks sum to about
+985 seconds, including alternative author triangle anchors. These are
+summed elapsed durations on overlapping processes. They exclude
+preparation of the shared original factor state and independent review.
+The complete maximum-row case supplies a second harder route sample.
+Costs for the remaining groups, the full coefficient, physical
+acceptance and publication gates remain open.
