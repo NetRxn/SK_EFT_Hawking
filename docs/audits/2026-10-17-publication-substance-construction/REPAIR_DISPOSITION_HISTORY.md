@@ -4381,3 +4381,35 @@ mixed evaluation at the saturated cap, and the full original
 nine-entry normalized unit/force sewing with its reflected defect
 and source contacts. The numerical and physical publication gates
 remain open.
+
+
+### L1 paired dense pilot at the eighths
+
+The [paired evidence package](L1_N16_C0_DENSE_EIGHTHS_PAIRED_PILOT_R1.zip)
+has SHA-256 `cc011c0127b8cef8c187836554322484ba88c965fb6c8559a6a158a5ced4d466`. The selection was fixed by zero-based
+source-row ranks 241 and 1693, giving Groups 1189 and 1600. Their
+independent reviews reconstruct the 88 source factor tables and
+replay original ordinal 0 through the signed scalar. All eight
+1189 and six 1600 original and cached checkpoint digests agree.
+Group 1600's third-pivot replay independently sums all 8,647,680
+compatible products.
+
+| Group | Source rows before and after two sweeps | Preparation | Original solve | Cached solve |
+|---|---|---:|---:|---:|
+| 1189 | 2,253,295 → 563,491 → 475,591 | 21.51 s | 88.23 s | 61.32 s |
+| 1600 | 3,243,510 → 1,238,850 → 989,752 | 40.12 s | 75.01 s | 59.44 s |
+
+Group 1600's terminal triangle takes a separately measured 6.35 s
+and 5.87 s respectively. The solve pairs record one observation
+per route. The sole optimization caches immutable ordered
+projections under the existing signed checks and numerical budgets.
+The outer and review manifests, ZIP integrity and archived comparison
+all checked at checkpointing.
+
+ROOT will use complete signed groups for the next cost assessment.
+The author found a guard refusal on Group 1600 ordinal 3 and obtained
+a terminal scalar after preserving the exact prejoin frontier and
+running the existing continuation. Independent review of that recovery
+and the other remaining ordinals is still owed. No group moves into the
+covered set on the strength of this pilot. The full signed coefficient,
+the normalized physical susceptibility and publication acceptance remain open.
