@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Volovik2026SecondSound",
+    "version": "2601.00639v5",
+    "path": "Volovik2026SecondSound-arXiv2601.00639v5.pdf",
+    "url": "https://arxiv.org/pdf/2601.00639v5",
+    "sha256": "de8c3734b09ed333af476e7e4bd17a59a1eafb6e87d97c5e48cbae2c465b4fdc",
+    "bytes": 226304,
+    "pages": 7,
+    "fidelity": "full"
+  },
+  {
+    "name": "Volovik2024LandauDeSitter",
+    "version": "2410.04392v11",
+    "path": "Volovik2024LandauDeSitter-arXiv2410.04392v11.pdf",
+    "url": "https://arxiv.org/pdf/2410.04392v11",
+    "sha256": "2755cd78d61d84697dcb2367efd15841ec58f7d246771560eeeb21f148412933",
+    "bytes": 422651,
+    "pages": 27,
+    "fidelity": "full"
+  },
+  {
+    "name": "Abbott2017GW170817",
+    "version": "1710.05834v2",
+    "path": "Abbott2017GW170817-arXiv1710.05834v2.pdf",
+    "url": "https://arxiv.org/pdf/1710.05834v2",
+    "sha256": "bf06bd2ae6a23cf7f7092307677c2b681ce02abab3b5bbe37bbce76a8960140a",
+    "bytes": 2129594,
+    "pages": 27,
+    "fidelity": "full"
+  },
+  {
+    "name": "Popovych2009PathAlgebra",
+    "version": "0904.0971v2",
+    "path": "Popovych2009PathAlgebra-arXiv0904.0971v2.pdf",
+    "url": "https://arxiv.org/pdf/0904.0971v2",
+    "sha256": "be1d8deb69c04f2d92bbd7a8dcc7770450836c7e57e30987a0fc2077325c2ae7",
+    "bytes": 225501,
+    "pages": 15,
+    "fidelity": "full"
+  },
+  {
+    "name": "HandrackSalmhofer2026FermionRP",
+    "version": "2608.10685v1",
+    "path": "HandrackSalmhofer2026FermionRP-arXiv2608.10685v1.pdf",
+    "url": "https://arxiv.org/pdf/2608.10685v1",
+    "sha256": "cf958c1ccee3f1431db0d22a9e896f798e80dbd968578e1cfd8828e0d071a383",
+    "bytes": 322620,
+    "pages": 15,
+    "fidelity": "full"
+  },
+  {
+    "name": "LuShao2026ChiralRP",
+    "version": "2611.20084v1",
+    "path": "LuShao2026ChiralRP-arXiv2611.20084v1.pdf",
+    "url": "https://arxiv.org/pdf/2611.20084v1",
+    "sha256": "ab90ba84a4096d112c96e2023ca33098c1aa3bae85a657f332b77e8321e818b1",
+    "bytes": 455080,
+    "pages": 30,
+    "fidelity": "full"
+  },
+  {
+    "name": "MutzelTilloy2026CertifiedSpectra",
+    "version": "2606.09791v1",
+    "path": "MutzelTilloy2026CertifiedSpectra-arXiv2606.09791v1.pdf",
+    "url": "https://arxiv.org/pdf/2606.09791v1",
+    "sha256": "88c3237420e234c890aaa7aae203f985553635cdba1a7a77b49794c0e5035256",
+    "bytes": 1137954,
+    "pages": 13,
+    "fidelity": "full"
+  },
+  {
+    "name": "AbbottEtAl2026SpectralBootstrap",
+    "version": "2605.20509v1",
+    "path": "AbbottEtAl2026SpectralBootstrap-arXiv2605.20509v1.pdf",
+    "url": "https://arxiv.org/pdf/2605.20509v1",
+    "sha256": "911c1ae4330b0dabdd74ed485c5477a87e31ce4a9449010c1d3d5afb05106860",
+    "bytes": 953488,
+    "pages": 23,
+    "fidelity": "full"
+  },
+  {
+    "name": "GiustiEtAl2026SpectralReconstruction",
+    "version": "2606.28167v1",
+    "path": "GiustiEtAl2026SpectralReconstruction-arXiv2606.28167v1.pdf",
+    "url": "https://arxiv.org/pdf/2606.28167v1",
+    "sha256": "f846c2b4d61833b243a71b8ad2c0f870fa64c6ff65bb0d842392daa4eda0bcfa",
+    "bytes": 1436690,
+    "pages": 44,
+    "fidelity": "full"
+  },
+  {
+    "name": "Lehner2026SpectralBounds",
+    "version": "2611.24374v1",
+    "path": "Lehner2026SpectralBounds-arXiv2611.24374v1.pdf",
+    "url": "https://arxiv.org/pdf/2611.24374v1",
+    "sha256": "16b72cc325d6e480be3c3398db8586d43dfa550c8f3b025f055fd719bd63f30c",
+    "bytes": 442277,
+    "pages": 9,
+    "fidelity": "full"
+  },
+  {
+    "name": "KasauraEtAl2026LeanQuantum",
+    "version": "2607.05492v1",
+    "path": "KasauraEtAl2026LeanQuantum-arXiv2607.05492v1.pdf",
+    "url": "https://arxiv.org/pdf/2607.05492v1",
+    "sha256": "baa69479125c9fe2cd637b99858018c41684895dc69ce04ffcc5d65377f43875",
+    "bytes": 566615,
+    "pages": 34,
+    "fidelity": "full"
+  },
+  {
+    "name": "DouglasEtAl2026LeanQFT",
+    "version": "2603.15770v1",
+    "path": "DouglasEtAl2026LeanQFT-arXiv2603.15770v1.pdf",
+    "url": "https://arxiv.org/pdf/2603.15770v1",
+    "sha256": "5180aee874551e4715ddf398543b31c4dc429edee14e1f1906f9ff5e905f40e0",
+    "bytes": 867556,
+    "pages": 35,
+    "fidelity": "full"
+  },
+  {
+    "name": "MaitiniyaziEtAl2026SpinorLoop",
+    "version": "2609.14627v1",
+    "path": "MaitiniyaziEtAl2026SpinorLoop-arXiv2609.14627v1.pdf",
+    "url": "https://arxiv.org/pdf/2609.14627v1",
+    "sha256": "3d24d9e98d6429a02a086116170cfc04598f7f281de9600ae8718a6dc5333500",
+    "bytes": 615192,
+    "pages": 45,
+    "fidelity": "full"
+  },
+  {
+    "name": "LopezSarrionEtAl2026GWConstraints",
+    "version": "2608.01118v1",
+    "path": "LopezSarrionEtAl2026GWConstraints-arXiv2608.01118v1.pdf",
+    "url": "https://arxiv.org/pdf/2608.01118v1",
+    "sha256": "b7d4e5d3b47e67de22610180c71afa12ddebdbe3e6c10f1d22bbff091e956896",
+    "bytes": 690768,
+    "pages": 26,
+    "fidelity": "full"
+  },
+  {
+    "name": "JaffeJanssens2016ReflectionPositiveDoubles",
+    "version": "1607.07126v1",
+    "path": "JaffeJanssens2016ReflectionPositiveDoubles-arXiv1607.07126v1.pdf",
+    "url": "https://arxiv.org/pdf/1607.07126v1",
+    "sha256": "9df0224f39d033119d08ad635516bd779b06965a9c24bad888e4a63ae5456ac9",
+    "bytes": 923885,
+    "pages": 53,
+    "fidelity": "full"
+  },
+  {
+    "name": "KlepEtAl2026PauliCertificates",
+    "version": "2605.29959v1",
+    "path": "KlepEtAl2026PauliCertificates-arXiv2605.29959v1.pdf",
+    "url": "https://arxiv.org/pdf/2605.29959v1",
+    "sha256": "6b8b19448b2593d23b9bff5d7ed509001670c9ac95fd78df80e9e04de38ed194",
+    "bytes": 663952,
+    "pages": 20,
+    "fidelity": "full"
+  },
+  {
+    "name": "Diakonov2011LatticeGravity",
+    "version": "1109.0091v1",
+    "path": "Diakonov2011LatticeGravity-arXiv1109.0091v1.pdf",
+    "url": "https://arxiv.org/pdf/1109.0091v1",
+    "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+    "bytes": 270355,
+    "pages": 20,
+    "fidelity": "full"
+  },
+  {
+    "name": "VladimirovDiakonov2012Gravity",
+    "version": "1208.1254v2",
+    "path": "VladimirovDiakonov2012Gravity-arXiv1208.1254v2.pdf",
+    "url": "https://arxiv.org/pdf/1208.1254v2",
+    "sha256": "bce58516816a8f8962a8b71a37b107304a860d40c3b344fa19f92accfef9f8d2",
+    "bytes": 599983,
+    "pages": 40,
+    "fidelity": "full"
+  },
+  {
+    "name": "Vergeles2025LatticeUnitarity",
+    "version": "2506.00036v2",
+    "path": "Vergeles2025LatticeUnitarity-arXiv2506.00036v2.pdf",
+    "url": "https://arxiv.org/pdf/2506.00036v2",
+    "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+    "bytes": 1756894,
+    "pages": 11,
+    "fidelity": "full"
+  },
+  {
+    "name": "Volovik2024Vestigial",
+    "version": "2312.09435v2",
+    "path": "Volovik2024Vestigial-arXiv2312.09435v2.pdf",
+    "url": "https://arxiv.org/pdf/2312.09435v2",
+    "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+    "bytes": 140946,
+    "pages": 6,
+    "fidelity": "full"
+  },
+  {
+    "name": "MourrainSchmudgen2014FlatExtensions",
+    "version": "1406.4975v1",
+    "path": "MourrainSchmudgen2014FlatExtensions-arXiv1406.4975v1.pdf",
+    "url": "https://arxiv.org/pdf/1406.4975v1",
+    "sha256": "c62c93f7c7d7d9b13fa91d95799be33ebe8fd9c082de2072791b56ddb3690804",
+    "bytes": 179469,
+    "pages": 12,
+    "fidelity": "full"
+  }
+]
