@@ -1,0 +1,12 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  ledger_ids_resolve: Supersession records name findings that exist (ratcheted)
+══════════════════════════════════════════════════════════════════════
+  [33m⚠[0m ratchet  —  59 of 1271 supersession record(s) name no live finding (pre-existing annotated-ID debt, baseline 59); no growth
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 1/1 checks passed (1 warning)
+  [32mALL CHECKS PASSED[0m
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.2s

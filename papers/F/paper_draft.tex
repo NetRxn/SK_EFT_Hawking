@@ -6,6 +6,8 @@
 \usepackage{booktabs}
 \usepackage{siunitx}
 
+\newcommand{\leanref}[1]{\path{#1}}
+
 %% Bundle-skeleton header (Phase 7g flagship draft)
 %% Bundle target: F (Tier 0, flagship review, ~80--150pp PRD-long-format)
 %% Generated: 2026-05-04 (Phase 7c.7 close-out; substantive draft awaits
@@ -58,7 +60,8 @@ from any individual sibling, is that the same antisymmetric-tetrad-bilinear
 (ADW) substrate that drives the emergent-gravity content of
 Bundle~D3 (a single heat-kernel coefficient
 $G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
-propagating across six observables) also drives the SK--EFT analog-Hawking
+used across gravitational comparisons, with an additional free response
+in the GW-speed law) also drives the SK--EFT analog-Hawking
 content of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid
 platforms; $93\%$ Lean-theorem reuse), the chirality-wall and
 modular-invariance content of Bundle~D2
@@ -70,9 +73,10 @@ Bundle~D5 (causal-set, entropic, and Jacobson thermodynamic-GR with
 the full Phase~6m three-track closure), and the topological
 quantum-computation foundations of Bundle~D4 (one MTC, four faces).
 The substrate is one object; its faces are the sibling bundles'
-worth of predictive register. NO-GO results are reported as
-first-class predictive content rather than absences: GW170817 falsifies
-the vestigial-second-sound graviton at $\sim 7\times 10^{14}$; an
+worth of predictive register. Exclusions and conditional constraints are
+reported as predictive content: under an assumed susceptibility-speed law,
+GW170817 excludes the adopted comparison endpoints while retaining a
+finite compatible interval about unity; an
 abelian-MTC falsifier closes the Bekenstein--Hawking entropy with the
 Kaul--Majumdar $-3/2 \log A$ correction as a kernel-pure derivation with an
 $O(1/A)$ rate (Wave~7C: faithful $\Gamma$-Catalan log-dimension, saddle a derived
@@ -157,8 +161,8 @@ target tier:
   networks; a formally verified demarcation), Bundle~D8
   (kernel-verified universal quantum gate compilation;
   alphabet-agnostic Solovay--Kitaev across $\mathrm{SU}(d)$).
-\item \textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (GW170817 falsifies
-  the vestigial-second-sound graviton), Bundle~L2 (three SM fermion
+\item \textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (the conditional GW170817
+  susceptibility constraint), Bundle~L2 (three SM fermion
   generations from modular invariance), Bundle~L3 (BCH four laws by
   regime).
 \item \textbf{Tier 3 (3 infrastructure papers):} Bundle~I1 (verification
@@ -193,10 +197,10 @@ four categories.
   Plaza--Kraiselburd~\cite{Roehm2026D5}).
 \item \textbf{Falsified.} The substrate produces a quantitative
   prediction in tension with observation at $\geq 5\sigma$ or
-  Bayes-factor $|\log\mathcal{B}| \geq 5$ (Jeffreys-decisive). Examples
-  include the GW170817 vestigial-graviton falsification at $\sim
-  7\times 10^{14}$ (L1 with D3 \S\ref{sec:emergent-gravity}), the
-  Wen--ADW factor-$6000$ deficit closing the
+  Bayes-factor $|\log\mathcal{B}| \geq 5$ (Jeffreys-decisive). The
+  GW170817 susceptibility comparison is recorded separately as a conditional
+  parameter constraint (L1 with D3 \S\ref{sec:emergent-gravity}).
+  The register includes the Wen--ADW factor-$6000$ deficit closing the
   emergent-$U(1)$-string-net-extended-to-gravity channel of Wen
   (D3 \S 4),
   the abelian-MTC falsifier on Bekenstein--Hawking entropy with the
@@ -524,10 +528,11 @@ centre symmetries that re-enter through the deconfinement transition
 (Bundle~D3 \S 14, with cross-bridge to D4 \S 4 below). The erasure
 theorem (\texttt{GaugeErasure.gauge\_erasure},
 \texttt{GaugeErasure.u1\_survival}) is the first of three
-predictive-boundary cuts that force the ADW substrate route to the
-tetrad-condensation channel; the other two are the perturbative
-Wen-ADW deficit and the GW170817 vestigial-graviton falsification
-(\S\ref{sec:emergent-gravity}).
+comparisons motivating the ADW tetrad-condensation channel; the other
+two are the perturbative Wen--ADW deficit and the conditional GW170817
+susceptibility constraint (\S\ref{sec:emergent-gravity}). The GW comparison
+retains compatible interior responses and supplies no unique-channel
+selection theorem.
 
 \subsection{Erasure mechanism}
 
@@ -959,16 +964,17 @@ Bundle~D3~\cite{Roehm2026D3} is the substrate program's heaviest deep
 paper at $\sim 53$pp, consolidating the substrate's emergent-gravity
 content from the substrate-condensation mechanism through the
 Bekenstein--Hawking entropy and the BCH four laws. The two PRL
-splashes Bundle~L1 (GW170817 falsifies the vestigial-second-sound
-graviton; \cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws
+splashes Bundle~L1 (the conditional GW170817 susceptibility
+constraint; \cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws
 by regime;~\cite{BardeenCarterHawking1973}) extract headline
-results from D3 that ship as four-page PRL submissions ahead of the
-D3 deep-paper submission per the strategy frame~\cite{Roehm2026Strategy}.
+results intended for PRL letters ahead of the D3 deep-paper submission
+in the strategy frame~\cite{Roehm2026Strategy}. Physical construction,
+venue qualification and final review remain required.
 
 \subsection{The single Sakharov coefficient}
 
-The substrate's emergent-gravity content propagates across six
-observables through a \emph{single} closed-form coefficient
+The induced-Newton baseline used in the gravitational comparisons is
+the closed-form coefficient
 \begin{equation}
   G_N^{a_2} \;=\; \frac{3\pi}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,,
 \end{equation}
@@ -981,13 +987,13 @@ $G_N^{\mathrm{Sak}} = 12\pi/(N_f\Lambda_{\mathrm{UV}}^{2})$ that Phase
 6a.1 states independently; the factor is the Dirac index trace
 $\operatorname{tr}_V\mathbb{1} = 4$ carried by Vassilevich Eq.~(4.27),
 and the named theorem is the exact ratio rather than an equality. The
-same coefficient propagates without an additional dial across the six
-observables of D3 (the BCH four
-laws regime-partition mass; the Bekenstein--Hawking entropy
-prefactor; the cosmological-constant overshoot ratio; the
-Einstein--Cartan torsion at the cosmological background; the
-gravitational-wave propagation speed; the Stelle higher-curvature
-ceilings).
+coefficient enters the comparisons of the BCH four-laws regime-partition
+mass, Bekenstein--Hawking entropy prefactor, cosmological-constant
+overshoot, Einstein--Cartan torsion and Stelle higher-curvature ceilings.
+The GW-speed comparison additionally assumes a free normalized
+susceptibility $\chi_{\mathrm{vest}}$. A physical normalization relating
+that response to the induced-Newton baseline remains required; the
+shared numerical comparison ranges do not supply it.
 
 The substrate-identity claim of this flagship leans on the
 observation that the same $N_f$ in the Sakharov coefficient is the
@@ -996,11 +1002,12 @@ from the modular-framing constraint plus the Rokhlin 16-convergence.
 The Sakharov coefficient and the SM anomaly classification share
 their $N_f$ count.
 
-\subsection{Three closures forcing ADW}
+\subsection{Channel exclusions and a conditional GW constraint}
 
-Three independent closures force the substrate to the ADW
-tetrad-condensation channel rather than alternative emergent-gravity
-mechanisms. (D3 \S 4 originally enumerates the closure triad as
+The following comparisons have different scopes. The gauge and coupling
+results address their stated channels, while the assumed GW-speed law
+leaves a finite compatible susceptibility interval. Together they do
+not establish a unique physical selection of the ADW channel. (D3 \S 4 originally enumerates the closure triad as
 Wen + fracton + GW170817; F lifts the gauge-erasure prerequisite
 of D3 \S 3 into the closure list as the structural pre-condition for
 the substrate-identity claim, and handles the fracton diff-invariance
@@ -1039,38 +1046,67 @@ separately Lean-verified at the Newton-constant level. Wen's
 mechanism is consistent for a $U(1)$ photon (its original
 target) but cannot scale to gravity at quantitative magnitude.
 
-\paragraph{Closure 3: GW170817 vestigial-graviton constraint (D3
-\S 6 with Bundle~L1).} The Volovik vestigial-second-sound
-mode~\cite{Volovik2024Vestigial} is a candidate for the substrate's
-graviton. Carried onto our substrate, the identification makes the
-propagation speed depend on the natural-range parameter band
-$\chi_{\mathrm{vest}}\in[0.1,10]$ (a project-adopted order-unity
-naturalness window about the random-phase-approximation
-bubble-integral scale, a modeling choice of this project rather than
-a published derivation). The
-GW170817 multi-messenger constraint (asymmetrically
-$-3\times 10^{-15} \le \Delta c/c \le +7\times 10^{-16}$;
-conservatively two-sided $|\Delta c/c| \le 3\times
-10^{-15}$)~\cite{Abbott2017GW170817} then \emph{confines} that band
-rather than falsifying it: the compatible window is nested strictly
-inside $[0.1,10]$ and meets it at $\chi_{\mathrm{vest}} = 1$, while
-both endpoints deviate from $c$ by $\sim 14$ orders of magnitude
-($\sim 7\times 10^{14}$). The Lean
-formalisation \texttt{GravitationalWaves.natural\_endpoints\_violate\_ligo\_window}
-plus \texttt{vestigial\_natural\_range\_violates\_ligo} plus
-\texttt{ligo\_confines\_chi\_vest\_within\_natural\_range} and the
-width ratio
-\texttt{ligo\_window\_width\_lt\_natural\_range\_width\_by\_1e14}
-ship the constraint at zero \texttt{sorry}. Bundle~L1 PRL splash
-extracts this as a stand-alone four-page submission.
+\paragraph{Closure 3: conditional GW170817 constraint on the
+vestigial-graviton identification.} Under the assumed scalar law
+$c_{\mathrm{GW}}=c\sqrt{\chi_{\mathrm{vest}}}$, GW170817 confines the
+free, nonnegative normalized response $\chi_{\mathrm{vest}}$ to a
+finite interval about unity. Here $c$ is the electromagnetic reference
+speed. The physical identification requires a separate dynamical
+construction. Volovik's quartet-order proposal allows metric order
+before a nonzero tetrad expectation~\cite[Sec.~III,
+Eqs.~(18)--(20)]{Volovik2024Vestigial}. His de~Sitter two-fluid
+model derives luminal second sound, $s_2=c$, from its thermodynamic
+relations~\cite[Sec.~III, Eqs.~(6)--(9)]{Volovik2026SecondSound};
+its discussion leaves the graviton interpretation open
+\cite[Sec.~IV]{Volovik2026SecondSound}. Neither result derives the
+susceptibility-dependent speed law or identifies this substrate's
+excitation with a propagating tensor mode coupled to the same
+matter/light reference.
 
-The three closures, taken together, force the substrate to the ADW
-tetrad-condensation channel: the alternative emergent-gravity
-mechanisms are ruled out either structurally (gauge erasure;
-fracton diff-invariance no-go), at quantitative magnitude (Wen-ADW
-deficit), or --- for the vestigial graviton --- conditionally, absent
-a mechanism pinning $\chi_{\mathrm{vest}}$ to unity, which GW170817
-confines it to within $3\times 10^{-15}$.
+Abbott et al. obtain
+$-3\times10^{-15}\le\Delta c/c\le+7\times10^{-16}$ using a
+conservative source distance, simultaneous emission for the upper
+bound and a delayed gamma-ray emission assumption for the lower
+bound~\cite[Sec.~4.1, Eq.~(1)]{Abbott2017GW170817}.
+We adopt the symmetric envelope $|\Delta c/c|\le\tau$, with
+$\tau=3\times10^{-15}$; alternative source-emission histories can
+weaken this inferred propagation constraint. For the assumed law,
+$\Delta c/c=\sqrt{\chi_{\mathrm{vest}}}-1$ when $c\ne0$.
+The theorem
+\leanref{GravitationalWaves.c_GW_match_iff_chi_close_to_one}
+gives, for $\chi_{\mathrm{vest}}\ge0$,
+\[
+ |\sqrt{\chi_{\mathrm{vest}}}-1|\le\tau
+ \quad\Longleftrightarrow\quad
+ \chi_{\mathrm{vest}}\in[(1-\tau)^2,(1+\tau)^2].
+\]
+The comparison window $[0.1,10]$ is adopted about the exactly luminal
+anchor $\chi_{\mathrm{vest}}=1$. Its physical normalization, center
+and endpoints are not determined by the RPA resummation with
+unevaluated bare-response and coupling inputs.
+Both endpoints fail the cap
+(\texttt{natural\_endpoints\_violate\_ligo\_window}), while the
+compatible interval lies strictly inside the comparison window and
+contains unity
+(\texttt{ligo\_confines\_chi\_vest\_within\_natural\_range} and
+\texttt{chi\_one\_mem\_ligo\_window}).
+Its width is exactly $4\tau$ and is smaller than the comparison-window
+width by more than fourteen orders of magnitude
+(\texttt{ligo\_window\_width\_eq} and
+\leanref{ligo_window_width_lt_natural_range_width_by_1e14}).
+This width comparison assigns no probability without a prior.
+The susceptibility offsets are $-2\tau+\tau^2$ and
+$2\tau+\tau^2$; $\tau$ bounds the speed deviation.
+
+These comparisons motivate the ADW tetrad-condensation channel,
+but the GW170817 result does not uniquely select it: the assumed
+vestigial speed law retains a finite compatible interval, including
+unity. Establishing a physical realization still requires the
+microscopic response normalization and range, the physical state,
+a propagating tensor mode with matched matter/light reference,
+and controlled transport and frequency matching with units and
+error bounds. The conditional scalar constraint discharges none of
+these construction requirements.
 
 \subsection{Four cleared decision gates}
 
@@ -1213,7 +1249,7 @@ prediction that is verified at experimental precision but with
 substantial headroom against tightening of the bound.
 
 The Lean theorem
-\texttt{EinsteinCartanExtension.torsionAtCosmologicalBackground\_at\_planck\_natural\_below\_kostelecky}
+\leanref{EinsteinCartanExtension.torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky}
 closes the comparison at zero \texttt{sorry}. The 46-order headroom
 is a substrate prediction: future Lorentz-violation experiments at
 substantially tighter precision are not expected to falsify the
@@ -1244,11 +1280,11 @@ D3 cross-bridges back to three sibling bundles in the substrate-identity
 network:
 
 \begin{itemize}
-\item \textbf{D3 \S 6 $\leftrightarrow$ L1 (GW170817).} The
-  $\sim 7\times 10^{14}$ vestigial-graviton falsification is shared
-  character-for-character between D3 and L1, including the natural-range
-  parameter band and the Lean theorem name. Cross-bridge verified
-  in the Phase~7c.8 review pass.
+\item \textbf{D3 \S 6 $\leftrightarrow$ L1 (GW170817).}
+  D3 and L1 use the same assumed susceptibility-speed law, adopted
+  comparison interval and finite GW-compatible interval. The endpoint
+  exclusion and interval-width results are conditional scalar constraints;
+  the physical response, tensor mode and matter reference require matching.
 \item \textbf{D3 \S 8 $\leftrightarrow$ L3 (BCH four laws regime
   partition).} The regime-partition mass $M_c = N_f \Lambda_{\mathrm{UV}}/
   (12\pi\,\alpha_{\mathrm{ADW}})$ is shared character-for-character;
@@ -1262,11 +1298,12 @@ network:
   \S 7.
 \end{itemize}
 
-The cross-bridge network closes self-consistently: D3, L1, L3, D4
-all cite the same Lean theorem names character-for-character, and
-the substrate-identity claim of this flagship leans on the
-observation that the cross-bridges close without an additional
-mechanism.
+The cross-bridge network records the stated mathematical connections
+between D3, L1, L3 and D4. Matching a theorem name is not a physical
+identification: the L1 edge additionally needs the microscopic response
+normalization, propagating mode and common matter/light reference.
+These construction obligations remain part of the substrate-identity
+claim.
 
 %% =====================================================================
 %% §7 — Topological QC foundations (D4)
@@ -1832,8 +1869,9 @@ locations:
   heat-kernel coefficient $G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
   follows from Vassilevich Eq.~(4.27)~\cite{Vassilevich2003} with the
   Dirac fibre trace, and is exactly one quarter of the Sakharov--Adler
-  $12\pi/(N_f\Lambda_{\mathrm{UV}}^{2})$. The same coefficient propagates
-  across six observables in D3 without an additional dial.
+  $12\pi/(N_f\Lambda_{\mathrm{UV}}^{2})$. The same coefficient
+  enters D3's gravitational comparisons. The GW-speed statement also
+  takes a free normalized response whose physical matching remains open.
 \item \textbf{Decision Gate~E.3 (diff invariance through $a_4$).}
   The path-(b) order-by-order invariance failure
   \texttt{NonlinearDiffInvariance.pathB\_residual\_a4\_dirac\_eq\_zero}
@@ -1870,22 +1908,24 @@ locations:
   binary-BH-inspiral observational ceilings (D3 \S 18).
 \end{itemize}
 
-\subsection{Falsified register}
+\subsection{Exclusions and conditional constraints}
 
-The substrate produces predictions in tension with observation at
-$\geq 5\sigma$ or Bayesian thresholds exceeding decisive at the
-following locations:
+The following comparisons distinguish statistical exclusions from
+conditional parameter constraints. A speed-deviation/cap ratio is
+neither a Gaussian significance nor a Bayes factor:
 
 \begin{itemize}
-\item \textbf{GW170817 vestigial-second-sound graviton.} The
-  vestigial-mode-as-graviton hypothesis (the mode is
-  Volovik's~\cite{Volovik2024Vestigial}) is falsified at $\sim 7\times
-  10^{14}$ over the susceptibility natural range (D3
-  \S\ref{sec:emergent-gravity} with Bundle~L1 PRL splash). The
-  falsification is universal across the natural-range parameter band
-  $\chi_{\mathrm{vest}}\in[0.1,10]$ (a project-adopted naturalness
-  window, not a published derivation) via Abbott et al.\
-  $|\Delta c/c| \le 3\times 10^{-15}$~\cite{Abbott2017GW170817}.
+\item \textbf{Conditional GW170817 susceptibility constraint.}
+  For the assumed law $c_{\mathrm{GW}}=c\sqrt{\chi_{\mathrm{vest}}}$,
+  the conservative symmetric cap gives
+  $\chi_{\mathrm{vest}}\in[(1-\tau)^2,(1+\tau)^2]$ with
+  $\tau=3\times10^{-15}$, subject to the source-emission assumptions
+  stated in \S\ref{sec:emergent-gravity}~\cite{Abbott2017GW170817}.
+  The adopted $[0.1,10]$ comparison interval contains this finite
+  compatible set, including unity. The endpoint results exclude each
+  chosen endpoint; the interval result locates the compatible interior.
+  Physical response, polarization and matter-reference
+  matching remain construction requirements.
 \item \textbf{Wen--ADW factor-$6000$ deficit.} The
   perturbative-Wen extension to gravity under-predicts $G_N$ by an
   estimated ratio $G_{\mathrm{Wen}}/G_c^{\mathrm{ADW}} \approx
@@ -2225,9 +2265,10 @@ load-bearing.
 
 The cleared register includes the four cleared decision gates of D3,
 the polariton stimulated-Hawking-gain prediction of D1+E1, and the
-strongest Phase~6m Track-C $f(R)$ candidates of D5. The falsified
-register includes the GW170817 vestigial-graviton falsification of
-D3+L1 at $\sim 7\times 10^{14}$, the Wen--ADW factor-$6000$ deficit
+strongest Phase~6m Track-C $f(R)$ candidates of D5. The GW170817
+susceptibility comparison of D3 and L1 is a conditional constraint,
+with a finite compatible interior rather than universal falsification.
+The falsified register includes the Wen--ADW factor-$6000$ deficit
 of D3, the abelian-MTC entropy falsifier of D3+D4, and the unanimous
 $8/8$ Phase~6m Track-B closure of D5. The structurally-blocked
 register includes the Gibbs--Duhem obstruction theorem, the
@@ -2543,6 +2584,10 @@ arXiv:hep-th/0306138.
 G.~E.~Volovik,
 ``Fermionic quartet and vestigial gravity,''
 JETP Lett.\ \textbf{119}, 330 (2024).
+
+\bibitem{Volovik2026SecondSound}
+G.~E.~Volovik, ``Massless graviton in de Sitter as second sound in
+two-fluid hydrodynamics,'' arXiv:2601.00639v1 (2026).
 
 \bibitem{WalkerWang2012}
 K.~Walker and Z.~Wang,

@@ -1,0 +1,126 @@
+{
+  "task": "l1-current-canonical-gate-review-r2",
+  "verdict": "ACCEPT_AT_ARTIFACT_CONSISTENCY_SCOPE",
+  "new_required_findings": [],
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-current-canonical-gate-review-r2.json",
+  "initial_same_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-current-canonical-gate-review-r2",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "final_same_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-current-canonical-gate-review-r2",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "R1_preserved": true,
+  "R1_repairs": [
+    {
+      "id": "R1-1",
+      "status": "PASS",
+      "actual": "Both candidate controls read Nov6, matching actual measurement date."
+    },
+    {
+      "id": "R1-2",
+      "status": "PASS",
+      "actual": "Both static L1 fix-propagation cells now say PR1171open(original2.1humanattestation),1accepted historical; blocked."
+    },
+    {
+      "id": "R1-3",
+      "status": "PASS",
+      "actual": "Historical01d72 moved to earlier column; current PR117 default RED7084pass/27fail/11skip/92deselected, full merge profile failed, static classification not baseline execution."
+    },
+    {
+      "id": "R1-4",
+      "status": "PASS",
+      "actual": "counts.current_gate_state_changes_since_baseline=4; independent actual comparison gives4 (L1G3/G4/G9,I1G9)."
+    },
+    {
+      "id": "R1-5",
+      "status": "PASS",
+      "actual": "k4 selected-word row explicitly historical PR113 restricted checkpoint; source-register row explicitly PR113 historical census, not PR117 census. Later original nonzero construction remains separate evidence."
+    },
+    {
+      "id": "R1-6",
+      "status": "PASS",
+      "actual": "Header labels ce194cdc dated main checkpoint (Nov5), preserving original dated metadata."
+    }
+  ],
+  "verified": {
+    "authoritative_roster": "AST of scripts/bundle_registry.py BUNDLES (source of BUNDLE_CODES)",
+    "bundles": 21,
+    "gates_per_bundle": 11,
+    "canonical_cells": 231,
+    "producer_filtered_nodes_exact_readback": true,
+    "all231chart_meta_detail_exact": true,
+    "counts": {
+      "passed": 160,
+      "blocked": 25,
+      "open": 28,
+      "needs-recheck": 18
+    },
+    "state_transitions_since_AF255": [
+      {
+        "id": "gate:L1:NumericalFreshness",
+        "before": "needs-recheck",
+        "now": "passed"
+      }
+    ],
+    "baseline_state_differences": 4,
+    "all63_candidate_stage_values_actual_bundle_metadata_exact": true,
+    "baseline_primary_cells_and_metadata_conserved_against_before_main8b_r1": true,
+    "historical_candidate_metadata_conserved": true,
+    "previous_AF255_measurement_preserved_exact": true,
+    "all_serialized_refs_match_ReviewFinding_nodes": true,
+    "serialized_open_refs": 231,
+    "open_ref_totals": 244,
+    "serialized_accepted_refs": 55,
+    "accepted_ref_totals": 55,
+    "both_HTML_identical": true,
+    "each_HTML_bytes": 847710,
+    "embedded_JSON_exact_snapshot": true,
+    "existing_control_tags_unchanged": true,
+    "no_new_gates_predicates_controls": true,
+    "root_structural_receipt": {
+      "html_sha256": "1e1ff20e87c5ffe4175572a4c688029adde813ff4645186b56a5a13f7b1f79bf",
+      "html_bytes": 847710,
+      "all_six_R1_items_repaired": true,
+      "current_difference_scalar": 4,
+      "node_check_exit_code": 0,
+      "static_ids_resolve": true,
+      "browser_render_inspected": false,
+      "evaluator_or_controls_changed": false
+    }
+  },
+  "source_head": "8b0ab67533918d4aabdf04c22499b3768dc05314",
+  "source_status": "Packet-bound regenerated Paper25PDF only",
+  "limits": [
+    "Artifact/data review only; not publication, physics, human, main/merge or full-tree acceptance. ROOT must read/accept/integrate.",
+    "No browser, evaluator, test, graph/native/scientific import or execution. ROOT structural Node0/staticIDs result is inspected as supplied evidence only; browser_render_inspected=false.",
+    "Graph source_hash34fa083674600b86 and priorf05067d944cb41f5 cover selected sources/Lean files only; not full source/manuscript/evidence binding. Exact artifact hashes bind artifact bytes.",
+    "Different branch AF255 versus main-based8b comparison has exactly1state transition but does not establish per-commit causal attribution or new scientific gain.",
+    "Actual producer D11 caps persist:63total/50serialized blocker refs,13omitted, flags/totals exact. No chart data reduction or new gate.",
+    "Existing renderer shows gate detail/evidence rather than listing raw refs; exact serialized open/accepted arrays remain embedded.",
+    "G4 static coverage and G6 vacuity remain. L1G3 remains blocked20missing human dates, G11blocked1open original2.1+1accepted historical. B3physical metric/state/transport/window requirements remain open.",
+    "Reported current default suite RED and full merge failed are supplied existing receipts, not rerun. Remote PR/main freshness not reverified.",
+    "Frozen8b source permits only the packet-bound regenerated Paper25PDF modification; no reviewer edits to source/artifacts/notebook/packets or any R1 report. Other worker slot authority is outside this review."
+  ],
+  "actual_commands": [
+    "FIRST and FINAL python3 scripts/codex_continuity.py check exactR2packet",
+    "Python stdlib json/pathlib/ast/re/collections/hashlib read-only artifact comparison and assigned report writes only"
+  ],
+  "hashes": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-current-canonical-gate-review-r2.json": "4e26b813e307f6ba21a7c83988e9b18b3adf9500fe67e5f1197eb0f7d6161507",
+    "/tmp/l1-current-canonical-gate-review-r1.md": "9873d682040b49253890814f029fc0f74331026e5f9806d1022122665b8a72b6",
+    "/tmp/l1-current-canonical-gate-review-r1.json": "130e1adad3ba328d193bec2c98b19ed3167dd3b72e195f4bbe29c6a33449cf19",
+    "/tmp/l1-main-8b-canonical-graph-r1.json": "57f25750ad1c9aa49ee49a5a92c2d241e8ccb9341e6bfd4b78adb0f9dec45208",
+    "/tmp/l1-main-8b-gate-readback-r1.json": "c868dab81ced7599e19e8a4d180df811815d0803a3b5821553c4b6a2213ef746",
+    "/tmp/l1-current-chart-structural-r2.json": "3bbac01872b43efdbbd2827fc27ac95cc7c81f6b57a1ad0a4f58ee105777409e",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness.html": "1e1ff20e87c5ffe4175572a4c688029adde813ff4645186b56a5a13f7b1f79bf",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness-comparison.html": "1e1ff20e87c5ffe4175572a4c688029adde813ff4645186b56a5a13f7b1f79bf",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness-snapshot.json": "f30c47e31f9991a393446443e1fe16a43c1ee071b0cf7de923c690fda8807512"
+  },
+  "report_md_sha256": "c94e71eb332f2b47461dd16cbcc0bbb70cd681a1a047bdd1e90d05a27aa13ae3"
+}

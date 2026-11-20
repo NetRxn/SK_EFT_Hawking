@@ -2570,7 +2570,17 @@
       "rewrite_of": null
     }
   ],
-  "non_reproducing_prior_findings": [],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.4",
+      "prior_run_date": "2026-08-15T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Held quant-ph/0505030v2 full paper (abstract, section3 Eqs8-9 and section5) and independently fetched publisher/arXiv sources establish gate-length exponent3.97 and separate pointer-compressed runtime2.71. The alleged verbatim approximately2 cache is false. Supported existing exponent attribution is retained; source record/cache corrections do not strengthen Lean or waive other D8 work. Human confirmation remains terminal under claims-reviewer PartD.2.",
+      "deterministic_recheck": null,
+      "agent_run_id": "publication-source-reconciliation:2026-11-06:r1"
+    }
+  ],
   "summary": {
     "total_sentences": 84,
     "by_type": {

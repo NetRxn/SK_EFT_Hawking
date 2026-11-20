@@ -1,0 +1,42 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  counts_fresh: counts.json / counts.tex are up-to-date vs. sources
+══════════════════════════════════════════════════════════════════════
+  [33m⚠[0m staleness  —  stale: SKEFTHawking/**/*.lean newer than counts.json
+  ✓ regenerate  —  update_counts.py succeeded
+  ✓ post_regenerate  —  update_counts.py output verified fresh
+  ✓ summary  —  theorems=30948 (substantive=30922, placeholder=26) | modules=2152 | sorry=0 | papers=42 | aristotle_proved=313
+  ✓ mapping_row_agreement  —  3 PAPER_DRAFT_MAPPING.md count figure(s) agree with counts.tex
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  lean_zero_sorry: Pipeline Invariant #4 — no declaration's axiom closure contains `sorryAx`
+══════════════════════════════════════════════════════════════════════
+  ✓ zero_sorry  —  0 of 53530 declarations carry `sorryAx` in their axiom closure
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  vacuous_statement_audit: No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion)
+══════════════════════════════════════════════════════════════════════
+  [33m⚠[0m ground_arithmetic  —  152 closed-arithmetic theorem(s) (verify load-bearing or delete/disclose) — e.g. exactness_rank_nullity, ext_total_dim, h0_tower_stem4_starts, kaul_majumdar_log_decomposition, antiunitary_map_zero
+  [33m⚠[0m baseline  —  29 grandfathered content-thin theorem(s) in VACUOUS_STATEMENT_BASELINE (visible tracked debt → Vacuous Statement Sweep)
+  ✓ all_theorems  —  no NEW content-thin statements (29 baselined, 152 ground-arith advisory)
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  existential_witness_disclosure: Every existential theorem sold as a result names its witness (EXISTENTIAL_WITNESS_REGISTRY)
+══════════════════════════════════════════════════════════════════════
+  ✓ coverage  —  16 existential result(s) sold via formulas.py/ARISTOTLE; 16 name a witness; 9 anchored, 0 escape, 7 misnamed
+  ✓ escape_ratchet  —  0 existential escape(s) vs down-only ceiling 0: none
+  [33m⚠[0m misnamed_ratchet  —  7 misnamed existential(s) vs down-only ceiling 7: chiral_charge_noncompact, firstOrder_uniqueness, fullSecondOrder_uniqueness, gt_chiral_charge_non_compact, hidden_sector_required, relaxed_uniqueness_test, secondOrder_uniqueness
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  axiom_closure_allowlist: Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop)
+══════════════════════════════════════════════════════════════════════
+  ✓ allowlist_size  —  13 allow-listed axioms (3 core + 10 AXIOM_METADATA)
+  [33m⚠[0m native_decide  —  530 declaration(s) transitively use `native_decide` (compiler-trust axiom) — accepted Lean mechanism, flagged for visibility (counts.json 'Axioms: 0' counts only declared `axiom`s)
+  ✓ allowlist  —  no declaration carries a non-allow-listed, non-native_decide axiom (Invariant #15 backstop clean)
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 5/5 checks passed (5 warnings)
+  [32mALL CHECKS PASSED[0m
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 213.4s

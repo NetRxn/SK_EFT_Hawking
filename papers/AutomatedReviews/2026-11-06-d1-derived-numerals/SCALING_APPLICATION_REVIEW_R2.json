@@ -1,0 +1,63 @@
+{
+  "task": "d1-scaling-application-review-r2",
+  "disposition": "ACCEPT_EXACT_NARROW_REPAIR",
+  "base": "fb05b9a26",
+  "candidate": "8189530ea2380fa73546cf3702a6073acb3b5374",
+  "exact_full_source_replacement_verified": true,
+  "source_pins": {
+    "papers/D1/paper_draft.tex": "2769eeaa832647cdc2aa9d8ff566fe577fe5454acc650834142df6cc7b9b19ed",
+    "papers/D1/paper_draft.pdf": "9da9453d51c098c9ab0a9f2b60aa1d6e4022baf9f51b65cd96cd24237376c0bb",
+    "papers/D1/change_log.md": "cb78ae8cb42d1060c3cc9fcb0147a56be7e046d6b69668372bfc71348a7556ab",
+    "papers/D1/claims_review.json": "fd7b6728fc3c2e0b2a430f66714c76a5afbfd96f4894f3c691c3f7eab135ab1b",
+    "papers/D1/claims_review_r1.json": "ec3338cd6641dfc49a928544f975163367c0fec3eeeb9847e806fbdeca3cab5b",
+    "papers/D1/bundle_metadata.json": "1940bf5f5b7fe260560cbaea28ac5bc11f0d30bfb1c7051c0112d39404a65023",
+    "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+    "src/core/transonic_background.py": "cd928fec73d3474ef60fd246617abc84ab1ac291aca3d8b1e8849e815b22419c",
+    "scripts/gen_d1_hierarchy_table.py": "8a8c15b7e00c7dcb7e9f47d0e09ba79d8a16e8c1c8153852b4c8bc8966feb845",
+    "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_APPLICATION_R1.json": "62785c69d35a4868b14089e2cd230b0be4c369e694d8de0e3dfe0e4496e1265c",
+    "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_APPLICATION_R1_EVIDENCE.json": "b18e779226544325bb6b8fcf57c29361690e94795a634ac6a6d73eb41f32fbe5",
+    "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_APPLICATION_R1_EVIDENCE.zip": "4256e0098096249811beeb17d535b2974cb5c544f8c6cff61663b859e7efdbfb",
+    "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_VERIFY_GREEN_R1.json": "72823aabcfbf30156dd69a737d3b49c5a1f5601269e5d68aa0f5d5c4ad3293c2"
+  },
+  "archive_all_9_member_sha256_crc_verified": true,
+  "current_pdf_equals_archived_pdf": true,
+  "viewed_png_equals_archived_png": true,
+  "page11_visual_disposition": "ACCEPT_EDITED_SPAN_ONLY",
+  "retained_compile": {
+    "pages": 20,
+    "overfull": 15,
+    "tex_errors": 0,
+    "unresolved": 0,
+    "dropped_class_options": 0,
+    "edited_span_overfull": false
+  },
+  "independent_original_verify": {
+    "argv_source": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_VERIFY_GREEN_R1.json",
+    "cwd": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking",
+    "PATH_prefix": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "retained_hierarchy_check": "1/1PASS_NO_NORMALIZATION_ACCEPTANCE",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": [],
+    "task": "d1-scaling-application-review-r2"
+  },
+  "broader_migration": "HOLD",
+  "original_physical_BUILD": "OPEN_FULL_STRENGTH",
+  "canonical_closure": "NOT_PERFORMED_REVIEWER",
+  "whole_publication_acceptance": false,
+  "repository_files_touched": [],
+  "written_files": [
+    "/tmp/d1-scaling-application-review-r2.md",
+    "/tmp/d1-scaling-application-review-r2.json"
+  ],
+  "markdown_sha256": "af5dbaf3c739890562679da64a6a641902d06f2b4577e9a3a5e5b0474256e9a8"
+}

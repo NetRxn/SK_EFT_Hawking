@@ -1600,7 +1600,7 @@ BIBITEM_TITLE_DRIFT_CEILING = 7
 #: pushes the count over this ceiling, turning the check red. **Lower this as entries are
 #: established; back-filling `citation_class` onto the residue to lower it reproduces the very
 #: defect it records.**
-CITATION_UNDECLARED_CLASS_CEILING = 78
+CITATION_UNDECLARED_CLASS_CEILING = 76
 
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
@@ -4058,14 +4058,14 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 
     # ---- merged from PERMANENT_TRACKED_HYPOTHESES.md (cosmology Props) ----
     'H_VestigialModeIsGraviton': {
-        'statement': 'A vestigial-mode coupling χ_vest represents a graviton-like d.o.f.: 0<χ_vest ∧ LigoSatisfied(c_GW_deviation χ_vest) ∧ |c_GW_deviation χ_vest| < 1/2.',
+        'statement': 'Scalar compatibility predicate for the assumed normalized law c_GW/c = √χ_vest: 0<χ_vest ∧ LigoSatisfied(c_GW_deviation χ_vest) ∧ |c_GW_deviation χ_vest| < 1/2. It asserts no physical graviton degree of freedom.',
         'status': 'active', 'tier': 'external_boundary', 'eliminability': 'open',
         'module': 'GravitationalWaves',
-        'elimination_path': 'Out of scope for SK_EFT_Hawking (analog-Hawking BEC, not full QG). Would require a microscopic substrate from which the vestigial-mode→graviton bridge follows.',
-        'source': 'Volovik 2024 ("second-sound graviton"): derives s₂=c at equilibrium but NO off-shell propagator / matter coupling; "the type of graviton this mode represents requires further consideration".',
+        'elimination_path': 'Original L1 B3/Wave2 physical BUILD remains OPEN in Phase6a_Roadmap.md: derive the metric-channel operator/source/projector, regulator and response normalization with independently justified stability conditions making the stated susceptibility range a result; construct the physical state, stable constrained propagator, spin/polarization and matter coupling; match transport coefficients, units, ordinary/angular frequency and controlled observational-band errors. Scalar satisfiability discharges none of these obligations.',
+        'source': 'Project-defined scalar predicate in GravitationalWaves.lean. Volovik, arXiv:2601.00639v1 (2026), Section III Eqs. (6)–(9), derives s₂=c within its de Sitter two-fluid model; Section IV discusses possible graviton interpretations. This does not derive the normalized susceptibility law or its physical tensor/matter bridge.',
         'risk': 'Conjectural. Anchor at χ_vest=1 + 4 falsifiers establish non-vacuity.',
         'circularity_note': 'None.',
-        'prose': 'KEEP_AS_TRACKED. The hydrodynamic-mode→graviton bridge is, to our knowledge, not derived in any published source; the tracked-Prop form is the principled treatment. Discharging would mean shipping a different microscopic theory than this project commits to.',
+        'prose': 'KEEP_AS_TRACKED for the scalar compatibility predicate only. Its external_boundary tier records the present formalization boundary, not permission to defer the original L1 physical BUILD. At the fixed cap, P2 implies P3′ and, on the nonnegative carrier, P1; the unity witness and four counterexamples concern scalar compatibility, not independent physical clauses. The microscopic response, range, state, tensor/matter and controlled transport construction remains active and open under the owning roadmap. Neither scalar witnesses nor endpoint exclusion prove a physical mode or a universal microscopic no-go.',
     },
     'H_DESICompatibility': {
         'statement': 'A dark-energy predictor produces (w₀,w_a) within (0.1, 0.2) of the DESI DR2 CPL best-fit (−0.838, −0.62) for some positive (Λ_UV, N_f, α_ADW).',
@@ -5886,27 +5886,31 @@ GW_PARAMS = {
     'C_GW_DEVIATION_UPPER_BOUND': 7.0e-16,    # most stringent (+) side
     'C_GW_DEVIATION_LOWER_BOUND': -3.0e-15,   # (−) side
     'C_GW_TWO_SIDED_CAP': 3.0e-15,            # symmetric falsification cap
-    # ── Vestigial-phase susceptibility natural ranges ─────────────────
-    # χ_vest is the metric-channel susceptibility from
-    # VestigialSusceptibility.lean (chi_RPA closed form).
-    # The "natural" range = within 1 order of magnitude of unity in
-    # dimensionless form χ_vest · Λ², i.e. consistent with the RPA
-    # bubble integral being O(Λ²/16π²) per Vergeles 2025.
+    # ── Adopted normalized-susceptibility comparison range ─────────────
+    # χ_vest is a free dimensionless normalized response in the assumed
+    # law c_GW/c = sqrt(χ_vest). VestigialSusceptibility.lean gives the
+    # RPA closed form, not its physical normalization or numerical range.
+    # [0.1, 10] is an adopted one-decade window about unity; neither the
+    # dimensional bubble estimate O(Λ²/16π²) nor Vergeles 2025 derives it.
+    # Deriving the original stated normalization/range remains OPEN BUILD.
     'CHI_VEST_NATURAL_LOWER': 0.1,
     'CHI_VEST_NATURAL_UPPER': 10.0,
     'CHI_VEST_DEFAULT': 1.0,
     # ── Frequency window (LIGO + cross-instrument) ───────────────────
-    # LIGO sensitivity: 10 Hz – 10 kHz. GW170817 inspiral peak ≈ 100 Hz.
+    # Adopted numerical frequency grid and probe, labeled in Hz by the API.
+    # Their use in gamma*omega still requires physical frequency/unit matching.
     'GW_FREQ_HZ_LOWER': 10.0,
     'GW_FREQ_HZ_UPPER': 1.0e4,
-    'GW170817_PEAK_FREQ_HZ': 100.0,        # inspiral peak
+    'GW170817_PEAK_FREQ_HZ': 100.0,        # adopted probe label
     'GW_FREQ_HZ_PROBE': 100.0,             # probe frequency for dispersion
-    # ── Dissipative correction scale (SK-EFT cross-link) ──────────────
-    # SecondOrderSK.lean Γ_H = (γ₁+γ₂)(κ/c_s)². For GW propagation,
-    # the analog κ is the inverse coherence scale of the vestigial
-    # background; c_s → c_GW. The ratio Γ_H · ω / c_GW² is the
-    # dimensionless dispersion correction at frequency ω.
-    'GAMMA_H_VESTIGIAL_DEFAULT': 1.0e-30,  # placeholder (vestigial regime, ≪ obs)
+    # ── Illustrative product-correction coefficient ───────────────────
+    # The helper computes the literal numerical product gamma*omega.
+    # 1e-30 is an adopted placeholder, not a measured/derived coefficient.
+    # Identifying gamma = Γ_H/c_GW² remains unmatched. SecondOrderSK.GammaH
+    # is an acoustic horizon damping rate [s⁻¹]; its symbol supplies no
+    # metric-channel state/transport bridge or dimensionless normalization.
+    # Ordinary versus angular frequency, units and error control remain OPEN.
+    'GAMMA_H_VESTIGIAL_DEFAULT': 1.0e-30,  # placeholder for numerical product
     # ── Correctness-push tolerance ────────────────────────────────────
     # Wave 2 correctness-push: |c_GW − c|/c ≤ tolerance.
     # Tolerance set to GW170817 two-sided cap.

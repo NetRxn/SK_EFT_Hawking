@@ -228,3 +228,54 @@ class TestTheReaderHasAProductionCaller:
         r.state, r.measured = "open", False
         assert r.to_node_payload()["meta"]["state"] == "open"
         assert r.to_node_payload()["meta"]["measured"] is False
+
+
+class TestG4CompleteInternalEvidence:
+    @pytest.mark.parametrize("mode", ["missing", "unsupported", "supported", "wrong_type"])
+    def test_single_payload_cap_retains_actual_totals(self, mode):
+        names = [f"item{i:03}" for i in range(61)]
+        paper = {"id": "paper:unit", "type": "Paper", "meta": {"formulas": names}}
+        nodes, links = [paper], []
+        for name in names:
+            if mode != "missing":
+                nodes.append({"id": f"formula:{name}",
+                              "type": "Parameter" if mode == "wrong_type" else "Formula"})
+            if mode in {"supported", "unsupported"}:
+                test = "test:" + name
+                nodes.append({"id": test, "type": "PythonTest"})
+                links.append({"source": test, "target": "formula:" + name,
+                              "type": "VERIFIES",
+                              "test_kind": "golden" if mode == "supported" else "bounds"})
+        result = rg._eval_computation_correctness(
+            paper, rg.GraphIndex({"nodes": nodes, "links": links}))
+        payload = result.to_node_payload()["meta"]
+        assert len(result.evidence) == 62  # summary plus every exact member
+        assert payload["evidence_total"] == 62
+        assert payload["evidence_truncated"] is True
+        assert len(payload["evidence"]) == 50
+        assert payload["notes"] == result.notes
+        assert payload["measured"] == (mode in {"supported", "unsupported"})
+        assert payload["state"] == ("passed" if mode == "supported" else "blocked")
+        if mode == "supported":
+            assert payload["blockers_total"] == 0
+            assert payload["blockers_truncated"] is False
+        else:
+            assert len(result.blockers) == payload["blockers_total"] == 61
+            assert len(payload["blockers"]) == 50
+            assert payload["blockers_truncated"] is True
+            assert all(any(name in item for item in result.blockers) for name in names)
+
+    def test_partial_measurement_log_does_not_claim_nothing_was_read(
+            self, monkeypatch, caplog):
+        import logging
+        import build_graph
+        result = rg.GateResult(gate="ComputationCorrectness", paper="unit", priority=1,
+                               state="blocked", measured=False,
+                               evidence=["supported: formula:present"],
+                               blockers=["absent Formula: formula:missing"])
+        monkeypatch.setattr(rg, "evaluate_all_gates", lambda graph: [result])
+        with caplog.at_level(logging.WARNING):
+            nodes = build_graph.extract_readiness_gate_nodes()
+        assert nodes[0]["meta"]["evidence"] == result.evidence
+        assert "partial evidence may remain" in caplog.text
+        assert "read nothing" not in caplog.text

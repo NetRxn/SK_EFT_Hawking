@@ -929,16 +929,23 @@ all Lean-only. Novelty backing: `papers/D12/prior_art_novelty.md`.
 **Source:** paper25.
 
 **Anchors:**
-- LIGO Δc/c bound from Abbott 2017 GW170817 detection paper.
-- Vestigial-graviton dispersion forecast at the project's natural χ_vest
-  range.
-- GW170817 falsification factor ~7×10¹⁴ in the natural range.
+- Multimessenger speed interval from `Abbott2017GW170817`, ApJL 848, L13,
+  under its conservative distance and source-emission assumptions; distinguish
+  the detection report PRL 119, 161101. The project uses the symmetric
+  envelope |Δc/c| ≤ 3×10⁻¹⁵.
+- Assumed normalized scalar law c_GW/c = √χ_vest and adopted comparison
+  range [0.1,10]; neither a derived spin-2 mode nor a physical range result.
+- Endpoint violation factors approximately 2.28×10¹⁴ at 0.1 and 7.21×10¹⁴
+  at 10 coexist with the finite compatible interior interval
+  [(1−τ)²,(1+τ)²], containing unity and having exact width 4τ for τ=3×10⁻¹⁵.
+  Endpoint exclusion does not exclude the range; a width ratio requires
+  a specified prior before it can be interpreted as probability.
 
 **Stage-13 BLOCKERs:**
 - The numerical Δc/c bound must match D3 §6 character-for-character
   (cross-bundle consistency check via Wave 7.3).
-- Abbott 2017 detection paper bibitem must be cached and `doi_verified:
-  True` (Wave 1+2 infrastructure).
+- The `Abbott2017GW170817` multimessenger bibitem must be cached and
+  `doi_verified: True` (Wave 1+2 infrastructure).
 
 ### L2. Three generations from modular invariance
 

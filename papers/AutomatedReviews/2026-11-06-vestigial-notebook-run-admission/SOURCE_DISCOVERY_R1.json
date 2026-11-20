@@ -1,0 +1,967 @@
+{
+  "task": "vestigial-data-provenance-r1",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/vestigial-data-provenance-r1.json",
+  "candidate_head": "8ad1411526b8b8d5b49e9f3b9993b8083ec887d9",
+  "start_packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "read_only": true,
+  "repository_writes": [],
+  "scientific_compute_or_tests": false,
+  "failure_chain": {
+    "notebook": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/notebooks/Phase5b_Synthesis_Technical.ipynb",
+    "cell_index_zero_based": 13,
+    "cell_id": "e061fa2d",
+    "function": "src.core.visualizations.fig_vestigial_binder_crossing",
+    "loader_source": "src/core/visualizations.py:3856-3873",
+    "directory": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/data/vestigial_mc",
+    "selection": "largest byte-size file with .json suffix, no filename/model/provenance filtering",
+    "required_schema": {
+      "binder_crossing.data": "map from integer-like lattice-size string to scan",
+      "scan": "g_EH_values, binder_tetrad, binder_metric arrays; equal lengths and finite numeric values scientifically required"
+    },
+    "required_filename": "No exact filename required by failing function; any selected .json must have schema. Historical intended L4/6/8 run: vestigial_mc_20260329T192611.json, scientifically superseded."
+  },
+  "previous_cell": {
+    "index": 12,
+    "id": "a33da0be",
+    "directory": "../docs/vestigial_mc_results",
+    "selection": "lexicographic last vestigial_mc_*.json",
+    "missing_directory_behavior": "prints No MC result files found.; does not fail",
+    "both_primary_candidate_docs_directory_exists": false,
+    "would_select_if_primary_collection_mirrored": "vestigial_mc_njl_20260331T201920.json"
+  },
+  "primary_datasets": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/rhmc_20260402T082842.json",
+      "bytes": 5901,
+      "sha256": "747e1ab03877b6f7bf55aa433ce5525e197048e56d522abdc5a4708d2cadae60",
+      "top_keys": [
+        "algorithm",
+        "sign_free",
+        "timestamp",
+        "parameters",
+        "sizes",
+        "total_elapsed_seconds"
+      ],
+      "metadata": null,
+      "binder_sizes": [],
+      "binder_scan_keys": [],
+      "fss_keys": [],
+      "split_transition": null,
+      "vestigial_detected": null
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260329T102224.json",
+      "bytes": 1467,
+      "sha256": "1d09f89073c532b29c356dfc556480e7b0b068cfb3e1f743453421e6f27daefd",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260329T102224",
+        "lattice_sizes": [
+          4
+        ],
+        "n_measure": 200,
+        "n_thermalize": 100,
+        "n_couplings": 10,
+        "seed": 42,
+        "total_runtime_s": 28.136895895004272
+      },
+      "binder_sizes": [],
+      "binder_scan_keys": [],
+      "fss_keys": [
+        "lattice_sizes",
+        "tetrad_crossing",
+        "metric_crossing",
+        "split_transition",
+        "vestigial_survives",
+        "susc_peaks_tetrad",
+        "susc_peaks_metric",
+        "runtime_s"
+      ],
+      "split_transition": false,
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260329T192103.json",
+      "bytes": 3146,
+      "sha256": "da704bd064fbde94628bf43ea106bdfc76350f5c4efb827c2e00174ef5c19917",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260329T192103",
+        "lattice_sizes": [
+          4
+        ],
+        "n_measure": 200,
+        "n_thermalize": 100,
+        "n_couplings": 10,
+        "n_cores": 4,
+        "seed": 42,
+        "total_runtime_s": 1.6664652824401855,
+        "vectorized": true,
+        "multiprocessing": true
+      },
+      "binder_sizes": [
+        "4"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "runtime_s"
+      ],
+      "split_transition": false,
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260329T192224.json",
+      "bytes": 5365,
+      "sha256": "04ffec2ac6b0b7fdb7b07b8da7bfeedff246f0d6f71190c76deb9d6db43096ad",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260329T192224",
+        "lattice_sizes": [
+          4,
+          6
+        ],
+        "n_measure": 500,
+        "n_thermalize": 250,
+        "n_couplings": 10,
+        "n_cores": 16,
+        "seed": 42,
+        "total_runtime_s": 5.988483428955078,
+        "vectorized": true,
+        "multiprocessing": true
+      },
+      "binder_sizes": [
+        "4",
+        "6"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "runtime_s"
+      ],
+      "split_transition": "True",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260329T192611.json",
+      "bytes": 11523,
+      "sha256": "2756849b07a3f2d0c9ff9e09550f63a61701b2e18befd6866157ff29fc18f30d",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260329T192611",
+        "lattice_sizes": [
+          4,
+          6,
+          8
+        ],
+        "n_measure": 2000,
+        "n_thermalize": 1000,
+        "n_couplings": 20,
+        "n_cores": 10,
+        "seed": 42,
+        "total_runtime_s": 106.73179388046265,
+        "vectorized": true,
+        "multiprocessing": true
+      },
+      "binder_sizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "runtime_s"
+      ],
+      "split_transition": "True",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260330T135549.json",
+      "bytes": 78384,
+      "sha256": "c20337a3c08f7a86eeb72ea557acaee328b3f7c4c1c77c87fb6bcf5448eecf91",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260330T135549",
+        "lattice_sizes": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "n_measure": 2000,
+        "n_thermalize": 1000,
+        "n_couplings": 20,
+        "n_cores": 10,
+        "seed": 42,
+        "total_runtime_s": 5576.725417137146,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": true,
+        "new_binder_sizes": [
+          10,
+          12,
+          14,
+          16
+        ],
+        "new_fss_sizes": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "reused_sizes": [
+          4,
+          6,
+          8
+        ]
+      },
+      "binder_sizes": [
+        "4",
+        "6",
+        "8",
+        "10",
+        "12",
+        "14",
+        "16"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "False",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260330T164110.json",
+      "bytes": 318726,
+      "sha256": "9bf0ad2b00ac4a1f2518a36b776a21e2912154fb4385eabc7be58bf4ad08a2dd",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260330T164110",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 14,
+        "seed": 16,
+        "total_runtime_s": 40500.8809235096,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "True",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260331T091743.json",
+      "bytes": 226324,
+      "sha256": "da4a01cbf48f21da5931f9c88e53caa703f4ee9d938710c64188eaf1b37614a5",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T091743",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 10,
+        "seed": 137,
+        "total_runtime_s": 4473.348971605301,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "10",
+        "12",
+        "14",
+        "16"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "False",
+      "vestigial_detected": true
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_20260331T114048.json",
+      "bytes": 222942,
+      "sha256": "9c4cf8c098ec30510d7a749b371da61c0b65101dfe8d4b24366feaf4232e4e8e",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T114048",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 14,
+        "seed": 137,
+        "total_runtime_s": 11484.209629297256,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "10",
+        "12",
+        "14",
+        "16"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "True",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_adw_20260331T182511.json",
+      "bytes": 148953,
+      "sha256": "f21d8305c6969f4b7693c67575742261eeabec6dc915b323fb1c8f4c5699c3db",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T182511",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 14,
+        "seed": 137,
+        "total_runtime_s": 1673.3101217746735,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "True",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_njl_20260331T174830.json",
+      "bytes": 8357,
+      "sha256": "60e5feac93df69a5d80d9f7da70c30e558cbcb5848d08d908038b34b6726db73",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T174830",
+        "lattice_sizes": [
+          4
+        ],
+        "n_measure": 200,
+        "n_thermalize": 100,
+        "n_couplings": 10,
+        "n_cores": 2,
+        "seed": 42,
+        "total_runtime_s": 1.9779613018035889,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4
+        ],
+        "new_fss_sizes": [
+          4
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": false,
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_njl_20260331T174845.json",
+      "bytes": 101545,
+      "sha256": "c991f618f985a338a4876141c59050be9f630e59ca8784d480257c83116c639d",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T174845",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          8
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 14,
+        "seed": 137,
+        "total_runtime_s": 166.0234820842743,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          8
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          8
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "8"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "False",
+      "vestigial_detected": true
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_njl_20260331T175303.json",
+      "bytes": 151176,
+      "sha256": "713e52af6df5f196c4e3e97980bf90beefa0937d1b4d954107b3c9ac8b3a034c",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T175303",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 14,
+        "seed": 137,
+        "total_runtime_s": 1901.2887771129608,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "False",
+      "vestigial_detected": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc/vestigial_mc_njl_20260331T201920.json",
+      "bytes": 260780,
+      "sha256": "9afcb1406a41e87860b1b93720380b6846e202d076ea5493af2fae42d66d8b1c",
+      "top_keys": [
+        "binder_crossing",
+        "finite_size_scaling",
+        "sign_reweighting",
+        "sign_runtime_s",
+        "metadata"
+      ],
+      "metadata": {
+        "timestamp": "20260331T201920",
+        "lattice_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "n_measure": 5000,
+        "n_thermalize": 2500,
+        "n_couplings": 40,
+        "n_cores": 14,
+        "seed": 137,
+        "total_runtime_s": 4839.04708814621,
+        "vectorized": true,
+        "multiprocessing": true,
+        "incremental": false,
+        "new_binder_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "new_fss_sizes": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "reused_sizes": []
+      },
+      "binder_sizes": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "binder_scan_keys": [
+        "g_EH_values",
+        "binder_tetrad",
+        "binder_metric",
+        "phases",
+        "acceptance_rates"
+      ],
+      "fss_keys": [
+        "lattice_sizes",
+        "coupling_range",
+        "split_transition",
+        "susceptibility_peaks",
+        "raw_results",
+        "runtime_s"
+      ],
+      "split_transition": "False",
+      "vestigial_detected": false
+    }
+  ],
+  "whole_directory_would_select": "vestigial_mc_20260330T164110.json",
+  "whole_directory_selected_run_scientific_status": "Invalid for current ADW vestigial claim: pre-March31 disconnected coupling/wrong FSS backend era; Phase5 roadmap 9A explicitly retracts split signal as noise.",
+  "other_copies": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/data/vestigial_mc",
+      "all_14_json_byte_match_primary": true
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-adw-validation-20261019/data/vestigial_mc",
+      "all_14_json_byte_match_primary": true
+    }
+  ],
+  "existing_path_mechanisms": {
+    "failing_figure": "repo-local path derived from __file__; no argument, environment variable, find_workspace or admission/config hook",
+    "workspace_resolver": "src/core/workspace.py find_workspace supports .workspace-root/structural detection/fallback for shared resources, but this loader never calls it",
+    "producer": "scripts/run_vestigial_production.py writes cwd-relative data/vestigial_mc; --model adw|njl and --resume supported, grid compatibility checked; no source-commit manifest/model tag in emitted metadata",
+    "related_viewer": "scripts/view_vestigial_mc.py accepts explicit filepath/model selection; it is not notebook loader",
+    "notebook_execution": "scripts/validation/checks/notebooks.py uses notebooks cwd via nbclient resources; no data mount/admission mechanism found in inspected docs/loader/producer/slot guide"
+  },
+  "scientific_admission": "No publication-accepted run for the notebook current ADW split-transition assertion identified. Schema compatibility is established for historical files, not scientific validity.",
+  "minimum_next_action": "ROOT reconcile notebook scientific scope and historical retraction using existing planner before admitting data: retain historical MC only as explicitly labelled invalidated diagnostic with exact file identity, or propagate a separately scientifically reviewed current result through existing canonical figure/notebook. Do not mount whole primary directory or substitute NJL/RHMC as accepted ADW vestigial evidence. No new loader/fallback infrastructure is warranted by discovery.",
+  "acceptance_boundary": "Dataset existence yes in primary; syntactic loader compatibility yes for 12/14 JSONs; run provenance lacks source commit/model manifests and historical runs are scientifically limited; publication acceptance not established."
+}

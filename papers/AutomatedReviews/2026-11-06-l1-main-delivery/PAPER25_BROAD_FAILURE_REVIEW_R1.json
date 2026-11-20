@@ -1,0 +1,263 @@
+{
+  "task": "l1-paper25-broad-failure-review-r1",
+  "parent": "publication-remediation",
+  "reviewer": "l1-broad-failure-review",
+  "acceptance_reviewer": "ROOT",
+  "baseline": "a3ceb535231b54d82a751a0a0509521ff08f76d6",
+  "patch_sha256": "df50bbd54a92350186e49b1b833903d1621d5825f4465fd210bf329ac31104e3",
+  "terminal_summary": "27 failed, 7084 passed, 11 skipped, 92 deselected, 7 warnings in838.89s",
+  "verdict": "NO INTRODUCED FAILURE IDENTIFIED BY STATIC CAUSAL REVIEW; BROAD SUITE RED",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "rows": [
+    {
+      "number": 1,
+      "nodeid": "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]",
+      "group": "canonical-json",
+      "assertion_evidence": "Missing terminal newline in papers/L2/bundle_metadata.json; serializer emits }\\n, file ends }.",
+      "root_and_limits": "Direct L2 bytes equal HEAD; scripts/bundle_json.py:dump_bundle_json appends newline.",
+      "existing_reference": "TODO-D25",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 2,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+      "group": "manuscript-reach",
+      "assertion_evidence": "185 registered-but-unreached modules versus ceiling147.",
+      "root_and_limits": "Coverage checks append-log net registrations against actual manuscript module/theorem references; not a count of missing proofs.",
+      "existing_reference": "ADR-011 F-10; TODO-D12",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 3,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+      "group": "stage-lifecycle",
+      "assertion_evidence": "D10.stage10_status=redrafted-2026-08-17; D6=redrafted; D8=redrafted-2026-08-15; all outside enum.",
+      "root_and_limits": "Guard reads actual bundle_metadata.json and _STAGE_STATUS_ENUM. No modified input.",
+      "existing_reference": "TODO-D5",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 4,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+      "group": "sentence-length",
+      "assertion_evidence": "24 sentences >100words versus ceiling18; longest160; 192 >60words advisory only.",
+      "root_and_limits": "Bundle reader-visible .tex input and constants unchanged.",
+      "existing_reference": "TODO-D7",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 5,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+      "group": "sentence-length",
+      "assertion_evidence": "24 !=18 exact equality guard.",
+      "root_and_limits": "Same population as preceding failure; no independent sixth sentence introduced by patch.",
+      "existing_reference": "TODO-D7",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 6,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+      "group": "open-blocking",
+      "assertion_evidence": "21 bundles checked; result false. Known terminal differences D1=13>2,D3=14>1,E1=7>1,D4=13>4; unattributed57>44.",
+      "root_and_limits": "Terminal truncates other per-bundle differences and subordinate details. Changed2.3 remains recommended/nonblocking, same declared L1.",
+      "existing_reference": "ADR-012 D9; docs/required_open_ceilings.json",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 7,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+      "group": "open-blocking",
+      "assertion_evidence": "Seeded D10 blocking finding was refused and original bytes restored; final unseeded-green assertion fails.",
+      "root_and_limits": "stdout:304-310 reaches seed/refusal/restore; final failure is restored corpus red, not seed failure or restoration failure.",
+      "existing_reference": "ADR-012 D9; seed_journal",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 8,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+      "group": "open-blocking",
+      "assertion_evidence": "Exact per-bundle map differs: D1 13vs2,D3 14vs1,E1 7vs1,D4 13vs4; six equal entries; four additional differences hidden.",
+      "root_and_limits": "Do not invent complete map from pytest abbreviated repr. Same nonblocking2.3 cannot change blocking population.",
+      "existing_reference": "ADR-012 D9",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 9,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+      "group": "open-blocking",
+      "assertion_evidence": "57 unattributed open blocking findings !=44.",
+      "root_and_limits": "Count is nodes NOT reached by aggregation, including unresolved declarations; not merely no-key findings.",
+      "existing_reference": "ADR-012 D7/D9",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 10,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+      "group": "manuscript-reach",
+      "assertion_evidence": "Unseeded coverage185>147 causes precondition failure before L3 false deregistration is seeded.",
+      "root_and_limits": "No demonstrated mutation result for this test on this run.",
+      "existing_reference": "ADR-011 F-10; deregistration control",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 11,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_live_state_passes",
+      "group": "apex-grounding",
+      "assertion_evidence": "636 apex claims scored;35 numeral-gap claims versus ceiling31; live check false.",
+      "root_and_limits": "Checks apex claims against extracted statement plus one-hop type dependencies. Terminal abbreviates any other subordinate failures; metadata/extraction unchanged.",
+      "existing_reference": "ADR-016; check_apex_theorem_claims_grounded",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 12,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_population_floor_has_zero_headroom",
+      "group": "apex-grounding",
+      "assertion_evidence": "636 scored !=634 floor.",
+      "root_and_limits": "This equality guard detects stale floor/headroom; >=634 production coverage is met.",
+      "existing_reference": "ADR-016 population seam",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 13,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_numeral_ratchet_has_zero_headroom",
+      "group": "apex-grounding",
+      "assertion_evidence": "35 numeral-gap claims !=31 ceiling.",
+      "root_and_limits": "No exact35 identities in supplied terminal; cannot infer all offending declarations without forbidden evaluation.",
+      "existing_reference": "ADR-016",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 14,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red",
+      "group": "apex-grounding",
+      "assertion_evidence": "Unseeded apex check false at precondition; L3 placeholder seed not reached.",
+      "root_and_limits": "Existing35>31 explains red; no new placeholder found by this failed control.",
+      "existing_reference": "ADR-016",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 15,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_the_population_floor_has_zero_headroom",
+      "group": "apex-vacuity",
+      "assertion_evidence": "636 scored !=634 shared floor.",
+      "root_and_limits": "Same coverage population as grounded claims; no production population-loss evidence.",
+      "existing_reference": "ADR-016 population seam",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 16,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_both_ratchets_have_zero_headroom",
+      "group": "apex-vacuity",
+      "assertion_evidence": "19 content-free apex rows !=20 ceiling.",
+      "root_and_limits": "Stops at first assertion; undisclosed count assertion is not reached or shown. Do not claim undisclosed count.",
+      "existing_reference": "ADR-016 D4/D5",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 17,
+      "nodeid": "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_every_flagged_row_is_NAMED_in_the_output",
+      "group": "apex-vacuity",
+      "assertion_evidence": "19 named apex_content_free details !=20 ceiling.",
+      "root_and_limits": "Does not establish missing names: there are19 flagged rows and19 emitted details; first shown F:r_d_independent_count_eight. Stale ceiling causes this assertion.",
+      "existing_reference": "ADR-016 D4",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 18,
+      "nodeid": "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+      "group": "table-producer",
+      "assertion_evidence": "15 handwritten bundle tabulars !=1 ceiling.",
+      "root_and_limits": "Production scans bundle .tex after comment stripping; remedy is actual tables.py producer propagation, not deleting tables.",
+      "existing_reference": "BUNDLE_LIFT_PROCEDURE \u00a77",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 19,
+      "nodeid": "tests/test_d5_prose_checks.py::TestSpelledOutCensusFigures::test_the_live_ceiling_has_ZERO_headroom",
+      "group": "spelled-census",
+      "assertion_evidence": "67 spelled-out project census figures !=71 ceiling.",
+      "root_and_limits": "Improved population leaves4 slack; not physical three-orders-of-magnitude claims. All .tex/constants unchanged.",
+      "existing_reference": "I1 Stage13 finding7.2",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 20,
+      "nodeid": "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+      "group": "verify-command",
+      "assertion_evidence": "282 Verify lines;3 malformed: D1 redraft:54 multiline; D8 redraft:62 and118 trailing explanatory prose.",
+      "root_and_limits": "Actual text read. IDs D1:1.1,D8:1.4,D8:1.8. New Aug14 L1:2.3 command is one valid backtick span.",
+      "existing_reference": "review_verify_is_one_command; D1:1.1; D8:1.4/1.8",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 21,
+      "nodeid": "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+      "group": "chain-target",
+      "assertion_evidence": "Unseeded chain baseline false before seam mutation;2552 Lean links total,111 unresolved>109.",
+      "root_and_limits": "Only exact target shown at abbreviated tail: SKEFTHawking.VestigialGravity.VestigialPhase.vestigial. Not a physical theorem-absence proof.",
+      "existing_reference": "chain_canonicalize; check_chain_backing_targets_resolve",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 22,
+      "nodeid": "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+      "group": "chain-target",
+      "assertion_evidence": "111 unresolved links !=109 ceiling.",
+      "root_and_limits": "GraphIndex Lean resolution uses node identities/index and lean sources; patch adds Parameter dependency edges and metadata prose, no Lean identity.",
+      "existing_reference": "chain_canonicalize",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 23,
+      "nodeid": "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+      "group": "review-declaration",
+      "assertion_evidence": "62 dated review documents checked; seeded dangling Blocked-by refused and bytes restored, then unseeded review_severity_declared false.",
+      "root_and_limits": "Seed/refusal/restoration succeed before final unseeded-red. Concrete static cause: unchanged Aug15 D8:1.1 lane docs,1.2 metadata,1.3 docs,1.4 citations are outside _LANE_DECL_MAP {lean,pyrust,substrate,prose,research,infra}. Additional subordinate failures UNKNOWN from terminal truncation; final Blocked-by-resolves detail is passing.",
+      "existing_reference": "ADR-012 D1/D2/D10; review_severity_declared",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 24,
+      "nodeid": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]",
+      "group": "digit-census",
+      "assertion_evidence": "89 count literals !=95 ceiling;6 slack.",
+      "root_and_limits": "Same live production count guard, not evidence of growth. Original drafts and constants unchanged.",
+      "existing_reference": "count_literals; zero-headroom contract",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 25,
+      "nodeid": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+      "group": "numerical-literal",
+      "assertion_evidence": "139 inline numerical literals !=117 ceiling;22 excess.",
+      "root_and_limits": "Unit-bearing and dimensionless scientific notation both in scope.",
+      "existing_reference": "TODO-D37; ADR-009",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 26,
+      "nodeid": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+      "group": "table-producer",
+      "assertion_evidence": "15 handwritten bundle tabulars !=1 ceiling.",
+      "root_and_limits": "Duplicate guard of row18, not15 additional offending tables.",
+      "existing_reference": "BUNDLE_LIFT_PROCEDURE \u00a77",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    },
+    {
+      "number": 27,
+      "nodeid": "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population",
+      "group": "numerical-literal",
+      "assertion_evidence": "15 unit-leg +124 times-ten-leg =139 >117.",
+      "root_and_limits": "Independent composition assertion for same139 population; no narrowing to unit-only permitted.",
+      "existing_reference": "TODO-D37",
+      "exact_patch_causality": "No plausible causal path found by static comparison; no baseline test execution or global inherited-pass claim."
+    }
+  ]
+}

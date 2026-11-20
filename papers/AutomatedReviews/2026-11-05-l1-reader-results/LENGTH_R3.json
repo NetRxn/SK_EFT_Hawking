@@ -1,0 +1,11 @@
+{
+  "existing_instrument": "scripts/validation/checks/bundles_readiness.py::_measure_manuscript",
+  "value": 3268,
+  "unit": "word_equivalents",
+  "note": "1 figure(s) at 300 words each",
+  "declared_ceiling": 3750,
+  "measured_within_declared_ceiling": true,
+  "pdf_sha256": "28a12f204d4c0104baf4162e8b66d18c9c998378c125e0139d6481a5909124e0",
+  "manuscript_sha256": "e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f",
+  "scope": "Existing rendered-text token count plus300perfigure; repository instrument, not fresh publisher-policy verification"
+}

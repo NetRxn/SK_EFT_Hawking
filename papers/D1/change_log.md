@@ -160,3 +160,17 @@ references or citations; below the 24-page floor. Eleven TODO comments mark
 claims whose primary source is not held in full text; the bundle is
 deliberately not green while they stand. Findings at
 `papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md`.
+
+
+## 2026-11-06 — Fixed-material hierarchy scaling
+
+Correct the hierarchy paragraph: the damping rate is quadratic in surface
+gravity, while its dimensionless dissipative correction is linear. The ratio
+to the magnitude of the dispersive correction scales inversely with surface
+gravity at fixed material coefficients; specify the positive-input and
+zero-damping cases. A scattering-length sweep requires recomputing the
+background rather than assuming fixed geometry fixes surface gravity.
+Scientific source review and original red Verify are recorded under
+`2026-11-06-d1-derived-numerals`. The separate numerical-source proposal remains
+on hold for quantity identity, temperature normalization and graphene physical
+operating-point/reduction obligations. No underlying physical BUILD is closed.

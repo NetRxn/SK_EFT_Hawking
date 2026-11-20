@@ -1,0 +1,182 @@
+{
+  "source_candidate": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1",
+  "native": {
+    "candidate": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1",
+    "started_at": "2026-11-06T17:19:20.044470+00:00",
+    "argv": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "scope": "Actual main-based candidate standalone native library and ExtractDeps build; not full merge or publication acceptance",
+    "pins": {
+      "lean/SKEFTHawking/ADW/GaussianPolynomialAffine.lean": "3e6a5a5671a518595571395a2584f3d8794f157aadd3b0d552677dec69b47676",
+      "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e",
+      "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464"
+    },
+    "returncode": 0,
+    "finished_at": "2026-11-06T17:19:39.029451+00:00",
+    "head_after": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1",
+    "status_after": ""
+  },
+  "canonical_producers": {
+    "candidate": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1",
+    "started_at": "2026-11-06T17:20:18.812556+00:00",
+    "steps": [
+      {
+        "name": "extraction",
+        "returncode": 0,
+        "argv": [
+          "/Users/johnroehm/.local/bin/uv",
+          "run",
+          "python",
+          "-B",
+          "-c",
+          "import sys;sys.path.insert(0,'scripts');import extract_lean_deps as e;e._run_extraction();d=e.load_lean_deps();sel=[x for x in d if x.get('module')=='SKEFTHawking.ADW.GaussianPolynomialAffine'];assert len(sel)>=10,(len(sel),[x.get('module') for x in d[-10:]]);assert all(set(x['axiom_deps_core'])=={'propext','Classical.choice','Quot.sound'} and not x['axiom_deps_project'] for x in sel);import json;print(json.dumps({'records':len(d),'source_hash':e.compute_lean_hash(),'new_declarations':sel}))"
+        ]
+      },
+      {
+        "name": "counts",
+        "returncode": 0,
+        "argv": [
+          "/Users/johnroehm/.local/bin/uv",
+          "run",
+          "python",
+          "scripts/update_counts.py"
+        ]
+      },
+      {
+        "name": "tables",
+        "returncode": 0,
+        "argv": [
+          "/Users/johnroehm/.local/bin/uv",
+          "run",
+          "python",
+          "scripts/render_paper_tables.py"
+        ]
+      },
+      {
+        "name": "fast-sync",
+        "returncode": 0,
+        "argv": [
+          "/Users/johnroehm/.local/bin/uv",
+          "run",
+          "python",
+          "scripts/sync.py",
+          "--fast"
+        ]
+      }
+    ],
+    "scope": "Existing canonical extraction, counts, paper tables and fast sync after actual main native build; no slot transition",
+    "finished_at": "2026-11-06T17:24:57.576687+00:00",
+    "status": " M docs/ATLAS_HEATMAP.md\n M docs/counts.json\n M docs/counts.tex\n M lean/atlas_view.json\n M lean/lean_deps.json\n M lean/lean_deps.json.hash\n"
+  },
+  "freshness_checks": {
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "scripts/validate.py",
+      "--check",
+      "counts_fresh",
+      "--check",
+      "theorem_census_agrees",
+      "--check",
+      "tables_fresh",
+      "--check",
+      "claim_clusters_fresh"
+    ],
+    "returncode": 0
+  },
+  "generated_artifacts": {
+    "docs/ATLAS_HEATMAP.md": "8ef44b4ec615034d502a2aa49249d20cd10ce4b32007ac52e054c5758f4d1032",
+    "docs/counts.json": "a3f1e3e0f73b19595c124c2d206ecc2d3920ab096cf54b0f113feb14e25ebfe2",
+    "docs/counts.tex": "1e3642ff375579dc35eac1b7b641a395d591101bc1a45884a5cce876f86a5192",
+    "lean/atlas_view.json": "95b5844b1ced183d7376418f2509100d38c9ffe1b981511d9d35252196100229",
+    "lean/lean_deps.json": "a3e46613a4040d9fa6576ef70dd01dffef4569a3957ecc005bc064bc2bd16e5b",
+    "lean/lean_deps.json.hash": "da1adb576d6f258dc3eef69476a21b84479371b4c80a5f8a8347a6cd712d346f"
+  },
+  "catalog_delta": {
+    "before": 41054,
+    "after": 41064,
+    "all_prior_records_identical": true,
+    "ten_authored_theorems_standard_core_axioms_only": true
+  },
+  "atlas_actual_prior_node_deltas": {
+    "SKEFTHawking.ADW.integrable_hermite_mul": {
+      "frontier_impact": [
+        0,
+        1
+      ]
+    },
+    "SKEFTHawking.ADW.integrable_polynomial_gaussianReal": {
+      "frontier_impact": [
+        2,
+        3
+      ]
+    },
+    "SKEFTHawking.ADW.integral_hermite_mul": {
+      "frontier_impact": [
+        3,
+        4
+      ]
+    },
+    "SKEFTHawking.Detection.gaussianReal_map_affine": {
+      "frontier_impact": [
+        2,
+        4
+      ]
+    }
+  },
+  "gate_snapshot": {
+    "source_candidate": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1",
+    "working_tree_note": "Six canonical derivative files freshly regenerated and independently under review; scientific/review source at named HEAD. Snapshot is this exact working tree, not an unmodified HEAD catalog.",
+    "graph_meta": {
+      "built_at": "2026-11-06T17:27:07.640458+00:00",
+      "source_hash": "d4f438ebb1f26b14",
+      "node_count": 51126,
+      "edge_count": 19034
+    },
+    "counts": {
+      "passed": 160,
+      "open": 28,
+      "blocked": 25,
+      "needs-recheck": 18
+    },
+    "changed_from_previous": []
+  },
+  "full_profile": "NOT rerun; earlier Hermite d4 full profile FAILED7172passed/28failed/14skipped; 27 persistent IDs remain owed",
+  "scope": "Actual main-based native and canonical artifacts only; no physicalB3, gate transition, main merge or publication acceptance",
+  "archive_sha256": "73dcb5de957a8efa8e53385730fcd238a1f0d62626fba1bfa516a87f44e0065c",
+  "members": {
+    "receipts/l1-affine-main-native-r1.py": "02d4fdf95aad4ab06ffbd39957d3df13b9a70578e3cd41cf913d9229e9d89d31",
+    "receipts/l1-affine-main-native-r1.invocation.json": "5eac754bb3c9b0b6041a12af9c33ee1bc9b676b587cfb64f7f6f9257bc4e68b0",
+    "receipts/l1-affine-main-native-r1.result.json": "60494401792fbf94a4517b3cd627a1a7fb0d757a3126323b31a31f5cf9a978bb",
+    "receipts/l1-affine-main-native-r1.stdout": "c8ecde507e44a5830f2ad06f712b6f63c661679259fde69eb8cce922596f6ed5",
+    "receipts/l1-affine-main-native-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-affine-main-refresh-r1.py": "86379bca71956c8367c3a72a0c27ca7e9a2fee020b48e35b977d49315a38e4c7",
+    "receipts/l1-affine-main-refresh-r1.invocation.json": "4a4059cfe52fcf080ca59251445e9598c983db07bb2cf96712520957bd13980e",
+    "receipts/l1-affine-main-refresh-r1.result.json": "54d5f403e9a31a30205da40a3dcfcc44dfe498f8f8be1505b3860be4b1b0467c",
+    "receipts/l1-affine-main-refresh-r1.extraction.stdout": "ae949edce8132076fdea8fdd439f2fb12373354b47c029c20ed1184d2cd6a9ca",
+    "receipts/l1-affine-main-refresh-r1.extraction.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-affine-main-refresh-r1.counts.stdout": "c9c973395e665fd09d67aac7caa914c4feaf1ae33a8008dca2dab62fefcfc5b6",
+    "receipts/l1-affine-main-refresh-r1.counts.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-affine-main-refresh-r1.tables.stdout": "74ee7584945eb41305e9c84eb425b65b4e8c6e73ab67e017bee7aa592ad3464c",
+    "receipts/l1-affine-main-refresh-r1.tables.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-affine-main-refresh-r1.fast-sync.stdout": "2a16cb498a44358bf778e6fb8ddac6b7c9f27e641fd0e8d52646d093dbab6123",
+    "receipts/l1-affine-main-refresh-r1.fast-sync.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-affine-main-freshness-r1.result.json": "7f520b97d2884f174cee79546adb97f278eb87564e380103c8fa9ce26faad1ad",
+    "receipts/l1-affine-main-freshness-r1.stdout": "07a91f4ef2d1b94d202053f3f194904ccc54daf8a3cf677612a263cc130e9574",
+    "receipts/l1-affine-main-freshness-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/publication-affine-generated-review-r1.md": "607a67252882d4398731c9cde6020278d8e6658b1643f13d098a5b9acdb01706",
+    "receipts/publication-affine-generated-review-r1.json": "ee340cabcc1ec0b1bec752fe9c20f093722a29399a77dcfa44c633dab399b605",
+    "receipts/l1-main-affine-gate-snapshot-r1.json": "1af9306c855694ecc26150c539dade13c617eeb411eacc653c153374407d60ab",
+    "receipts/l1-main-affine-canonical-graph-r1.json": "b0c2358fe580e47d6de349a2694df012769baedd6749155063714f1faba9a884",
+    "receipts/l1-main-affine-canonical-graph-r1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-main-affine-canonical-graph-r1.stderr": "e5b19802f1c34b46e43bd368ad74c759d71bd5bfedbaaac93f12fee5f5b8d40c",
+    "generated/docs/ATLAS_HEATMAP.md": "8ef44b4ec615034d502a2aa49249d20cd10ce4b32007ac52e054c5758f4d1032",
+    "generated/docs/counts.json": "a3f1e3e0f73b19595c124c2d206ecc2d3920ab096cf54b0f113feb14e25ebfe2",
+    "generated/docs/counts.tex": "1e3642ff375579dc35eac1b7b641a395d591101bc1a45884a5cce876f86a5192",
+    "generated/lean/atlas_view.json": "95b5844b1ced183d7376418f2509100d38c9ffe1b981511d9d35252196100229",
+    "generated/lean/lean_deps.json": "a3e46613a4040d9fa6576ef70dd01dffef4569a3957ecc005bc064bc2bd16e5b",
+    "generated/lean/lean_deps.json.hash": "da1adb576d6f258dc3eef69476a21b84479371b4c80a5f8a8347a6cd712d346f"
+  }
+}

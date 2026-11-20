@@ -1,0 +1,51 @@
+{
+  "closed_finding_ids": [
+    "review:2026-08-14-l1-stage13:L1:3.3",
+    "review:2026-08-14-l1-stage13:L1:3.4",
+    "review:2026-08-14-l1-stage13:L1:4.2",
+    "review:2026-08-14-l1-stage13:L1:5.3",
+    "review:2026-11-05-l1-apex-propagation:L1:1.2",
+    "review:2026-11-05-l1-reader-results:L1:1.2",
+    "review:2026-11-05-l1-lean-source-docs:L1:1.1",
+    "review:2026-11-05-l1-lean-source-docs:L1:1.2"
+  ],
+  "ledger_sha256": "259fbccb61e14d9add9a341964de6bb05a5e3763d3c0b6deeb39e6752755d7ab",
+  "remaining_source_findings": [
+    "review:2026-11-05-l1-lean-source-docs:L1:1.3"
+  ],
+  "publication_conservation": [
+    {
+      "path": "papers/L1/paper_draft.tex",
+      "unchanged": true,
+      "sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2"
+    },
+    {
+      "path": "papers/L1/paper_draft.pdf",
+      "unchanged": true,
+      "sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a"
+    },
+    {
+      "path": "papers/L1/bundle_metadata.json",
+      "unchanged": true,
+      "sha256": "57b0a4e30446196a6cfbac62e9499e5fb96dcb99359f30c8b6484be82433f16b"
+    },
+    {
+      "path": "papers/L1/claims_review.json",
+      "unchanged": true,
+      "sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951"
+    },
+    {
+      "path": "papers/L1/prose_state.json",
+      "unchanged": true,
+      "sha256": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627"
+    },
+    {
+      "path": "papers/L1/audit_log.jsonl",
+      "unchanged": true,
+      "sha256": "447676b4f073f130aa0290d569d5a29bfd2d1ef39a53d3ff89e83299e92824ed"
+    }
+  ],
+  "ledger_gate": "PASS with59 preexisting annotated-ID records/no growth; raw receipt retained",
+  "global_broader_failures": 19,
+  "no_newly_green_bundle_or_main_human_approval": true
+}

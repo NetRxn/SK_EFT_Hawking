@@ -1,0 +1,40 @@
+{
+  "measured_at": "2026-11-05T23:29:50.393614+00:00",
+  "source_head_before_repair": "130b4015d99f5d2d69a71bc6baca4978d38a5061",
+  "repaired_module_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "controls": [
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md",
+      "finding": "1.2",
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-reader-results/L1.md",
+      "finding": "1.2",
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+      "finding": "1.1",
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert (chr(96)+\"|\u03b3| \u00b7 \u03c9\"+chr(96)) not in s'",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+      "finding": "1.2",
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "scope": "Actual unchanged declared finding controls on publication repaired file; no physical BUILD or full publication native certification."
+}

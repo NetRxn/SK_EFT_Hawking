@@ -1,0 +1,104 @@
+{
+  "source": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+  "native": {
+    "candidate": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+    "started_at": "2026-11-06T18:30:14.005394+00:00",
+    "argv": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "scope": "Actual main-based candidate standalone native library and ExtractDeps build; not full merge or publication acceptance",
+    "pins": {
+      "lean/SKEFTHawking/ADW/GaussianAuxiliaryComplex.lean": "91b9884a4194980538b2889f8b57f6c09cf995dfdfa1db71241c00723472375f",
+      "lean/SKEFTHawking/FKLW/GenericSUdSkLengthExponent.lean": "27a5778afc4dfef481e91ccf00b2d23e10897cb3304321fe15a14a2b58262fb1",
+      "lean/SKEFTHawking.lean": "7c7d45566ba00fb19484821b44d798f15beca139e17b7ec13a3d7c9d58d22952",
+      "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e",
+      "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464"
+    },
+    "returncode": 0,
+    "finished_at": "2026-11-06T18:31:09.997358+00:00",
+    "head_after": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+    "status_after": ""
+  },
+  "canonical_refresh": {
+    "candidate": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+    "started_at": "2026-11-06T18:40:42.386530+00:00",
+    "scope": "Continue completed canonical extraction after ROOT-only invalid exact-three-axioms check on definitions. No canonical checker changed, no extraction repeated. Verify authored exports separately; all records only permitted core subsets/no project axioms.",
+    "steps": [
+      {
+        "name": "completed-extraction-qualification",
+        "argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "-c",
+          "import sys,json,subprocess;from pathlib import Path;sys.path.insert(0,'scripts');import extract_lean_deps as e;d=e.load_lean_deps();assert Path('lean/lean_deps.json.hash').read_text().strip()==e.compute_lean_hash();sel=[x for x in d if x.get('module')=='SKEFTHawking.ADW.GaussianAuxiliaryComplex'];names=json.loads(Path('/tmp/publication-complex-integration-r1.json').read_text())['exports'];rows={x['name']:x for x in sel};assert len(names)==40 and len(sel)==62;assert all(set(x['axiom_deps_core'])<={'propext','Classical.choice','Quot.sound'} and not x['axiom_deps_project'] for x in sel);assert all(set(rows['SKEFTHawking.ADW.'+n]['axiom_deps_core'])=={'propext','Classical.choice','Quot.sound'} and rows['SKEFTHawking.ADW.'+n]['kind']=='theorem' for n in names);print(json.dumps({'source_hash':e.compute_lean_hash(),'records':len(d),'new_module_records':sel,'authored_exports_exactly_verified':names},indent=2))"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "counts",
+        "argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "scripts/update_counts.py"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "tables",
+        "argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "scripts/render_paper_tables.py"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "fast-sync",
+        "argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "scripts/sync.py",
+          "--fast"
+        ],
+        "returncode": 0
+      }
+    ],
+    "finished_at": "2026-11-06T18:41:10.400615+00:00"
+  },
+  "artifact_sha256": {
+    "lean/lean_deps.json": "02dd6ab4a0829b0888cf2a790b919179467c73d336423879a6b49ff850235860",
+    "lean/lean_deps.json.hash": "403c306fdd6abd71c78c182befcb70663784b12f53e6db515dbdad231872f593",
+    "lean/atlas_view.json": "c516a96a17e06abfd8573a0857715a7a7d3989fd8638cb78475ebc8d1686a1ef",
+    "docs/counts.json": "472bf7bd80f17de3c3c22d8034a5cb408230212d0dec3d1d61c4ad10526f4aaf",
+    "docs/counts.tex": "721f9b33f4450684582278ec883867a6cecc2df783e7b5caf7457e5abdf28a78",
+    "docs/ATLAS_HEATMAP.md": "bd352b1ea2538859c43dd79470b1a553eb48075d0163a0e13c112204be659908",
+    "papers/claim_clusters.json": "bd7e9b8b88b4c5f29c23e98b559c246878c1fd7a671985360400997a093b9a49"
+  },
+  "gate_snapshot_meta": {
+    "source_commit": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+    "working_tree_qualified_note": "Actual ownnative-built source with all seven regenerated canonical derivatives and one independently accepted narrowAPIclosure. Complete snapshot after canonicalclaimclusterwriter; generated-artifactreviewR2 inprogress.",
+    "command": "existing scripts/build_graph.py --out /tmp/l1-main-complex-canonical-graph-r2.json",
+    "graph_meta": {
+      "built_at": "2026-11-06T18:44:32.990966+00:00",
+      "source_hash": "00636544253f53aa",
+      "node_count": 51181,
+      "edge_count": 19041
+    },
+    "graph_sha256": "1a4d93a3c554c30421d6aee849501606ad707013e68283092dab8d40e3dd8cc7",
+    "bundle_roster_source": "actual validate.BUNDLE_CODES",
+    "counts": {
+      "passed": 160,
+      "open": 28,
+      "blocked": 25,
+      "needs-recheck": 18
+    },
+    "changed_from_previous": [],
+    "previous_source": "c9b223abfe3f2856e4fe9abbbc4839e390489ca1"
+  },
+  "independent_generated_verdict": "ACCEPT_GENERATED_ARTIFACTS_ONLY",
+  "evidence_archive_sha256": "364e0db42fa6409a2afb7764f12329992830c4590584013c0b6c827191edb14a",
+  "preserved_failures": [
+    "ROOT R1 post-extraction exact-three-axioms assertion on helper definitions",
+    "R1 generated-review final snapshot changed after canonical cluster regeneration"
+  ],
+  "scope": "Native and canonical artifacts only. Full project, original physics, qualifiedmain and finalhuman remain owed."
+}

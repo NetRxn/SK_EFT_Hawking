@@ -94,10 +94,10 @@ def compute_bec_hierarchy() -> dict[str, dict]:
         delta_diss           Gamma_H/kappa = gamma_dim (dimensionless)
         ratio                delta_diss / |delta_disp|
         dominance            'disp' | 'diss' | 'comparable'
-        ln_arg               ln(2 / delta_diss)
+        ln_arg               ln(1 + 1 / delta_diss)
         omega_cross_over_TH  crossover frequency in units of T_H (= ln_arg)
         omega_max_over_TH    dispersive UV cutoff in units of T_H
-        spectral_floor       delta_diss / 2  (FDR noise floor n_noise)
+        spectral_floor       delta_diss  (FDR noise floor n_noise)
         cross_below_cutoff   omega_cross_over_TH < omega_max_over_TH
         T_H_nominal_label    LaTeX label for the (published) T_H column
     """
@@ -142,7 +142,7 @@ def compute_bec_hierarchy() -> dict[str, dict]:
             # n_noise = Gamma_H/kappa = delta_diss (noise_floor_eq_delta_diss). The
             # delta_k/2 halving is inside that identity, not on top of it.
             "spectral_floor": delta_diss,
-            "cross_below_cutoff": ln_arg < omega_max_over_TH,
+            "cross_below_cutoff": bool(ln_arg < omega_max_over_TH),
             "T_H_nominal_label": T_H_NOMINAL_LABEL[name],
         }
     return out
@@ -192,7 +192,7 @@ def render_latex_rows() -> str:
 def _print_human(hier: dict[str, dict]) -> None:
     hdr = (
         f"{'Platform':<12s} {'D':>10s} {'delta_disp':>13s} {'delta_diss':>13s} "
-        f"{'ratio':>8s} {'dom':>10s} {'ln(2/diss)':>11s} {'wmax/T_H':>9s} "
+        f"{'ratio':>8s} {'dom':>10s} {'ln(1+1/diss)':>14s} {'wmax/T_H':>9s} "
         f"{'floor':>11s}"
     )
     print(hdr)
@@ -201,7 +201,7 @@ def _print_human(hier: dict[str, dict]) -> None:
         print(
             f"{name:<12s} {h['D']:>10.4e} {h['delta_disp']:>13.4e} "
             f"{h['delta_diss']:>13.4e} {h['ratio']:>8.3f} {h['dominance']:>10s} "
-            f"{h['ln_arg']:>11.4f} {h['omega_max_over_TH']:>9.2f} "
+            f"{h['ln_arg']:>14.4f} {h['omega_max_over_TH']:>9.2f} "
             f"{h['spectral_floor']:>11.4e}"
         )
 
@@ -229,7 +229,7 @@ def main() -> None:
     print("\n--- Heidelberg crossover sentence numbers ---")
     heid = hier["Heidelberg"]
     print(f"  delta_diss = {fmt_sci_latex(heid['delta_diss'])}  "
-          f"=> omega_x = T_H ln(2/delta_diss) ~ {heid['ln_arg']:.2f} T_H  "
+          f"=> omega_x = T_H ln(1 + 1/delta_diss) ~ {heid['ln_arg']:.2f} T_H  "
           f"(UV cutoff ~ {heid['omega_max_over_TH']:.0f} T_H)")
 
 

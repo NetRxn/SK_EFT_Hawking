@@ -133,12 +133,12 @@
 
 ### `H_VestigialModeIsGraviton`
 
-**Statement.** A vestigial-mode coupling χ_vest represents a graviton-like d.o.f.: 0<χ_vest ∧ LigoSatisfied(c_GW_deviation χ_vest) ∧ |c_GW_deviation χ_vest| < 1/2.
+**Statement.** Scalar compatibility predicate for the assumed normalized law c_GW/c = √χ_vest: 0<χ_vest ∧ LigoSatisfied(c_GW_deviation χ_vest) ∧ |c_GW_deviation χ_vest| < 1/2. It asserts no physical graviton degree of freedom.
 
 - status `active` · eliminability `open` · module `GravitationalWaves`
-- **Posture.** KEEP_AS_TRACKED. The hydrodynamic-mode→graviton bridge is, to our knowledge, not derived in any published source; the tracked-Prop form is the principled treatment. Discharging would mean shipping a different microscopic theory than this project commits to.
-- **Discharge path.** Out of scope for SK_EFT_Hawking (analog-Hawking BEC, not full QG). Would require a microscopic substrate from which the vestigial-mode→graviton bridge follows.
-- **Source.** Volovik 2024 ("second-sound graviton"): derives s₂=c at equilibrium but NO off-shell propagator / matter coupling; "the type of graviton this mode represents requires further consideration".
+- **Posture.** KEEP_AS_TRACKED for the scalar compatibility predicate only. Its external_boundary tier records the present formalization boundary, not permission to defer the original L1 physical BUILD. At the fixed cap, P2 implies P3′ and, on the nonnegative carrier, P1; the unity witness and four counterexamples concern scalar compatibility, not independent physical clauses. The microscopic response, range, state, tensor/matter and controlled transport construction remains active and open under the owning roadmap. Neither scalar witnesses nor endpoint exclusion prove a physical mode or a universal microscopic no-go.
+- **Discharge path.** Original L1 B3/Wave2 physical BUILD remains OPEN in Phase6a_Roadmap.md: derive the metric-channel operator/source/projector, regulator and response normalization with independently justified stability conditions making the stated susceptibility range a result; construct the physical state, stable constrained propagator, spin/polarization and matter coupling; match transport coefficients, units, ordinary/angular frequency and controlled observational-band errors. Scalar satisfiability discharges none of these obligations.
+- **Source.** Project-defined scalar predicate in GravitationalWaves.lean. Volovik, arXiv:2601.00639v1 (2026), Section III Eqs. (6)–(9), derives s₂=c within its de Sitter two-fluid model; Section IV discusses possible graviton interpretations. This does not derive the normalized susceptibility law or its physical tensor/matter bridge.
 - **Risk.** Conjectural. Anchor at χ_vest=1 + 4 falsifiers establish non-vacuity.
 
 ### `TPFConjecture`

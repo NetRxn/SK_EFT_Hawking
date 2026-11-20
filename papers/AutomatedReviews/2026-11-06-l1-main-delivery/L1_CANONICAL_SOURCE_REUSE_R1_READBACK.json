@@ -1,0 +1,477 @@
+{
+  "archive": "L1_CANONICAL_SOURCE_REUSE_R1_EVIDENCE.zip",
+  "sha256": "3e7f1d6a3c816f6a8c9d2843da4a12e1361b53c44f7d5b660f81af2c36a0d499",
+  "bytes": 348439,
+  "members": {
+    "receipts/l1-canonical-source-reuse-ledger-before-r1.json": "a40938e4f3a246e7a1f3911f937d150ac2582be724f0f51af98eda0492da9501",
+    "receipts/l1-canonical-source-reuse-markers-r2.json": "342031343abe18daf38144def5d9049dec93e6b7a9947575bb33f322cd79722b",
+    "receipts/l1-canonical-source-reuse-review-r1.json": "24052433af8facdaa810082726dc35946ac7bec035a5c3f0991b8e44c0a48f2b",
+    "receipts/l1-canonical-source-reuse-controls-r1.json": "675d111abb0b7a88e543c59b5f8a2c01f373adee2b00d6634ca8f0387c63792f",
+    "receipts/l1-canonical-source-reuse-dry-r1.json": "35ae80e6468be1105e521204d19a48e25f32e1838320997fd4b85ba73588a811",
+    "receipts/l1-canonical-source-reuse-planner-r1.json": "4166dc23c81ec095f3c0b1b2e5db234ebca5bb13448f8a8160c79fdf1870e386",
+    "receipts/l1-canonical-source-reuse-writer-r1.json": "956a30b026b7669b553ecf09f239e8832ddf3fd1e61be15ec3f7eebc4d7b92b8",
+    "receipts/l1-canonical-source-reuse-application-r1.json": "d6665ced9f47905c862e403171b6ac95e21566511744cfa73291338775ce772b",
+    "receipts/l1-canonical-source-reuse-proposal-r1.json": "5b09072935e5eea6ae8e70de307441a8300d7a0c3b1a04df0ee03c39e3644840",
+    "receipts/l1-canonical-source-reuse-archive-placement-r2.json": "80054bee68311318ba77b700920aa732e933f39bd9afe80a9247df736ba1ab0f",
+    "receipts/l1-canonical-source-reuse-review-r1.md": "429661df62f0dec2b2743c682488e7da19027b266399b8eab25778943da3aa63",
+    "receipts/l1-canonical-source-reuse-id-gate-r1.log": "d65065cde6916eee5ff94449364c3cfa6f12a511281a420d40ebaa2aed15a65e",
+    "receipts/l1-canonical-source-reuse-markers-r1.log": "1dce78d22d6f8593203cd41c6b8c0378b309b1f8119a385147a2bfdf77b9f14a",
+    "receipts/l1-native-prerequisite-requiredness-r3.md": "f1b6aa8ed3ad49b7d824a93a36c1f90ee5bd1196cdbf85c79cabd863f0918f27",
+    "receipts/l1-native-prerequisite-requiredness-r3.json": "0de67a575624c38e28f7d67ed4ec0a4b1dbe61cb2a0d9fdb0101787aca72addf",
+    "receipts/l1-primary-live-status-20261106-r1.json": "c27fe11941308e7caaf498ccbabf5ff25db8b76702cdb7b561fed7d6bf433372",
+    "receipts/l1-primary-live-status-20261106-r2.json": "029172ba12154a7861e9c374f5629900357f31b98e1413f77f2948cea3b705da",
+    "papers/AutomatedReviews/2026-11-05-l1-reader-results/PREDECESSOR_PROSE_REVIEW.md": "7e854dd27eeaba583a04429382ea5e769e61b0346931c89cb9b6468b546f1685",
+    "receipts/l1-canonical-source-reuse-application-review-r2.md": "6feb712e4638aa536362e1ea40d067fbd96e7042185579cdc28e1a42cccf6b85",
+    "receipts/l1-canonical-source-reuse-application-review-r2.json": "01b2db0a590a2a92b6295f36d631b6f2c81918f31c70569ede7bff6add9f4ea2",
+    "receipts/l1-canonical-source-reuse-final-reader-r2.json": "cf6772ef72b7c62dfea324ee571b1ee76232d7b282c0499005c80c617afe3088",
+    "receipts/l1-canonical-source-reuse-corpus-gates-r2.log": "3309c0bad0b587754b75400bda6e87ba2df24758bae70ea507f61db9b7496605",
+    "receipts/l1-canonical-source-reuse-planner-final-r2.json": "b5cb99aed232480350f4c61fd3f8ef88e36e2d59a0004f1915d536ea7b737aac",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROADER_FAST.stdout": "fb20ae6137d6e13c000a5e934579d94c524139f481814cf97775e1bee294fb8f",
+    "receipts/l1-canonical-source-reuse-raw-output-placement-r3.json": "239988d4aca6530c90bffc83c7b2b5f553fc8a4c3da93b2fec3c05a5316ecba3"
+  },
+  "actual_canonical_application": {
+    "scope": "Actual existing writer and canonical reader application of11 independently accepted historical L1 repairs. Not11 new scientific constructions.",
+    "parent_head": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+    "restored_original_files": {
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INDEPENDENT_REVIEW.md": "d2be0963afd268b78264e117cc09ddd0a5719dd76209ae0bc86833c5a97f7363",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INDEPENDENT_COMPOSITION.md": "9bdf852e2a569797cc82bf39bd765841de75e6c9c29f86de52ede40858570d10",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/ORIGINAL_RED_1_2.json": "3939771d445f898a47f9f017c79ed9c24a3d164c26490e06c441ac796acc03aa",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/REPORT.md": "bb7c5d9d228c0edcf5d0833fd698c8424b0858e670fb105c1af04fa61a8c2d08",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/CANONICAL_CLOSURE.json": "76937658b9e61914874e02e06714f04d7b5adb40b50cbca6c6ee4c4519e7340f",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/SCOPE.md": "896f3d71db85b764c7b3df86a7ce6b54b0ae1e0ba826a6fc00555e1ae356358a",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INTEGRATED_VERIFY_1_1.json": "21074778714fae75a5476fb5e7f1c2feebcd7b67f7825a7e47c1fde80be96878",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/preservation.json": "40407a4d2b351fcabd44dbe54284c4606c5dad4a137960479f0d5d3d96dbc3f7",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/proposed_bundle_metadata.json": "889dfeff967b251b66dbf2092809bd0b1322652bb06f226bded9482f796cdb30",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md": "81a4231bae0e1218d3290b80ae9e49148ae28d2dd6af0b199a11bb5402415901",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/CLOSURE_READBACK.json": "f36de67cd728ab8433f8c8cbb59581ca85976a05486f80e651e218cf4691259a",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INDEPENDENT_COMPOSITION.json": "7a3fc7dc6de5c2621de3203fae56815fc70ceb0929b1409caccd008de2833f8f",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INTEGRATED_VERIFY_1_2.json": "2153490d45e7de9c60ef93d2cf5446ba6d56f1821fbcfe4bd1b92be1b74fdb93",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/VALIDATION_BEFORE.txt": "4a7029881973a24b819e4fcd55af34c6b522b3e882d889c39ebd27718918730b",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/ORIGINAL_RED_1_1.json": "97b3f449ba9de6d466d4a807c5c44f8fe4b4d240092e34e45bf5cc91d45b65d7",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INDEPENDENT_REVIEW.json": "015d5727d136cfa26f1bd56033fee27d768624594e2448dad729feb1dcf4684b",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/apex_source_map.json": "5897b0345c6c5844adf5696b13037a3ccf5aa2f93e1e81c1c0641c561640a3c8",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/VALIDATION_AFTER.txt": "4a7029881973a24b819e4fcd55af34c6b522b3e882d889c39ebd27718918730b",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/INTEGRATED_READBACK.json": "c5eb7eaad75a500c209323b627462e43215db4698ceca554d9dcc465403bc32a",
+      "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/CONTROLLER_OBSERVATION.txt": "2ea15bc5fb5a5441ff7f5b922d255711a04e39addb9c45136a9bf5c0a314ce64",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/R3_PROSE_FOLLOWUP.json": "20639b426da0f6c3e5912fc8acbfaf1398b53ac4ae218870f5ad78c434c344f3",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CLAIMS_INTAKE_READBACK.json": "84540a05356d6b059546b080e0a0aba08707c9a2e1d10871ab1dcee4473b3a6f",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/PREDECESSOR_CLAIMS_REVIEW.json": "8e53db0cdcddc0240dab137892980cd71167938683355fb57ec17285d813291c",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CATALOG_INDEPENDENT_AUDIT.json": "230e22d8e088de666c56cd1aaa1fc61af3cde41427452014a3d464f82425df8c",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/RESULTS_SOURCE_INDEPENDENT_REVIEW.md": "65c165dd31405b3a2ef22f893af890f4b0b27181c4c49df00f9b40922bddb390",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/SCOPE.md": "cd4bf85cc7b93eb939f9879d2e989ad3bc7ed6a6c39cac86a4f0d8248e021f84",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/COMPILE_R2.txt": "d8e1b3be55eda39579ffa49ab514163352d74a26b2b79f53f9a34275fff9c118",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/COMPILE_R3.txt": "2168818e3749b008d8827099c831c71157fa595599d1906fc9ab0088437c63ee",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/OBSERVATION_INDEPENDENT_REVIEW.md": "9e760408c93920b072a66b5fc053f3d91e5802117b71e44acfe344e204024c78",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/EVIDENCE_MANIFEST.json": "57c3e1262c820595455a8a4d63f82f3bbe0b89a0e4fbaeac0d607664419e14fc",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/L1.md": "96dca4e2fa8b495abe4c60c9c452afb2c707632b1b51afab60224539435a0500",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/INTEGRATED_VERIFY.json": "e0772c791285ce63cf78a4379412f672f7a557c57e178494faa67ac2239ce265",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/ORIGINAL_RED.json": "33e2eec9ee0847b99f3a486c403cf17ba0d3c993f45be3b35ba9fe9d30097cd5",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/full-manuscript-r2.tex": "911fef6ae5b1a6037a98afc483f185885e38e5cf16321aaa8dc42b6204d78338",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/author-results-r1.tex": "e559653974c93f37466c5dc2e7a2a62814e304ac8f0fed1b257a8a6ebde8ed79",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/root-results-r2.tex": "b810f5ab1b9bf87cc67375281d751a41e6acc7ffa6de8cca947bc05586521c19",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/full-manuscript-r3.tex": "e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CATALOG_INDEPENDENT_REVIEW.json": "0a2fb9316788f62cc8eb3a4f6ff150567102bb97e7945f5140c3440512ec24d8",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/claims_author_evidence.zip": "c1a539dfba4d0f11dd889e0bc60f4991910f5b05592e703ba44a6e79ac1e6c1e",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/PREDECESSOR_PROSE_REVIEW.md": "7e854dd27eeaba583a04429382ea5e769e61b0346931c89cb9b6468b546f1685",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CORPUS_FLOOR_R2.txt": "59ac441c327335f2ff78e470c13fe07e33eb536719cb356edc52e7cfd14dc9f4",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CLOSURE_READBACK.json": "ea815940c94201a702530d1c3c4c5ea0a6782ef29f9498ac7bdc1ffc9c412f4a",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CLAIMS_INGEST.json": "c8b1cbdcdd6ca6ab8958e31588505fea09640c72d3fc9efe0c1981961051d180",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/CATALOG_INDEPENDENT_REVIEW.md": "f2e6d8423a0c51fa16d0fdf58837ea4740b6e7c898b0a11f4469d17cff31b745",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/DOMAIN_TESTS_R2.txt": "a2f9f7fc204903752fc6cf696a15451feb0bc9a0678ab0179687f9d5b8c72852",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/DOMAIN_TESTS_R3.txt": "a2f9f7fc204903752fc6cf696a15451feb0bc9a0678ab0179687f9d5b8c72852",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/WHOLE_PROSE_INDEPENDENT_REVIEW.md": "6ae37ed7e92627aa753496743f5ca360b028a5d5221013e6dac5f4835adaa228",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/OBSERVATION_INDEPENDENT_REVIEW.json": "9f0877f1bce60a32e21618683ecafc233bf4be13259f5710f6610cdd0f7feed3",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/SOURCE_DOCUMENTATION_RED.json": "43a9d331ddba71b1d05779263ee8088d180e0da4126695d022b864a4637527da",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/R3_PROSE_FOLLOWUP.md": "9eaa9f27445ac5390719f2ec926a1989193e3f4ed881fd53c6f896bd419b8904",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/DOMAIN_TESTS_R3.xml": "ec1ec28126d6fc94592f46373c55329acf1dc2ab12ffd0b7a419ee772b02c0ab",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/DOMAIN_TESTS_R2.xml": "136abcf289a1ab3683d75a0da58e4523f2a9825a6324c2355bb6d3ac78347545",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/RESULTS_SOURCE_INDEPENDENT_REVIEW.json": "90fb7f677c153561ab919d9dce9fc0b509bf41db17c0769e0a17c192205bf334",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/LENGTH_R3.json": "91fd7c1980d9d042010576f643ae60e0aa8cf4c30eb6eb1888a1df6a783ff883",
+      "papers/AutomatedReviews/2026-11-05-l1-reader-results/WHOLE_PROSE_INDEPENDENT_REVIEW.json": "6f2eff8efca17e6d833fea319b8ecf6ea187917ef033e3a00ae74c8d5d7baf90",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/FINAL_LEDGER_ID_GATE.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROADER_FAST.stdout": "fb20ae6137d6e13c000a5e934579d94c524139f481814cf97775e1bee294fb8f",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/PROJECT_CHECKS.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND.stdout": "1594b4326dc06db431500f9f6234507ff15cc180679855e619d19f19ca99d186",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/MARKER_CONTRACT.stdout": "71458fabb35da3b7490cff2c641f12f033cde73e5be9ea4ec8821eb2e6e4df9c",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_DOC_PROPOSAL.zip": "61f63afc816ab34c26296bb61d4f8449dbad255fedef839ee0372bcf162556a3",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROAD_DISPOSITION_INDEPENDENT.md": "c6bf2d886d0a6ce2b5a19841f1ac3aa5d995909bf93b899fa6da706543a374c2",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_TEST_IMPORTS.json": "0ad57235c522d65c146f6a4f365ff964a5baed3a496f60749f0a60620f169762",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_PROJECT_CHECKS.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/CONTROLLED_ABSORB.json": "7b69ce1c8eaa3161cfc4ed1344d9d2ae2817cfdb171b233a018cc06fe73e4896",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_PROJECT_CHECKS.stdout": "daf22fc96e0630ca89c49e0d01eccee95e463e27ebfac11472adae09eb0046bc",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md": "2cf18ed34101c2706872160adac93e0ff9cd01d08f4b77350c8d5782ff3416fc",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_DOC_ORIGINAL_RED.json": "d29bef738c308915aece88dae1b9efc5a063fbc1b84711792ca691894986c1f3",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_POST_ABSORB_STATUS.json": "dad3b8f8a7eb78a053e1a58fff661d9b0cf3c1c2fee1d0e7cd58801f5d360978",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/MARKER_CONTRACT.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_ROOT_READBACK.json": "3b021f79611f85982e6fcad406ee3de9ba95ee81148dacdede82c45d48155efe",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REPAIRED_VERIFY.json": "4b78a9e2ccd6495d6c38bbe8154d74c9114e10d422556644b0e9cc2e9727d02a",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_NATIVE_DELIVERY.md": "97cc806898dcfd6ec662513566a720c8fffd8730d92319d723e9b880226196ea",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_APPLICATION_INDEPENDENT.md": "8a2f9417a36c382edae0e18ac12e00a09904ddf04613d8b6c0481f59e7ab674f",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROAD_DISPOSITION_INDEPENDENT.json": "b75809bc374c0536dc40d5bd4acbf419e3b03e52108af9e120eb6bee4159d860",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md": "d510cc768fadf335ebf8bd8b0bcd4a098ed7b652a8dcba04cf1c2627f511f8da",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REJECTED_R1.zip": "6fcb790f4704bbccadebd44264857a2deb628791b8554b3e2895aca421c3df04",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND.stderr": "27c6fa72b8af802aed00b4489b0de44abc1e0b292bf8bf06122883aabba6450d",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_VERIFY.json": "7676c87991fdfe0c691cc565c6eaf66175ac2925c58546f230e792e588002a18",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/PROJECT_CHECKS.stdout": "5b1240f2280c4ac8b153400afe2b6030c6f863702964c01dec6421ede8128b98",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/COMMENT_TRANSFORM.json": "8dbe34e673b3ee39b31d24cd60f37563d20eab9fe0415f6c8043b3cc8858ad74",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md": "548291cbf5a5fdda45f5ffd6aaf2d36efc7f3aedcf83dad87a9f83452c4322ff",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/ORIGINAL_RED.json": "dc887ae5fe9c958233cbc938ae79339e3084fb521dde84a2c2dca6fc47f231fb",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/NATIVE_DELIVERY.json": "65f4835ae906205ea1801efc840e5488ba80739796f666bc521dcbea624ddeee",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICABILITY.md": "66a1180ef3519cf4a929839cbd5f242e51c28dde6f561fefff6605a1eae875d3",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROADER_FAST.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/FINAL_LEDGER_ID_GATE.stdout": "01d7a40d0e0d0be656336372a27741fa46c78ead77d98e68083d9c8e5dfbd364",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/MAIN_DELIVERY_ASSESSMENT.md": "e928d0dbd4d5159db688b3c3fe1e695fe04ce18920c750b68260e76b4f46ced0",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/MAIN_DELIVERY_ASSESSMENT.json": "cefef52d850486ea01dc42972ed9af78ba40d510953bbb953c80e40c2d400693",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.json": "991c91b211f329d9c9f3b9a2171e95292c937a7800141289b2fbe9e6baf004af",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/LEDGER_ID_GATE.stdout": "7354592d557f86759fa932a324f7ed0cfb307c54ac37bafedbe90ca68dd42f9f",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.json": "0e873ce2c29a8eae1f882b5cf525fc31018ec65ff676ffd045863eca2cf1210d",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/EIGHT_CLOSURE_READBACK.json": "f570b89737260087f3116c05918338cf71ca232ac6dfaa00407d47eb3b99116e",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROADER_QUALIFICATION.json": "e1509c48cf6dbb49e84e988de800e412633833658464b20e6171a94943e263f7",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND_BASELINE_COMPARISON.json": "594497453c1cd1780b56a1c798e94587c3cedde0d989805813ec4a806dae6609",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_REJECTED_R1.md": "0014ddc63908f2030674f2e2ae2011890a73077ba62553c2fa288f2f7532a003",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_MARKER.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_REVIEW.json": "5b640516c9ad113b8ba1e0839e7bc191ff524f3b4ff2b54fe8ba83d9b081c32b",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_GRAV_TESTS.stdout": "8bdf7963add52bc3d8147530464b7115dcd4d602be1e4691fe9cfc41ecc479aa",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/POST_ABSORB_PUBLIC_STATUS.json": "2735701cb40768a6003f83ddf16a9069370b8eeb91d8d72eed20b9a3e07b428b",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND_FINAL.stdout": "8e3439130f2c7d344df632ea989cbe41959cc109564ef799a4a281c66ee2a25a",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICABILITY.json": "6b07b3019a54d9a52c037b81f7096bcc34ad72135199f8b4241f84743277d664",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_REJECTED_R1.json": "3dea27dc059133eab4dced8accfd02d2014161e0c9d7ee7fd058a6cb461e1bea",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_CANONICAL_CLOSURE.json": "5c83ab59b145c22843e6ba4883d591968da7c524c5c1e0c29bdc4b584d8332b1",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_CONTROLLED_ABSORB.json": "9e3e76032fa1da9e6c7327bf23feb7d0d08aa7883b90061b4fca8a6f14bd4b96",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/FINAL_NINE_VERIFY.json": "bac4e4fa7e6e2c11c16633818922c9eefef212e79e96b3063fb05fd3732304f4",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.md": "7cb8f8d8fd25253786c8c14512501c009ed97827e6a974776504930e3ff59d74",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/NATIVE_DELIVERY.md": "a3865c032fe29cd67313043e6a9225cb8ac20f3f36efcc96f8b2ec33561e6627",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_DOC_PROPOSAL.json": "822ea932c67b00dd492e0c07879a00532dcd7e795a8bfe6cb93f8b2fb1e07b35",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/CONTROL_REFINEMENT.json": "0cbb8d2947b9191fa61161b8c0937c93d5cb6df8d153bb8650590af63a2c2e47",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_REVIEW.md": "21195b59d0a5ea9768cf686443652cbcf06f5351f8f79a258f5435beecab1a6c",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/EIGHT_CANONICAL_CLOSURE_RECEIPTS.json": "22dd95399968eb8e29f20b7bd3db1c75ca1b3dae3a2cd1a11c782435be3211e2",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_DOC_INDEPENDENT.json": "53c5f9fa18bb9ebce1501996987232622d21d08f294d2f29392185bf4817962c",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/NATIVE_BASELINE.json": "426cc798fd1e0da73725d52fb4b2509148a403f8fefb121377bcf80f51451aba",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/FINAL_PACKAGE_READBACK.json": "6f28d376e01748574c436798fa131892ca21228e87bef7481d2630329b29b8fb",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND_FINAL.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_NATIVE_DELIVERY.json": "070eefced6c1cbf003c01b80db764f89c35e35a54c57e991a554874cbf59bf2d",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_GRAV_TESTS.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_MARKER.stdout": "71458fabb35da3b7490cff2c641f12f033cde73e5be9ea4ec8821eb2e6e4df9c",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_APPLICATION_INDEPENDENT.json": "ceaaebede88095acf7ab2c1a58b380530eb1afb0da7dff67e8fd5cf10f334381",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/DEFINITION_DOC_INDEPENDENT.md": "1cfd2aab8b4cc18907612e9099ab71ffd168c67c8a90ab414237e635651e0bed",
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/LEDGER_ID_GATE.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "records_before": 1236,
+    "records_after": 1247,
+    "all_prior_records_and_top_schema_preserved": true,
+    "reader_results": [
+      {
+        "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.1",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.1",
+          "status": "fixed",
+          "evidence": "Metadata still preserves all14 apex names/dates and the accepted fixed-tau/nonnegative domain, dependent/nonexclusive falsifiers, actual c!=0 carrier and strict1e14width comparison. Later wording changes at indices11/12/13 clarify adopted comparison scope and remove title/section placement claims. Actual theorem bodies establish the claims; no new physical range or probability is implied. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 366fe4109d33df4f6337b498c0e2817d3859a7b6. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'import json; from pathlib import Path; a=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text())[\"apex_theorems\"]; assert all(\"isolating\" not in x[\"claims\"] for x in a), \"apex metadata overstates exclusive falsifier scope\"; assert \"nonnegative\" in a[0][\"claims\"] and \"fixed\" in a[0][\"claims\"], \"missing theorem domain\"; assert \"\u2260 0\" in a[10][\"claims\"], \"missing actual relative-deviation carrier\"; assert \"10^14 times\" in a[13][\"claims\"], \"wrong exact width theorem scope\"'",
+            "declared": "python3 -c 'import json; from pathlib import Path; a=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text())[\"apex_theorems\"]; assert all(\"isolating\" not in x[\"claims\"] for x in a), \"apex metadata overstates exclusive falsifier scope\"; assert \"nonnegative\" in a[0][\"claims\"] and \"fixed\" in a[0][\"claims\"], \"missing theorem domain\"; assert \"\u2260 0\" in a[10][\"claims\"], \"missing actual relative-deviation carrier\"; assert \"10^14 times\" in a[13][\"claims\"], \"wrong exact width theorem scope\"'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-11-05-l1-reader-results:L1:1.1",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-reader-results:L1:1.1",
+          "status": "fixed",
+          "evidence": "The entire accepted GW170817 Introduction paragraph remains present: conservative distance and emission assumptions; asymmetric[-3e-15,+7e-16]; adopted symmetric envelope; alternative histories may weaken inference. Later title/range/numeric-input edits do not change it. This is source-fidelity disclosure, not a source-clock likelihood or astrophysical measurement. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 7b963cc29. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+            "declared": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-08-14-l1-stage13:L1:3.3",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-08-14-l1-stage13:L1:3.3",
+          "status": "fixed",
+          "evidence": "Actual c_GW_relative_deviation_eq proves (c_GW chi c-c)/c=c_GW_deviation chi under c!=0 by div_eq_iff and ring. Actual natural_endpoints_violate_ligo_for_every_c rewrites through it before applying endpoint proofs. Current manuscript displays the ratio and c!=0 endpoint carrier, includes physical c>0, and asserts no tensor/Lorentz covariance. git300c2a9 contains BOTH substantive statements and is current ancestry: this recognizes the August proof, not new/missing work. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c",
+          "verified_by": {
+            "command": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+            "declared": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-08-14-l1-stage13:L1:3.4",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-08-14-l1-stage13:L1:3.4",
+          "status": "fixed",
+          "evidence": "Whole current manuscript contains no computational decidability claim. Endpoint paragraph displays sqrt(1/10)<=sqrt(1/4)=1/2 and sqrt(10)>=sqrt4=2. Actual endpoint bodies use sqrt monotonicity/square identities and norm_num/linarith. Later generated numerals preserve this reasoning. Removal of the false prose is supported independently of negative grep. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 33ba6eeec498458cc9b4d9aaee5cf35653a201ca. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+            "declared": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-08-14-l1-stage13:L1:4.2",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-08-14-l1-stage13:L1:4.2",
+          "status": "fixed",
+          "evidence": "Actual section3 and source summary say adopted normalized[.1,10], one decade on each side of unity; definitions remain1/10 and10, width99/10. Current manuscript calls it an adopted comparison window centered geometrically at1 and explicitly says no microscopic normalization/center/endpoints are derived. Later removal of old dimensional-naturalness prose strengthens disclosure, not the physical result. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+            "declared": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-08-14-l1-stage13:L1:5.3",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-08-14-l1-stage13:L1:5.3",
+          "status": "fixed",
+          "evidence": "Current Introduction simply cites Volovik2024Vestigial for metric-before-tetrad vestigial order, without calling it a review. Bibliography retains original Fermionic quartet and vestigial gravity/JETP Letters119,330(2024). Historical independent publisher/institution and primary metadata review support original Article/Letter scope; no new web acquisition or physics-attribution acceptance is claimed. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 47f99e86a48cd503d64d3a8e5f03e1e3ccd3a5af. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+            "declared": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.2",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.2",
+          "status": "fixed",
+          "evidence": "Actual H docstring/summary retain dependent scalar clauses: at fixed cap P2 implies P3, and on nonnegative carrier compatibility yields P1; quarter point passes P1 and fails P2/P3. Actual H definition/proofs remain intact, with witness1 and nonexclusive counterexamples. Current appendix states the same dependency and does not promote scalar satisfiability to microscopic mode construction. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+            "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-11-05-l1-reader-results:L1:1.2",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-reader-results:L1:1.2",
+          "status": "fixed",
+          "evidence": "Actual tolGW170817 docstring identifies Abbott Eq1/sec4.1, asymmetric bound, conservative distance/emission assumptions, adopted symmetric envelope and alternative histories. Exact value remains3e-15. Current Introduction agrees; historical independent complete primary carrying-section review establishes locator and qualifications beyond lexical Eq1 presence. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+            "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.1",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.1",
+          "status": "fixed",
+          "evidence": "Actual imports Basic/LinearizedEFE/Mathlib and free inputs are described honestly. Fixed LigoSatisfied has one deviation argument; biconditional nonnegative carrier is retained; W6Ext.chi_RPA locator is corrected. Dispersion is explicitly illustrative real multiplication, requires physical source/state/unit matching, and abs_bound has |gamma|*|omega|. Current Discussion/appendix preserve unmatched coefficient/frequency and correction-only limits. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert (chr(96)+\"|\u03b3| \u00b7 \u03c9\"+chr(96)) not in s'",
+            "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert (chr(96)+\"|\u03b3| \u00b7 \u03c9\"+chr(96)) not in s'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.2",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.2",
+          "status": "fixed",
+          "evidence": "Actual source states exact[(1-tau)^2,(1+tau)^2], offsets-2tau+tau\u00b2 and+2tau+tau\u00b2, approximately\u00b12tau. Current Discussion correctly distinguishes susceptibility\u00b16e-15 from speed\u00b13e-15, and manuscript/source retain exact4tau width. No threshold or physical domain has changed. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'",
+            "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      },
+      {
+        "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.3",
+        "reader_status": "fixed",
+        "record": {
+          "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.3",
+          "status": "fixed",
+          "evidence": "Actual immediate c_GW docstring explicitly adopts a scalar susceptibility-to-speed law, says H does not derive it or construct a microscopic graviton, and retains physical mode/response/matter-reference matching. Module exactlyeab4 matches accepted R3 application/native source; all nonblock segments retain accepted semantics. Current manuscript explicitly assumes the law and leaves the same physical bridge open. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 3c9306bc5793245e5e7108c8c5b5fe0661497409. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+          "superseded_by": null,
+          "date": "2026-11-06",
+          "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+          "verified_by": {
+            "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Gravitational-wave propagation speed\",1)[1].split(\"-/\",1)[0]; n=\" \".join(d.replace(chr(96), \"\").split()); assert \"This definition adopts a scalar susceptibility-to-speed law\" in n and \"it does not derive this law or construct a microscopic graviton\" in n; assert \"Volovik 2024 + Phase 5y H1\" not in d and \"leading-order identification under\" not in d'",
+            "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Gravitational-wave propagation speed\",1)[1].split(\"-/\",1)[0]; n=\" \".join(d.replace(chr(96), \"\").split()); assert \"This definition adopts a scalar susceptibility-to-speed law\" in n and \"it does not derive this law or construct a microscopic graviton\" in n; assert \"Volovik 2024 + Phase 5y H1\" not in d and \"leading-order identification under\" not in d'",
+            "exit_code": 0,
+            "enforced": true,
+            "run_at": "2026-11-06"
+          }
+        }
+      }
+    ],
+    "source_catalog_human_audit_pins_unchanged": {
+      "lean/SKEFTHawking/GravitationalWaves.lean": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+      "papers/L1/paper_draft.tex": "5b89d421a4255d845016ac8c350d2f18ae107300f7226b314abcb38642c62ced",
+      "papers/L1/bundle_metadata.json": "9b1c3278da2bf706d3de6bc805eb21d69ba37f6b9bc5487f288a5cf8d1513993",
+      "papers/L1/claims_review.json": "7a4ac6ec9485bce91d0d093e469eb9b9611c2422743926eef544327e8e931b62",
+      "papers/L1/prose_state.json": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627",
+      "papers/L1/audit_log.jsonl": "aaf285b36a79e03f2259526251caccfb6354564f69e9feabc8dabc97e322cc49"
+    },
+    "four_blockers_still_open": [
+      {
+        "id": "L1-H1-endpoint-attribution",
+        "status": "open; fresh main review does not close or promote donor acceptance"
+      },
+      {
+        "id": "L1-B3-physical-normalization",
+        "status": "open; fresh main review does not close or promote donor acceptance"
+      },
+      {
+        "id": "L1-physical-dynamics-transport",
+        "status": "open; fresh main review does not close or promote donor acceptance"
+      },
+      {
+        "id": "L1-fix-propagation",
+        "status": "open; fresh main review does not close or promote donor acceptance"
+      }
+    ],
+    "ledger_id_gate": {
+      "rc": 0,
+      "checks_pass": 1,
+      "warnings": 1,
+      "annotated_legacy_exceptions": 59,
+      "baseline_unchanged": true
+    },
+    "preserved_limits": [
+      "Original physical B3 normalization/window, dynamics/matter/light, state/domain/adjoint and transport/frequency error bounds",
+      "Current whole-source native/fullgraph/fullmerge, final human and publication acceptance",
+      "Numerical literals139>117; no fresh portfolio231 snapshot"
+    ],
+    "all11_exact_declared_Verify_commands_run_by_writer": true
+  },
+  "final_archive_placement": {
+    "standalone_original_files": 120,
+    "archived_original_files": 2,
+    "exact_archived_path": "papers/AutomatedReviews/2026-11-05-l1-reader-results/PREDECESSOR_PROSE_REVIEW.md",
+    "archived_sha256": "7e854dd27eeaba583a04429382ea5e769e61b0346931c89cb9b6468b546f1685",
+    "bytes": 18256,
+    "exact_five_incidental_predecessor_nodes_removed": [
+      "review:2026-11-05-l1-reader-results:PREDECESSOR_PROSE_REVIEW:1",
+      "review:2026-11-05-l1-reader-results:PREDECESSOR_PROSE_REVIEW:2",
+      "review:2026-11-05-l1-reader-results:PREDECESSOR_PROSE_REVIEW:3",
+      "review:2026-11-05-l1-reader-results:PREDECESSOR_PROSE_REVIEW:4",
+      "review:2026-11-05-l1-reader-results:PREDECESSOR_PROSE_REVIEW:5"
+    ],
+    "every_other_current_canonical_node_deep_exact": true,
+    "all11_live_findings_fixed": true,
+    "six_source_catalog_human_audit_pins_unchanged": true,
+    "four_current_scientific_blockers_open": true,
+    "no_parser_gate_or_predicate_changes": true,
+    "no_whole_prose_or_physical_acceptance": true,
+    "additional_raw_stdout": {
+      "operation": "Archive existing raw historical stdout byte-exact instead of stripping13 original trailing-whitespace lines. This changes storage only; .stdout is not canonical review input.",
+      "path": "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/BROADER_FAST.stdout",
+      "sha256": "fb20ae6137d6e13c000a5e934579d94c524139f481814cf97775e1bee294fb8f",
+      "bytes": 87862,
+      "trailing_lines": [
+        157,
+        230,
+        235,
+        322,
+        345,
+        352,
+        383,
+        436,
+        480,
+        551,
+        559,
+        564,
+        580
+      ],
+      "no_scientific_source_changes": true,
+      "prior_independent_review": "R2 accepted actual11closures and121standalone+1predecessorarchive; this additional raw-output storage correction is ROOT verified, not a new claimed independent semantic review."
+    }
+  },
+  "independent_current_application_review_sha256": "6feb712e4638aa536362e1ea40d067fbd96e7042185579cdc28e1a42cccf6b85",
+  "operational_requiredness_correction": "R3 withdraws mandatory newer controller import; no infrastructure changes required or made. Exact scientific-source admission/integration and original full gates remain owed.",
+  "supporting_current_checks": {
+    "original_review_marker_contracts": {
+      "passed": 3,
+      "failed": 0,
+      "initial_three_path_invocation_exit": 2,
+      "correction": "One actual command per file, all3PASS; original incorrect invocation retained."
+    },
+    "ledger_ids_resolve": "PASS with unchanged59 annotated legacy exceptions",
+    "corpus_validation": {
+      "passed": 1,
+      "failed": 2,
+      "mint_findings": "PASS",
+      "severity_declared": "FAIL:8 documents lack declared severity,5 have unmappable lanes",
+      "verify_one_command": "FAIL:56 malformed controls",
+      "receipt_retained": true,
+      "no_global_waiver": true
+    },
+    "existing_planner": "No remaining L1 manuscript/GW source groups; snapshot-local0slots is not canonical capacity authority."
+  }
+}

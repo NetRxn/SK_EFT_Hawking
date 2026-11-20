@@ -1,0 +1,64 @@
+{
+  "source_before": "1dc710e9185411ca86c794b75b95e86552e7610b",
+  "measured_at": "2026-11-06T14:35:51.129401+00:00",
+  "old_sha256": "f5231e903694eef7b637da53e759e728bfcc57da6ab158094b836c648c4bb341",
+  "new_sha256": "eb926f0fb30a8df77f38993ddb897441fe6f1aa95742c07d04811c7e7a363b0a",
+  "old_bytes": 9692,
+  "new_bytes": 9693,
+  "parsed_object_preserved": true,
+  "exact_delta": "one terminal LF; every prior byte preserved",
+  "mutation_restore_exact_bytes_and_mtime": true,
+  "checker_sha256_unchanged": "482447311c72e570378dfb3de728a8780e20789d085099950670e7d42df57dd5",
+  "validator_pin_hunks": "UNAPPLIED, held for bundled architecture assessment",
+  "results": [
+    {
+      "label": "canonical corrected bytes",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]"
+      ],
+      "returncode": 0,
+      "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+      "stderr": ""
+    },
+    {
+      "label": "actual production terminal LF removed",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]"
+      ],
+      "returncode": 1,
+      "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_ TestCorpusIsCanonical.test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json] _\n\nself = <tests.test_bundle_json_serializer.TestCorpusIsCanonical object at 0x10b0424e0>\nblob = PosixPath('/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/L2/bundle_metadata.json')\n\n    @pytest.mark.parametrize(\"blob\", BLOBS, ids=lambda p: str(p.relative_to(REPO)))\n    def test_blob_is_byte_stable_through_the_serializer(self, blob):\n        \"\"\"Round-trip is a fixed point: load, re-serialize, bytes identical.\n        This is what makes `git diff` usable as evidence of what a tool changed.\"\"\"\n        from bundle_json import dump_bundle_json\n        text = blob.read_text(encoding=\"utf-8\")\n>       assert dump_bundle_json(json.loads(text)) == text\nE       assert '{\\n  \"bundle...open\": 1\\n}\\n' == '{\\n  \"bundle...l_open\": 1\\n}'\nE         \nE         Skipping 9646 identical leading characters in diff, use -v to show\nE           _open\": 1\nE         - }\nE         + }\n\ntests/test_bundle_json_serializer.py:63: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]\n1 failed in 0.03s\n",
+      "stderr": ""
+    },
+    {
+      "label": "exact production bytes and mtime restored",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]"
+      ],
+      "returncode": 0,
+      "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "one exact existing serializer test and journalled production control only; not full suite, scientific or publication acceptance"
+}

@@ -371,18 +371,43 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0505065',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf',
+        'primary_source_path': None,
         'used_in': [
             'src/core/transonic_background.py',
             'papers/paper1_first_order/paper_draft.tex',
         ],
         'provides': [],
-        'notes': 'Canonical review of analog gravity. Acoustic metric definition.',
+        'notes': ('2005 review metadata; no verified 2005 full body is held. '
+                  'Historical artifact Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf '
+                  'is arXiv gr-qc/0505065v4 (29 November 2024). '
+                  'Its bytes and historical fetch record are preserved. '
+                  'The 2011 E1 reference is registered separately as Barcelo2011.'),
     },
 
     # ════════════════════════════════════════════════════════════════
     # Polariton analog gravity
     # ════════════════════════════════════════════════════════════════
+
+    'Barcelo2011': {
+        'authors': 'Barceló, C., Liberati, S., Visser, M.',
+        'title': 'Analogue Gravity',
+        'journal': 'Living Reviews in Relativity',
+        'volume': 14,
+        'page': '3',
+        'year': 2011,
+        'doi': '10.12942/lrr-2011-3',
+        'arxiv': 'gr-qc/0505065v3',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf',
+        'used_in': ['papers/E1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Published 2011 review metadata verified at the publisher. '
+                  'Held full author preprint v3, 12 May 2011; the journal body is '
+                  'not the cached artifact. Eqs. (61), (63)-(64) distinguish '
+                  'acceleration g_H from frequency kappa = g_H/c_H and give '
+                  'k_B T_H = hbar kappa/(2 pi). Not the 2005 or 2024 edition.'),
+    },
 
     'Falque2025': {
         'authors': 'Falque, K., Delhom, A., Glorieux, Q., Giacobino, E., Bramati, A., Jacquet, M. J.',
@@ -3496,19 +3521,17 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
                     'papers/paper25_gravitational_waves/paper_draft.tex'],
         'provides': [],
-        'notes': 'Vestigial gravity: composite ⟨ē e⟩ condenses before tetrad ⟨e⟩. '
-                 'Phase 6a Wave 1 derivation is in the fully-condensed phase '
-                 'where this distinction is irrelevant. Wave 2 cites for the '
-                 'second-sound graviton identification. ⚠️ CORRECTED 2026-08-14 '
-                 '(review:2026-08-14-l1-stage13:L1:1.1): this paper does NOT '
-                 'contain that identification — its subject is the two-step '
-                 'transition and metric-before-tetrad condensation. The '
-                 'identification is advanced in `Volovik2026SecondSound` '
-                 '(arXiv:2601.00639) and `Volovik2024VacuumDecay` '
-                 '(arXiv:2410.04392). NOTE: same paper as '
-                 '`Volovik2024` (arXiv:2312.09435); the two keys exist for '
-                 'historical reasons in different paper drafts. Consolidate in '
-                 'a future pass.',
+        'notes': (
+            'Vestigial gravity: Section III proposes metric order before a nonzero tetrad expectation. This'
+            ' is not a derivation of the L1 susceptibility-dependent spin-2 speed law or second-sound '
+            'identification. Historical correction 2026-08-14 (review:2026-08-14-l1-stage13:L1:1.1) '
+            'recorded that this paper does not contain that identification; current L1 distinguishes the de'
+            ' Sitter second-sound proposal in Volovik2026SecondSound from the thermodynamic framework in '
+            'Volovik2024VacuumDecay. The fully-condensed versus vestigial distinction requires physical '
+            'matching rather than being automatically irrelevant. Same paper as Volovik2024 '
+            '(arXiv:2312.09435); duplicate keys remain for historical draft provenance and future '
+            'consolidation.'
+        ),
     },
     'Volovik2026SecondSound': {
         'authors': 'Volovik, G. E.',
@@ -3523,21 +3546,20 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path':
             'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.abstract.txt',
-        'used_in': ['papers/L1/paper_draft.tex'],
+        'used_in': ['papers/L1/paper_draft.tex', 'papers/F/paper_draft.tex'],
         'provides': [],
-        'notes': 'THE actual source of the second-sound--graviton identification, '
-                 'registered 2026-08-14 to close review:2026-08-14-l1-stage13:L1:1.1, '
-                 'which found the identification misattributed to Volovik2024Vestigial. '
-                 'Derives s₂ = c EXACTLY on the de Sitter two-fluid background, '
-                 'independent of H — structural from the stiff-matter equation of '
-                 'state w_n = 1, not tunable — and records GW170817 as SATISFIED. '
-                 'Also leaves the graviton type open, describing a scalar mode, '
-                 'against L1 spin-2 assignment (which comes from the ADW Goldstone '
-                 'counting and is ours). ⚠️ TITLE PROVENANCE: taken from the project '
-                 'corpus (Lit-Search/Phase-5y, two independent files quote it), NOT '
-                 'from a fresh Crossref/arXiv fetch. Needs fresh-fetch confirmation '
-                 'and a primary_source_path before any Stage-13 green that depends '
-                 'on this bibitem metadata.',
+        'notes': (
+            'Registered 2026-08-14 to close historical review:2026-08-14-l1-stage13:L1:1.1, which '
+            'identified the misattribution to Volovik2024Vestigial. Current source scope: '
+            'arXiv:2601.00639v1 Section III Eqs. (6)-(9) gives s2=c within the de Sitter two-fluid model; '
+            'Section IV discusses possible scalar/helicity interpretations and leaves the graviton type '
+            'open. It supplies neither the assumed L1 law c_GW=c*sqrt(chi_vest) nor a microscopic spin-2 '
+            'tensor/matter bridge; luminality of that source model does not establish GW170817 '
+            'compatibility of an unmatched substrate. The original physical L1 BUILD remains open. ⚠️ TITLE'
+            ' PROVENANCE: taken from the project corpus (Lit-Search/Phase-5y, two independent files quote '
+            'it), NOT from a fresh Crossref/arXiv fetch. Needs fresh-fetch confirmation and a '
+            'primary_source_path before any Stage-13 green that depends on this bibitem metadata.'
+        ),
     },
     'Volovik2024VacuumDecay': {
         'authors': 'Volovik, G. E.',
@@ -3554,12 +3576,15 @@ CITATION_REGISTRY = {
             'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2024VacuumDecay.abstract.txt',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Companion source for the second-sound--graviton identification; '
-                 'registered 2026-08-14 alongside `Volovik2026SecondSound` to close '
-                 'review:2026-08-14-l1-stage13:L1:1.1. Two-fluid de Sitter '
-                 'thermodynamics with a Zel\'dovich stiff-matter component. '
-                 '⚠️ TITLE PROVENANCE: same caveat as `Volovik2026SecondSound` — '
-                 'corpus-sourced, not fresh-fetched.',
+        'notes': (
+            'Registered 2026-08-14 alongside Volovik2026SecondSound to close historical '
+            'review:2026-08-14-l1-stage13:L1:1.1. Current source scope: the held arXiv:2410.04392v11 '
+            'thermodynamic framework has a gravitational normal component with stiff-matter equation of '
+            'state w=1 (Section IV). Distinguish it from the separate 2026 second-sound paper and from the '
+            'assumed L1 normalized susceptibility law; neither source supplies the required microscopic '
+            'spin-2 tensor/matter matching. ⚠️ TITLE PROVENANCE: same caveat as `Volovik2026SecondSound` — '
+            'corpus-sourced, not fresh-fetched.'
+        ),
     },
     # ── The 2017 GW170817-constraint sweep ────────────────────────────────
     # Four back-to-back PRLs (251301-251304, 18 Dec 2017) that turned the c_GW
@@ -3581,11 +3606,16 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.abstract.txt',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'scalar-tensor / vector-tensor elimination from the c_GW bound',
-            'independent graviton-mass bound in bimetric gravity',
+            'constraints on specified scalar-tensor and vector-tensor actions under the stated background and no-finely-tuned-cancellation assumptions',
+            'conditional graviton-mass bound in bimetric gravity, assuming similar amplitudes of the two modes',
         ],
-        'notes': 'Sweep member covering the vector-tensor and bimetric classes. '
-                 'Cited by L1 to delimit what the 2017 sweep reached.',
+        'notes': (
+            'Cited by L1 to delimit the 2017 sweep. Held arXiv:1710.06394v1 treats '
+            'scalar-tensor/vector-tensor actions and a conditional bimetric mass bound; its Caveats '
+            'distinguish present low-redshift propagation from other epochs and cosmological-background '
+            'matching. These restrictions do not eliminate every theory in the named classes or derive the '
+            'L1 scalar speed law.'
+        ),
     },
     'CreminelliVernizzi2017': {
         'authors': 'Creminelli, P., Vernizzi, F.',
@@ -3601,11 +3631,16 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.abstract.txt',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'no-tuning criterion: c_GW unaffected on nearby cosmological solutions',
-            'Horndeski / beyond-Horndeski / DHOST operator relations',
+            'no-tuning criterion requiring luminal GW propagation on nearby cosmological backgrounds, not only one chosen solution',
+            'operator relations for the specified Horndeski, beyond-Horndeski and degenerate higher-order scalar-tensor settings',
         ],
-        'notes': 'Supplies the stability-under-nearby-solutions criterion that L1 '
-                 'contrasts with its own window-measure argument.',
+        'notes': (
+            'Supplies the nearby-background robustness criterion contrasted with the L1 adopted-window '
+            'width comparison. Held full text is arXiv:1710.05877v3 (June 2018); its EFT and '
+            'covariant-action sections impose relations under stated scalar/background assumptions. This '
+            'summary does not establish that every v3 detail is unchanged from the 2017 published version '
+            'or exclude all theories in the broad classes.'
+        ),
     },
     'SaksteinJain2017': {
         'authors': 'Sakstein, J., Jain, B.',
@@ -3622,11 +3657,16 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.abstract.txt',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'c_GW bound combined with cluster + M87 SEP constraints',
-            'quartic-galileon exclusion; disformal photon-coupling bound',
+            'GW-speed bound combined with cluster and stellar tests to constrain beyond-Horndeski parameters',
+            'separate GW plus M87 SEP constraints on the covariant quartic galileon for the considered order-unity matter couplings; disformal photon-coupling bound',
         ],
-        'notes': 'The sweep member that combines the bound with independent '
-                 'astrophysical data rather than using it alone.',
+        'notes': (
+            'Held arXiv:1710.05893v3 distinguishes the beyond-Horndeski parameter constraints using '
+            'cluster/stellar data from the separate GW plus M87 black-hole combination. The latter makes '
+            'the covariant quartic galileon cosmologically irrelevant for the representative order-unity '
+            'matter couplings studied; it is not an unconditional exclusion of all galileon or '
+            'scalar-tensor theories.'
+        ),
     },
     'EzquiagaZumalacarregui2017': {
         'authors': 'Ezquiaga, J. M., Zumalacarregui, M.',
@@ -3642,13 +3682,16 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.abstract.txt',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'broadest sweep coverage: Einstein-aether, Horava, Generalized Proca, '
-            'TeVeS, MOND-like',
-            'GW-speed bound |c_g/c - 1| <= 5e-16',
+            'constraints on GW-speed-modifying couplings in Einstein-aether, some Horava sectors and Generalized Proca; effects on TeVeS and MOND-like models',
+            'adopted GW-speed bound |c_g/c - 1| <= 5e-16 in arXiv:1710.05901v2, distinct from the L1 conservative symmetric cap 3e-15',
         ],
-        'notes': 'L1 leans on this paper\'s closing enumeration: every class it names '
-                 'has a Lagrangian predicting a varying c_g, which is exactly what the '
-                 'kinematic vestigial identification lacks.',
+        'notes': (
+            'Held arXiv:1710.05901v2 constrains specified actions/couplings and discusses viable luminal '
+            'alternatives and background-independent compensation. Its closing enumeration concerns '
+            'affected sectors under physical model and matter-coupling assumptions, not every member of '
+            'every named theory class. L1 assumes a scalar susceptibility law and does not infer '
+            'microscopic operator coefficients from this comparison.'
+        ),
     },
     'Abbott2017GW170817': {
         'authors': 'Abbott, B. P. et al. (LIGO+Virgo+EM partners)',
@@ -3665,16 +3708,20 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Abbott2017GW170817.pdf',
         'used_in': ['papers/paper25_gravitational_waves/paper_draft.tex',
                     'papers/paper40_higher_curvature/paper_draft.tex'],
-        'provides': ['c_GW deviation bound (|Δc/c| ≤ 7e-16/3e-15) '
-                     '(GW.C_GW_DEVIATION_UPPER_BOUND, GW.C_GW_DEVIATION_LOWER_BOUND, '
-                     'GW.C_GW_TWO_SIDED_CAP); '
-                     'primary experimental anchor for HC_BOUND_LIGO_C_SQ ≲ 10⁶² '
-                     'via Calmet-Capozziello-Pryer 2017 EFT translation'],
-        'notes': 'GW170817 multi-messenger constraint on the GW propagation speed; '
-                 'load-bearing for the Phase 6a Wave 2 falsification of the Volovik '
-                 'vestigial-second-sound graviton identification, and for the '
-                 'Phase 6e Wave 2 LIGO-derived ceiling on the Stelle β coefficient '
-                 '(paper40).',
+        'provides': [
+            'asymmetric multimessenger speed bound -3e-15 <= Delta c/c <= +7e-16 under Section 4.1 distance/emission assumptions; the project adopts symmetric envelope |Delta c/c| <= 3e-15 (GW.C_GW_DEVIATION_UPPER_BOUND, GW.C_GW_DEVIATION_LOWER_BOUND, GW.C_GW_TWO_SIDED_CAP)',
+            'primary experimental anchor for HC_BOUND_LIGO_C_SQ approximately <= 1e62 via the Calmet-Capozziello-Pryer 2017 EFT translation',
+        ],
+        'notes': (
+            'Multimessenger ApJL 848, L13 (arXiv:1710.05834), distinct from the GW detection report PRL '
+            '119, 161101. Section 4.1 derives its speed interval using a conservative distance and assumed '
+            'emission window; alternative emission histories can weaken the constraint. In L1 the adopted '
+            'symmetric cap restricts the assumed normalized scalar law to a finite interior interval within'
+            ' adopted [0.1,10], including unity; it excludes the two adopted endpoints, not the entire '
+            'range or Volovik framework. Original microscopic physical BUILD remains open. Also retained as'
+            ' the Phase 6e Wave 2 input to the LIGO-derived Stelle beta ceiling in paper40; that separate '
+            'EFT translation is not rederived here.'
+        ),
     },
     'CrossleyGloriosoLiu2017': {
         'authors': 'Crossley, M. and Glorioso, P. and Liu, H.',
@@ -6483,14 +6530,14 @@ CITATION_REGISTRY = {
         'volume': 6,
         'page': '81-95',
         'year': 2006,
-        'doi': None,
+        'doi': '10.26421/QIC6.1-6',
         'arxiv': 'quant-ph/0505030',
-        'doi_verified': None,
+        'doi_verified': '2026-11-06',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf',
         'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Canonical reference for the polylogarithmic length bound of the Solovay-Kitaev algorithm. Cited in D4 §9 Stage 10.E prose alongside KitaevShenVyalyi2002 (existence form) and AharonovArad2011 (group-commutator substrate). No DOI: QIC vol. 6 (Rinton Press) does not register article DOIs; arXiv quant-ph/0505030 is the canonical locator.',
+        'notes': 'Canonical balanced-commutator length reference. Held arXiv quant-ph/0505030v2, section 3 Eqs. (8)-(9): length exponent log(5)/log(3/2), distinct from pointer-compressed runtime log(3)/log(3/2); section 5 extends the analysis to SU(d). DOI/title/authors/venue verified against the publisher record on 2026-11-06. Legacy abstract-cache exponent was false; see the source-reconciliation evidence.',
     },
 
     'KitaevShenVyalyi2002': {
@@ -8096,8 +8143,10 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Abbott2017GW170817Detection.pdf',
         'used_in': ['src/core/provenance.py'],
         'provides': [
-            'GW.GW170817_PEAK_FREQ_HZ (inspiral peak frequency)',
-            'GW.GW_FREQ_HZ_PROBE (operational alias)',
+            'GW.GW170817_PEAK_FREQ_HZ (event context only for the project-adopted '
+                '100 Hz probe; not a measured inspiral peak)',
+            'GW.GW_FREQ_HZ_PROBE (same project-adopted probe; no physical band '
+                'or peak calibration)',
         ],
         'notes': 'GW170817 detection paper (PRL 119:161101). Distinct from Abbott2017GW170817 (which canonical-tracks the multimessenger speed-of-graviton paper ApJL 848:L13 used for HC_BOUND_LIGO_C_SQ in paper40). Both Abbott2017 papers cite the same event but address different physics.',
     },
@@ -12692,6 +12741,210 @@ CITATION_REGISTRY = {
     # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
     # ════════════════════════════════════════════════════════════════
 
+    # Exact citing-key identities reconciled against current sources (2026-10-15).
+    'CompanionCompilation': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D8/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'CompanionFaultTolerance': {
+        'authors': 'Roehm, John G.',
+        'title': 'Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D6/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'CompanionStochastic': {
+        'authors': 'Roehm, John',
+        'title': "Verified Stochastic Calculus and Large-Deviation Foundations for Lean 4 / Mathlib4: A Predicate-Substrate Library for the Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Principles, with a Typeclass Bridge to Schwinger--Keldysh Effective Field Theory",
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/I3/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'Roehm2026TQC': {
+        'authors': 'Roehm, John',
+        'title': 'Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D4/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD8Compilation': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D8/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD4Topological': {
+        'authors': 'Roehm, John',
+        'title': 'Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D4/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD6FaultTolerant': {
+        'authors': 'Roehm, John G.',
+        'title': 'Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D6/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD9Certification': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D9/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'FinazziLiberatiSindoni2012': {
+        'authors': 'Finazzi, S., Liberati, S., Sindoni, L.',
+        'title': 'Cosmological Constant: A Lesson from Bose-Einstein Condensates',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 108,
+        'page': '071101',
+        'year': 2012,
+        'doi': '10.1103/PhysRevLett.108.071101',
+        'arxiv': '1103.4841',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf',
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of FinazziLiberatiSindoni2012PRL; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:1103.4841v2, 28 February 2012; the separate proceedings source 1204.3039 is not substituted.',
+    },
+
+    'Kitaev2006': {
+        'authors': 'Kitaev, A.',
+        'title': 'Anyons in an exactly solved model and beyond',
+        'journal': 'Annals of Physics',
+        'volume': 321,
+        'page': '2-111',
+        'year': 2006,
+        'doi': '10.1016/j.aop.2005.10.005',
+        'arxiv': 'cond-mat/0506438',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf',
+        'used_in': ['papers/D2/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of KitaevHonest2006; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:cond-mat/0506438v3, 1 January 2008, distinct from the 2006 publication metadata.',
+    },
+
+    'Wang2026TMDPolariton': {
+        'authors': 'Wang, Z., Kim, B., Zhen, B., He, L.',
+        'title': 'Strongly Nonlinear Nanocavity Exciton Polaritons in Gate-Tunable Monolayer Semiconductors',
+        'journal': 'PRL',
+        'volume': 136,
+        'page': '146901',
+        'year': 2026,
+        'doi': '10.1103/gc15-qsvf',
+        'arxiv': '2411.16635',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf',
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of WangKimBZHe2026PennTMDPolariton; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:2411.16635v1 (2024), authors Wang/He/Kim/Zhen; published metadata has author order Wang/Kim/Zhen/He. The published body was read online for the cited linewidths, but is not the cached file. No identity of all parameters across revisions is asserted.',
+    },
+
+    'Verlinde1988': {
+        'authors': 'Verlinde, Erik',
+        'title': 'Fusion rules and modular transformations in 2D conformal field theory',
+        'journal': 'Nuclear Physics B',
+        'volume': 300,
+        'page': '360-376',
+        'year': 1988,
+        'doi': '10.1016/0550-3213(88)90603-7',
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json',
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Publisher bibliographic identity verified 2026-10-15. Full body not held or read in this package. Existing acquisition writer cached Crossref metadata only on 2026-10-15; no abstract or full body was acquired, so this does not back a source-content claim. No citation-class exemption is declared.',
+    },
 }
 
 

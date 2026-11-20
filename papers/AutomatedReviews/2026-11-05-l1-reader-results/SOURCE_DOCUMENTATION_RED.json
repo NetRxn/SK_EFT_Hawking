@@ -1,0 +1,7 @@
+{
+  "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"\n                                                                                                                                                                               ^^^^^^^^^^^^^^\nAssertionError: GW170817 tolerance docstring cites the wrong primary equation\n",
+  "source_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54"
+}

@@ -1,0 +1,98 @@
+{
+  "verdict": "ACCEPT_SCOPED_ARTIFACT_SYNCHRONIZATION",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-generated-artifacts-review-r2.json",
+  "candidate": "9d0d7fc3c6ab01ab58118cd474cabda43260c158",
+  "initial_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-generated-artifacts-review-r2",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "final_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-generated-artifacts-review-r2",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "prior_review": {
+    "path": "/tmp/l1-generated-artifacts-review-r1.json",
+    "verdict": "REVISE",
+    "preserved": true,
+    "resolution": "R2 adds canonical producer-regenerated counts.tex; r1 rejection remains valid for its original three-file composition."
+  },
+  "findings": [],
+  "artifact_sha256": {
+    "docs/counts.json": "c11360067c3bb224675c87dfde80c20d6e402a71a3dcf397f20bb9af901a967d",
+    "docs/counts.tex": "6bda8a2f70d47978f4a84500429ca4ee4141a87760e0b36a321daca327497579",
+    "lean/lean_deps.json.hash": "aa78bff4aa1ba92e39dd7f54a21e15f6ee112260d7a87ce53a806a5eca355028",
+    "papers/paper15_methodology/tables/table2_checks.tex": "585507d8f6a1ab80373b2597a57666fbb2eab7350f9cdf811f93a6e93776e8a1"
+  },
+  "r1_three_artifacts_byte_unchanged": {
+    "docs/counts.json": true,
+    "lean/lean_deps.json.hash": true,
+    "papers/paper15_methodology/tables/table2_checks.tex": true
+  },
+  "counts": {
+    "lean_all_21_fields_exact": true,
+    "python_all_fields_exact": true,
+    "aristotle_all_fields_exact": true,
+    "collection_receipt": "/tmp/l1-generated-counts-collection-r1.stdout",
+    "collection_summary": "6927/7019 tests collected (92 deselected) in 7.50s",
+    "producer_regex_total": 7019,
+    "tex_totaltests": 7019,
+    "json_unchanged_regeneration_stdout": "Counts unchanged \u2014 /Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/docs/counts.json left byte-identical",
+    "source_path_matches_actual": true
+  },
+  "full_latex": {
+    "unchanged_canonical_generate_tex_used": true,
+    "all_bytes_exact": true,
+    "bytes": 4717,
+    "all_lines": 119,
+    "macro_count": 107,
+    "generated_header_matches_json": true,
+    "semantic_diff_vs_HEAD": [
+      {
+        "old": "\\newcommand{\\totaltests}{6891}",
+        "new": "\\newcommand{\\totaltests}{7019}"
+      }
+    ],
+    "memory_sink_writes": 1,
+    "native_capable_loader_intercept": [
+      "bundle_closure.load_records"
+    ],
+    "forbidden_calls": [],
+    "method": "Actual generate_tex(counts, memory_sink, deps=preloaded_json). Actual D11 closure/count code ran on identical preloaded JSON, replacing only native-capable loader. Direct autogen loader is read-only. Original reuse classifier, source counters, per-section/module counters and live pin reader ran unchanged. No fullgraph builder, native helper, or scientific evaluator called."
+  },
+  "lean_hash": {
+    "computed": "1d45fd4918bfe9c6",
+    "stored": "1d45fd4918bfe9c6",
+    "declarations": 41034,
+    "declaration_json_sha256": "942279d0b9a4480b6396acd0717a1709a763aeee1a74289bfefbdb41d0664e6d"
+  },
+  "paper15_table": {
+    "canonical_render_byte_exact": true,
+    "registry_rows": 89,
+    "row14": {
+      "number": "14",
+      "name": "\\texttt{readiness\\_submission\\_gate}",
+      "description": "No paper has a blocked readiness gate; report outstanding state and measurement"
+    },
+    "consumer_semantics": "Literal blocked at either priority fails; outstanding nonblocked gates can remain YELLOW/advisory; absent gate population fails; state/measurement/evidence/blocker metadata are reported. YELLOW/OPEN is not human-ready; human submission requires GREEN. No threshold/policy change in artifact sync."
+  },
+  "canonical_regeneration_receipt": {
+    "candidate": "9d0d7fc3c6ab01ab58118cd474cabda43260c158",
+    "argv": [
+      "/Users/johnroehm/.local/bin/uv",
+      "run",
+      "python",
+      "scripts/update_counts.py"
+    ],
+    "started_at": "2026-11-06T11:06:15.225160+00:00",
+    "purpose": "Existing generated JSON/TeX producer synchronization after independent REVISE; no machinery or threshold change",
+    "returncode": 0,
+    "finished_at": "2026-11-06T11:06:18.674162+00:00",
+    "status_after": " M docs/counts.json\n M docs/counts.tex\n M lean/lean_deps.json.hash\n M papers/paper15_methodology/tables/table2_checks.tex\n"
+  },
+  "execution_scope": "Read-only source/AST/preloaded index/count/render checks; only r2 md/json reports written. No repository/Git/index/ledger/notebook/runtime changes, tests/validators/fullgraph, native/Lean/build, scientific evaluators, or collection repeats.",
+  "acceptance_scope": "ACCEPT only these four exact generated artifact bytes for ordinary artifact synchronization commit. ROOT owns integration and required gates. No full-profile/full-merge/scientific-production/human/publication acceptance; live CI status is separate and was not reverified here."
+}

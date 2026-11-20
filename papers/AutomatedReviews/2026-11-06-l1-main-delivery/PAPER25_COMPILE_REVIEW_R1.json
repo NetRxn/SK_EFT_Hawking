@@ -1,0 +1,180 @@
+{
+  "task": "l1-paper25-compile-acceptance-r1",
+  "parent": "publication-remediation",
+  "reviewer": "independent compile/render reviewer",
+  "acceptance_reviewer": "ROOT",
+  "verdict": "ACCEPT_ORIGINAL_COMPILE_INVARIANT_ONLY",
+  "review_date_utc": "2026-11-06T12:15:44.656509+00:00",
+  "candidate_head": "8b0ab67533918d4aabdf04c22499b3768dc05314",
+  "candidate_diff": "Only newly generated papers/paper25_gravitational_waves/paper_draft.pdf; source frozen.",
+  "finding": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:6",
+  "original_verify": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+  "original_observation": "Historical13fatal errors, first Unicode Gamma U+0393; not re-executed by reviewer.",
+  "expected_invariant": "Draft compiles to actual PDF with zero fatal TeX errors.",
+  "actual_forced_compile": {
+    "executed_by": "ROOT, reviewer read retained actual receipt and kept log; reviewer did not run compiler",
+    "argv": [
+      "uv",
+      "run",
+      "python",
+      "scripts/compile_bundle_pdf.py",
+      "paper25_gravitational_waves",
+      "--force",
+      "--keep-artifacts"
+    ],
+    "returncode": 0,
+    "pages": 5,
+    "fatal_tex_errors": 0,
+    "overfull": 0,
+    "rendered_unresolved_markers": 0,
+    "dropped_class_options": 0,
+    "kept_log": "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-paper25_gravitational_waves-4ibgdopo/paper_draft.log",
+    "kept_pdf_equals_current": true
+  },
+  "author_anchor": {
+    "commit": "455358440ab0c16dee043de0d574eff13dec7a78",
+    "is_current_ancestor": true,
+    "subject": "Prepare main-based L1 consumer source checkpoint",
+    "repair": "Replaced literal Unicode Gamma section heading with Illustrative dispersion correction; rewrote Unicode-bearing dispersion formula into TeX math; added missing GNemerg/Lambdauv/Mpl/Nf macros and retained mathematical content in qualified prose. Current source contains no literal Unicode Gamma.",
+    "parent_source_sha256": "b873d4f23bd8dd33a3366f0563d41d26470abde13cd11f7c9ef53b39b075ddbe",
+    "commit_source_sha256": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff",
+    "excluded_nonancestor": "e196381b7d599211f5f2d5c16c2480bd0c1e140e has similar repair but ancestry check returns1; not current author anchor.",
+    "today_no_source_authorfix": true
+  },
+  "pdf_byte_difference": {
+    "preimage_equals_HEAD_committed_pdf": true,
+    "length_both": 372662,
+    "differing_byte_count": 12,
+    "zero_based_differing_offsets": [
+      371303,
+      371304,
+      371305,
+      371306,
+      371307,
+      371308,
+      371332,
+      371333,
+      371334,
+      371335,
+      371336,
+      371337
+    ],
+    "only_CreationDate_and_ModDate": true,
+    "old_dates": "D:20261106070042Z",
+    "new_dates": "D:20261106115707Z",
+    "no_ID_difference": true,
+    "all_other_bytes_identical": true,
+    "source_date_explanation": "Existing compiler sets SOURCE_DATE_EPOCH from newest input-closure mtime and clears pdftrailerid; dates are metadata, not wall-clock compile start."
+  },
+  "full_pdftotext": {
+    "preimage_equal": true,
+    "bytes": 18515,
+    "sha256": "34834d1385a980c12a8320d1cfd1e68e42d85618785f74af1102a888d749acd1"
+  },
+  "pages": [
+    {
+      "page": 1,
+      "current_png": "/tmp/l1-paper25-current-r1-1.png",
+      "preimage_png": "/tmp/l1-paper25-preimage-r1-1.png",
+      "sha256_both": "131a60cc1db05bdfc5866d7d3bc595c556ed7b44c0f125255faae420023e477e",
+      "bytes_equal": true,
+      "visually_inspected_current": true,
+      "status": "pass_at_compile_render_scope",
+      "notes": "Title, author, abstract, introduction and setup readable; symbols and displayed result present; no clipping or missing glyphs observed."
+    },
+    {
+      "page": 2,
+      "current_png": "/tmp/l1-paper25-current-r1-2.png",
+      "preimage_png": "/tmp/l1-paper25-preimage-r1-2.png",
+      "sha256_both": "4edf7df3d8e99c6e4929138acd4879140f50c1bd10131878da022132aaa4dac1",
+      "bytes_equal": true,
+      "visually_inspected_current": true,
+      "status": "pass_at_compile_render_scope",
+      "notes": "Equations1-3, interval proof, endpoint theorems and conjunction display fit columns. Dense theorem identifiers remain readable; no clipped mathematical text observed."
+    },
+    {
+      "page": 3,
+      "current_png": "/tmp/l1-paper25-current-r1-3.png",
+      "preimage_png": "/tmp/l1-paper25-preimage-r1-3.png",
+      "sha256_both": "52a8028c5209f5fb01dd26cf409ad4968ffca277ded68f431c26b2e9e8fb8780",
+      "bytes_equal": true,
+      "visually_inspected_current": true,
+      "status": "pass_at_compile_render_scope",
+      "notes": "Conjunction continuation, all four failures, Gamma_H acoustic discussion, units and equations4-8 readable. Figure cross-reference resolves. No Unicode-error artifacts observed."
+    },
+    {
+      "page": 4,
+      "current_png": "/tmp/l1-paper25-current-r1-4.png",
+      "preimage_png": "/tmp/l1-paper25-preimage-r1-4.png",
+      "sha256_both": "6d42a9f71aee2fff9640d175f84d0ca5f212cdb7656e51c339be7655e4546b7a",
+      "bytes_equal": true,
+      "visually_inspected_current": true,
+      "status": "pass_at_compile_render_scope",
+      "notes": "Actual Fig1 intact and legible, logarithmic axis, blue curve, adopted band, endpoint annotations and unity star present. Caption, conclusions and references visible. Figure is delayed to this page, consistent with nonfatal stuck-float warning."
+    },
+    {
+      "page": 5,
+      "current_png": "/tmp/l1-paper25-current-r1-5.png",
+      "preimage_png": "/tmp/l1-paper25-preimage-r1-5.png",
+      "sha256_both": "e46182621a4cc10a910d84a38a4387f2e2b042cd84d10934ba70650b7a4a5405",
+      "bytes_equal": true,
+      "visually_inspected_current": true,
+      "status": "pass_at_compile_render_scope",
+      "notes": "Reference-list continuation1-12 complete across pages4-5; page5 is sparsely occupied by final references, not a missing-content page. No clipped references observed."
+    }
+  ],
+  "nonfatal_warnings": [
+    "Class default10pt size",
+    "nameref label-definition warning",
+    "epstopdf shell escape disabled",
+    "hyperref PDF bookmark string removes math shift/subscript on section title",
+    "Underfull boxes in identifier-heavy prose/references",
+    "Float stuck warning at source line422; actual figure appears intact page4"
+  ],
+  "prior_scoped_evidence": "Read both composed source/render reports from INDEPENDENT_MAIN_REVIEWS_AND_CLAIMS.zip. Their earlier Paper25source760c21f/PDFb809ffc render acceptance is corroboration only, not current hashes or broadened acceptance. Retain all original scoped limits.",
+  "limits": [
+    "No source fix, test, compiler, validator/evaluator, scientific import, native/slot operation or finding closure performed by reviewer.",
+    "No fresh historical failing-source compilation or root-cause accounting of all13old TeX diagnostics; retained original RED report and actual current forced GREEN suffice for original current compile invariant.",
+    "No full-project/full-paper scientific acceptance, metadata stage promotion, native certification, main merge qualification or publication approval.",
+    "Old accepted count advisory remains untouched; physical/human/B3 and all original construction requirements remain open; other-paper/D3layout holds not disposed.",
+    "No independent Poppler re-render performed; actual supplied5current PNGs visually inspected and pairwise hashes/bytes checked. PDF streams differ only in dates, supplying stronger direct content conservation evidence."
+  ],
+  "findings": [],
+  "hashes": {
+    "/tmp/l1-paper25-compile-current-r1.json": "e55e5ee4a3ccaaa37154ce7518d95f99fa514650c5a5d0f2632b6c67b2cfe9f9",
+    "/tmp/l1-paper25-compile-current-r1.stdout": "26bf33eb9a84bc76a4400001a80588fe50b2c789a5c397a3e0fe1a9f30187a61",
+    "/tmp/l1-paper25-compile-current-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-paper25-pdf-comparison-r1.json": "cc945b19952c8c1b81cd793a1205fdef6bd9002951cc98e7416acbacd011f476",
+    "/tmp/l1-paper25-pdf-current-r1.pdf": "63e1fdfdf62e60a8f6a7eb72da884985b5581cdc5bfa73f921e7ce100c5c5e3d",
+    "/tmp/l1-paper25-pdf-preimage-r1.pdf": "abb3164e18de05930b637510a934ce463e77cbdc3399896765a5c887258a782a",
+    "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-paper25_gravitational_waves-4ibgdopo/paper_draft.log": "b3d5805ff79d0e708c3b95c8c969b4e2c1b3898b0113d418354b20520babd6ac",
+    "papers/paper25_gravitational_waves/paper_draft.tex": "48950754ea4c523339dd992ffc22761a7b7da877839db0556c0c36d003fd2477",
+    "papers/paper25_gravitational_waves/tables.py": "d50458e0523bd8b710d13eace4974b420355f0106f6f648541f1694c40b09816",
+    "papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976"
+  },
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-paper25-compile-acceptance-r1.json",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-paper25-compile-acceptance-r1",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "repository_files_touched": [],
+  "owned_outputs_only": [
+    "/tmp/l1-paper25-compile-acceptance-r1.md",
+    "/tmp/l1-paper25-compile-acceptance-r1.json"
+  ],
+  "commands_actually_run": [
+    "python3 scripts/codex_continuity.py check <same packet> (first and final)",
+    "Read cat/sed/rg of referenced contracts, notebook, roadmap, original finding, full Paper25source and retained logs/receipts",
+    "git show/log/merge-base --is-ancestor/rev-parse/status (read only)",
+    "pdfinfo both PDFs; pdftotext both PDFs to stdout for exact comparison",
+    "Python standard-library hashlib/bytes/re/json/zipfile inspection, no scientific imports",
+    "view_image on all5actual current PNGpages",
+    "Python wrote only owned /tmp report .md/.json"
+  ]
+}

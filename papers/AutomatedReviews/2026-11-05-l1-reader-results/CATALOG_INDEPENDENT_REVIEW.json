@@ -1,0 +1,167 @@
+{
+  "decision": "ACCEPT",
+  "scope": "Independent acceptance of scratch catalog maintenance proposal only; ROOT remains final canonical intake reviewer. No physical/build/kernel/full Stage10/publication/human acceptance.",
+  "proposal": "/tmp/l1-reader-results-claims-20261105-r1/claims_review.json",
+  "proposal_sha256": "77197b489bc16f6e6f61770dba3580f6a3d52efd779c50adeb6d837a4a01f18c",
+  "manuscript_sha256": "e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f",
+  "predecessor_sha256": "8e53db0cdcddc0240dab137892980cd71167938683355fb57ec17285d813291c",
+  "continuity": {
+    "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-reader-results-catalog-review-r3.json",
+    "initial": {
+      "fresh": true,
+      "changed": []
+    },
+    "final": {
+      "fresh": true,
+      "changed": [],
+      "task": "l1-reader-results-catalog-review",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    }
+  },
+  "automated_audit": {
+    "path": "/tmp/l1-reader-results-catalog-independent-audit-20261105.json",
+    "checks": 741,
+    "all_pass": true,
+    "independent_full_body_coverage": true,
+    "uncovered_prose": [],
+    "counts": {
+      "current": 128,
+      "retained": 85,
+      "affected": 38,
+      "successors": 43,
+      "predecessors": 123
+    }
+  },
+  "manual_review": {
+    "current_units": 128,
+    "affected_predecessors": 38,
+    "scientific_content_preserved": true,
+    "all_verdict_transitions": [
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+        "prior_verdict": "WARN",
+        "successor_id": "sentence:L1:formal-setup-and-result:413ce978",
+        "successor_verdict": "PASS",
+        "review": "ACCEPT",
+        "justification": "WARN inventory defect was calling a definition a lemma. Current sentence states positivity under chi>0,c>0; actual c_GW_pos proof uses mul_pos and Real.sqrt_pos."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+        "prior_verdict": "WARN",
+        "successor_id": "sentence:L1:formal-setup-and-result:9f0aa030",
+        "successor_verdict": "PASS",
+        "review": "ACCEPT",
+        "justification": "Actual c_GW_relative_deviation_eq has real chi,c and c!=0, cancels division after unfolding c*sqrt chi. Precise conditional identity supports source PASS."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+        "prior_verdict": "WARN",
+        "successor_id": "sentence:L1:formal-setup-and-result:dd7c3d55",
+        "successor_verdict": "PASS",
+        "review": "ACCEPT",
+        "justification": "Actual StrictMonoOn on Set.Ici0 and zero-iff-one with nonnegative hypothesis support these stated domains; no physical derivation promoted."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+        "prior_verdict": "WARN",
+        "successor_id": "sentence:L1:formal-setup-and-result:3d479f29",
+        "successor_verdict": "PASS",
+        "review": "ACCEPT",
+        "justification": "The file-location inventory claim resolves in actual sections1\u20134 and links; obsolete taxonomy is removed. A source-presence claim earns PASS without physics acceptance."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:c694dfa5",
+        "prior_verdict": "TRANSITION",
+        "successor_id": "sentence:L1:formal-setup-and-result:0bb322db",
+        "successor_verdict": "PASS",
+        "review": "ACCEPT",
+        "justification": "Former transition merges into actual fixed-tolerance biconditional theorem statement. Source proof carries chi>=0, fixed3e-15, both squared inequalities; PASS judges mathematical content."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:ed33e4c6",
+        "prior_verdict": "PASS",
+        "successor_id": "sentence:L1:formal-setup-and-result:0ad2c240",
+        "successor_verdict": "INFO",
+        "review": "ACCEPT",
+        "justification": "Interpretation that result compares widths within adopted domain receives INFO; quantitative strict width inequality remains PASS in3c494760."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:bb17ffb5",
+        "prior_verdict": "PASS",
+        "successor_id": "sentence:L1:formal-setup-and-result:e891bf26",
+        "successor_verdict": "TRANSITION",
+        "review": "ACCEPT",
+        "justification": "Figure connective sentence receives TRANSITION. Endpoint check claim remains PASS in d29e3d58 and theorem units."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:2cf63785",
+        "prior_verdict": "INFO",
+        "successor_id": "sentence:L1:formal-setup-and-result:83325799",
+        "successor_verdict": "PASS",
+        "review": "ACCEPT",
+        "justification": "Former conditional interpretive INFO is split: precise real-valued endpoint binders permit source PASS on quantifier limitation. This is not absence of a substrate or physical impossibility."
+      },
+      {
+        "prior_id": "sentence:L1:formal-setup-and-result:f7fc4a81",
+        "prior_verdict": "PASS",
+        "successor_id": "sentence:L1:formal-setup-and-result:9e054bac",
+        "successor_verdict": "INFO",
+        "review": "ACCEPT",
+        "justification": "Former exact binder-scope PASS also maps to new physical-requirements INFO. Precise binder statement remains PASS in83325799; open physical requirements are not asserted completed."
+      }
+    ],
+    "observational_primary": "Held Abbott PDF SHA bf06bd2ae6a23cf7f7092307677c2b681ce02abab3b5bbe37bbce76a8960140a, complete printed p6 section4 introduction/4.1 including upper-right continuation before4.2; conservative26Mpc, simultaneous upper emission,10s delayed lower emission, asymmetric Eq1 and alternative histories read. Current four qualifiers support source PASS. Registry identity checked.",
+    "mathematical_backing": "Actual GravitationalWaves definitions/statements/proof bodies in sections1\u20134 read, ordinary Real/Set.Icc/Set.Ici carriers. RPA definition and nonzero-denominator/stability hypotheses inspected. Fixed tau, nonnegative chi, full c!=0 domain, finite interval, uniform prior condition, all four falsifiers and P2=>P3 dependence retained. Source comparison only; no Lean or numeric execution."
+  },
+  "preservation": {
+    "blockers_unchanged": 4,
+    "candidate_supersessions_unchanged": 54,
+    "automatic_closures": 0,
+    "unaffected_exact_assessments": 85,
+    "affected_full_old_histories": 38,
+    "current_successors": 43,
+    "all123_predecessors_accounted": true,
+    "human_state_audit_bytes_unchanged": true,
+    "prior_scope_evidence_unchanged": true,
+    "prior_scientific_claims_retained": true
+  },
+  "existing_validation": {
+    "schema": "PASS:128",
+    "ingest_agent_run": "dry-run PASS:128,54candidate supersessions,0automatic closures; no real ingest",
+    "review_doc": "checked separately using existing validate_review_doc.py"
+  },
+  "remaining_authored_catalog_gaps": [],
+  "contradictions": [
+    {
+      "source": "docs/agents/claims-reviewer-bundle-prompts.md:932,940",
+      "description": "Stale anchor calls Abbott a detection paper; actual registry/held primary is multimessenger ApJL848L13. Proposal correctly follows actual primary."
+    },
+    {
+      "source": "lean/SKEFTHawking/GravitationalWaves.lean aggregate H_VestigialModeIsGraviton comment",
+      "description": "Independently necessary conjunct comment conflicts with actual fixed predicate: P2 implies P3prime. Manuscript/catalog correctly state dependence; existing ROOT source-comment obligation remains open."
+    }
+  ],
+  "open_physical_obligations": [
+    "B3 physical response/normalization/adopted range derivation",
+    "physical state",
+    "propagating tensor mode",
+    "common matter/light reference",
+    "controlled transport/frequency matching with units/errors",
+    "cross-consumer original physical acceptance"
+  ],
+  "limitations": [
+    "No new scientific test, Lean/LSP/native/kernel/build/LaTeX/figure execution performed.",
+    "85 inherited assessments preserved rather than relabeled as fresh full validation.",
+    "Original sole UNGROUNDED normalization record sentence:L1:formal-setup-and-result:7cde98b1 remains.",
+    "Historical blocker references remain unchanged; complete explicit lineage maps to current successors.",
+    "Empty dry-run tombstones do not prove predecessor coverage; independent123lineage audit supplies that evidence."
+  ],
+  "tracked_files_touched": [],
+  "scratch_files_touched": [
+    "/tmp/l1_catalog_independent_audit.py",
+    "/tmp/l1-reader-results-catalog-independent-audit-20261105.json",
+    "/tmp/l1_catalog_independent_report.py",
+    "/tmp/l1-reader-results-catalog-independent-20261105.md",
+    "/tmp/l1-reader-results-catalog-independent-20261105.json"
+  ]
+}

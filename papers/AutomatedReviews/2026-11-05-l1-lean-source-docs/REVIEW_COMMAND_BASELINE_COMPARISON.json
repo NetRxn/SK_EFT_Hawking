@@ -1,0 +1,463 @@
+{
+  "baseline": "130b4015d99f5d2d69a71bc6baca4978d38a5061",
+  "baseline_invalid": [
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+      "`grep -c \"Dawson-Nielsen exponent\\|Dawson & Nielsen\" lean/SKEFTHawking/FKLW/GenericSUdSkLengthExponent.lean` (currently non-zero at the \u22483.97 attribution site)"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+      "`grep -c \"figuredeferred\" papers/D8/paper_draft.tex` (currently 2; expected 0)"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ]
+  ],
+  "current_invalid": [
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+      "`python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert \"`|\u03b3| \u00b7 \u03c9`\" not in s'`"
+    ],
+    [
+      "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+      "`python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'`"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      ""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "(fails at HEAD):"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+      "`grep -c \"Dawson-Nielsen exponent\\|Dawson & Nielsen\" lean/SKEFTHawking/FKLW/GenericSUdSkLengthExponent.lean` (currently non-zero at the \u22483.97 attribution site)"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+      "`grep -c \"figuredeferred\" papers/D8/paper_draft.tex` (currently 2; expected 0)"
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ],
+    [
+      "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "`cd \"$REPO\" && uv run python -c \""
+    ]
+  ]
+}

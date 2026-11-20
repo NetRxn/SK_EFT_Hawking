@@ -231,3 +231,22 @@ class TestGenerator:
         # all three crossovers sit below the dispersive UV cutoff
         for name in ("Steinhauer", "Heidelberg", "Trento"):
             assert h[name]["cross_below_cutoff"]
+
+    def test_cli_json_round_trip(self):
+        """The advertised JSON interface carries the real evaluated hierarchy and cutoff flags."""
+        import json
+        import os
+        import subprocess
+
+        run = subprocess.run(
+            [sys.executable, str(SK_ROOT / "scripts/gen_d1_hierarchy_table.py"), "--json"],
+            cwd=SK_ROOT, env={**os.environ, "PYTHONPATH": str(SK_ROOT)},
+            capture_output=True, text=True, check=True,
+        )
+        data = json.loads(run.stdout)
+        assert data == compute_bec_hierarchy()
+        for row in data.values():
+            assert type(row["cross_below_cutoff"]) is bool
+            assert row["cross_below_cutoff"] is (
+                row["omega_cross_over_TH"] < row["omega_max_over_TH"]
+            )

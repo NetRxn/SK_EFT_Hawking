@@ -83,3 +83,22 @@ Post-Wave-1-7 absorption: F bundle synced with sibling Tier-1 fix-pass correctio
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: real-delta set (paper4/6/7/8/9/11/12/15/17/18/20/21/26 + paper10 RESTRICTED) reconciled against F. Verified-consistent: zero-axiom/TPFConjecture posture, Halenka-Miller PRD 102 084007 (2020) framing, 2-of-4 Bayes-decisive Track-B ledger at the three already-swept sites, D5 module counts, Vergeles-propositions naming, L2/D2 external-hypothesis description. Fixed residuals: abstract + Section-9 register stale 3-of-4 Bayes-decisive -> 2-of-4 with Verlinde >=5-sigma Halenka-Miller exclusion; Pillar-1 GS no-go -> conditional-constraints/applicability framing (mirrors D2); chi_vest window given project-adopted-window provenance + asymmetric GW170817 bound (mirrors D3/L1); Volovik natural-range misattribution; 22+ -> 29+ validate checks. Paper10/Rokhlin 16|sigma unconditional-theorem upgrade DOCUMENTED NOT FIXED (Phase 5q.B ownership) - see change_log.md. Compile gate clean x2 (23pp). stage13_redo_required=true (substantive prose changed); freshness_stale intentionally retained.
+
+
+## 2026-11-06 — L1 consumer source propagation
+
+- Corrected twenty mapped attribution, quantifier and synthesis spans after
+  independent source and actual reader/render review; sixteen initial repair
+  spans and four neutral spans are preserved in the focused evidence record.
+- Distinguished adopted susceptibility/window and scalar-law constraints from
+  the original physical normalization, state, tensor/matter/light and transport
+  constructions, which remain required. Kept conditional finite-interval results.
+- Added the existing held 2026 second-sound source to F's citation consumers;
+  retained the distinct 2024 quartet-order attribution and all unrelated physics.
+- Wrapped three long theorem references with the existing supported path
+  primitive, resolving an overprint of the new L1 paragraph. Actual compile:
+  24pages,22 inherited overflows remain unwaived. Focused tests97PASS; selected
+  gates2/4PASS, global corpus failures remain.
+- See ../AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md and
+  F_PROPAGATION_R3_EVIDENCE.zip for independent reviews and exact receipts.
+  No whole-F/L1 stage, scientific BUILD, main or human acceptance is claimed.

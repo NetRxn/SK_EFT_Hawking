@@ -1,0 +1,188 @@
+{
+  "baseline": "a3ceb535231b54d82a751a0a0509521ff08f76d6",
+  "source_diff_sha256": "df50bbd54a92350186e49b1b833903d1621d5825f4465fd210bf329ac31104e3",
+  "source_hashes": {
+    "src/core/provenance.py": "714ecf00f68e403174f8508dc58d30fcef1d1aecf6f362a66a90388cfa0b05a7",
+    "src/core/citations.py": "56147f30e925c8dbadcbc7de045679f643707e6ca813d176baa8b343c2f9788d",
+    "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md": "8e67a8d1ffb8cd16c786f9ad5093c30fb6fddc971b4e72c7873604dc6c08db6b"
+  },
+  "archive_sha256": "e69f8fdbaee0b3ceed290da79b8026033551686aaaae318f2f866c71e8ef156d",
+  "members": {
+    "receipts/l1-existing-provenance-findings-r2.json": "a955b500a61550528c64829700e77d386818427fd200f9cf76b1230b6c9e7669",
+    "receipts/l1-existing-provenance-findings-r2.md": "69ab71d89fb0f72019bbdd51089aa4d9793b4e1743f99505f77aafbcd67a7f4a",
+    "receipts/l1-paper25-actual-scope-r1.json": "0a1a1770192d6b9fa5eef3a63c66c93c5da239c895f6be11374ed7b48adbfde2",
+    "receipts/l1-paper25-actual-scope-r1.stderr": "49616503e5a177e421add0f7a4a2e16d4cff1a551280149fbbf8839dfab8e037",
+    "receipts/l1-paper25-actual-scope-r1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-paper25-actual-scope-r2.json": "645f6fae900aae1b9ed2bc06232b4ada7445aaec903f013016a7726807e095b9",
+    "receipts/l1-paper25-actual-scope-r2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-paper25-actual-scope-r2.stdout": "f380d1456ac287a47784f56376e195d96ca89f4bb3d2418d3db3f339dfd6d17f",
+    "receipts/l1-paper25-broad-failure-review-r1.json": "90ba765151c1a7986a8c18ab6d01531005abcfbc3b35ccc0b332026fd289ff74",
+    "receipts/l1-paper25-broad-failure-review-r1.md": "2b3cbe6459623afb67bde5158bc33acae6296c36e695606b0866117c8c302639",
+    "receipts/l1-paper25-broad-terminal-r1.json": "1be13cd7058377471d9038776aa56b03f2e2b27617ed98e2254180d27b58a86c",
+    "receipts/l1-paper25-broader-fast-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-paper25-broader-fast-r1.stdout": "7542ae490298189865dccc4390d1d306cab0798d8dcdfe97cd74ba00735ce9f9",
+    "receipts/l1-paper25-parameter-adverse-r1.stderr": "a62a7af3abb13e55a09c821fd062799275ff446636b4ba7f0c26741709e9c789",
+    "receipts/l1-paper25-parameter-adverse-r1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-paper25-parameter-controls-r1.json": "b1ad42232cae6441a238008ab83a64eb08afb210b4c2f54a39dffb4f187f23f7",
+    "receipts/l1-paper25-parameter-green-r1.json": "ebc07e2ee8d9cb1c2b10aebe07020a5f5d3da56a7a391f756ea8d33d4e2c2f92",
+    "receipts/l1-paper25-parameter-green-r1.stderr": "ea6d7aa2c7695fd772f21553a19ec6f281b15d8ae1f258b7a871dd673acecfbd",
+    "receipts/l1-paper25-parameter-green-r1.stdout": "9655b07e01ff989f9facf18265675f4e849f21f698fe2648132a2b606750aac1",
+    "receipts/l1-paper25-parameter-red-r1.json": "8fd28bff9f3aa6665f020977d18c7ee5653521bbf6ea8ecb36aeaca3bd538b28",
+    "receipts/l1-paper25-parameter-red-r1.stderr": "a62a7af3abb13e55a09c821fd062799275ff446636b4ba7f0c26741709e9c789",
+    "receipts/l1-paper25-parameter-red-r1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-paper25-parameter-restored-r1.stderr": "ea6d7aa2c7695fd772f21553a19ec6f281b15d8ae1f258b7a871dd673acecfbd",
+    "receipts/l1-paper25-parameter-restored-r1.stdout": "9655b07e01ff989f9facf18265675f4e849f21f698fe2648132a2b606750aac1",
+    "receipts/l1-paper25-parameter-source-review-r1.json": "f568646bd1ea285248a163f5fdbb941b9fca8e44631a591152556cca00e2d3c5",
+    "receipts/l1-paper25-parameter-source-review-r1.md": "dfedf18ed5892f8fa86d4efdf4ef6576f8ca58d78ec239044d6bc185c20b5959",
+    "receipts/l1-paper25-parameter-verify-r1.command": "d9286f213e276555283017464bb65f24cdf189c99bf098faa0e19f381a23317f",
+    "receipts/l1-paper25-source-repair-r1.patch": "df50bbd54a92350186e49b1b833903d1621d5825f4465fd210bf329ac31104e3",
+    "preimage/src/core/provenance.py": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
+    "preimage/src/core/citations.py": "5ae657c3ada17d0e7e0d4f758a7d44f2576f17929cb1f03d0566fa16064928f8",
+    "preimage/papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md": "2deeb284439b716beb5c4cecd9f721e5b15090b14d4d919073f2091991298993"
+  },
+  "broad_default_pytest": {
+    "head": "a3ceb535231b54d82a751a0a0509521ff08f76d6",
+    "diff_sha256": "df50bbd54a92350186e49b1b833903d1621d5825f4465fd210bf329ac31104e3",
+    "source": {
+      "src/core/provenance.py": "714ecf00f68e403174f8508dc58d30fcef1d1aecf6f362a66a90388cfa0b05a7",
+      "src/core/citations.py": "56147f30e925c8dbadcbc7de045679f643707e6ca813d176baa8b343c2f9788d",
+      "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md": "8e67a8d1ffb8cd16c786f9ad5093c30fb6fddc971b4e72c7873604dc6c08db6b"
+    },
+    "broad_command": "uv run python -m pytest -q",
+    "broad_session": 72659,
+    "returncode": 1,
+    "passed": 7084,
+    "failed": 27,
+    "skipped": 11,
+    "deselected": 92,
+    "seconds": 838.89,
+    "failures": [
+      "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]",
+      "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+      "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+      "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_live_state_passes",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_population_floor_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_numeral_ratchet_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red",
+      "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_the_population_floor_has_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_both_ratchets_have_zero_headroom",
+      "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_every_flagged_row_is_NAMED_in_the_output",
+      "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+      "tests/test_d5_prose_checks.py::TestSpelledOutCensusFigures::test_the_live_ceiling_has_ZERO_headroom",
+      "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+      "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+      "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+      "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]",
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+      "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+      "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population"
+    ]
+  },
+  "scoped_checks": {
+    "argv": [
+      "/Users/johnroehm/.local/bin/uv",
+      "run",
+      "python",
+      "scripts/validate.py",
+      "--no-memo",
+      "--check",
+      "architecture_inventory_fresh",
+      "--check",
+      "module_census_fresh",
+      "--check",
+      "counts_fresh",
+      "--check",
+      "bundle_prose_em_dash_free",
+      "--check",
+      "bundle_reader_facing_voice",
+      "--check",
+      "bundle_todo_free_before_green",
+      "--check",
+      "review_verify_is_one_command",
+      "--check",
+      "seed_residue_absent",
+      "--check",
+      "bundle_lean_module_coverage",
+      "--check",
+      "bundle_abstract_length",
+      "--check",
+      "apex_theorem_claims_grounded",
+      "--check",
+      "apex_claims_not_vacuous",
+      "--check",
+      "spelled_out_census_figures"
+    ],
+    "start": "2026-11-06T11:57:03.875759+00:00",
+    "end": "2026-11-06T11:57:11.154475+00:00",
+    "returncode": 1,
+    "meaning": "Remaining canonical scoped checks from existing verify_scope plan; broad default pytest receipt recorded separately. No full merge certification.",
+    "checks": [
+      {
+        "name": "counts_fresh",
+        "state": "PASS"
+      },
+      {
+        "name": "spelled_out_census_figures",
+        "state": "PASS"
+      },
+      {
+        "name": "review_verify_is_one_command",
+        "state": "FAIL"
+      },
+      {
+        "name": "seed_residue_absent",
+        "state": "PASS"
+      },
+      {
+        "name": "bundle_abstract_length",
+        "state": "FAIL"
+      },
+      {
+        "name": "bundle_prose_em_dash_free",
+        "state": "FAIL"
+      },
+      {
+        "name": "bundle_reader_facing_voice",
+        "state": "FAIL"
+      },
+      {
+        "name": "bundle_lean_module_coverage",
+        "state": "FAIL"
+      },
+      {
+        "name": "apex_theorem_claims_grounded",
+        "state": "FAIL"
+      },
+      {
+        "name": "apex_claims_not_vacuous",
+        "state": "PASS"
+      },
+      {
+        "name": "bundle_todo_free_before_green",
+        "state": "PASS"
+      },
+      {
+        "name": "architecture_inventory_fresh",
+        "state": "PASS"
+      },
+      {
+        "name": "module_census_fresh",
+        "state": "PASS"
+      }
+    ]
+  },
+  "original_finding": "review:2026-08-14-l1-stage13:L1:2.3",
+  "canonical_closure": "PENDING_AUTHOR_COMMIT_AND_WRITER",
+  "human_finding2_1": "OPEN_ACTUAL_OPERATOR_ATTESTATION",
+  "physical_BUILD": "OPEN_ORIGINAL_STRENGTH",
+  "newly_green_bundles": 0,
+  "qualified_main_merge": false
+}

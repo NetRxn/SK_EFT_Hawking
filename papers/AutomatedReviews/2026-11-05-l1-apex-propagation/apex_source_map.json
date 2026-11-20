@@ -1,0 +1,768 @@
+{
+  "checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+  "head": "be998d8ba2c2b2123b7ae2ba4ec631153cd40bfa",
+  "pins_sha256": {
+    "papers/L1/bundle_metadata.json": "d925401e82a9b7e3401199404c5f712603facbe707544c40297147e83a9b0392",
+    "lean/SKEFTHawking/GravitationalWaves.lean": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+    "lean/lean_deps.json": "942279d0b9a4480b6396acd0717a1709a763aeee1a74289bfefbdb41d0664e6d",
+    "papers/L1/paper_draft.tex": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+    "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e",
+    "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464"
+  },
+  "apex_count": 14,
+  "existing_registry_module_non_autogen_counts": {
+    "def": 8,
+    "theorem": 32
+  },
+  "evidence_status": "Source and existing extracted registry audit only. No native, Lean, LSP, slots, build or fallback proof/discovery commands run. Live discovery unavailable/incomplete in this assignment; cached extraction is not fresh elaboration or universal absence evidence.",
+  "entries": [
+    {
+      "ordinal": 1,
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 201,
+      "source_end_line": 228,
+      "source_statement": "theorem c_GW_match_iff_chi_close_to_one {χ_vest : ℝ} (hχ : 0 ≤ χ_vest) :\n    LigoSatisfied (c_GW_deviation χ_vest) ↔\n      (1 - tolGW170817)^2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817)^2",
+      "source_declaration_and_proof": "theorem c_GW_match_iff_chi_close_to_one {χ_vest : ℝ} (hχ : 0 ≤ χ_vest) :\n    LigoSatisfied (c_GW_deviation χ_vest) ↔\n      (1 - tolGW170817)^2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817)^2 := by\n  unfold LigoSatisfied c_GW_deviation\n  have h_tol_pos : 0 < tolGW170817 := by unfold tolGW170817; norm_num\n  have h_tol_lt_one : tolGW170817 < 1 := by unfold tolGW170817; norm_num\n  have h_one_minus_tol_nn : 0 ≤ 1 - tolGW170817 := by linarith\n  have h_one_plus_tol_nn : 0 ≤ 1 + tolGW170817 := by linarith\n  have hsqrt_nn : 0 ≤ Real.sqrt χ_vest := Real.sqrt_nonneg _\n  have hsq_eq : (Real.sqrt χ_vest)^2 = χ_vest := Real.sq_sqrt hχ\n  rw [abs_le]\n  constructor\n  · rintro ⟨h_lo, h_hi⟩\n    have h_sqrt_lo : 1 - tolGW170817 ≤ Real.sqrt χ_vest := by linarith\n    have h_sqrt_hi : Real.sqrt χ_vest ≤ 1 + tolGW170817 := by linarith\n    refine ⟨?_, ?_⟩\n    · nlinarith [sq_nonneg (Real.sqrt χ_vest - (1 - tolGW170817)), hsq_eq]\n    · nlinarith [sq_nonneg ((1 + tolGW170817) - Real.sqrt χ_vest), hsq_eq]\n  · rintro ⟨h_lo, h_hi⟩\n    have h_sqrt_lo : 1 - tolGW170817 ≤ Real.sqrt χ_vest := by\n      have h1 : Real.sqrt ((1 - tolGW170817)^2) ≤ Real.sqrt χ_vest :=\n        Real.sqrt_le_sqrt h_lo\n      rwa [Real.sqrt_sq h_one_minus_tol_nn] at h1\n    have h_sqrt_hi : Real.sqrt χ_vest ≤ 1 + tolGW170817 := by\n      have h1 : Real.sqrt χ_vest ≤ Real.sqrt ((1 + tolGW170817)^2) :=\n        Real.sqrt_le_sqrt h_hi\n      rwa [Real.sqrt_sq h_one_plus_tol_nn] at h1\n    constructor <;> linarith",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Carrier ℝ; hypothesis 0 ≤ χ; fixed τ, not a tolerance argument. Proof uses sqrt positivity/square identity and both cap bounds.",
+      "old_claim": "Theorem 1: LigoSatisfied(Δc/c) ↔ χ_vest ∈ [(1-τ)²,(1+τ)²] — the correctness-push biconditional locating the compatible window",
+      "proposed_claim": "Theorem 1: for nonnegative χ_vest and fixed τ = tolGW170817 = 3e-15, LigoSatisfied(Δc/c) ↔ χ_vest ∈ [(1-τ)²,(1+τ)²] — the correctness-push biconditional locating the compatible window",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "∀ {χ_vest : Real},\n  Real.instLE.le 0 χ_vest →\n    Iff (SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation χ_vest))\n      (And (Real.instLE.le (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2) χ_vest)\n        (Real.instLE.le χ_vest (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "091947a8a35e63f37156a131d52f33e4562c7e7a295c750e4490360a937ae5ca"
+    },
+    {
+      "ordinal": 2,
+      "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 256,
+      "source_end_line": 272,
+      "source_statement": "theorem natural_lower_violates_ligo :\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_lower)",
+      "source_declaration_and_proof": "theorem natural_lower_violates_ligo :\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_lower) := by\n  unfold LigoSatisfied c_GW_deviation chi_vest_natural_lower tolGW170817\n  intro habs\n  rw [abs_le] at habs\n  obtain ⟨h_lo, _⟩ := habs\n  -- h_lo : -3e-15 ≤ sqrt(1/10) - 1\n  -- Use sqrt(1/10) ≤ sqrt(1/4) = 1/2\n  have h_le_quarter : (1 : ℝ) / 10 ≤ 1 / 4 := by norm_num\n  have h_sqrt : Real.sqrt (1 / 10) ≤ Real.sqrt (1 / 4) :=\n    Real.sqrt_le_sqrt h_le_quarter\n  have h_quarter : Real.sqrt (1 / 4 : ℝ) = 1 / 2 := by\n    rw [show (1 / 4 : ℝ) = (1 / 2 : ℝ)^2 by norm_num]\n    exact Real.sqrt_sq (by norm_num)\n  rw [h_quarter] at h_sqrt\n  -- So sqrt(0.1) - 1 ≤ 0.5 - 1 = -0.5, much less than -3e-15\n  linarith",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Closed lower-end statement. Proof bounds sqrt(1/10) ≤ sqrt(1/4)=1/2, contradicting the lower cap inequality.",
+      "old_claim": "Theorem 2: at χ_vest = 0.1 the deviation exceeds the GW170817 cap",
+      "proposed_claim": "Theorem 2: at χ_vest = 0.1 the deviation exceeds the GW170817 cap",
+      "changed": false,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not\n  (SKEFTHawking.GravitationalWaves.LigoSatisfied\n    (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "83ab061505a28f5832220ac0d412620a794bd424a6bcba524408e0cc050677f1"
+    },
+    {
+      "ordinal": 3,
+      "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 276,
+      "source_end_line": 291,
+      "source_statement": "theorem natural_upper_violates_ligo :\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_upper)",
+      "source_declaration_and_proof": "theorem natural_upper_violates_ligo :\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_upper) := by\n  unfold LigoSatisfied c_GW_deviation chi_vest_natural_upper tolGW170817\n  intro habs\n  rw [abs_le] at habs\n  obtain ⟨_, h_hi⟩ := habs\n  -- h_hi : sqrt(10) - 1 ≤ 3e-15\n  -- sqrt(10) ≥ sqrt(4) = 2\n  have h_ge_four : (4 : ℝ) ≤ 10 := by norm_num\n  have h_sqrt : Real.sqrt 4 ≤ Real.sqrt 10 := Real.sqrt_le_sqrt h_ge_four\n  have h_four : Real.sqrt (4 : ℝ) = 2 := by\n    rw [show (4 : ℝ) = (2 : ℝ)^2 by norm_num]\n    exact Real.sqrt_sq (by norm_num)\n  rw [h_four] at h_sqrt\n  -- sqrt(10) - 1 ≥ 2 - 1 = 1, much greater than 3e-15\n  linarith",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Closed upper-end statement. Proof bounds sqrt(10) ≥ sqrt(4)=2, contradicting the upper cap inequality.",
+      "old_claim": "Theorem 3: at χ_vest = 10 the deviation exceeds the GW170817 cap",
+      "proposed_claim": "Theorem 3: at χ_vest = 10 the deviation exceeds the GW170817 cap",
+      "changed": false,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not\n  (SKEFTHawking.GravitationalWaves.LigoSatisfied\n    (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "3613f648b7b45e1ccd8dc791b2a1240ea8a83383b6fbc34e2b5d72f81d3f5e14"
+    },
+    {
+      "ordinal": 4,
+      "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 300,
+      "source_end_line": 303,
+      "source_statement": "theorem vestigial_natural_range_violates_ligo :\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_lower) ∧\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_upper)",
+      "source_declaration_and_proof": "theorem vestigial_natural_range_violates_ligo :\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_lower) ∧\n    ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_upper) :=\n  ⟨natural_lower_violates_ligo, natural_upper_violates_ligo⟩",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Conjunction of the two endpoint theorems, not an interval-wide falsification. Figure attribution is contextual metadata, not an extra Lean conclusion.",
+      "old_claim": "the bundled corollary — both endpoints fail simultaneously; the headline figure's Lean witness",
+      "proposed_claim": "the bundled corollary — both endpoints fail simultaneously; the headline figure's Lean witness",
+      "changed": false,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "And\n  (Not\n    (SKEFTHawking.GravitationalWaves.LigoSatisfied\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)))\n  (Not\n    (SKEFTHawking.GravitationalWaves.LigoSatisfied\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ]
+      },
+      "registry_record_sha256_canonical": "ce84307e4be3e53766f9ff5b7f440ed9d7a6674d843d6df8fedfbc90cd973573"
+    },
+    {
+      "ordinal": 5,
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_at_one",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 478,
+      "source_end_line": 483,
+      "source_statement": "theorem H_VestigialModeIsGraviton_at_one :\n    H_VestigialModeIsGraviton 1",
+      "source_declaration_and_proof": "theorem H_VestigialModeIsGraviton_at_one :\n    H_VestigialModeIsGraviton 1 := by\n  refine ⟨by norm_num, ligo_satisfied_at_chi_one, ?_⟩\n  -- Δc/c at χ=1 is zero; |0| < 1/2.\n  rw [c_GW_deviation, Real.sqrt_one]\n  simp",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Closed witness H 1: norm_num for P1, ligo_satisfied_at_chi_one for P2, sqrt_one for P3prime. Establishes non-vacuity, not physical identification.",
+      "old_claim": "the tracked-hypothesis bundle is discharged at χ_vest = 1 (non-vacuity)",
+      "proposed_claim": "the tracked-hypothesis bundle is discharged at χ_vest = 1 (non-vacuity)",
+      "changed": false,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_at_one",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 1",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "dec50eb0ac0ae38252f48cd490803b64fb5495d549c643cca56dda9014ef25e1"
+    },
+    {
+      "ordinal": 6,
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 486,
+      "source_end_line": 489,
+      "source_statement": "theorem H_VestigialModeIsGraviton_fails_at_natural_lower :\n    ¬ H_VestigialModeIsGraviton chi_vest_natural_lower",
+      "source_declaration_and_proof": "theorem H_VestigialModeIsGraviton_fails_at_natural_lower :\n    ¬ H_VestigialModeIsGraviton chi_vest_natural_lower := by\n  intro ⟨_, h2, _⟩\n  exact natural_lower_violates_ligo h2",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Proof projects only h2 and calls natural_lower_violates_ligo. At 1/10, P1 true, P2 false, P3prime false (sqrt(1/10)<1/2).",
+      "old_claim": "falsifier isolating P2 (GW170817 compatibility) at the lower endpoint",
+      "proposed_claim": "bundle falsifier using failure of P2 (GW170817 compatibility) at the lower endpoint; P1 holds and P3' also fails",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower.match_1_1",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower.match_1_1",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "1b23cf6e53bfe318a975da3f0bd13fd6e03d5c4713f06bcac40404f79b51fd2e"
+    },
+    {
+      "ordinal": 7,
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 492,
+      "source_end_line": 495,
+      "source_statement": "theorem H_VestigialModeIsGraviton_fails_at_natural_upper :\n    ¬ H_VestigialModeIsGraviton chi_vest_natural_upper",
+      "source_declaration_and_proof": "theorem H_VestigialModeIsGraviton_fails_at_natural_upper :\n    ¬ H_VestigialModeIsGraviton chi_vest_natural_upper := by\n  intro ⟨_, h2, _⟩\n  exact natural_upper_violates_ligo h2",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Proof projects only h2 and calls natural_upper_violates_ligo. At 10, P1 true, P2 false, P3prime false (sqrt(10)>2).",
+      "old_claim": "falsifier isolating P2 at the upper endpoint",
+      "proposed_claim": "bundle falsifier using failure of P2 at the upper endpoint; P1 holds and P3' also fails",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper.match_1_1",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper.match_1_1",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ]
+      },
+      "registry_record_sha256_canonical": "8b2618020c0ee2a8c1f9b09d717d932f0b04a628268804a2ed52138e662ba3bd"
+    },
+    {
+      "ordinal": 8,
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 498,
+      "source_end_line": 501,
+      "source_statement": "theorem H_VestigialModeIsGraviton_fails_at_zero :\n    ¬ H_VestigialModeIsGraviton 0",
+      "source_declaration_and_proof": "theorem H_VestigialModeIsGraviton_fails_at_zero :\n    ¬ H_VestigialModeIsGraviton 0 := by\n  intro ⟨h1, _, _⟩\n  exact lt_irrefl 0 h1",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Proof projects only h1 and uses lt_irrefl. At 0, sqrt0-1=-1, so all three clauses fail.",
+      "old_claim": "falsifier isolating P1 (positivity)",
+      "proposed_claim": "bundle falsifier using failure of P1 (positivity) at χ_vest = 0; P2 and P3' also fail",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero.match_1_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 0)",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero.match_1_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "9e62b1af794d4fc74ed5ae325b00eb7d0f86c02eb8013838ce1b5effaa440b91"
+    },
+    {
+      "ordinal": 9,
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 509,
+      "source_end_line": 522,
+      "source_statement": "theorem H_VestigialModeIsGraviton_fails_at_quarter :\n    ¬ H_VestigialModeIsGraviton (1 / 4)",
+      "source_declaration_and_proof": "theorem H_VestigialModeIsGraviton_fails_at_quarter :\n    ¬ H_VestigialModeIsGraviton (1 / 4) := by\n  intro ⟨_, _, h3⟩\n  -- Δc/c at χ=1/4 is sqrt(1/4) - 1 = 1/2 - 1 = -1/2; |-1/2| = 1/2 ≥ 1/2.\n  unfold c_GW_deviation at h3\n  have hsqrt : Real.sqrt (1 / 4 : ℝ) = 1 / 2 := by\n    rw [show (1 / 4 : ℝ) = (1 / 2 : ℝ)^2 by norm_num]\n    exact Real.sqrt_sq (by norm_num)\n  rw [hsqrt] at h3\n  -- |1/2 - 1| = 1/2, but goal says |1/2 - 1| < 1/2.\n  have : (1 / 2 - 1 : ℝ) = -(1 / 2) := by ring\n  rw [this] at h3\n  rw [abs_neg, abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2)] at h3\n  exact lt_irrefl _ h3",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Proof projects only h3; proves sqrt(1/4)=1/2 and contradicts strict 1/2<1/2. P1 true; P2 and P3prime false. Independence from P1 alone is supported; independence from P1∧P2 is false.",
+      "old_claim": "falsifier isolating P3' — at χ_vest = 1/4 the deviation saturates -1/2, establishing P3' independence from P1",
+      "proposed_claim": "bundle falsifier using failure of P3' — at χ_vest = 1/4 the deviation is -1/2; P1 holds while P2 and P3' fail, showing P1 alone does not imply P3'",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter.match_1_1",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton (1 / 4))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter.match_1_1",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+          "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "738cb0fd2bf27bc7eed2315ecb53161afc1abbea24c51b65f2c0ef5a467c6472"
+    },
+    {
+      "ordinal": 10,
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 429,
+      "source_end_line": 436,
+      "source_statement": "theorem natural_endpoints_violate_ligo_window :\n    ¬ ∃ χ : ℝ,\n      (χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper) ∧\n      LigoSatisfied (c_GW_deviation χ)",
+      "source_declaration_and_proof": "theorem natural_endpoints_violate_ligo_window :\n    ¬ ∃ χ : ℝ,\n      (χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper) ∧\n      LigoSatisfied (c_GW_deviation χ) := by\n  rintro ⟨χ, hcase, hligo⟩\n  rcases hcase with h | h\n  · rw [h] at hligo; exact natural_lower_violates_ligo hligo\n  · rw [h] at hligo; exact natural_upper_violates_ligo hligo",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Existential negation over χ: endpoint disjunction plus LigoSatisfied. No c binder in this statement; proof case-splits and calls endpoint violations.",
+      "old_claim": "the Phase-5y H1 underdetermination caveat as an endpoint theorem: no c-rescaling reconciles either endpoint",
+      "proposed_claim": "endpoint exclusion: neither χ_vest = 0.1 nor χ_vest = 10 satisfies LigoSatisfied(c_GW_deviation χ_vest); the c-rescaling result is supplied by natural_endpoints_violate_ligo_for_every_c",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Not\n  (Exists fun χ =>\n    And\n      (Or (Eq χ SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n        (Eq χ SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))\n      (SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation χ)))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ]
+      },
+      "registry_record_sha256_canonical": "caed4077ba67a29a8de2760bbdb593e0d0dc8c2b973212543d9aab25c3c0acb0"
+    },
+    {
+      "ordinal": 11,
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 447,
+      "source_end_line": 454,
+      "source_statement": "theorem natural_endpoints_violate_ligo_for_every_c\n    {c : ℝ} (hc : c ≠ 0) {χ : ℝ}\n    (hχ : χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper) :\n    ¬ LigoSatisfied ((c_GW χ c - c) / c)",
+      "source_declaration_and_proof": "theorem natural_endpoints_violate_ligo_for_every_c\n    {c : ℝ} (hc : c ≠ 0) {χ : ℝ}\n    (hχ : χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper) :\n    ¬ LigoSatisfied ((c_GW χ c - c) / c) := by\n  rw [c_GW_relative_deviation_eq hc]\n  rcases hχ with h | h\n  · rw [h]; exact natural_lower_violates_ligo\n  · rw [h]; exact natural_upper_violates_ligo",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Implicit real c and χ; assumptions c≠0 and endpoint disjunction. Proof explicitly rewrites through c_GW_relative_deviation_eq hc, then endpoint violations. This is stronger than c>0.",
+      "old_claim": "the frame-independent form, quantifying over all c > 0 explicitly",
+      "proposed_claim": "the c-independent endpoint exclusion for the actual relative deviation (c_GW χ_vest c - c)/c, for every real c ≠ 0",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.c_GW",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "∀ {c : Real},\n  Ne c 0 →\n    ∀ {χ : Real},\n      Or (Eq χ SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n          (Eq χ SKEFTHawking.GravitationalWaves.chi_vest_natural_upper) →\n        Not\n          (SKEFTHawking.GravitationalWaves.LigoSatisfied\n            (instHDiv.hDiv (instHSub.hSub (SKEFTHawking.GravitationalWaves.c_GW χ c) c) c))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.c_GW",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.c_GW",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+          "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+        ]
+      },
+      "registry_record_sha256_canonical": "6e3305f875153efc468fcaf009e9280298dd655468e9101795ce4b1838b252af"
+    },
+    {
+      "ordinal": 12,
+      "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 359,
+      "source_end_line": 365,
+      "source_statement": "theorem ligo_confines_chi_vest_within_natural_range {χ_vest : ℝ} (hχ : 0 ≤ χ_vest)\n    (hligo : LigoSatisfied (c_GW_deviation χ_vest)) :\n    (1 - tolGW170817) ^ 2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817) ^ 2 ∧\n      chi_vest_natural_lower < χ_vest ∧ χ_vest < chi_vest_natural_upper",
+      "source_declaration_and_proof": "theorem ligo_confines_chi_vest_within_natural_range {χ_vest : ℝ} (hχ : 0 ≤ χ_vest)\n    (hligo : LigoSatisfied (c_GW_deviation χ_vest)) :\n    (1 - tolGW170817) ^ 2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817) ^ 2 ∧\n      chi_vest_natural_lower < χ_vest ∧ χ_vest < chi_vest_natural_upper := by\n  obtain ⟨hlo, hhi⟩ := (c_GW_match_iff_chi_close_to_one hχ).mp hligo\n  exact ⟨hlo, hhi, lt_of_lt_of_le natural_lower_lt_ligo_window_lower hlo,\n    lt_of_le_of_lt hhi ligo_window_upper_lt_natural_upper⟩",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Real χ with 0≤χ and LigoSatisfied; concludes both squared-window inequalities and strict natural bounds. Proof uses biconditional and strict endpoint ordering.",
+      "old_claim": "TITLE + ABSTRACT — the headline result: GW170817 confines chi_vest to a window strictly interior to the natural range",
+      "proposed_claim": "TITLE + ABSTRACT — the headline result: for nonnegative chi_vest satisfying the fixed GW170817 cap, chi_vest lies in [(1-τ)²,(1+τ)²], strictly interior to the natural range",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+          "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "∀ {χ_vest : Real},\n  Real.instLE.le 0 χ_vest →\n    SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation χ_vest) →\n      And (Real.instLE.le (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2) χ_vest)\n        (And (Real.instLE.le χ_vest (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n          (And (Real.instLT.lt SKEFTHawking.GravitationalWaves.chi_vest_natural_lower χ_vest)\n            (Real.instLT.lt χ_vest SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)))",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+          "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+          "SKEFTHawking.GravitationalWaves.tolGW170817",
+          "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+        ]
+      },
+      "registry_record_sha256_canonical": "9e2650e4423cfe2436b6aa03b0905af662e223520932d45c2ab7e238ffa24068"
+    },
+    {
+      "ordinal": 13,
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 344,
+      "source_end_line": 347,
+      "source_statement": "theorem ligo_window_inter_natural_range_nonempty :\n    (Set.Icc ((1 - tolGW170817) ^ 2) ((1 + tolGW170817) ^ 2) ∩\n      Set.Icc chi_vest_natural_lower chi_vest_natural_upper).Nonempty",
+      "source_declaration_and_proof": "theorem ligo_window_inter_natural_range_nonempty :\n    (Set.Icc ((1 - tolGW170817) ^ 2) ((1 + tolGW170817) ^ 2) ∩\n      Set.Icc chi_vest_natural_lower chi_vest_natural_upper).Nonempty :=\n  ⟨1, chi_one_mem_ligo_window, ligo_window_subset_natural_range chi_one_mem_ligo_window⟩",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Nonempty intersection of real closed intervals; proof exhibits 1 with chi_one_mem_ligo_window and ligo_window_subset_natural_range. Strong constructive witness retained.",
+      "old_claim": "ABSTRACT — the compatible window and the natural range intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
+      "proposed_claim": "ABSTRACT — the compatible window and the natural range intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
+      "changed": false,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_one_mem_ligo_window",
+          "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.tolGW170817"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "(Set.instInter.inter\n    (Set.Icc (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n      (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n    (Set.Icc SKEFTHawking.GravitationalWaves.chi_vest_natural_lower\n      SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)).Nonempty",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.tolGW170817"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_one_mem_ligo_window",
+          "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.tolGW170817"
+        ]
+      },
+      "registry_record_sha256_canonical": "2da356131bad84284b1b90d20de18553e111e6e522a70878702631a1f7e70fd9"
+    },
+    {
+      "ordinal": 14,
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+      "source_origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "source_start_line": 391,
+      "source_end_line": 396,
+      "source_statement": "theorem ligo_window_width_lt_natural_range_width_by_1e14 :\n    1e14 * ((1 + tolGW170817) ^ 2 - (1 - tolGW170817) ^ 2) <\n      chi_vest_natural_upper - chi_vest_natural_lower",
+      "source_declaration_and_proof": "theorem ligo_window_width_lt_natural_range_width_by_1e14 :\n    1e14 * ((1 + tolGW170817) ^ 2 - (1 - tolGW170817) ^ 2) <\n      chi_vest_natural_upper - chi_vest_natural_lower := by\n  rw [ligo_window_width_eq, natural_range_width_eq]\n  unfold tolGW170817\n  norm_num",
+      "carrier": "Real; closed numerical/Set Real statements except explicitly quantified real parameters",
+      "scope_audit": "Closed numerical strict inequality; proof rewrites exact width=4τ and natural width=99/10, then norm_num. Guarantees >14 orders, not exact fraction 10^-15.",
+      "old_claim": "TITLE + ABSTRACT + §4 — the fine-tuning quantified: one part in 10^15 of the natural range",
+      "proposed_claim": "TITLE + ABSTRACT + §4 — the fine-tuning quantified: 10^14 times the compatible-window width remains smaller than the natural-range width (4τ = 1.2e-14 versus 9.9)",
+      "changed": true,
+      "registry_origin": "lean/lean_deps.json",
+      "registry_record": {
+        "autogen": false,
+        "axiom_deps_core": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_deps_project": [],
+        "kind": "theorem",
+        "module": "SKEFTHawking.GravitationalWaves",
+        "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+        "name_deps_extracted": true,
+        "name_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+          "SKEFTHawking.GravitationalWaves.tolGW170817"
+        ],
+        "name_deps_timed_out": false,
+        "structure_fields": [],
+        "type": "Real.instLT.lt\n  (instHMul.hMul 1e14\n    (instHSub.hSub (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n      (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)))\n  (instHSub.hSub SKEFTHawking.GravitationalWaves.chi_vest_natural_upper\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)",
+        "type_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.tolGW170817"
+        ],
+        "value_deps_project": [
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+          "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+          "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+          "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+          "SKEFTHawking.GravitationalWaves.tolGW170817"
+        ]
+      },
+      "registry_record_sha256_canonical": "bb2273e234f1c656f92dafe62e7cf5c82954f469eaeedb7a5e452fad0672d0c1"
+    }
+  ],
+  "docstring_proposals_only": [
+    {
+      "origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "start_line": 463,
+      "end_line": 471,
+      "old": "    P3' — `|c_GW_deviation χ_vest| < 1/2` (sub-half-deviation\n          quantitative constraint; load-bearing, NOT implied by P1\n          since e.g. χ_vest = 1/10 gives Δ ≈ -0.684 which violates\n          P3' even though χ > 0)\n\n    The bundle is genuinely non-trivial: explicit falsifiers below\n    witness that each conjunct is independently necessary, and\n    `H_VestigialModeIsGraviton_at_one` witnesses that the bundle is\n    satisfiable. -/",
+      "proposed": "    P3' — `|c_GW_deviation χ_vest| < 1/2` (sub-half-deviation\n          quantitative constraint; not implied by P1 alone, as\n          χ_vest = 1/4 satisfies P1 and fails P3')\n\n    These clauses are not independent at the fixed tolerance:\n    P2 implies P3' because `tolGW170817 < 1/2`. On the nonnegative\n    domain, P2 also confines χ_vest to a strictly positive interval.\n    The explicit falsifiers below refute the bundle using failures\n    of P2, P1 or P3'; they do not isolate a uniquely failing clause.\n    At χ_vest = 1/4, P1 holds while P2 and P3' both fail.\n    `H_VestigialModeIsGraviton_at_one` witnesses satisfiability. -/"
+    },
+    {
+      "origin": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "start_line": 644,
+      "end_line": 644,
+      "old": "  -- Bundled hypothesis (3-conjunct, all independently load-bearing):",
+      "proposed": "  -- Bundled hypothesis (3 conjuncts; P2 implies P3' at the fixed tolerance):"
+    }
+  ]
+}

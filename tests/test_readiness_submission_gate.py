@@ -156,3 +156,102 @@ class TestCannotMeasureIsNotPassing:
         monkeypatch.setattr(builtins, "__import__", _boom)
         r = m.check_readiness_submission_gate()
         assert r.passed is False
+
+
+class TestG4SerializedConsumer:
+    @staticmethod
+    def _payload(state, measured, *, notes="actual scoped assessment",
+                 evidence=(), blockers=()):
+        import readiness_gates as rg
+        return rg.GateResult(gate="ComputationCorrectness", paper="unit", priority=1,
+                             state=state, measured=measured, notes=notes,
+                             evidence=list(evidence), blockers=list(blockers)).to_node_payload()
+
+    def _check(self, payload, monkeypatch, extra=()):
+        import validation.checks.bundles_readiness as m
+        from types import SimpleNamespace
+        gates = [_gate("unit", f"other{i}", "passed") for i in range(10)]
+        gates += [payload] + list(extra)
+        monkeypatch.setitem(sys.modules, "build_graph",
+                            SimpleNamespace(build_graph_json=lambda: {"nodes": gates, "links": []}))
+        return m.check_readiness_submission_gate(), gates
+
+    @pytest.mark.parametrize("state,measured,expected,colour", [
+        ("open", False, True, "yellow"), ("blocked", False, False, "red"),
+        ("blocked", True, False, "red"), ("passed", True, True, "green"),
+    ])
+    def test_actual_state_measurement_notes_and_verdict(
+            self, monkeypatch, state, measured, expected, colour):
+        payload = self._payload(state, measured, evidence=["exact evidence"],
+                                blockers=["exact blocker"] if state == "blocked" else [])
+        result, gates = self._check(payload, monkeypatch)
+        green, yellow, red = partition_readiness(classify_readiness(gates))
+        assert {"green": green, "yellow": yellow, "red": red}[colour] == ["unit"]
+        assert result.passed is expected
+        detail = next(d for d in result.details if d.name == "unit:ComputationCorrectness")
+        assert detail.measured is measured
+        assert detail.passed is (state != "blocked")
+        assert f"state={state}; measured={measured}" in detail.message
+        assert "actual scoped assessment" in detail.message and "exact evidence" in detail.message
+        if state == "open":
+            paper = next(d for d in result.details if d.name == "unit")
+            assert paper.warning and "all P1 passed" not in paper.message
+            assert "ComputationCorrectness=open" in paper.message
+
+    def test_g4_unmeasured_detail_survives_unrelated_red(self, monkeypatch):
+        payload = self._payload("open", False)
+        result, _ = self._check(payload, monkeypatch,
+                                [_gate("unit", "CitationIntegrity", "blocked")])
+        assert result.passed is False
+        detail = next(d for d in result.details if d.name == "unit:ComputationCorrectness")
+        assert detail.measured is False and detail.warning
+        assert "state=open" in detail.message
+
+    def test_capped_serialized_evidence_is_not_reported_complete(self, monkeypatch):
+        payload = self._payload("blocked", False,
+                                evidence=[f"e{i}" for i in range(61)],
+                                blockers=[f"b{i}" for i in range(63)])
+        result, _ = self._check(payload, monkeypatch)
+        detail = next(d for d in result.details if d.name == "unit:ComputationCorrectness")
+        assert detail.measured is False and not detail.passed
+        assert "total=61; truncated=True" in detail.message
+        assert "total=63; truncated=True" in detail.message
+        assert "'e49'" in detail.message and "'e50'" not in detail.message
+        assert "'b49'" in detail.message and "'b50'" not in detail.message
+
+    @pytest.mark.parametrize("state,expected", [("open", True), ("needs-recheck", True),
+                                               ("blocked", False)])
+    def test_p2_policy_is_unchanged(self, monkeypatch, state, expected):
+        result, _ = self._check(self._payload("passed", True), monkeypatch,
+                                [_gate("unit", "NumericalFreshness", state, 2)])
+        assert result.passed is expected
+
+    @pytest.mark.parametrize("mode,state,measured", [
+        ("empty", "open", False), ("missing", "blocked", False),
+        ("wrong_type", "blocked", False), ("bounds", "blocked", True),
+        ("supported", "passed", True),
+    ])
+    def test_real_evaluator_serialization_reaches_actual_check(
+            self, monkeypatch, mode, state, measured):
+        import readiness_gates as rg
+        paper = {"id": "paper:unit", "type": "Paper",
+                 "meta": {"formulas": [] if mode == "empty" else ["Exact"]}}
+        nodes, links = [paper], []
+        if mode not in {"empty", "missing"}:
+            nodes += [{"id": "formula:Exact",
+                       "type": "Parameter" if mode == "wrong_type" else "Formula"},
+                      {"id": "test:actual", "type": "PythonTest"}]
+            links += [{"source": "test:actual", "target": "formula:Exact",
+                       "type": "VERIFIES",
+                       "test_kind": "golden" if mode == "supported" else "bounds"}]
+        g4 = rg._eval_computation_correctness(
+            paper, rg.GraphIndex({"nodes": nodes, "links": links}))
+        assert (g4.state, g4.measured) == (state, measured)
+        result, _ = self._check(g4.to_node_payload(), monkeypatch)
+        detail = next(d for d in result.details if d.name == "unit:ComputationCorrectness")
+        assert detail.measured is measured
+        assert f"state={state}; measured={measured}" in detail.message
+        assert g4.notes in detail.message
+        for blocker in g4.blockers:
+            assert blocker in detail.message
+        assert result.passed is (state != "blocked")

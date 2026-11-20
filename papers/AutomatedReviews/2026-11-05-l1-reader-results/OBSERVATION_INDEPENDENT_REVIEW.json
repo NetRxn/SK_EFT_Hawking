@@ -1,0 +1,108 @@
+{
+  "review": "l1-observation-source-independent-20261105",
+  "verdict": "ACCEPT",
+  "acceptance_scope": "Single Introduction source-assumption clarification only; ROOT intake required",
+  "head": "7258784b74dcdd34e8ca1a56f5d7ff67a366a292",
+  "continuity_check": {
+    "fresh": true,
+    "changed": [],
+    "authority": "snapshot only"
+  },
+  "pins": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/papers/L1/paper_draft.tex": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+    "/tmp/l1-observation-assumptions-725-r1.tex": "d5a9c9c6ecd6ca4eb016aa7fa40f465847d5150c8f53b50268901658ce58b4cd",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-6a/primary-sources/Abbott2017GW170817.pdf": "bf06bd2ae6a23cf7f7092307677c2b681ce02abab3b5bbe37bbce76a8960140a",
+    "/tmp/l1-abbott-primary-full-20261105.txt": "7fd295d66324e299f3a9395f7cef2955f726387be93cb463748077f84a98803c"
+  },
+  "primary_identity": {
+    "title": "Gravitational Waves and Gamma-Rays from a Binary Neutron Star Merger: GW170817 and GRB 170817A",
+    "journal": "Astrophysical Journal Letters",
+    "volume": 848,
+    "article": "L13",
+    "year": 2017,
+    "doi": "10.3847/2041-8213/aa920c",
+    "pages": 27,
+    "bytes": 2129594,
+    "registry": "src/core/citations.py:CITATION_REGISTRY[Abbott2017GW170817]",
+    "fetch_record": "docs/primary_sources_state.json:entries.Abbott2017GW170817",
+    "recorded_url": "https://arxiv.org/pdf/1710.05834",
+    "recorded_fetched_at": "2026-05-11T16:14:18+00:00",
+    "custody_result": "registry path, fetch path/size and held PDF identity agree; no acquisition performed"
+  },
+  "body_actually_read": {
+    "printed_page": 6,
+    "sections": [
+      "whole section 4 introductory text before 4.1",
+      "whole section 4.1, including continuation at top of right column before 4.2"
+    ],
+    "method": [
+      "full body text extraction read",
+      "actual rendered PDF page independently inspected"
+    ],
+    "render": "/tmp/l1-observation-primary-p6-review.png"
+  },
+  "scope": {
+    "hunks": 1,
+    "canonical_lines": [
+      94,
+      100
+    ],
+    "proposal_lines": [
+      94,
+      102
+    ],
+    "outside_span_byte_equal": true,
+    "numeric_token_sequence_equal": true,
+    "citation_key_sequence_equal": true,
+    "source_code_changed": false,
+    "parameter_api_changed": false,
+    "fixed_tau_math_changed": false,
+    "results_section_changed": false
+  },
+  "original_tex": "GW170817~\\cite{Abbott2017GW170817} placed an extraordinarily tight\nbound on $\\cGW$: comparing the gravitational-wave arrival time at\nLIGO/Virgo against the gamma-ray-burst signal at Fermi/INTEGRAL,\nthe multi-messenger collaboration constrained\n$-3 \\times 10^{-15} \\leq \\dccap \\leq +7 \\times 10^{-16}$.\nConservatively two-sided, $|\\dccap| \\leq \\tau$ with\n$\\tau = 3 \\times 10^{-15}$.\n",
+  "exact_proposal_tex": "GW170817~\\cite{Abbott2017GW170817} yielded a tight propagation\nconstraint under the collaboration's conservative distance and\nemission-time assumptions. Comparing the gravitational-wave arrival\ntime at LIGO/Virgo with the gamma-ray signal at Fermi/INTEGRAL gives\n$-3 \\times 10^{-15} \\leq \\dccap \\leq +7 \\times 10^{-16}$\nunder those assumptions. We use its conservative symmetric envelope,\n$|\\dccap| \\leq \\tau$ with $\\tau = 3 \\times 10^{-15}$.\nThis cap inherits the assumed source-emission window; alternative\nemission histories can weaken the inferred propagation constraint.\n",
+  "source_assumptions": [
+    "Section 4 uses observed offset, source distance and expected emission-time difference, rather than observed offset alone.",
+    "Section 4.1 chooses 26 Mpc, the lower end of the 90% GW luminosity-distance credible interval, because smaller distances give weaker constraints.",
+    "Upper endpoint assumes simultaneous GW peak and first-photon emission; lower endpoint assumes the SGRB was emitted 10 seconds after the GW signal.",
+    "Eq. (1) is exactly the cited asymmetric range. The symmetric tau=3e-15 envelope is a conservative manuscript choice containing that range.",
+    "Section 4.1 explicitly discusses longer delays and pre-merger photons; its alternative window broadens the allowed velocity interval on both sides.",
+    "The section closes by identifying emission times as model dependent and future joint observations as a route to separating emission and propagation effects."
+  ],
+  "sentence_judgments": [
+    {
+      "claim": "tight propagation constraint under conservative distance and emission-time assumptions",
+      "verdict": "PASS",
+      "backing": "printed p6 section 4 introduction and 4.1 first paragraph"
+    },
+    {
+      "claim": "quoted asymmetric range under those assumptions",
+      "verdict": "PASS",
+      "backing": "printed p6 section 4.1 Eq. (1) with full preceding assumptions"
+    },
+    {
+      "claim": "use conservative symmetric envelope with unchanged tau",
+      "verdict": "PASS",
+      "backing": "direct containing-envelope arithmetic; manuscript convention, not new source measurement"
+    },
+    {
+      "claim": "alternative emission histories can weaken inferred propagation constraint",
+      "verdict": "PASS",
+      "backing": "printed p6 section 4.1 last paragraph and right-column continuation"
+    }
+  ],
+  "boundaries": [
+    "No independent emission-clock measurement, source-lag likelihood, posterior, new parameter inference or new universal cap is asserted.",
+    "The weaker-constraint possibility is source-qualified and does not assert that all alternative histories necessarily weaken the range.",
+    "No manuscript title, charter or original research objective is reduced.",
+    "No B3, physical state, tensor, matter, transport, normalization, physical matching, original BUILD or full prose BLOCK obligation is discharged.",
+    "No compile, numerical calculation, native execution, Lean or slot activity, canonical finding closure, Git or tracked-file write was performed by this review.",
+    "This is not full-manuscript, full-stage, deployment, main or publication acceptance."
+  ],
+  "scratch_files_created": [
+    "/tmp/l1-observation-source-independent-20261105.md",
+    "/tmp/l1-observation-source-independent-20261105.json",
+    "/tmp/l1-observation-primary-p6-review.png"
+  ],
+  "contradictions_between_brief_and_sources": []
+}

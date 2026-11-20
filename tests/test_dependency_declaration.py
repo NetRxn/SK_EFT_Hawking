@@ -116,6 +116,9 @@ def _local_module_names() -> frozenset[str]:
     for p in _walk_py(REPO):
         names.add(p.stem)
         names.add(p.parent.name)
+        parts = p.relative_to(REPO).parts
+        if len(parts) > 1 and parts[0].isidentifier():
+            names.add(parts[0])
     return frozenset(names)
 
 
@@ -217,3 +220,64 @@ def test_alias_map_resolves_renamed_distributions(module, dist):
     """`pdfminer` resolves to the distribution `pdfminer-six`; a naive name match would report
     a false violation and train the reader to ignore this test."""
     assert _dist_for(module) == _norm(dist)
+
+
+def _clear_import_caches():
+    _local_module_names.cache_clear()
+    _third_party_imports_cached.cache_clear()
+
+
+@pytest.fixture
+def fresh_import_caches():
+    _clear_import_caches()
+    yield
+    _clear_import_caches()
+
+
+@pytest.fixture
+def isolated_local_repo(tmp_path, monkeypatch, fresh_import_caches):
+    """Keep namespace fixtures and their cached names out of production measurements."""
+    _clear_import_caches()
+    with monkeypatch.context() as patch:
+        patch.setattr(sys.modules[__name__], "REPO", tmp_path)
+        yield tmp_path
+    _clear_import_caches()
+
+
+def test_nested_namespace_is_local_without_admitting_data_or_pruned_roots(isolated_local_repo):
+    root = isolated_local_repo
+    for name in ("namespace/deep/producer.py", "ordinary.py",
+                 "data_only/readme.txt", "node_modules/excluded/foreign.py"):
+        path = root / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("")
+    names = _local_module_names()
+    assert {"namespace", "ordinary"} <= names
+    assert not {"data_only", "node_modules", "excluded", "foreign",
+                "skeft_dependency_unlisted_probe"} & names
+
+
+def test_real_namespace_and_production_seed_preserve_external_dependency_detection(fresh_import_caches):
+    """Measure the real guard before, during and after a journalled external import."""
+    from scripts.seed_journal import seeded_mutation
+
+    target = REPO / "tests/test_gravitational_waves.py"
+    original = target.read_bytes()
+    mtime_ns = target.stat().st_mtime_ns
+    sentinel = "skeft_dependency_unlisted_probe"
+    _clear_import_caches()
+    assert "papers" in _local_module_names()
+    test_every_third_party_import_is_declared()
+    with seeded_mutation(
+        target, original + f"\nimport {sentinel}\n".encode(),
+        reason="prove the namespace repair still rejects an undeclared production import",
+    ):
+        _clear_import_caches()
+        assert sentinel in third_party_imports()
+        with pytest.raises(AssertionError, match=sentinel):
+            test_every_third_party_import_is_declared()
+    _clear_import_caches()
+    assert target.read_bytes() == original
+    assert target.stat().st_mtime_ns == mtime_ns
+    assert sentinel not in third_party_imports()
+    test_every_third_party_import_is_declared()

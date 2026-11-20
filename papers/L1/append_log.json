@@ -30,6 +30,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:42:03Z",
       "notes": "D.2 absorption: Phase 6o W1b Kerr-Schild single-copy as alternative substrate context to vestigial graviton; cross-ref-only"
+    },
+    {
+      "date": "2026-11-07T13:14:40Z",
+      "source_paper": "_phase6o_W1b_lean_only",
+      "lift_action": "Inline-absorption-record",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-11-07T13:14:40Z",
+      "notes": "Discussion adds the independently reviewed W1b algebraic cross-reference using the three original registrations, which resolve to DoubleCopy.PetrovD, DoubleCopy.SingleCopy and DoubleCopy.PolaritonCrossBridge. This application leaves the physical ringdown and common-reference matching obligations open. Existing freshness and stage disposition is preserved."
     }
   ]
 }

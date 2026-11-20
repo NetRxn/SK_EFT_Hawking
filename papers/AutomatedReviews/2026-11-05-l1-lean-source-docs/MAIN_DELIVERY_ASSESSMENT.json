@@ -1,0 +1,80 @@
+{
+  "status": "READ_ONLY_DECOMPOSITION_NOT_EXECUTION_AUTHORITY",
+  "base": {
+    "local_origin_main": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+    "local_main": "90e39dc7d627c0f31d495a3111ca52b0e04da710",
+    "remote_live_readback": "NOT_PERFORMED"
+  },
+  "publication": {
+    "head": "08079c0bc2152a82fd8845eac8291753b7f913e1",
+    "commits_ahead_of_ce194": 617,
+    "changed_paths": 1288
+  },
+  "source": {
+    "path": "lean/SKEFTHawking/GravitationalWaves.lean",
+    "base_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+    "primary_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+    "publication_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f"
+  },
+  "existing_checkout": {
+    "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019",
+    "head": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+    "status_observed": "clean",
+    "purpose": "Notebook records intentionally untouched baseline; ownership/purpose reconciliation required before reuse",
+    "not_authorized_for_reassignment_by_this_report": true
+  },
+  "proposed_source_evidence_draft_paths": [
+    "lean/SKEFTHawking/GravitationalWaves.lean",
+    "papers/L1/change_log.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/COMMENT_TRANSFORM.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/CONTROLLED_ABSORB.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/CONTROL_REFINEMENT.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICABILITY.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICABILITY.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_REJECTED_R1.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_REJECTED_R1.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/MARKER_CONTRACT.stderr",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/MARKER_CONTRACT.stdout",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/NATIVE_BASELINE.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/NATIVE_DELIVERY.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/NATIVE_DELIVERY.md",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/ORIGINAL_RED.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/POST_ABSORB_PUBLIC_STATUS.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/PROJECT_CHECKS.stderr",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/PROJECT_CHECKS.stdout",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REJECTED_R1.zip",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REPAIRED_VERIFY.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND.stderr",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND.stdout",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND_BASELINE_COMPARISON.json",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND_FINAL.stderr",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/REVIEW_COMMAND_FINAL.stdout",
+    "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md"
+  ],
+  "draft_path_count": 31,
+  "excluded": [
+    "full publication roadmap",
+    "whole publication ledger",
+    "all manuscript/catalog changes",
+    "controller/toolchain/cache changes",
+    "entire frontier history"
+  ],
+  "closure_prerequisites_if_chosen_later": [
+    "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md",
+    "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/ORIGINAL_RED_1_2.json",
+    "papers/AutomatedReviews/2026-11-05-l1-reader-results/L1.md",
+    "papers/AutomatedReviews/2026-11-05-l1-reader-results/SOURCE_DOCUMENTATION_RED.json",
+    "docs/review_finding_supersessions.json (existing writer append, never copied wholesale)"
+  ],
+  "holds": [
+    "live primary broad suite not terminal at assignment",
+    "no released existing main-based delivery checkout established",
+    "no exact main-draft scoped or merge-gate receipt",
+    "existing raw-build merge-gate execution must be reconciled with ADR-008 current-primary controller authority; no bypass or retarget"
+  ]
+}

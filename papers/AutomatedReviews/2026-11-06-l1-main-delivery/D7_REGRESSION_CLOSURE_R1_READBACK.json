@@ -1,0 +1,67 @@
+{
+  "runs": [
+    {
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "scripts/close_finding.py",
+        "--doc",
+        "papers/AutomatedReviews/2026-10-15-d7-current-theorem-regression/infra.md",
+        "--section",
+        "1.1",
+        "--status",
+        "fixed",
+        "--evidence",
+        "Exact historical source-backed D7 citation regression is independently accepted at this current composition. The actual class passes all 7 checks, including three phantom citation forms through production extraction/resolution. Journalled removal of the real manuscript headline gives intended RED and exact restored GREEN with bytes/fullmode/nsmtime and empty journal. D7_REGRESSION_REUSE_R1_READBACK.json and its archive preserve original finding, actual baseline/current controls, both independent reviews and limits. This closes only the focused test-regression defect; numeric150>117, cached-extraction freshness/native, physical D7/simulability, full G11/main/publication/human acceptance remain open.",
+        "--commit",
+        "b0f8e3b45c14d188faace12c450e596cc0b5829b",
+        "--dry-run"
+      ],
+      "rc": 0,
+      "stdout": "\u2713 would write 1 record(s): review:2026-10-15-d7-current-theorem-regression:infra:1.1\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "scripts/close_finding.py",
+        "--doc",
+        "papers/AutomatedReviews/2026-10-15-d7-current-theorem-regression/infra.md",
+        "--section",
+        "1.1",
+        "--status",
+        "fixed",
+        "--evidence",
+        "Exact historical source-backed D7 citation regression is independently accepted at this current composition. The actual class passes all 7 checks, including three phantom citation forms through production extraction/resolution. Journalled removal of the real manuscript headline gives intended RED and exact restored GREEN with bytes/fullmode/nsmtime and empty journal. D7_REGRESSION_REUSE_R1_READBACK.json and its archive preserve original finding, actual baseline/current controls, both independent reviews and limits. This closes only the focused test-regression defect; numeric150>117, cached-extraction freshness/native, physical D7/simulability, full G11/main/publication/human acceptance remain open.",
+        "--commit",
+        "b0f8e3b45c14d188faace12c450e596cc0b5829b"
+      ],
+      "rc": 0,
+      "stdout": "\u2713 wrote 1 record(s): review:2026-10-15-d7-current-theorem-regression:infra:1.1\n",
+      "stderr": ""
+    }
+  ],
+  "source_commit": "b0f8e3b45c14d188faace12c450e596cc0b5829b",
+  "before_rows": 1235,
+  "after_rows": 1236,
+  "all_prior_records_exact": true,
+  "before_sha256": "934b5ea19c3a689bc461d3547e5c144245b1584d7eb2e301afc3fffcf403de62",
+  "after_sha256": "a40938e4f3a246e7a1f3911f937d150ac2582be724f0f51af98eda0492da9501",
+  "new_record": {
+    "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+    "status": "fixed",
+    "evidence": "Exact historical source-backed D7 citation regression is independently accepted at this current composition. The actual class passes all 7 checks, including three phantom citation forms through production extraction/resolution. Journalled removal of the real manuscript headline gives intended RED and exact restored GREEN with bytes/fullmode/nsmtime and empty journal. D7_REGRESSION_REUSE_R1_READBACK.json and its archive preserve original finding, actual baseline/current controls, both independent reviews and limits. This closes only the focused test-regression defect; numeric150>117, cached-extraction freshness/native, physical D7/simulability, full G11/main/publication/human acceptance remain open.",
+    "superseded_by": null,
+    "date": "2026-11-06",
+    "commit": "b0f8e3b45c14d188faace12c450e596cc0b5829b",
+    "verified_by": {
+      "command": "uv run --no-sync python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+      "declared": "uv run --no-sync python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-06"
+    }
+  },
+  "canonical_reader_status": "fixed"
+}

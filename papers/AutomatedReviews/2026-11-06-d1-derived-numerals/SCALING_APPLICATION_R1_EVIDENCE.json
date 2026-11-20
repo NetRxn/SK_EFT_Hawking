@@ -1,0 +1,25 @@
+{
+  "archive": "SCALING_APPLICATION_R1_EVIDENCE.zip",
+  "sha256": "4256e0098096249811beeb17d535b2974cb5c544f8c6cff61663b859e7efdbfb",
+  "members": {
+    "compile.stdout": "fccd7f3f5a0344880ac5f95c6d2cb76b1815b8157bc41455f415d040db0672ea",
+    "compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hierarchy.stdout": "e2957248bef88daf73945c50b30444513c7099086d268d1b1d8d48c3f339595f",
+    "hierarchy.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "render.json": "ad30c3a8b4c89bf0fbf7a82ee5b83722f1c469f0d5a5e159cd4cbb7b7edd833b",
+    "page11.png": "8d8526650a54c266f77a39a1b79b3efe8ac02e0fe11773b30a764dad0356f603",
+    "page11.txt": "39824275eba00c0c969a2a47d2dd6c09cdbb06156a69226800ba99f2da465ea3",
+    "paper_draft.pdf": "9da9453d51c098c9ab0a9f2b60aa1d6e4022baf9f51b65cd96cd24237376c0bb",
+    "paper_draft.log": "e6f22765e387323804fdcd99ec07d068f98d9e6db6f96bc5ed572e72d5152c72"
+  },
+  "original_verify_rc": 0,
+  "hierarchy_existing_check_rc": 0,
+  "compile_rc": 0,
+  "compile_scope": "20pages,15overfull,0TeXerrors,0unresolved,0droppedoptions; no whole-layout acceptance",
+  "changed_page": 11,
+  "root_visual_read": "Page11 inspected: new equation and paragraph readable without clipping; existing figure-deferred box and cross-scale cutoff discussion remain unresolved",
+  "independent_post_application_review": "PENDING",
+  "canonical_closure": "NOT APPLIED",
+  "original_physical_BUILD": "OPEN",
+  "no_numerical_migration": true
+}

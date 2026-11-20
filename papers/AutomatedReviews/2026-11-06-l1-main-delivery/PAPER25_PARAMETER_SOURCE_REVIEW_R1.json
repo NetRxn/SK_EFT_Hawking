@@ -1,0 +1,51 @@
+{
+  "task": "l1-paper25-parameter-source-review-r1",
+  "verdict": "ACCEPT_SOURCE_CONSUMER_CONTROL_SCOPE",
+  "baseline": "a3ceb535231b54d82a751a0a0509521ff08f76d6",
+  "diff_sha256": "df50bbd54a92350186e49b1b833903d1621d5825f4465fd210bf329ac31104e3",
+  "actual_diff_matches_patch": true,
+  "PARAMETER_PROVENANCE_AST_exact": true,
+  "only_PAPER_DEPENDENCIES_entry_changed": "paper25_gravitational_waves",
+  "only_citation_entry_changed": "Abbott2017GW170817Detection",
+  "only_citation_field_changed": "provides",
+  "paper25_declared_parameters": [
+    "GW.C_GW_DEVIATION_UPPER_BOUND",
+    "GW.C_GW_DEVIATION_LOWER_BOUND",
+    "GW.C_GW_TWO_SIDED_CAP",
+    "GW.CHI_VEST_NATURAL_LOWER",
+    "GW.CHI_VEST_NATURAL_UPPER",
+    "GW.GW170817_PEAK_FREQ_HZ",
+    "GW.GAMMA_H_VESTIGIAL_DEFAULT",
+    "GRAV.N_F_PER_GEN_NO_NU_R",
+    "GRAV.N_F_PER_GEN_WITH_NU_R",
+    "GRAV.N_F_THREE_GEN_NO_NU_R",
+    "GRAV.N_F_THREE_GEN_WITH_NU_R",
+    "GRAV.ALPHA_ADW_LOWER",
+    "GRAV.ALPHA_ADW_UPPER",
+    "GRAV.SAKHAROV_COEFFICIENT"
+  ],
+  "all14_unique_existing_provenance_keys": true,
+  "target_kind_evidence": "Static actual producer source proof of Parameter targets and Paper source; no dynamic extractor/fullgraph execution",
+  "original7_GW_keys_also_in_L1": true,
+  "GRAV7_scope": "Separate current manuscript conditional Newton comparison; not original finding2.3 scope expansion",
+  "red_green_receipts_read": true,
+  "reviewer_reran_verify": false,
+  "tests_validators_native_scientific_evaluators_fullgraph_executed": false,
+  "physical_BUILD": "OPEN_FULL_STRENGTH",
+  "finding2_1": "OPEN_ACTUAL_OPERATOR_ATTESTATION",
+  "human_approvals_granted": 0,
+  "initial_manual_packet_drift": [],
+  "same_packet_canonical_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "owned_outputs": [
+    "/tmp/l1-paper25-parameter-source-review-r1.md",
+    "/tmp/l1-paper25-parameter-source-review-r1.json"
+  ],
+  "final_same_packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "report_sha256": "dfedf18ed5892f8fa86d4efdf4ef6576f8ca58d78ec239044d6bc185c20b5959"
+}

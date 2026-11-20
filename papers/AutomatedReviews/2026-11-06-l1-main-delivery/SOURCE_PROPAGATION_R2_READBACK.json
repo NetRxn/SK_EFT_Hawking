@@ -1,0 +1,30 @@
+{
+  "parent": "f144749d795f904e563a83c869b0dee27bdbbd99",
+  "exact_accepted_five_file_proposal_applied": true,
+  "original_ast_assertions_values_metadata_preserved": "Independent proposal review and actual file hash equality",
+  "generated_hypothesis_view": "existing renderer; only H_VestigialModeIsGraviton narratives changed",
+  "hypothesis_gates": {
+    "pass": 2,
+    "fail": 0
+  },
+  "focused_tests": {
+    "pass": 124,
+    "fail": 0,
+    "exit_code": 0,
+    "seconds": 12.82
+  },
+  "TEX_PDF_inputs_unchanged": true,
+  "actual_PDFs_unchanged": true,
+  "application_review": "ACCEPT scoped actual application; full independent report archived",
+  "canonical_G11_closure": false,
+  "original_physical_BUILD": "OPEN",
+  "canonical_refresh": {
+    "prior151_assessments_and_all_fields_preserved_except_four_explicit_append_objects": true,
+    "all_four_blockers": "OPEN",
+    "audit_prefix_exact": true,
+    "prose_human_state_byte_exact": true,
+    "automatic_closures": 0,
+    "canonical_closures": 0
+  },
+  "G11_diagnostic": "Existing canonical review/FLAGS producers and G11 evaluator only; L1 remains blocked by original human parameter verification finding2.1; no other gates remeasured and no physical BUILD acceptance inferred"
+}
