@@ -3925,3 +3925,55 @@ nonzero open quantum-kernel witness. The proposed remedy keeps the
 bridge force in the original two-sided relation and tracks its first
 and mixed source jets. The physical product, state, adjoint and
 equations (30)–(31) remain the original acceptance target.
+
+
+### L1 dense input reuse and maximum-row Group 934
+
+The [reuse census and guarded pilot](L1_N16_C0_DENSE_REUSE_PILOT_R1.zip)
+bind the original cut plan and compiled block index. All 3,872 ordered
+whole-group block selections differ. At the factor-family boundary,
+340,736 references use 1,304 family/block keys, with sixteen families
+invariant across the profile. The keys carry 47,769,624 input rows
+counted once per key, compared with 10,581,286,320 counted by reference.
+Independent review reproduced these counts, checked all 2,456 compiled
+blocks and their 47,769,624 exact signed rows, and matched both shared-key
+and changed-key controls to the original loader. The loader determines
+an input table from its family, fixed retained axes and ordered block IDs. Signed whole-network equivalence between
+different keys requires a separate witness.
+
+Groups 934, 1673, 2198 and 2937 tie for the maximum input row count.
+The existing preparer took Group 934 from 3,436,540 to 1,298,202 rows
+after two quotient sweeps. Its guarded contraction stopped after
+56.770719 elapsed seconds, retaining 35 factors and 2,228,538 signed
+rows with 1,732,742 matched products already accepted. The refused pair
+(20,21) forecasts 580,608 products. The restart is pinned to the exact
+recorded state. No Group 934 terminal scalar has been established.
+
+A bounded cache pilot reused 30 of Group 934's 88 raw input tables from
+Group 672, covering 1,655,473 input rows. It exposed the cached tables as
+read-only inputs and ran the same two signed quotient sweeps separately.
+All 88 retained signed tables, ordered axes and denominators matched
+the corresponding uncached frontier in each group. The measured load
+stages took 2.46 seconds on Group 672 and 1.81 seconds on Group 934.
+Their quotient stages took 33.08 and 57.54 seconds. This paired pilot
+establishes exact input reuse and shows why input assembly alone is a
+limited optimization target. There is no matched cached-versus-uncached
+speedup measurement or proof of reuse of a later signed state.
+
+The exact Group 672 scalar and its original evidence remain at the
+previous checkpoint. The full coefficient, physical B3 and publication
+qualification remain open.
+
+
+### L1 temporal-source R2 prospective approval
+
+Both independent reviewers approved the bounded manual attempt in R2
+brief SHA-256
+`eeb593d269321294a1068ee5eb803ecd99eea901e24a5cc767fcb5a316ad68e1`.
+The mathematics report SHA-256 is
+`eb60c0202ea70ce90ceacef1c2bdaa413639c44456b54ad413c041aeb49cb348`.
+The original-source report SHA-256 is
+`5b11e473a4cab4c7dc4a9fb5409c2a3c437df91725efd9e1c4c2ccaedcc1942a`.
+Approval covers the attempt on the two specified endpoint constraints
+and associated open-kernel witness. The actual construction and its
+independent acceptance remain open.
