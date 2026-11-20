@@ -3639,3 +3639,20 @@ with coefficient and intermediate bounds, and a costed contraction order
 preserving the signed boundary factorization. The domain bounds do not license
 a whole-core run. The core value and physical realization remain open.
 [Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_COVARIANT_PAGE_ACCEPTANCE.md).
+
+
+### L1 group 128 opposite branch assignment 0, outer contributions 6 and 7
+
+All 16 values of G(0,0,2) cover the selected pair's 8,318,976 compatible
+products. The original factor convention and normalization give outer 6 the
+real value `-8720661076882492896855/10141204801825835211973625643008` with
+zero imaginary part. Independent arithmetic checks all 96 terminal inputs
+and every original lift. The exact prior signed map transfers this value
+once to the distinct outer 7 coordinate. Both enter the full assignment
+with weight one. [Signed arithmetic and source bindings](L1_N16_C0_DENSE_BRANCH1_LABEL0_OUTER67_R1.zip).
+
+Only outer representative 2 remains for assignment 0. Its signed source
+maps to 3, 4 and 5 are already accepted. These four cases each enter once.
+The group-128 total remains open until the representative and whole-group
+composition are reviewed. Full `c0`, physical B3 and publication acceptance
+remain open.
