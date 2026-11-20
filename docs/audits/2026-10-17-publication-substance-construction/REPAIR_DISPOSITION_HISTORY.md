@@ -4273,3 +4273,48 @@ verifies the distinct native cap and all three continuation checkpoints.
 Together with the two zero slices, this establishes three of the eight
 original Group 1466 contributions. The accepted group totals and partner
 ledger remain unchanged until the other five terminal values are verified.
+
+### L1 lower-quartile dense Group 1466
+
+The [complete signed replay](L1_N16_C0_DENSE_GROUP1466_COMPLETE_R1.zip)
+binds all eight original ordinals, the already reviewed exact zero
+restrictions for 5 and 7, and complete independent replay of the
+other six. The zero restrictions preserve compact survivor position
+5 as original ordinal 6. The L2 continuation reaches three factors
+with 32,342,016 compatible products. Two author traversals partition
+the original pivot rows into five disjoint bounded intervals each.
+The independent reviewer evaluated a third traversal in nine bounded
+intervals and reproduced all ten author intervals independently.
+All three give the same signed Gaussian terminal. Five assignments
+terminate directly at an axis-empty factor.
+
+The raw sum is
+`2356223545037257678527673484356581236036378110103323064401920 + 0i`
+at inherited denominator `790361941837205407080937169092608`.
+The original orientation and occupation/coframe factor give
+`372649450256959014066562155/680564733841876926926749214863536422912 + 0i`.
+The already verified chirality exchange transfers this result to
+Group 2684 without changing the sign or normalization. The twelve
+covered groups have the exact subtotal
+`-220349419340852180544880124766621429/87112285931760246646623899502532662132736 + 0i`
+after the outer profile weight 48. The dense remainder is 3,860
+groups or 1,930 distinct representatives. The full-coefficient
+residual stays open.
+
+Recorded Group 1466 author elapsed durations sum to 173.15 seconds
+for guarded work and 410.86 seconds for continuation and terminal
+work. The summed durations overlap and exclude preparation and
+independent verification. The two exact zeros avoid individual
+guard and continuation work within this group. One additional
+paired experiment on the full L3 continuation from the same
+signed cap observes 105.16 seconds with the original ordered
+projection and 66.41 seconds with the bounded cached projector.
+Every split and output state matches the independently accepted
+baseline byte for byte. This is one continuation measurement for
+one original assignment. It establishes neither guard acceleration
+nor the overall profile rate.
+
+The upper-quartile Group 1441 trial continues separately. Independent
+reference replays already verify its original L1 and L5 values and
+their distinct signed source and cap tables. They enter no group
+subtotal until all eight original ordinals have independent evidence.
