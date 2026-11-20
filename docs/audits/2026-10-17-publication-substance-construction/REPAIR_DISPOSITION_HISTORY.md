@@ -3120,3 +3120,11 @@ The independent review reconstructed and inverse-lifted all nine cuts, checked t
 ### L1 exact independent closure of cases 4–11
 
 Repeated support and quotient reduction closed eight additional outer contributions without the final row sharding used for the harder cases. Independent reviewers recovered the complete parent roster, inverse-lifted the eight entries, and replayed their exact terminal contractions with separate sparse arithmetic. The reviewer of cases 4–7 also reproduced all original stages and cap refusals byte for byte. Coincident scalar values have distinct cut inputs. The exact eight-case subtotal is `8404720067096427401361/1298074214633706907132624082305024 + 0i`. Fresh extraction of the [closure archive](L1_N16_C0_CASES4_11_CLOSURE_R1.zip) verified 153 checksums and reproduced the combined retally. The same archive pins reproducible open frontiers for cases 13–15 and 17–19. Nineteen of 48 entries in this binary child are accepted. The complete child, remaining profile, signed coefficient and publication gates remain open.
+
+### Intake of the original CAR contacts and open compact-link result
+
+Publication ROOT absorbed independently reviewed Executor donor `0c1965109` as `93704132a`. The manifest binds six exact task artifacts and nine original source inputs to the donor and publication checkpoint. Both independent actual reviews accept the same frozen manual result. [Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_CAR_LOGSOURCE_OPEN_LINK_ACCEPTANCE.md)
+
+The local positive CAR probe family reproduces the ordered original insertion contacts, including the negative second log contact required by the original nilpotent probe. An explicit compact-link fluctuation of variance one has zero averaged input and a nonzero exact first-source open response. This rules out evolution factoring through that averaged input. Retaining the compact-link variables gives a bounded algebraic kernel with the original trace convention. A positive physical quantum-link state, causal transfer, physical metric/tensor/matter matching, and transport remain open.
+
+ROOT commissioned a positive compact-link state and open-step candidate against the three original witness tests. The new result determines what the next construction must retain. It does not close a publication gate.
