@@ -3682,3 +3682,28 @@ hard profile, the full signed `c0`, the physical B3 derivation and publication
 qualification remain open. The viable exact primitive factorization is a
 route to test against the pinned group 672 residual. No full-profile runtime
 claim follows from this group.
+
+
+### L1 group 672 first G block, interval 5 exact signed value
+
+The pinned 14-factor interval-derived cap is one of six disjoint row
+intervals inside the first G block of the original J=(1,) child. The primitive
+fiber factorization preserves each original coefficient and denominator.
+Its first inverse-verified encoding has 28 factors and 100,806 stored rows.
+The first guarded run reaches 11 factors. Two further exact reformulations
+and their guarded continuations reach a four-factor residual with all original
+indices and weights preserved. The author retains 43 accepted joins and
+separate row-limit refusals. Two bounded complementary pairings agree on
+raw numerator `3509926069799187026593951974062879254428784546066270890491904`
+and zero imaginary part, at original factor denominator
+`576173855599322741762003196268511232`.
+The independent replay checks every accepted transformation and separately
+recomputes the raw terminal. [Exact interval evidence](L1_N16_C0_GROUP672_INTERVAL5_EXACT_R1.zip).
+
+The first terminal pairing uses 2,846,016 pair products and 2,954,400
+bounded complementary probes. Split search dominates this pilot's author
+time. The whole first G block, original J child and group 672 remain open.
+The separate whole-block author attempt reaches an 11-factor residual
+without dividing the physical domain. This interval result supplies an
+exact subnetwork value and measured cost. Remaining profile work, the full
+`c0` coefficient, physical B3 and final publication review remain open.
