@@ -4881,3 +4881,26 @@ Component 14 requires 16,114,854 pre-sweep rows across seven remaining
 groups, the lowest total among partially completed components. The
 chosen pilot Group 1418 has 1,981,325 pre-sweep rows. The full signed
 coefficient, physical susceptibility and publication finding remain open.
+
+
+### L1 physical forward insertion design intake
+
+ROOT verified exact Executor donor
+`6259b2ef0a0a7066c64b267fe4733b4a6affcad5`. All 19 archived data
+members passed size and digest verification. The four archived canonical
+documents match the donor blobs. The eight predecessor and original
+source authorities match the publication candidate byte for byte.
+Both completed independent reviews approve the [independently reviewed physical insertion design](../2026-11-05-l1-physical-bridges/ORIGINAL_PHYSICAL_FORWARD_INSERTION_DESIGN_STATUS.md).
+
+The carrying sources supply the one-kernel temporal vertices and the
+quantum derivative and force contacts. The actual physical cut action,
+product, adjoint, dual maps and insertion still require construction.
+The approved design specifies the ordered unit, singles and contracted
+pair test, including the free shared covector and off-shell connector.
+If the physical action yields the required polynomial-symbol range,
+full-cap separation applies. Other candidate actions retain the direct
+full-cap test. ROOT commissioned Executor to derive and independently
+qualify the actual action and one source-matched ordered insertion.
+The design establishes a gap in the inspected constructions. A physical
+realization or an impossibility theorem remains unestablished. G11
+and the original physical obligations remain open.
