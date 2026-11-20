@@ -3314,3 +3314,11 @@ ROOT absorbed the exact nine-file donor `2039b886193324113c8980b3961b5914f70fd40
 The entire coefficient is `-3^8 W / 2^43 < 0` with `W >= 3^8`. The inherited lower-tail bound and positive original denominator give a negative full literal response for the tested shear at the previously fixed finite base. This rules out the direct selfadjoint affine source dictionary at that base, and the positive CAR source family requires a negative mean second log contact. Numerical W, full signed c0 and the physical susceptibility remain open. No new tensor run or native validation was needed for the analytic sign theorem.
 
 ROOT commissioned Executor to derive the original quadratic log contact and its mixed transfer insertion, with independent source and mathematics review and a contrasting control. The projected metric, physical state and propagating pole, matter and time calibration, transport and B3 retain their original acceptance requirements.
+
+### L1 complementary outer cases 43–44
+
+Two further independent selector-1 cuts are accepted. The [portable result](L1_N16_C0_COMPLEMENTARY_CASES43_44_R1.zip) preserves both distinct source rosters, 20 inverse lifts, all capped restarts, 18 signed values and all 64 author shard receipts. Clean extraction verified 463 paths and reproduced the exact 45-term retally, `-10774533240377590228774821/5192296858534827628530496329220096 + 0i`. Cases 45–47 remain open. The group, full signed coefficient and physical acceptance remain open.
+
+### L1 group 128 descendant (0,1) tuples 2–4
+
+The [independent three-tuple checkpoint](L1_N16_C0_DENSE_CHILD01_TUPLES2_4_R1.zip) binds the exact (0,1) parent and verifies the six surviving original label tuples, three inverse lifts, 15 byte-identical author stages and eight alternative exact replays. One additional alternate order is preserved at its cap. The subtotal for tuples 2–4 is `56779577789625559242855/2658455991569831745807614120560689152 + 0i`. With accepted tuple 5, four of the six tuple values for this descendant are verified. The matching values in descendant (0,0) are independently observed equalities for these four tuples. Tuples 0 and 1 need distinct evidence. The full group and physical acceptance remain open.
