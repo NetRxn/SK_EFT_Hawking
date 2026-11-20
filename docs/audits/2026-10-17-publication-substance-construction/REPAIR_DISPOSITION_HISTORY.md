@@ -3240,3 +3240,11 @@ The [complementary closure](L1_N16_C0_COMPLEMENTARY_CASES13_14_R1.zip) independe
 ### L1 N16 complementary cases 15–16
 
 The [independent closure](L1_N16_C0_COMPLEMENTARY_CASES15_16_R1.zip) verifies both distinct outer inputs, all eighteen signed inner results, twenty inverse lifts and both exact cap lineages. The complementary child cumulative **17/48** subtotal is `111019502515404842504577/5192296858534827628530496329220096 + 0i`. The retally was reproduced from a fresh extraction against the preceding committed ledger. The unverified remainder still requires exact inputs and replays before complete tuple 0 and descendant recombination.
+
+### L1 exact source-channel obstructions and next finite shear coefficient
+
+ROOT read the source result and final independent math and source acceptance and verified the exact GitHub donor `07a61fc8b8075f37d5bfc3d9fd9de7c98372f838`. Its 19 files are absorbed unchanged. The [R3 acceptance](../2026-11-05-l1-physical-bridges/ORIGINAL_CHANNEL_ACT_ACCEPTANCE.md) is bound to the result, both review hashes, full archive hash, CRCs and all 41 recorded manifest members.
+
+Checkerboard and chirality grading give the exact local matter zeros. The three-source exterior Hessian is singular for every cross value. The original Haar-center cut-cycle identity also kills the higher cross slot h(15,1). The next finite targets are shear h(14,2) of q², mixed h(14,2) of q n₀ m₁, and cross h(13,5) of n₀ m₁. The denominator and tail certificate permits a highest surviving exact coefficient to prove a nonzero response at the existing base. The surviving coefficients, runtime cost, physical tensor projection and calibrated susceptibility remain open.
+
+Executor has been tasked to prepare the shear target first through the existing Phase 6a route, with pinned insertion assemblies, an exact control, and defensible support and join forecasts. The subsequent mixed and cross targets remain separate. No numerical run, native build, finding closure or manuscript gate changed during this intake.
