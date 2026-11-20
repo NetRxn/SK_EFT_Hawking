@@ -4533,3 +4533,38 @@ negative assigned moment. Either outcome has a bounded scope.
 Independent prospective review and a dimension and cost bound are
 pending. This is not evidence of a physical state, transport, a
 derived susceptibility window or G11 closure.
+
+
+### L1 first new group on the signed geometric cover
+
+The [complete signed Group 1231 review](L1_N16_C0_DENSE_GROUP1231_COMPLETE_R1.zip)
+has SHA-256 `528e65be416889f1e2e834c35893ccb3cea0b28d4ec069c948ba9baa13913530`. ROOT verified all 194 members
+and compared the eight independent Gaussian scalar records to the
+author ledger. The independent preparation reconstructs 88 signed
+factors from 252 original compiled blocks. It matches the two exact
+boundary-preserving sweeps from 1,792,198 to 447,333 to 356,059 rows.
+
+The initial script refused the prepared state because it assumed all
+eight original terms had nonempty restrictions. Independent replay
+proves original ordinals 5 and 7 have empty signed factor restrictions.
+The recovery keeps both exact zeros and the six surviving original
+ordinals 0, 1, 2, 3, 4 and 6. All six guarded and continued contractions
+were reproduced with the original limits. The independent L4 third
+pivot matches both author pivots on all 9,592,832 compatible products.
+
+The raw reduced sum is `78423562218064061630467768320 + 0i`.
+The exact physical divisor is `2^132`. Group 1231 has weight 192 as a
+selected original group in bipartite component 98, which gives
+`7179891560491704861187845/2596148429267413814265248164610048 + 0i`.
+The new additive subtotal is
+`-513568742521578812305962454291162869/87112285931760246646623899502532662132736 + 0i`.
+Ten selected representatives have accepted values. The remaining
+1,046 have a pre-sweep source-row proxy of 2,737,628,950. Seven selected
+representatives in component 98 remain.
+
+Recorded author components total 374.623631 seconds including source
+preparation, guarded work, continuation and the extra terminal. This
+excludes the preserved first roster refusal and independent replay.
+Review pins the current publication head after the unrelated connector
+checkpoint and confirms its numerical inputs by digest. Full signed
+coefficient and physical publication acceptance remain open.
