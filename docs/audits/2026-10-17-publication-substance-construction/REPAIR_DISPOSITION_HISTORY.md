@@ -4848,3 +4848,36 @@ frozen groups. A portfolio-wide completion rate remains unestablished.
 The full signed coefficient and the physical construction required by
 L1 finding 2.1 remain open. This checkpoint records reviewed numerical
 evidence and leaves the canonical publication finding open.
+
+
+### L1 component 3 complete signed contraction
+
+Independent replay closed the remaining original groups 189 and 207.
+Both retain exact zeros at original ordinals 1 and 3. Group 207 L0
+preserves the untouched cap receipt and exact native prefix. The separate
+capture records the thirteen original frontier factors at 10,425,580
+visited products. The independent next-pair census exceeds the unchanged
+per-pair cap. Signed continuation and independent third-pivot agreement
+complete L0. For L5 all three exact traversals agree after 25,559,040
+products each. The two complete author interval covers keep every
+individual interval within 8,000,000 products.
+
+| Group | Exact weighted real | Review SHA-256 | Manifest entries | Evidence |
+|---|---:|---|---:|---|
+| 189 | `-441355151142732155747895/5192296858534827628530496329220096` | `41bee65ac8984cc743b58a53dfdd9f6b50dded7fe8050c35a40a858aa8d3e218` | 167 | [Independent review](L1_N16_C0_DENSE_GROUP189_COMPLETE_R1.zip) |
+| 207 | `780013487544465757450905/162259276829213363391578010288128` | `d5aa08d1e563e82df29ed07f7f9b60c46c6b98dbb74a3018a7d0944f4e3a1090` | 225 | [Independent review](L1_N16_C0_DENSE_GROUP207_COMPLETE_R1.zip) |
+
+ROOT verified the archive manifests and compared all signed terminal
+values with the frozen author evidence. Exact retally of the eight
+selected representatives gives `-106652122503623380297805882085/20769187434139310514121985316880384 + 0i`.
+[The complete component archive](L1_N16_C0_DENSE_COMPONENT3_COMPLETE_R1.zip) includes the selected
+and mirror rosters, exact subtotal and replay script. The cumulative
+subtotal over the 24 accepted representatives is `-511188525956419610192314724769768693/87112285931760246646623899502532662132736 + 0i`.
+The accepted cover has 1,032 representatives remaining and a pre-sweep
+input proxy of 2,707,433,482 rows. This is a source row count, with no
+wall-time estimate implied.
+
+Component 14 requires 16,114,854 pre-sweep rows across seven remaining
+groups, the lowest total among partially completed components. The
+chosen pilot Group 1418 has 1,981,325 pre-sweep rows. The full signed
+coefficient, physical susceptibility and publication finding remain open.
