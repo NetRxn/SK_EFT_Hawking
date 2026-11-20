@@ -3552,3 +3552,49 @@ review arithmetic agree on all coordinates. [Signed ledger and review evidence](
 The opposite first-index branch now has four of six complete assignments.
 Assignments 0 and 1 remain open. The representative group 672, full signed
 `c0`, physical B3 and final publication gates remain open.
+
+
+### L1 group 128 opposite branch assignment 1
+
+The complete 16-value G(0,4,2) roster covers 2,377,728 compatible products
+of the refused join. Five light outer values each close through 16 nested
+terms. Two heavy outer values each close through nine nested terms. Exact
+signed row maps determine the other nine values from independently rechecked
+inputs. Each map preserves factor denominators and cancels its sign changes
+at the two appearances of each contracted index. A separate exact evaluation
+of high coordinate 12 establishes its value before any reuse at 13–15.
+
+Both independent retallies agree with the author ledger on all 16 values.
+The original normalization gives a real contribution of
+`-940520760199586648427969/324518553658426726783156020576256`
+and zero imaginary part. [Exact signed and review evidence](L1_N16_C0_DENSE_BRANCH1_LABEL1_R1.zip).
+
+Five of six assignments in first-index branch 1 are complete. Assignment 0
+still needs a complete exact signed sum. Its eight outer continuations have
+initial refusal or support receipts. The two tested smaller decompositions
+yield exact terminal values for individual cases. Group 128 and the
+representative hard profile remain incomplete. No publication gate is closed
+by this scientific checkpoint.
+
+### Intake of the original-core local Fierz proof
+
+Executor donor `b37efd926d47e5284b5284f89490c7b5e1529064` establishes the exact
+local rank 18 with two rank-nine channels, eight canonical zeros and ten
+additional independent relations. It also proves the original site 0 and 4
+chirality locks in internal gamma-vector and copy indices. The signed boundary
+matrix and all correlated central moments are retained. The conservative page
+domain provides a shape bound. A whole-core construction cost and the value
+or sign of the coefficient still need independent acceptance.
+
+Both independent actual reviews accepted the exact R2. ROOT verified all 23
+archive hashes and the byte identity of all four archived upstream artifacts
+against this publication branch before intake. The seven donor paths transfer
+intact. The independently reviewed orientation correction applies to lines 108–109
+of the historical R1 source review. The central third factors for the two page 0
+traces are Ω_(1,2) and Ω_(5,2), without daggers, by equation (2) of the
+[original support construction](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_SUPPORT_CONSTRUCTION.md).
+Page 1 uses daggered anchors. The mixed endpoint kernel uses different anchors
+in its source test and retains those daggers. This correction preserves the
+historical review bytes and the accepted local Fierz proof and rank.
+Independent correction receipt SHA-256
+`57ee48b1562b0988e2250aea65dac14c024f94a1cd4795492bef1fbced3212e3`. [Acceptance and evidence](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_CORE_CHIRAL_FIERZ_ACCEPTANCE.md).
