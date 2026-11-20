@@ -3870,3 +3870,58 @@ Their review is prospective. The actual mathematical and source
 acceptance pair follows the construction. The parallel page-0 basis
 implementation has a private frozen source snapshot awaiting static
 review. Its implementation and scientific execution remain open.
+
+
+### L1 complete original group 672 exact signed value
+
+The [complete portable group record](L1_N16_C0_DENSE_GROUP672_COMPLETE_R1.zip)
+binds all eight disjoint original joint-L assignments. For assignments
+1 through 6, it carries the original support lifts, signed guarded
+predecessor caps, inverse splits and independently replayed continuations
+to their own exact Gaussian scalars. Exact replays for the earlier
+assignments 0 and 7 are preserved in their separately reviewed archive.
+The source originally generated 30976 candidates across 3872 groups in
+this profile. This result covers all eight supported assignments of
+group 672, including all three distinct J children of assignment 7 once.
+
+The signed group sum before the common factor denominator is
+`1595422787448995760195667308123560921801614730381967235503058059264 + 0i`.
+Use the inherited factor denominator
+`576173855599322741762003196268511232` and the original phase +1 and
+occupation prefactor `1/(16*4^64)` once. The exact normalized value is
+`5408194248062619987159566721/10633823966279326983230456482242756608 + 0i`.
+The retally validates each independently accepted terminal against the
+author receipt, then checks the complete original assignment roster.
+Assignments 3 and 6 are negative. The signed retally retains both
+negative contributions and the original weights of all positive terms.
+
+The measured post-cap stages for assignments 0 through 6 sum to about
+906 seconds. One accepted route through the three children of assignment
+7 adds about 704 seconds from the respective saved caps. These are sums
+of observed author process durations on overlapping runs, excluding
+source preparation, earlier exploratory attempts, alternative terminals
+and independent replay. Peak reported RSS among these invocations was
+about 1.92 GB. Raw input row count places this group near the profile
+median. A complete measured route on this group and the earlier minimum
+input example do not establish total portfolio cost or a bound on more
+expensive groups. Full signed c0, physical B3 and publication qualification
+remain open.
+
+### L1 temporal-source construction brief revision
+
+The independent mathematics review
+(`763fe5c0de673e165da5ba589ae1e64128739cccbd64c3b0debb8b5ebf621a`)
+and independent source review
+(`133ce3d9a91aacce2303bf825cb645835ecdf5cb2d204e53335482005ad7d275`)
+both requested revision of the proposed boundary module. Its choice
+of polarization and product was insufficiently derived from the original
+action. Executor froze revised brief SHA-256
+`683887984224897e509031b59deaf4cdd034de744064f57db1aa62d89fda7a8a`
+for independent prospective review. The revision asks for regular
+polynomial first-source lifts of specified incoming and outgoing
+constraints over the complete original endpoint momentum algebras.
+A negative graph-symbol test must be distinguished from an exact
+nonzero open quantum-kernel witness. The proposed remedy keeps the
+bridge force in the original two-sided relation and tracks its first
+and mixed source jets. The physical product, state, adjoint and
+equations (30)–(31) remain the original acceptance target.
