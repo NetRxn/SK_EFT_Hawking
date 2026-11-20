@@ -3220,3 +3220,9 @@ PR126 is open and conflict-free at exact head `8596d6f9` on `a912c5542`. The Git
 ### L1 N16 complementary cases 4–5 and shared cases 6–11
 
 Independent replay of the two [complementary terms](L1_N16_C0_COMPLEMENTARY_CASES4_5_R1.zip) binds their distinct parents, verifies all 16 author shard intervals and reconciles two separate sparse join schedules. The cumulative **6/48** sum is `3000714659824806689787/324518553658426726783156020576256 + 0i`. The six [shared terms](L1_N16_C0_TUPLE1_CASES6_11_R1.zip) have independently reproduced cut lineage and exact signed outcomes from separate inputs. Their cumulative **12/36** sum is `-365065005939167351513025/2596148429267413814265248164610048 + 0i`. Fresh archive extraction reproduced both retallies and confirmed the preceding committed ledgers. No full child or publication gate closes here.
+
+### L1 N16 complementary cases 6–11 and shared cases 12–17
+
+The [six complementary terms](L1_N16_C0_COMPLEMENTARY_CASES6_11_R1.zip) have independent cut and cap-lineage verification and matching signed arithmetic from two sparse schedules per term. Their cumulative **12/48** value is `1878273476823473744841/162259276829213363391578010288128 + 0i`. The [six shared terms](L1_N16_C0_TUPLE1_CASES12_17_R1.zip) have distinct inputs, independent lineage and signed sparse replay. The cumulative **18/36** value is `-701209838170290083170293/2596148429267413814265248164610048 + 0i`. Both frozen retallies use the exact preceding committed subtotals.
+
+The first capped complementary term, case 12, yields nine inner coordinates with 1,021,248 compatible products in the diagnosed pair. The author has completed all nine and requested independent replay. The shared remainder is running. No full child, physical coefficient or publication gate has closed.
