@@ -9,7 +9,7 @@
 3. **L2 → D2** — Advance the letter and deep companion in order. Review shared proof work once.
 4. **D1 → E1/E2** — Advance the shared physical dispersion construction once. Retain distinct platform calibration, transmission and detection obligations.
 
-**L1 publication resume point.** The last accepted calculation checkpoint has 31 of 1,056 representatives and complete components 3, 14 and 98. The original L1 scientific and publication obligations remain open. Executor continues the assigned physical construction. ROOT retains L1 publication ownership. Use the [handoff inventory](L1_DELIVERY_HANDOFF_20261120.md) to resume L1 and select its next qualified main checkpoint.
+**L1 publication resume point.** The last accepted calculation checkpoint has 31 of 1,056 representatives and complete components 3, 14 and 98. The original L1 scientific and publication obligations remain open. Executor continues the assigned physical construction. ROOT retains L1 publication ownership. Use the [full-strength readiness specification and plan](L1_FULL_STRENGTH_READINESS_PLAN.md) to determine the next scientific milestone, and the [handoff inventory](L1_DELIVERY_HANDOFF_20261120.md) to reconcile custody and select its next qualified main checkpoint.
 
 The [publication strategy](../../PAPER_STRATEGY.md#3-sequencing--order-of-submission-and-dependencies) governs eventual submission order. NJL/ADW is an existing separately reviewable checkpoint. It remains queued under the current single-lane instruction. Record an explicit priority decision here if the lead bundle changes, and order the rest of the portfolio before the current queue runs low.
 
