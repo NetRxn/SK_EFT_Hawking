@@ -4977,3 +4977,31 @@ rerun of seven primary-source cache failures passed all seven on
 both revisions through the canonical local corpus. The original
 full fast-suite results remain recorded. No candidate-only failure
 was observed. Full merge qualification remains due.
+
+
+### L1 independently accepted relative source action and controls
+
+ROOT verified exact remote Executor donor
+`1a054ba3e75049cc73117c61c8f741d944d1a4bd`, all 19 archive members,
+the four canonical document copies and 11 current predecessor and
+source-authority pins. Both independent actual reviewers accepted the
+[scoped source construction](../2026-11-05-l1-physical-bridges/ORIGINAL_ORDERED_QUANTUM_CUT_ACCEPTANCE.md).
+
+The matching dilation defines an ordered auxiliary product, coefficient
+adjoint and independent cap dual. It gives all original source-cap
+unit, single-coframe and 16 ordered same-kernel pair insertions and
+retains shared right momentum and ordered force contacts. An exact
+balanced-cap pair has values zero and one half for that momentum,
+excluding a multiplication symbol for it. The source unit cap reads
+one, while imposing the tested odd annihilator as an operator-zero
+constraint with coordinate multiplication would collapse the unit.
+The relative source action survives both controls. The tested
+all-annihilator normalizer also excludes an original nonzero coframe
+derivative. These results apply to the stated reductions.
+
+ROOT commissioned the next actual derivation of a source-compatible
+quantum pre/post constraint subfamily and observable action, with
+unit and ordering-sensitive pair controls. Physical product, positive
+state and adjoint, physical cut maps, original temporal insertion and
+the full B3 susceptibility remain open. This intake does not close
+finding 2.1 or qualify a publication or merge gate.
