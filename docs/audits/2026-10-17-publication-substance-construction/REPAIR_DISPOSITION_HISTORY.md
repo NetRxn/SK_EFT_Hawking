@@ -3656,3 +3656,29 @@ maps to 3, 4 and 5 are already accepted. These four cases each enter once.
 The group-128 total remains open until the representative and whole-group
 composition are reviewed. Full `c0`, physical B3 and publication acceptance
 remain open.
+
+
+### L1 group 128 complete exact signed value
+
+The final assignment-0 representative at outer coordinate 2 is independently
+complete. Its 36 G/J values cover all 4,558,848 compatible products of the
+original selected pair. The direct, triangle and four-factor routes cover 24
+values. Exact primitive fiber factorizations and a folded four-factor closure
+cover six more, and verified signed row maps cover the remaining six. Both
+independent reviews agree with the complete author scalar and use the original
+normalization. The final representative equals the separately evaluated
+outer 6 value. Both source routes and all original summands remain explicit.
+
+The group-128 real coefficient is
+`-17865027341916851312184266649/664613997892457936451903530140172288`,
+with zero imaginary part. The two first-index branches have equal signed
+subtotals. The complete sum applies unit weight to both branches, all six
+assignments on the second branch and all eight outer values of assignment 0.
+The repeated numerators follow exact signed maps where used, with one
+contribution per disjoint original scope. [Exact group and verification evidence](L1_N16_C0_DENSE_GROUP128_COMPLETE_R1.zip).
+
+This completes original group 128. Group 672, the rest of the representative
+hard profile, the full signed `c0`, the physical B3 derivation and publication
+qualification remain open. The viable exact primitive factorization is a
+route to test against the pinned group 672 residual. No full-profile runtime
+claim follows from this group.
