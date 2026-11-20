@@ -4727,3 +4727,34 @@ physical product and adjoint, and B3 remain open. Executor has a fresh
 manual construction commission followed by independent actual
 mathematics and source review. The present handoff records design
 acceptance only.
+
+
+### L1 complete signed component 98
+
+The [independent full Group 1302 review](L1_N16_C0_DENSE_GROUP1302_COMPLETE_R1.zip) proves all eight
+original terms. It checks the two prepared zeros at original ordinals
+5 and 7 and reproduces all six surviving guarded and retained runs.
+ROOT verified 171 manifest members and compared every independent
+scalar to the exact author result. The raw reduced sum is
+`13065496161215331274085672280 + 0i`. Applying the original
+physical normalization and cover weight 192 adds
+`4899561060455749227782127105/10633823966279326983230456482242756608 + 0i`.
+Its measured author components are 28.08 s preparation, 120.058079 s
+guard and 238.060649 s continuation, totaling 386.198728 s.
+
+The [complete component retally](L1_N16_C0_DENSE_COMPONENT98_COMPLETE_R1.zip) reads the seven prior
+group and preparation records plus the accepted Group 1302 result.
+The exact weighted contribution of the entire original component is
+`711765491920606701145740040065/170141183460469231731687303715884105728 + 0i`.
+It covers both sides and both chirality fibers through the independently
+accepted cover identity. Individual omitted mirror-group scalars
+are outside this result. Both independently proved whole-group zeros
+are included and each original occupation weight is applied once.
+
+The new dense subtotal is
+`-513445235772849354472304632374928629/87112285931760246646623899502532662132736 + 0i`.
+Seventeen selected groups are accepted and 1,039 remain. The
+full signed coefficient and physical publication obligations remain
+open. The proposed shorter zero witness reproduces the full
+E141 quotient target on two accepted zero and two nonempty controls.
+It needs held-out and independent review before applying any new zeros.
