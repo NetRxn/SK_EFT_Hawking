@@ -3166,3 +3166,9 @@ The [closure archive](L1_N16_C0_CASES29_31_CLOSURE_R1.zip) retallies 36 accepted
 Four independent nine-cut audits and terminal replays verified all 36 inner values, including distinct captures and source indices. In each case the two triangle closures and two four-factor closures had separate, exact independent pivots or selected pairs. Reviewers checked full disjoint coverage of all four author shard sets and matched raw Gaussian sums and normalized fractions. Equal case 34 and 38 totals remain bound to different inputs. Earlier cap history is retained.
 
 The [closure archive](L1_N16_C0_CASES33_34_35_38_CLOSURE_R1.zip) gives the exact subtotal over 40 accepted outer terms, `-6998887093259411636707053/5192296858534827628530496329220096 + 0i`. Fresh extraction verified 582 checksums and reproduced raw-value checks and the cumulative retally. Cases 37 and 39–45 remain open. The full signed coefficient, physical susceptibility and publication gates remain open.
+
+### L1 N16 exact arithmetic for cases 37, 39 and 40
+
+The [portable closure](L1_N16_C0_CASES37_39_40_CLOSURE_R1.zip) binds the original case inputs, author contraction receipts, independent replay reports and the prior 40-term ledger. Independent replay verified all 27 inner values, with alternate pivots for the triangle reductions, alternate factor pairs for the four-factor closures and complete shard interval checks. The three outer cases are separate roster entries even where scalar values coincide with earlier terms.
+
+The retally gives **43 of 48** exact outer entries for tuple 0’s first binary child in descendant (0,0). Its exact partial sum is `-8971513488314807229882513/5192296858534827628530496329220096 + 0i`. Cases 41–45 remain open. Finish this child and use its measured costs to assess the remaining full dense profile before scaling to further profiles. The full signed coefficient, physical susceptibility window and publication qualification remain open.
