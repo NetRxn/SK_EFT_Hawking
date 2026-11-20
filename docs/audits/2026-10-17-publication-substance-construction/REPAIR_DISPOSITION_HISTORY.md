@@ -4211,3 +4211,65 @@ physical tetrad insertion, compatible positive state, product and adjoint
 remain required. This is a construction assignment with prospective
 acceptance. Actual independent review and all physical publication gates
 remain open.
+
+### L1 near-median dense Group 786
+
+The [complete signed replay](L1_N16_C0_DENSE_GROUP786_COMPLETE_R1.zip)
+binds all eight original joint-L assignments, frozen signed source
+tables, independent guarded and continuation replay, and the independent
+retally. The bounded adaptive stages terminate directly for seven
+assignments. Assignment 5 uses a complete triangle at its last three
+factors. Two author anchors and an independent third pivot agree on
+10,450,944 compatible triple products and the signed result. Each original
+assignment contributes once. All eight imaginary numerators are zero.
+
+The raw group sum is
+`-1786886334144640842638787384254954241471973200949447729417814016 + 0i`
+at the inherited denominator
+`3457043133595936450572019177611067392`.
+The original orientation and occupation/coframe prefactor
+`+1/(16*4^64)` give
+`-252384207869719386120951/2658455991569831745807614120560689152 + 0i`.
+The accepted chirality relation gives the same value for Group 3212.
+The ten-group subtotal after the outer orbit weight 48 is
+`-220353998457296938057244974682382069/87112285931760246646623899502532662132736 + 0i`.
+The other 3,862 groups require 1,931 representative evaluations. The
+full-coefficient residual remains unchanged until the dense profile is
+complete.
+
+Recorded Group 786 author elapsed durations sum to 216.32 seconds of
+guarded contractions and 640.86 seconds of continuation. Individual
+assignments range from 62.6 to 153.6 summed seconds. The durations overlap
+and exclude preparation and independent replay. The corresponding
+Group 1673 measurements are 379.47 and 908.28 seconds. This gives full
+reference timings on different original groups, with substantial
+variation in both workload and terminal shape.
+
+Profiling an exact continuation places about 19.31 of 29.79 profiled
+seconds in row projection and its generator. A bounded cache of ordered
+tuple projectors reduces elapsed time by about 26 and 37 percent in two
+paired two-repeat stage trials. Both split and result checkpoints match
+byte for byte in every run, including the signed L0 scalar. These
+measurements apply to the tested continuation stages. Group 786 exact
+scientific acceptance uses the independently reviewed original schedule.
+
+The next representatives were selected by the ranks 483 and 1,451 in the
+1,936 original pairs ordered by source rows and group ID. Group 1466
+loads 2,448,742 signed source rows and retains 578,337 after the two
+sweeps. Group 1441 loads 3,103,973 and retains 825,871. The archive's
+independent 1466 replay verifies seven empty factor restrictions for
+original ordinals 5 and 7 following exact boundary-preserving quotient,
+so both contributions are zero. The other six original ordinals
+remain 0, 1, 2, 3, 4 and 6. All eight original ordinals survive Group
+1441's prepared support. Full signed evaluation and acceptance on both
+quartile representatives remain separate from the verified zeros.
+
+Group 1466 original ordinal 4 independently reaches an axis-empty
+signed numerator
+`1755707804481029851241902347715280033419060596521458515050496 + 0i`
+at inherited denominator `790361941837205407080937169092608`.
+Its source review reverses all 183,390 signed conditioned rows and
+verifies the distinct native cap and all three continuation checkpoints.
+Together with the two zero slices, this establishes three of the eight
+original Group 1466 contributions. The accepted group totals and partner
+ledger remain unchanged until the other five terminal values are verified.
