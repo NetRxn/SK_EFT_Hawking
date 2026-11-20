@@ -3707,3 +3707,43 @@ The separate whole-block author attempt reaches an 11-factor residual
 without dividing the physical domain. This interval result supplies an
 exact subnetwork value and measured cost. Remaining profile work, the full
 `c0` coefficient, physical B3 and final publication review remain open.
+
+
+### L1 group 672 complete first G block
+
+The [complete first G-block archive](L1_N16_C0_GROUP672_G0_COMPLETE_R1.zip)
+verifies original joint-L assignment 7, J=(1,), and G(0,6,0) in
+{81,88,193,200}. This is the complete block estimated in the earlier
+three-block disjoint cover. The interval-5 result is included in this block
+and is not counted again. The frozen 16-factor input is
+`43a1b4a00842a6285f492357afb7875a8c9dfdffab9ffd785691a886ecc5bc85`.
+Four inverse-verified factorization passes reduce it to three factors.
+The last pass has seven inverse splits, eleven kept joins and 2,627,142
+matched pair products. The three retained factors have 483,312 rows.
+Every retained axis belongs to exactly two factors, so indexed support
+intersection computes the complete signed terminal without a pair-product
+table. The two author traversals each count 15,291,648 supported triples
+and agree on real numerator
+`28179366352920825606679044023701372434761278366057941423882240`,
+zero imaginary part, and inherited factor denominator
+`576173855599322741762003196268511232`.
+
+The four author passes took about 153 seconds after the frozen original
+block cap, plus about five seconds for one terminal traversal. Peak
+recorded author RSS was 1.91 GB. Those costs exclude upstream preparation
+and independent verification. The other two G blocks, the complete
+hard group, the full signed coefficient and the physical B3 acceptance
+remain open. No physical prefactor is applied to this recorded raw value.
+
+### Intake of the original six-EHC page-0 compiler design
+
+Executor donor `2678f1cd280a6398687cb694b5b5fa279260b094` is independently
+accepted as a [mathematical design](../2026-11-05-l1-physical-bridges/ORIGINAL_SIX_EHC_PAGE0_COMPILER_DESIGN_ACCEPTANCE.md).
+The publication lead verified the portable archive manifest, all nine
+accepted scientific input bytes and the exact version of both R2 reviews.
+The R1 Gram-only basis was rejected by two independent covariance
+counterexamples. R2 repairs the contragredient law on the raw coefficient
+legs and carries the inverse adapters into a rational computation design.
+The complete page-0 array contract is pinned. Execution, resource
+qualification, other pages, full coefficient, physical source matching
+and publication acceptance remain open.
