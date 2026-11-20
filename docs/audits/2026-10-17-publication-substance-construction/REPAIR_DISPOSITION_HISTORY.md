@@ -4164,3 +4164,50 @@ bounded stop in another 42.17 seconds. The saved frontier carries
 1,820,644 signed rows and a reproduced source roster. This bounded
 measurement still needs independent verification and a terminal value.
 The replay scripts and frontier hashes are in the archive.
+
+### L1 held-out dense Group 1673
+
+The [complete replay package](L1_N16_C0_DENSE_GROUP1673_COMPLETE_R1.zip)
+records all eight disjoint original joint-L assignments of the remaining
+maximum-input representative. The same guarded exact contraction and
+adaptive continuation framework reaches an axis-empty factor for each
+assignment. Independent source and continuation evidence verifies the
+signed tables, exact denominator and all eight Gaussian terminal values.
+The signed raw numerator sum is
+`1315022612650657354278861009756366465367293775531203202404877074432 + 0i`
+at the inherited factor denominator
+`10925963483957527547486875425536212992`. The original orientation is +1.
+The occupation and coframe prefactor `1/(16*4^64)` gives
+`1925721409677402851879035894011/87112285931760246646623899502532662132736 + 0i`.
+
+The previously reviewed exact chirality exchange gives the same normalized
+value for Group 2198. The eight covered groups now have an exact signed
+subtotal
+`-73451068175075828153539970398478247/1393796574908163946345982392040522594123776 + 0i`
+before the outer profile weight. The dense profile still needs 1,932
+distinct representatives covering 3,864 groups. The full-coefficient
+residual is unchanged until the dense profile is complete.
+
+Recorded author elapsed durations sum to 379.47 seconds for initial
+guarded contractions and 908.28 seconds for continuation. Individual
+assignments range from 93.4 to 220.6 summed seconds. The component
+durations overlap and exclude earlier preparation and independent replay.
+Projecting the measured summed durations to all 1,932 remaining
+representatives would give 28.8 process-days under the same timings.
+The observed sample supplies neither a whole-profile rate nor a wall-time
+promise. The next checkpoint uses a fixed bounded schedule on additional
+disjoint representative input strata and records completed signed values,
+resource bounds and any reproducible terminal stalls.
+
+### L1 two-force construction commissioned
+
+The [approved prospective R3 charter](../2026-11-05-l1-physical-bridges/ORIGINAL_TWO_FORCE_PHYSICAL_CHARTER_STATUS.md)
+is preserved from Executor donor `421e30593`. ROOT verified the exact charter
+and both independent reports, all evidence archive members and the nested
+accepted predecessor. Executor assigned the new constructor the exact
+original typed Ward relations and reflected reversal against the fixed
+cap and nine original normalized two-interface evaluations. The original
+physical tetrad insertion, compatible positive state, product and adjoint
+remain required. This is a construction assignment with prospective
+acceptance. Actual independent review and all physical publication gates
+remain open.
