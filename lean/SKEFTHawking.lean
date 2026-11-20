@@ -1,3 +1,33 @@
+import SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+import SKEFTHawking.ADW.FiniteGrassmannEvaluation
+import SKEFTHawking.ADW.GaussianGrassmannAuxiliary
+import SKEFTHawking.ADW.FiniteGrassmannCoframe
+import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
+import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
+import SKEFTHawking.ADW.GaussianAuxiliaryComplex
+import SKEFTHawking.ADW.GaussianPolynomialStein
+import SKEFTHawking.ADW.GaussianHaarPolynomialStein
+import SKEFTHawking.ADW.PolynomialPerturbationCoeff
+import SKEFTHawking.ADW.FiniteGrassmannShiftedDiracBerezin
+import SKEFTHawking.ADW.FiniteGrassmannSourceInsertion
+import SKEFTHawking.ADW.FiniteGrassmannSourceGenerating
+import SKEFTHawking.ADW.FiniteGrassmannComplementaryMinor
+import SKEFTHawking.ADW.FiniteDeterminantSubsetDP
+import SKEFTHawking.ADW.FiniteDeterminantRawJet
+import SKEFTHawking.ADW.FiniteDiracExecutableAssembly
+import SKEFTHawking.ADW.FiniteDiracQuaternionSpecialization
+import SKEFTHawking.ADW.QuaternionSU2Sphere
+import SKEFTHawking.ADW.QuaternionSU2Haar
+import SKEFTHawking.ADW.QuaternionSU2RadialMoments
+import SKEFTHawking.ADW.QuaternionSU2HaarMonomial
+import SKEFTHawking.ADW.QuaternionSU2HaarAnchored
+import SKEFTHawking.ADW.QuaternionSU2HaarPolynomial
+import SKEFTHawking.ADW.QuaternionSU2HaarAssembly
+import SKEFTHawking.ADW.QuaternionSU2SymbolicSource
+import SKEFTHawking.ADW.QuaternionSU2SymbolicWeight
+import SKEFTHawking.ADW.GaussianPolynomialAffine
+import SKEFTHawking.ADW.GaussianPolynomialHermite
+import SKEFTHawking.ADW.GaussianPolynomialIBP
 import SKEFTHawking.Basic
 -- Array helper lemmas (bang-indexed ofFn simp lemma) for cyclotomic-substrate
 -- symbolic reasoning. Upstream-contribution-quality; gating step for the
