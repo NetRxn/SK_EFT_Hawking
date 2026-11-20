@@ -4456,3 +4456,49 @@ There are 3,854 uncovered original cut groups paired into 1,927
 representatives under the accepted chirality identity. A proposed
 additional geometric cover is in independent review. The full signed
 dense contribution, physical B3 and publication acceptance remain open.
+
+
+### L1 accepted signed geometric cover
+
+The [frozen candidate and independent actual review](L1_N16_C0_DENSE_GEOMETRY_COVER_R1.zip)
+have outer SHA-256 `bf3bfef6484236edc5eca2961d705f9ee27cc17b857c9c69df89114e4d99b1b4`.
+For the original periodic dense occupation, a spatial axis 0/1 exchange
+with a one-step temporal translation preserves the ordered rooted
+holonomy, exact labeled projections and shared anchor Haar. Each
+Einstein–Cartan insertion contributes a minus sign. The degree is 32,
+and the transported site top form has positive orientation. The signed
+identity holds in both Gaussian components and commutes with the
+accepted chirality map. The exact source is `51e7c745e`.
+
+The complete independent joint-L census has 30,976 assignments.
+Its cut graph modulo chirality contains 110 complete bipartite
+components with eight groups per side and 22 complete eight-group
+components with loops. Compute one full side in each bipartite component
+and retain all loop-component groups. The weights on one physically
+normalized original group are 192 and 96 respectively. They already
+include the chirality factor and original occupation weight 48.
+A mirror individual group has no inferred scalar. The identity equates
+whole sides. Independent review checked every one of 7,832 invariant
+assignment orbit coefficients. Dropping the bipartite multiplicity
+fails on all 7,040 applicable coefficients. Doubling the loop weight
+fails on the other 792.
+
+The accepted-nine reweighted subtotal is
+`-513809659704712705103291251275441909/87112285931760246646623899502532662132736 + 0i`.
+It is twice the previous 18-group subtotal minus the accepted
+chirality-weighted pairs of the two loop groups 934 and 1673.
+The selected roster contains 1,056 representatives and retains all
+nine accepted group results. The exact residual is 1,047 groups.
+Their pre-sweep source-row proxy is 2,739,421,148, compared with
+5,265,467,246 under chirality alone at the same completion state.
+If all remaining groups cost the same as the two complete eighths
+pilots, the measured author components would total 7.6 to 9.2
+serial worker-days. Actual group costs vary. That illustration
+excludes separate review and is not a wall-clock forecast.
+
+ROOT reconciled the end-of-review source change to `a6fc0773a`.
+All original input paths were byte-identical. The added complete
+pilots and two disposition records were the only delta. The review's
+R2 continuity check and fresh portable replay verified this intake.
+The whole dense contribution, full signed coefficient and physical
+publication acceptance remain open.

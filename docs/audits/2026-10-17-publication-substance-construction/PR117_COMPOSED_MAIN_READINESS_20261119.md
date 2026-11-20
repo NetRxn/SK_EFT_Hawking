@@ -33,3 +33,19 @@ Measured 2026-11-19T23:09:25.260859+00:00 using the existing graph builder. Draf
 Gate definitions follow the [canonical gate taxonomy](../../READINESS_GATES.md). The [full gate evidence](PR117_COMPOSED_MAIN_READINESS_20261119.json) records measurement flags and supporting evidence, including caveats on mechanical passes.
 
 L1 G3 records 20 parameters and seven missing human verification dates. G11 identifies the open Stage 13 finding for the adopted susceptibility window. G4 covers static test grounding for seven declared formulas. The reviewed historical Paper 25 compile and dependency findings both read fixed on this composition. L1 and Paper 25 each compile at five pages with zero fatal errors, overfull reports and unresolved references. Three focused graph tests passed. Full merge qualification, the original physical deliverables and final human approval remain open.
+
+
+## 20 November venue provenance recheck
+
+The canonical graph was rebuilt on PR117 head `b6994984f044eb39a43c1435e3ab91458a02b522`
+composed against the same main `a912c5542d897c22ac8d4cdec07649a4872215a6`,
+tree `bd2778b884e19b053433a5949737e6131ce556e7`.
+The exact same-base change is limited to three length-source text fields
+in `papers/L1/bundle_metadata.json`. The new graph has 51,500 nodes and
+19,076 edges, source hash `562af3e2785d2fe0`, and SHA-256
+`f179ac2ec58ca6f1fbd3c58d9ccc3d16e0095ee3abddc6c67023f5ebe6736afa`.
+It was built at 2026-11-20 09:56:37 UTC. All 704 paper-level gate
+payloads agree after removing evaluation and modification timestamps.
+All 231 bundle gate states and measured flags agree. The table above
+also describes this exact composition. L1 still requires the seven
+human provenance dates and the physical window evidence for finding 2.1.
