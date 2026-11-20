@@ -5052,3 +5052,33 @@ a later product guard at 14 factors after 64.62 seconds. The existing
 complete Group 1490 L0 solve took 54.38 seconds. The experiment supplies
 an exact reuse control and no measured end-to-end speedup. The existing
 route remains in use.
+
+
+### Operator decision to move the publication lane to L3
+
+On November 20 the operator selected L3 for the single publication delivery
+lane. L1's last accepted numerical checkpoint is `1fbbcf972`, with 31 of
+1,056 reviewed representatives. An in-flight bounded Group 1186 author
+calculation and Group 1221 preparation remain available in local scratch
+and have no reviewed scalar credit. ROOT retains L1 publication ownership.
+Executor continues the existing ordered physical insertion and pre/post
+constraint work. All original L1 acceptance obligations remain open.
+
+Remote main at `a912c5542` contains the earlier reviewed L1 cloud
+research intake from issue 121. The recent signed coefficient and
+ordered source construction checkpoints are on the remote publication
+branch. L1 delivery PR117 and the metric–matter evidence draft PR126 remain
+open drafts. Their outstanding qualification is retained.
+
+For L3, verified PR112 head `e4c221214` and current main `a912c5542`
+produce a clean scratch composition `2e97a190d9d6f268fe25e21a750888c422fb03be`
+with the L3 and Paper 27 manuscript/package paths and inspected
+BHThermodynamicsFourLaws and ExactSolutions sources unchanged from the
+focused head. The draft's reported base SHA remains its original
+`ce194cdc`. PR114 at `f905a2873` retains separate reviewed research
+and its NJL-based ancestry. The composition does not import that lineage.
+
+ROOT requested fresh first-law/nozzle custody and exact-candidate
+validation from Executor. Retain reviewed source, canonical finding
+writers, the original four-laws BUILD, full Stage 13 and final human
+approval. An unqualified native build or paper gate remains open.
