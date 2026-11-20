@@ -3747,3 +3747,59 @@ legs and carries the inverse adapters into a rational computation design.
 The complete page-0 array contract is pinned. Execution, resource
 qualification, other pages, full coefficient, physical source matching
 and publication acceptance remain open.
+
+
+### L1 group 672 complete J=(1,) child of joint-L assignment 7
+
+The [exact reviewed J-child evidence](L1_N16_C0_GROUP672_J1_COMPLETE_R1.zip)
+accounts for all 16 allowed G(0,6,0) values across the three original blocks.
+Each sibling was evaluated from its own independently checked cap. G1 and
+G2 have the same real raw numerator
+`101021060482326859298003845595799509561244650066133141694709760`
+and zero imaginary part. Fourteen of their starting tables match exactly.
+The other two share a degree-two axis, and the direct signed primitive
+relabeling check on that axis did not yield an equivalence. Their matching
+terminal values come from separate contractions.
+
+The G1 route reaches a scalar in three passes and 165.38 elapsed author
+seconds at peak process RSS 1.76 GB. The G2 route reaches a scalar in four
+passes and 155.32 elapsed author seconds at peak process RSS 1.76 GB.
+The runs overlapped and these timings begin at the saved 16-factor
+inputs. The G0 measured cost is listed in its own receipt. The three
+blocks use the same inherited factor denominator. Their signed subtotal
+at that denominator is `399569479038759001830727680`. Applying the original
+phase +1 and prefactor `1/(16*4^64)` once gives
+`48775571171723510965665/664613997892457936451903530140172288` with zero
+imaginary part. The reproducible retally includes the independently
+verified G0 value once and preserves the original partition.
+
+An author-only direct run on the next J=(2,) child reduced its unpartitioned
+18-factor input to a six-factor restart in 101.80 elapsed seconds. The archive
+preserves the source, receipts and restart hashes. The scalar and independent
+review remain open. The other J children of assignment 7 and seven other
+joint-L assignments remain open. These measurements give a complete single-child cost
+sample. The representative group cost, the full signed coefficient
+and the three original physical L1 obligations remain open.
+
+
+### L1 original temporal physical source assignment
+
+ROOT commissioned Executor's next direct physical construction after
+source intake identified the original temporal Q_(r,00) insertion
+as a tractable first test of the unmatched physical operator map in
+[kinetic correspondence equations (30)–(31)](../2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md#10-the-attempted-physical-map-and-its-exact-remaining-metricnormalization-equation).
+The construction must retain the unaveraged compact-link memory and
+derive a product, adjoint, state and boundary maps from the original
+kinetic polarization. Test the actual first and mixed source derivatives
+with moving boundary maps, reverse adjoint, periodic functional and
+original denominator/contact terms. Require independent original-source
+and mathematics review of a matched instance or an exact failed identity
+with its witness and viable continuation.
+
+The six-EHC page-0 computation and the full shear sign remain separately
+owed. The sign is an adverse criterion for a specific same-source
+reflection prescription. It is not a prerequisite for attempting the
+more general source and operator identification. The commissioning
+message authorizes source-bound construction and review. It supplies no
+scientific runtime or Lean admission, physical acceptance, or gate
+transition.
