@@ -4758,3 +4758,34 @@ full signed coefficient and physical publication obligations remain
 open. The proposed shorter zero witness reproduces the full
 E141 quotient target on two accepted zero and two nonempty controls.
 It needs held-out and independent review before applying any new zeros.
+
+
+### L1 component 3 preparation and exact zeros
+
+The [independent signed preparation review](L1_N16_C0_DENSE_COMPONENT3_PREPARATION_R1.zip) has SHA-256
+`f3fe6557f97a8aa9727c3e8f55474f6f5cc0a9695549fd16ae7e0135a18f1421`. ROOT verified 124 manifest entries and the original
+56-ordinal ledger. Component 3 has the lowest remaining pre-sweep input
+row count among the nine partially completed components at selection.
+It had 15,097,734 rows across seven uncompleted representatives.
+Its matched row-count multiset with component 98 is a workload control.
+Prior accepted original Groups 128 and 1231 have opposite signs and
+different exact scalar magnitudes, so their signed values are retained
+independently.
+
+Groups 134 and 164 have exact whole-group zeros. All 88 signed
+tables agree with the independently rebuilt preparation. The original
+M16 to E141 step first empties its second factor, transforming
+992 and 2,144 rows to 248 and zero with 24 exact aliases. That
+empty factor annihilates each original term. Groups 158, 183, 189,
+201 and 207 have exact zeros at original ordinals 1 and 3. Thirty
+original terms survive, using ordinals 0, 2, 4, 5, 6 and 7.
+The accepted cover coefficient is 192 on each selected representative.
+
+Nineteen selected groups are accepted and 1,037 remain. The recorded
+subtotal is `-513445235772849354472304632374928629/87112285931760246646623899502532662132736 + 0i`.
+The two whole-group zeros add zero. The reduced preparation witness
+matches the full exact E141 target on all four paired controls and
+also detects the two observed component 3 zeros. A separate 16-group
+stratified sample returned only nonempty E141 targets. The sample
+provides no new scheduling credit. Full signed coefficient and original
+physics gates stay open.
