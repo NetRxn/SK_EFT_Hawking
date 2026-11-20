@@ -1,0 +1,83 @@
+# Independent ACTUAL original-source review — prepared shear14 package R1
+
+**ACTUAL ACCEPT. No necessary correction.** This accepts the exact PREPARED-NOT-RUN scientific input, controls, support-only program specification and bounded static forecast. It does not report a support run, a coefficient evaluation, a completed N16 contraction backend or local runtime admission.
+
+## Exact bytes, custody and continuity
+
+FIRST action was the explicit SAME check of `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-shear14-input-r1.json`, from the assigned checkpoint. It returned exit0, `fresh:true`, `changed:[]`, task `l1-shear14-input-r1`. Source is `07a61fc8b8075f37d5bfc3d9fd9de7c98372f838`. This snapshot is not runtime authority.
+
+Reviewed ZIP `/private/tmp/l1-shear14-input-package-r1.zip`: SHA256 `6c3d5d3c7e8d38d1a0feda4f7b8f71bcd089be73fce616da39773fd88843bde6`, 192282 bytes,13 members. Ordinary ZIP/text/hash bookkeeping verified every member equals the corresponding directory file, and every manifest-listed size/hash matches. No archive member or scientific program was imported/executed.
+
+Fully read construction, program, spec, README, upstream pins and manifest. Exact primary artifacts:
+
+- CONSTRUCTION.md: `741ce3e7810c1565aae69d3b4816f95868b4439a2e543dce993024ade77d9b18`,20017 bytes.
+- prepare_support.py: `7d11c450c97b2e2d63fee5f9cbc345850f2190cc5298e77e9b840e6f54f03107`,9019 bytes.
+- INPUT_SPEC.json: `644ae5d93b24ccffba2e6e49d9e5fbc3150c7b4da13ce0006529ba32041f1a1b`,4784 bytes.
+
+The original coframe/action, EHC antisymmetrization/four-world-order source, two-anchor normalization kernels, metric fourth-power control and accepted channel result were consulted directly. Their copies match the pinned accepted originals. Scientific files belong to the assigned checkpoint; absolute primary notebook/roadmaps/governing files retain their separate custody. The prospective review is not substituted for this actual review; all new mathematical/program claims below were checked independently. No other actual verdict was read.
+
+Only this private report is authored. Prior reports, candidate directory/ZIP, source, notebook and packet are unchanged. Work was manual/static and ordinary text/hash/ZIP/continuity bookkeeping. No scientific evaluator/import/support enumeration, CAS, Haar/exterior/matrix/Gram/coefficient computation, scientific test, build, Lean, runtime/controller/process/Git or slot action occurred.
+
+## 1. Full original source, insertion and multiplicities
+
+The target remains the original N16 coefficient `I Haar[q² S4^14 S2²]/(14!2!)`, q=Q_x11-Q_x22 at x0, all128 odd variables and all64 independent anchored Spin(4) links. Geometry uses16 binary vertices and xor neighbors in EVERY world direction. y1=2 and y2=4 are correct for axes1,2. No opposite anchors are identified; gauge_tree is null. Site top/order, carrying Euclidean gamma upper blocks, gamma5, quarters, full determinant/EHC sum and `Ddagger Cdagger B A` plaquette remain original.
+
+The proper world permutation(12)(03) gives equality of the two diagonal-square integrals at the specified isotropic base. Thus the two source cases with outer weights+2,-2 exactly implement `2[h(Q11²)-h(Q11Q22)]`. Four occurrence-distinct coframes with internal labels shared in pairs implement the full sums. There are10 diagonal commutative monomials and16 cross ones;16 ordered internal assignments in each case correctly reproduce the diagonal coefficients2 for unequal internal labels. Direct q² has8 fourth powers,12 same-axis mixed terms with+2,16 cross terms with-2. No source1/2 is present. The source-load arrays are exactly4 at x plus4 at y1, and4 at x plus2 at each neighbor.
+
+For each center and unordered curvature plane, the complete four world orders give the displayed class with `(H-Hdag)` and the gamma commutator divided by4. This equals the original quarter world sum: the antisymmetry in coframe internal indices and F(Hdag)=-F(H) account for both factors of two. It is not a selected curvature or chirality term. All internal terms remain in the mathematical binding, although the support program does not evaluate them. Thus16*6=96 complete classes and96*97/2=4656 unordered pairs are correct. Distinct pairs have coefficient1, identical pairs1/2.
+
+Center occupations replace S4^14/14! by product powers divided by prod m_z!. The record's divisor power counts double occupations plus identical class pairs. Class/world epsilon signs are separately retained in descriptors and eventual tensors; the source_prefactor_numerator is explicitly not claimed to be the complete amplitude sign. No additional14! or2! is applied. The uncontracted representation's quarter divisor4^66 covers64 coframes and two original EHC quarters.
+
+## 2. Green inventory and program's actual scientific meaning
+
+The site equation `(4I+Adj)m=8-source-EHC1-EHC2` has rank15/kernel checkerboard. The listed Green kernel satisfies the original radial recurrence and annihilates epsilon. The program uses exact384-scaled integer arithmetic, checks checkerboard compatibility, integrality/range, sum m14 and every original site equation. Source_load at vertex0 is4 and EHC loads are nonnegative, so4m0<=4: restricting the reference to0,1 is complete. It reduces the prospective three-candidate bound to at most4656*2*2=18624, with at most9312 Green vectors and9312*16²=2383872 multiply-add terms. These are analytical upper bounds, not counts returned by execution.
+
+Manual source inspection shows `classes()` describes the correct96 center/plane classes. Its four anchor tuples follow the exact original H order with appropriate dagger flags. The edge-bit labels use unique canonical edge roots and axis, retaining32 undirected edges while the anchor tuples retain64 anchored variables. Reducing to an undirected edge is used ONLY for necessary center parity, not to collapse compact integration variables.
+
+The descriptor computes pure S4 edge coframe count m_v+m_w, adds actual EHC spokes and all four source occurrences, and records original curvature anchors separately. It checks total coframe count64 and curvature count8. For c coframes and curvature counts r0,r1, paired parity is necessary; at c0, both individual anchor counts must also be even. At c>0, the two individual parity constraints reduce to one binary constraint, with exactly2^(c-1) LABELLED coframe anchor assignments when total parity agrees. Multiplying these counts across edges is legitimate as a necessary labelled assignment count. It is not a count of nonzero exterior terms, independent chiral assignments, signed contractions or surviving Haar amplitudes.
+
+The two EHC characters can cancel modulo cuts, so the descriptor correctly does not apply the one-EHC zero to all pairs. No gamma/epsilon tensor, Haar moment, exterior mask product or coefficient is computed. Output and README explicitly say necessary support only. Absent chirality/full-mask screens can retain false candidates but do not justify any coefficient nonzero claim. If a future complete inventory is empty, exact-byte output, exhaustive source mapping and pruning still need independent result verification before claiming the target zero.
+
+The script imports stdlib only and does not call legacy scientific code. The exact checksum-pinned spec is required before prepare(); the reviewed pinned bytes have the intended target/source cases and null gauge tree. Partial/refused output is not labelled complete: a final payload is serialized, byte/deadline checked, and installed by exclusive hard-link creation, preventing replacement of an existing receipt. Cooperative deadline checks are refusal boundaries, not a hard real-time/RSS guarantee. The final check before output installation and the explicit RSS caveat are adequate for this proposed bounded local preflight. Its successful future receipt must still pin program/spec/output and actual counts/time/bytes.
+
+## 3. Controls: source-legitimate complete adverse comparisons
+
+The two-anchor fourth metric power gives `(45/4)d_L² d_R²`, independent Haar1125/4, and raw2880 at the legitimate U=I,V=-I configuration. Embedding Q_x11^4 times all other14 site tops has degree128. The full original exponential contributes only its unit body, all unused normalized Haar integrates1. These are exact original controls; the fixed compact value is a coefficient diagnostic, not an adopted ensemble. Neither value is h14,2.
+
+The NEW gauge-scalar cap F has degree120: tau_xR contributes4, each neighbor tau_L*n_R contributes6, and the other13 site tops contribute104. Q11² or Q22² would put4 fields into one neighbor with only2 holes and is zero. For Q11Q22, independent source-edge anchors and the original same-endpoint second tensor give Haar(Q11Q22)=K_xy1 K_xy2/4. The neighbor caps annihilate the unwanted chirality and pair terms: only n_xL n_yiR survives on each edge. Multiplication then requires the three n²=-2tau contractions, giving(-2)^3=-8 in the original tau_L tau_R site orientation. Hence the complete original raw cross value is-2, q² gives+4, and the incorrect plus square gives-4. All final words have degree128, so these statements hold at all couplings with the full original action. No positivity of F, particle interpretation or selected favorable summand is assumed.
+
+The independent fixed-link coefficient control also checks out. With BOTH source-edge anchors U=I,V=-I and only the stated four bars at x, R psis at y1 and L psis at y2 retained, coframes reduce to barx gamma psi_y/2. Every q_A and q_A dagger has determinant1, so each Q is-2 times its oriented two-bar/two-psi word. Their product has+4 in the specified word order; the diagonal squares vanish. Consequently q² is-8 and plus² is+8. Transport to the final global mask order requires the explicit permutation, as the package states. This is a different control from the integrated cap, not a contradictory sign. Both discriminate the essential minus cross term of the original insertion.
+
+None of these controls was exercised by software. The construction accurately labels them manually proved expectations for a later qualified assembly, whose eventual control pass must actually use that assembly and cannot be a hardcoded self-comparison.
+
+## 4. New primitive bounds and paired-edge reduction
+
+The site equation implies an occupation2 forces all neighbors0, hence m_z+m_w<=2 on every edge. Each individual EHC class contributes at most one compact occurrence on any undirected edge: its four distinct curvature edges are in k/l and its spokes in complementary directions. Two EHCs therefore contribute at most2, while q² contributes at most4. Any single anchor degree is consequently at most8; no gauge/tree or opposite-anchor identification is used.
+
+The joint eight-real-coordinate Haar chain state formula is valid. Its viable-state upper bounds at t0..8 are1,8,36,120,330,736,1128,960,330, counted by choosing odd coordinates and distributing remaining even degree. Shorter final degrees only restrict this set. A transition has at most8 predecessor/successor choices; maximum8*min(N(t-1),N(t)) is7680 and terminals at most330. The individual128 frame,24 epsilon and65536 curvature row bounds are conservative with the declared sparse monomial gamma/quaternion basis. Per expanded occurrence word,64 frames+14 epsilons+2 curvatures+72 moment transitions+at most36 terminals give at most188 factors and the stated aggregate704440 initial row-slot bound. This is not an observed count or proof of a feasible join. Potential7680² pairs exceed the old product guard; the construction explicitly retains that uncertainty and does not use the generic choose heuristic as an actual compatible-product bound.
+
+For paired bulk reuse, marking both six-edge EHC square/spoke sets and the source edges covers at most14 edges, or13 for the diagonal case. Sum of pure S4 edge occurrences is4 sum m=56. With at most2 per edge, at least28 edges carry pure S4 occurrences. Therefore at least14 (diagonal15) lie outside the marked set. Paired-center parity makes each such nonzero unmarked edge have exactly2 coframes; no curvature/source occurrence is attached there. This proves genuinely reusable pairs, not just candidate empty edges.
+
+The accepted original two-anchor identity is Haar(T_u^A T_v^B)=H_uv^(AB)/8 with H=Haar_U(F_u^A F_v^B). Defining P=2H gives exactly P/16. SU2 second moments have denominator2 and Gaussian-integer coefficients in the carrying gamma basis, so the COMPLETE P tensor is Gaussian-integer. Equivalently quaternion covariance gives P=(1/2)sum_q F_u,q F_v,q over the eight real coordinates. Individual halves must not be rounded; the complete sum is integer. Same-endpoint P=2delta_AB K, while opposite-endpoint P is the actual mixed tensor and cannot be replaced by delta K.
+
+The mixed-kernel row bound4²*8*4²=2048 is safe: four odd monomials per fixed coordinate/endpoint frame, eight coordinate choices and16 A,B pairs. P/16 already accounts for BOTH original coframe quarters and the joint Haar integral; no further pair quarters or Haar multiplier may be applied. This is an original exact edge elimination only on the proven unmarked set. Marked defects retain their full correlated occurrences.
+
+With p>=14 such pairs, residual compact occurrences72-2p<=44 and active nonzero anchors<=22. Frames/remaining moment transitions/fused pairs plus14 epsilon/two curvature factors and22 terminal bound give152-3p+22<=132 factors. These structural counts check out; they do not bound summed anchor-word multiplicity, final bucket widths, signed tensor network size or runtime. The package explicitly requires a new source-bound complete factor/join forecast before selecting a full backend.
+
+## 5. Arithmetic certificate and exact forecast boundary
+
+The coefficient-specific clearing bound remains valid:64 coframe plus2 EHC quarters supply2^132; occupation/identical-class divisors divide2^8;72 compact degrees give half-degree<=36 and Haar denominator dividing2^36*72!. Thus `Lshear=2^176*72!<2^680`. The raw norm bound2^422 yields cleared bound below2^1102 and a sufficient signed CRT modulus greater than2^1103. No extra14! is retained after occupation expansion. A nonzero residue at a prime not dividing Lshear proves nonzero only, not sign. No residue or coefficient has been computed; the accepted full-tail/positive-normalization result only transports a future properly certified highest nonzero slot.
+
+The support-only forecast is concrete and limited: no more than18624 records, each checked against2048 compact JSON bytes, fixed96-class overhead and a final40000000-byte cap. This is not Python RSS. The120-second cooperative cap is not an observed timing estimate. Actual retained support, wall time, memory, signed coefficients and full joins remain UNKNOWN. Existing120000-row/3000000-product guards and old c0 frontier are preserved. No modular arithmetic choice cures combinatorial width automatically.
+
+The prepared program deliberately supplies descriptors rather than a full coefficient evaluator. The old helper's N4 forward geometry, fixed TREE, one Q/one determinant and scientific import initializers are not called or silently reused. A later N16 assembly still owes actual source/gamma/exterior controls, complete endpoint/anchor binding, and compatible key-bucket row/product bounds. This is a science-specific input/preflight construction, not a new general engine or harness. Acceptance of these exact bytes does not certify a nonexistent full backend.
+
+## Physical boundary and final verdict
+
+The later mixed-matter and cross targets remain distinct; the proved-zero h15,1 is not rerun. Physical tensor projector/source domain, pole/residue, microscopic normalization, chi_vest/B3, positive original boundary/product/adjoint/seam, causal spectrum, matter/EM/light/transport/time/scales and controlled limits remain open at full strength. No favorable sign/control or finite shear coefficient closes these goals. ROOT retains roadmap/planner/integration/gates/runtime/slots/c0 and final approval authority.
+
+ACTUAL ACCEPT therefore covers the exact prepared package, manual controls and bounded SUPPORT-ONLY run proposal, before any execution. An actual support result requires its own verification and acceptance. Full exact/modular contraction and any physical claim require separate construction and admission.
+
+## Final SAME check
+
+Final fresh SAME check returned exit0, `fresh:true`, `changed:[]`, task `l1-shear14-input-r1`. This establishes unchanged inputs only, not execution or completion authority.
