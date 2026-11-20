@@ -4651,3 +4651,33 @@ include Groups 1278, 1296 and 1302 in component 98.
 Author measured preparation, guard, continuation and separate terminal
 components total 263.861660 s. Timings describe this single group.
 The full signed coefficient, physical B3 and publication work remain open.
+
+
+### L1 complete signed Group 1278
+
+The [independent review](L1_N16_C0_DENSE_GROUP1278_COMPLETE_R1.zip) has SHA-256
+`1da3274db81962d30d72c3659058eaa30d8d7709dae5ac734fd9950e86ec0ad6`. ROOT verified 194 manifest members and
+compared all eight original signed values to their author and
+preparation records. The six live terms replay to exact signed
+terminals. The two original zero restrictions have 13 empty
+factors each. Original L1's independent pivot matches both author
+pivots over 10,272,768 compatible products.
+
+Original L6 reached the native product cap at 11 factors with
+7,825,348 prior matched products. Of 39 independently reproduced
+forecasts the smallest, 8,354,304, exceeds the 8,000,000 cap.
+The capture-only retry wrote the exact state after the same native
+prefix. The subsequent three retained passes and terminal agree
+independently under the original limits.
+
+The reduced inherited scalar is `-7473341893933973861628006960 + 0i`.
+Its original physical divisor is `2^132`; cover weight 192 gives
+`-1401251605112620099055251305/5316911983139663491615228241121378304 + 0i`.
+The new exact additive subtotal is
+`-513467332236132858192969964267685109/87112285931760246646623899502532662132736 + 0i`.
+Fifteen selected representatives are accepted, leaving 1,041.
+Groups 1296 and 1302 remain in component 98.
+
+Measured author components total 535.097885 s. The total includes
+48.683513 s for the original refused L6 attempt. The full signed
+coefficient and physical publication requirements remain open.
