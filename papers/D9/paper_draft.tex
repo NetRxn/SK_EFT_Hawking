@@ -471,22 +471,7 @@ worst case or a complete description of the channel.}
 \label{tab:whatcertifies}
 \begin{ruledtabular}
 \footnotesize
-\begin{tabular}{lll}
-Datum & Certifies $\ddist$ & Route \\
-\colrule
-Readout error prob. & exactly &
-  Table~\ref{tab:exact} \\
-Pauli error weights & exactly &
-  Table~\ref{tab:exact} \\
-Reconstructed Choi & from above &
-  Thm.~\ref{thm:sdp} \\
-Choi, spectral bound only & from above, loosely &
-  Thm.~\ref{thm:sandwich} \\
-Compiler accuracy $\varepsilon$ & from above &
-  \lean{diamondDist\_unitaryKraus\_le} \\
-$F_{\mathrm{avg}}$ (benchmark) & \emph{from below only} &
-  Thm.~\ref{thm:rblower} \\
-\end{tabular}
+\input{tables/what_certifies.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -641,33 +626,7 @@ entry is what is proven.}
 \label{tab:exact}
 \begin{ruledtabular}
 \footnotesize
-\begin{tabular}{lll}
-Channel & $\ddist(\Phi,\mathrm{id})$ & Declaration \\
-\colrule
-Dephasing $\gamma$ & $\gamma$ &
-  \lean{diamondDist\_dephasing\_eq} \\
-Depolarizing $p$ & $p$ &
-  \lean{diamondDist\_depolarizing\_eq} \\
-Pauli $\mathbf p$ & $1-p_0$ &
-  \lean{diamondDist\_pauliKraus\_eq} \\
-Two-qubit Pauli & $1-p_{00}$ &
-  \lean{diamondDist\_twoQubitPauliKraus\_eq} \\
-Qutrit Weyl & $1-p_0$ &
-  \lean{diamondDist\_weylKraus\_eq} \\
-Unitary error basis & $1-p_0$ &
-  \lean{diamondDist\_errorBasisKraus\_eq} \\
-Cyclic-shift leakage & leakage prob. &
-  \lean{diamondDist\_shiftLeakage\_eq} \\
-Readout bit-flip $q$ & $q$ &
-  \lean{diamondDist\_spamBitFlip\_eq} \\
-\colrule
-Amp.\ damping $\gamma$ &
-  $[\gamma/2,\,\gamma{+}1{-}\sqrt{1{-}\gamma}]$ &
-  \lean{diamondDist\_ampDamp\_ge},
-  \lean{\ldots\_le} \\
-Gen.\ amp.\ damping & $\ge (1-N)\gamma$ &
-  \lean{diamondDist\_genAmpDamp\_bracket} \\
-\end{tabular}
+\input{tables/exact.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -1350,14 +1309,7 @@ caveats is not a substitute for separating them.}
 \label{tab:classes}
 \begin{ruledtabular}
 \footnotesize
-\begin{tabular}{lll}
-Class & Closed by & Response \\
-\colrule
-1. Identification & literature & disclose, keep visible \\
-2. Library gap & work & schedule, or cite and say so \\
-3. Impossibility & nothing & state as a negative result \\
-4. Kernel-checked, empty & nothing to close & retract the claim \\
-\end{tabular}
+\input{tables/classes.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -1434,7 +1386,7 @@ consumes Sec.~\ref{sec:protocol} for its channel-level certificate,
 including the Kronecker-with-identity operator-norm bound
 $\opnorm{A\otimes\mathbf 1} \le \opnorm{A}$
 (\lean{l2\_opNorm\_kronecker\_one\_le}) that its ancilla-register
-argument needs and that it reports as an upstream candidate; the logical
+argument needs. The bound belongs to the certification layer developed here. The logical
 layer of fault tolerance, Ref.~\cite{CompanionFaultTolerance}, to which
 the abstract code-distance suppression results
 (\lean{logicalErrorBound\_antitone\_distance},
@@ -1500,21 +1452,18 @@ present in that library at our pin.
 
 \bibitem{CompanionCompilation}
 J.~Roehm,
-``Kernel-verified universal quantum gate compilation: alphabet-agnostic
-Solovay--Kitaev across dimensions,''
-companion manuscript.
+``Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions,''
+internal companion manuscript, in preparation (2026).
 
 \bibitem{CompanionFaultTolerance}
-J.~Roehm,
-``Minimal hypotheses for the Aliferis--Gottesman--Preskill threshold
-recursion, machine-checked in Lean~4,''
-companion manuscript.
+J.~G.~Roehm,
+``Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4,''
+internal companion manuscript, in preparation (2026).
 
 \bibitem{CompanionStochastic}
 J.~Roehm,
-``Verified stochastic calculus for Mathlib4: stochastic integral,
-quadratic variation, It\^o's lemma, and large-deviation foundations,''
-companion manuscript.
+``Verified Stochastic Calculus and Large-Deviation Foundations for Lean 4 / Mathlib4: A Predicate-Substrate Library for the Stochastic Integral, Quadratic Variation, It\^o's Lemma, and Large-Deviation Principles, with a Typeclass Bridge to Schwinger--Keldysh Effective Field Theory,''
+internal companion manuscript, in preparation (2026).
 
 \bibitem{Watrous2018}
 J.~Watrous,

@@ -10263,6 +10263,421 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+      "status": "fixed",
+      "evidence": "Current-source seven-path composition independently ACCEPTed after actual D7 manuscript, Lean declaration, built-index and resolver verification with all three phantom negatives preserved. Independent scoped68PASS/1SKIP; genuine citation failure remains visible. Full review and byte manifest preserved in docs/audits/2026-10-17-publication-substance-construction/MAIN_EXISTING_REPAIRS_COMPOSITION_REVIEW_R1.md and its evidence archive. This closes only the stale D7 citation regression, not proof substance or publication readiness.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "d9de91d6b",
+      "verified_by": {
+        "command": "uv run --no-sync python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "declared": "uv run --no-sync python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-citation-held-source-reconciliation:infra:1.1",
+      "status": "fixed",
+      "evidence": "Complete independent R1 review found one wrong Dawson source locator; R2 independently ACCEPTs corrected exact current source/state/custody composition, all13 genuine identities,662 prior unchanged records, actual held preprint/version/DOI, current writer receipts and measured76/76 zero-headroom population. Full current review is docs/audits/2026-10-17-publication-substance-construction/MAIN_CITATION_COMPOSITION_REVIEW_R2.md with immutable adverse/current evidence archive. Original declared three-module Verify executes on this source. This closes only current metadata/custody/ratchet repair, not historical D4/D8 attribution, compiled outputs, physical or publication acceptance.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "6d6fed8d2",
+      "verified_by": {
+        "command": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+        "declared": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d4-stage10-redraft:D4:2.2",
+      "status": "fixed",
+      "evidence": "Full held Dawson–Nielsen v2 independently read and pinned by SHA256. D4 now cites Sec. 3, Eqs. (8)–(9), and distinguishes the gate-length and pointer-reuse runtime bounds in the compiled passage.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D4_D8_DAWSON_ATTRIBUTION_ACCEPTANCE_R2.md",
+      "date": "2026-11-06",
+      "commit": "c9840bb1d87b0de90b36ee4bb58f5d2943c987b1",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf",
+      "artifact_sha256": "4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf",
+          "sha256": "4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e"
+        }
+      ],
+      "verified_by": {
+        "command": "python3 -B -c 'exec('\"'\"'from hashlib import sha256\\nfrom pathlib import Path\\nfrom runpy import run_path\\nfrom subprocess import check_output\\n\\ncommon_dir = Path(check_output(\\n    [\"git\", \"rev-parse\", \"--path-format=absolute\", \"--git-common-dir\"],\\n    text=True,\\n).strip())\\nfind_workspace = run_path(\"src/core/workspace.py\")[\"find_workspace\"]\\npdf = find_workspace(common_dir.parent) / (\\n    \"Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf\"\\n)\\nexpected = \"4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e\"\\nif not pdf.is_file() or sha256(pdf.read_bytes()).hexdigest() != expected:\\n    raise SystemExit(\"Held Dawson–Nielsen v2 PDF is missing or differs from the reviewed source.\")\\nprint(\"Held Dawson–Nielsen v2 PDF matches the independently reviewed full source.\")\\n'\"'\"')'",
+        "declared": "python3 -B -c 'exec('\"'\"'from hashlib import sha256\\nfrom pathlib import Path\\nfrom runpy import run_path\\nfrom subprocess import check_output\\n\\ncommon_dir = Path(check_output(\\n    [\"git\", \"rev-parse\", \"--path-format=absolute\", \"--git-common-dir\"],\\n    text=True,\\n).strip())\\nfind_workspace = run_path(\"src/core/workspace.py\")[\"find_workspace\"]\\npdf = find_workspace(common_dir.parent) / (\\n    \"Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf\"\\n)\\nexpected = \"4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e\"\\nif not pdf.is_file() or sha256(pdf.read_bytes()).hexdigest() != expected:\\n    raise SystemExit(\"Held Dawson–Nielsen v2 PDF is missing or differs from the reviewed source.\")\\nprint(\"Held Dawson–Nielsen v2 PDF matches the independently reviewed full source.\")\\n'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.4",
+      "status": "fixed",
+      "evidence": "Full held Dawson–Nielsen v2 supports 3.97 gate length and separate 2.71 runtime. D8 and named consumers carry the actual locators, verified against the compiled passage, with executable Lean bytes independently confirmed unchanged. Historical Verify preserved and the corrected declared guard executed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D4_D8_DAWSON_ATTRIBUTION_ACCEPTANCE_R2.md",
+      "date": "2026-11-06",
+      "commit": "c9840bb1d87b0de90b36ee4bb58f5d2943c987b1",
+      "verified_by": {
+        "command": "python3 -B -c 'exec('\"'\"'import ast\\nimport hashlib\\nfrom pathlib import Path\\nimport re\\nimport subprocess\\n\\nfrom runpy import run_path\\n\\ndef require(condition, invariant):\\n    if not condition:\\n        raise SystemExit(\"Dawson–Nielsen evidence mismatch: \" + invariant)\\n\\nrepo = Path.cwd()\\ncommon_dir = Path(subprocess.check_output(\\n    [\"git\", \"rev-parse\", \"--path-format=absolute\", \"--git-common-dir\"],\\n    text=True,\\n).strip())\\nfind_workspace = run_path(str(repo / \"src/core/workspace.py\"))[\"find_workspace\"]\\nworkspace = find_workspace(common_dir.parent)\\npath = \"Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf\"\\npdf = workspace / path\\nrequire(hashlib.sha256(pdf.read_bytes()).hexdigest() ==\\n        \"4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e\",\\n        \"held full preprint SHA256\")\\ncover = subprocess.check_output(\\n    [\"pdftotext\", \"-layout\", \"-f\", \"1\", \"-l\", \"1\", str(pdf), \"-\"],\\n    text=True,\\n)\\nrequire(all(s in cover for s in (\\n    \"THE SOLOVAY-KITAEV ALGORITHM\", \"CHRISTOPHER M. DAWSON\",\\n    \"MICHAEL A. NIELSEN\", \"arXiv:quant-ph/0505030v2 23 Aug 2005\",\\n)), \"held full preprint title, authors and arXiv version\")\\ndef read(name):\\n    return (repo / name).read_text(encoding=\"utf-8\")\\ndef compact(text):\\n    return \" \".join(text.split())\\nregistry_source = ast.parse(read(\"src/core/citations.py\"))\\nregistry = next(n.value for n in registry_source.body\\n                if isinstance(n, ast.Assign)\\n                and any(isinstance(t, ast.Name) and t.id == \"CITATION_REGISTRY\"\\n                        for t in n.targets))\\nentry = next(v for k, v in zip(registry.keys, registry.values)\\n             if isinstance(k, ast.Constant) and k.value == \"DawsonNielsen2006\")\\nfields = {k.value: v for k, v in zip(entry.keys, entry.values)}\\nfor field, value in {\\n    \"primary_source_path\": path, \"arxiv\": \"quant-ph/0505030\",\\n    \"title\": \"The Solovay-Kitaev algorithm\", \"year\": 2006,\\n    \"authors\": \"Dawson, C. M. and Nielsen, M. A.\", \"volume\": 6,\\n    \"page\": \"81-95\", \"doi\": \"10.26421/QIC6.1-6\",\\n}.items():\\n    require(ast.literal_eval(fields[field]) == value, \"registry \" + field)\\nnotes = ast.literal_eval(fields[\"notes\"])\\nrequire(all(s in notes for s in (\\n    \"preprint quant-ph/0505030v2 (23 August 2005)\",\\n    \"Section 3, Analysis, Eqs. (8)-(9), printed page 7\",\\n    \"gate-length exponent log(5)/log(3/2)\",\\n    \"pointer-compressed classical-runtime exponent log(3)/log(3/2)\",\\n)), \"registry equations, version and length/runtime distinction\")\\nlean = Path(\"lean/SKEFTHawking/FKLW\")\\nfor module, name in (\\n    (\"SolovayKitaevLengthBound\", \"skLengthExponent\"),\\n    (\"GenericSUdSkLengthExponent\", \"skLengthExponent_sud\"),\\n):\\n    code = read(lean / (module + \".lean\"))\\n    require(re.search(\\n        rf\"(?m)^noncomputable def {name}\\\\s*:\\\\s*ℝ\\\\s*:=\\\\s*Real\\\\.log\\\\s+5\\\\s*/\\\\s*Real\\\\.log\\\\s*\\\\(3\\\\s*/\\\\s*2\\\\)\\\\s*$\",\\n        code,\\n    ), \"canonical Real exponent \" + name)\\nsources = list((repo / \"lean\" / \"SKEFTHawking\").rglob(\"*.lean\"))\\nsources += list((repo / \"docs\" / \"roadmaps\").glob(\"*.md\"))\\nsources += [repo / p for p in (\\n    \"papers/D4/paper_draft.tex\", \"papers/D8/paper_draft.tex\",\\n    \"papers/D8/bibliography.bib\", \"src/core/citations.py\",\\n    \"src/core/visualizations.py\",\\n)]\\nstale = re.compile(r\"quant-ph/0505030(?:v\\\\d+)?[\\\\s,]*(?:§\\\\s*|Sec(?:tion)?\\\\.?\\\\s*)3\\\\.3\\\\b\", re.I)\\nrequire(not any(stale.search(p.read_text(encoding=\"utf-8\")) for p in sources),\\n        \"no obsolete Dawson §3.3 in current consumer roots\")\\nfor module in (\\n    \"CliffordCCZSU8Calibration\", \"GenericSUdHeadlineForm\", \"GenericSUdSKCompileBounds\",\\n    \"GenericSUdSkHeadlineCascade2IngredientFinal\", \"GenericSUdSkLengthExponent\",\\n    \"TrappedIonSU4Calibration\",\\n):\\n    citation = re.compile(\\n        r\"quant-ph/0505030v2, §3 \\\\(Analysis\\\\), Eq\\\\. \\\\(8\\\\), p\\\\. 7 and §5\\\\.1, p\\\\. 11\"\\n    )\\n    require(citation.search(compact(read(lean / (module + \".lean\")))),\\n            \"correct current v2 locator in \" + module)\\nfor name, anchors in (\\n    (lean / \"SolovayKitaevLengthBound.lean\",\\n     (\"§3 (Analysis), Eqs. (8)–(9), p. 7\", \"word-length exponent\",\\n      \"runtime exponent\", \"pointer reuse\")),\\n    (Path(\"docs/roadmaps/Phase6y_Roadmap.md\"),\\n     (\"§3 (Analysis), Eq. (8), p. 7\", \"Section 5.1 (p. 11)\",\\n      \"pointer-compressed classical runtime exponent\", \"base lookup construction cost\")),\\n):\\n    s = compact(read(name))\\n    require(\"quant-ph/0505030v2\" in s and all(a in s for a in anchors),\\n            \"correct current v2 attribution in \" + str(name))\\nd4 = read(\"papers/D4/paper_draft.tex\")\\nd8 = read(\"papers/D8/paper_draft.tex\")\\nfor name, tex, start, end, extra in (\\n    (\"D4\", d4, r\"\\\\subsection{The exponent}\", r\"\\\\subsection{The constant\",\\n     (r\"\\\\frac{\\\\log 5}{\\\\log(3/2)}\", r\"Eq.~(8) in Sec.~3 (Analysis), p.~7\",\\n      r\"Eq.~(9) gives the classical runtime exponent\", \"pointers reuse subsequences\")),\\n    (\"D8\", d8, r\"\\\\label{sec:sud-exponent}\", r\"\\\\begin{figure}\",\\n     (r\"\\\\frac{\\\\log 5}{\\\\log (3/2)}\", r\"Eq.~(8), Sec.~3 (Analysis), p.~7\",\\n      r\"Equation~(9) on the same page gives the classical runtime exponent\",\\n      \"pointer reuse of subsequences\", \"Section~5.1 (p.~11)\", \"fixed $d$\",\\n      \"dimension-dependent constants\", \"cost for constructing the base approximation table\",\\n      r\"\\\\cite{Selinger2015}\", r\"\\\\cite{KMM2013ancilla}\", \"instantiations use the same length exponent\",\\n      \"calibration aliases refer to the canonical\")),\\n):\\n    section = compact(tex.split(start, 1)[1].split(end, 1)[0])\\n    require(all(a in section for a in (\\n        r\"arXiv:quant-ph/0505030v2~\\\\cite{DawsonNielsen2006}\",\\n        r\"$\\\\log 3/\\\\log(3/2) \\\\approx 2.71$\", \"arithmetic precision costs\",\\n        \"fivefold\", *extra,\\n    )), name + \" direct primary attribution and separate length/runtime\")\\n    require(\"% TODO\" not in section and \"abstract\" not in section.lower(),\\n            name + \" stale abstract-only attribution narrative\")\\nexp_docs = compact(read(lean / \"GenericSUdSkLengthExponent.lean\"))\\nrequire(all(s in exp_docs for s in (\\n    \"Some headline statements spell out the same logarithm ratio.\",\\n    \"Clifford+CCZ calibration aliases use this definition.\",\\n    \"the two definitions use the same real logarithm ratio.\",\\n    \"uses the denominator `Real.log (3 / 2)` to set the recursion depth.\",\\n)), \"scope of canonical definition and definitional equality\")\\nfig = next(m for m in re.findall(r\"\\\\\\\\begin\\\\{figure\\\\}(.*?)\\\\\\\\end\\\\{figure\\\\}\", d8, re.S)\\n           if r\"\\\\label{fig:recursion}\" in m)\\nrequire(all(a in compact(fig) for a in (\\n    \"d8_fig3_sk_recursion.png\", \"giving the length exponent\",\\n    r\"\\\\gamma = \\\\log 5/\\\\log(3/2) \\\\approx 3.97\",\\n    r\"\\\\cite{Selinger2015,KMM2013ancilla}\",\\n)) and \"2.71\" not in fig, \"D8 Fig. 3 caption\\'\"'\"'s corroborating attribution and length exponent\")\\nvisual = read(\"src/core/visualizations.py\")\\nfigure_source = visual.split(\"def fig_d8_sk_recursion(\", 1)[1].split(\"\\\\n\\\\ndef \", 1)[0]\\nrequire(\"SK_LENGTH_EXPONENT = float(np.log(5) / np.log(3 / 2))\" in visual\\n        and all(a in figure_source for a in (\\n            \"Dawson–Nielsen recursion\", \"length exponent  log 5 / log(3/2) ≈ 3.97\",\\n            \"length = [N0 * 5 ** n for n in levels]\",\\n        )) and \"2.71\" not in figure_source,\\n        \"D8 Fig. 3 generator\\'\"'\"'s Dawson attribution and word-length quantity\")\\nprint(\"Pinned Dawson–Nielsen v2 identity and length/runtime attribution propagation match.\")\\n'\"'\"')'",
+        "declared": "python3 -B -c 'exec('\"'\"'import ast\\nimport hashlib\\nfrom pathlib import Path\\nimport re\\nimport subprocess\\n\\nfrom runpy import run_path\\n\\ndef require(condition, invariant):\\n    if not condition:\\n        raise SystemExit(\"Dawson–Nielsen evidence mismatch: \" + invariant)\\n\\nrepo = Path.cwd()\\ncommon_dir = Path(subprocess.check_output(\\n    [\"git\", \"rev-parse\", \"--path-format=absolute\", \"--git-common-dir\"],\\n    text=True,\\n).strip())\\nfind_workspace = run_path(str(repo / \"src/core/workspace.py\"))[\"find_workspace\"]\\nworkspace = find_workspace(common_dir.parent)\\npath = \"Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf\"\\npdf = workspace / path\\nrequire(hashlib.sha256(pdf.read_bytes()).hexdigest() ==\\n        \"4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e\",\\n        \"held full preprint SHA256\")\\ncover = subprocess.check_output(\\n    [\"pdftotext\", \"-layout\", \"-f\", \"1\", \"-l\", \"1\", str(pdf), \"-\"],\\n    text=True,\\n)\\nrequire(all(s in cover for s in (\\n    \"THE SOLOVAY-KITAEV ALGORITHM\", \"CHRISTOPHER M. DAWSON\",\\n    \"MICHAEL A. NIELSEN\", \"arXiv:quant-ph/0505030v2 23 Aug 2005\",\\n)), \"held full preprint title, authors and arXiv version\")\\ndef read(name):\\n    return (repo / name).read_text(encoding=\"utf-8\")\\ndef compact(text):\\n    return \" \".join(text.split())\\nregistry_source = ast.parse(read(\"src/core/citations.py\"))\\nregistry = next(n.value for n in registry_source.body\\n                if isinstance(n, ast.Assign)\\n                and any(isinstance(t, ast.Name) and t.id == \"CITATION_REGISTRY\"\\n                        for t in n.targets))\\nentry = next(v for k, v in zip(registry.keys, registry.values)\\n             if isinstance(k, ast.Constant) and k.value == \"DawsonNielsen2006\")\\nfields = {k.value: v for k, v in zip(entry.keys, entry.values)}\\nfor field, value in {\\n    \"primary_source_path\": path, \"arxiv\": \"quant-ph/0505030\",\\n    \"title\": \"The Solovay-Kitaev algorithm\", \"year\": 2006,\\n    \"authors\": \"Dawson, C. M. and Nielsen, M. A.\", \"volume\": 6,\\n    \"page\": \"81-95\", \"doi\": \"10.26421/QIC6.1-6\",\\n}.items():\\n    require(ast.literal_eval(fields[field]) == value, \"registry \" + field)\\nnotes = ast.literal_eval(fields[\"notes\"])\\nrequire(all(s in notes for s in (\\n    \"preprint quant-ph/0505030v2 (23 August 2005)\",\\n    \"Section 3, Analysis, Eqs. (8)-(9), printed page 7\",\\n    \"gate-length exponent log(5)/log(3/2)\",\\n    \"pointer-compressed classical-runtime exponent log(3)/log(3/2)\",\\n)), \"registry equations, version and length/runtime distinction\")\\nlean = Path(\"lean/SKEFTHawking/FKLW\")\\nfor module, name in (\\n    (\"SolovayKitaevLengthBound\", \"skLengthExponent\"),\\n    (\"GenericSUdSkLengthExponent\", \"skLengthExponent_sud\"),\\n):\\n    code = read(lean / (module + \".lean\"))\\n    require(re.search(\\n        rf\"(?m)^noncomputable def {name}\\\\s*:\\\\s*ℝ\\\\s*:=\\\\s*Real\\\\.log\\\\s+5\\\\s*/\\\\s*Real\\\\.log\\\\s*\\\\(3\\\\s*/\\\\s*2\\\\)\\\\s*$\",\\n        code,\\n    ), \"canonical Real exponent \" + name)\\nsources = list((repo / \"lean\" / \"SKEFTHawking\").rglob(\"*.lean\"))\\nsources += list((repo / \"docs\" / \"roadmaps\").glob(\"*.md\"))\\nsources += [repo / p for p in (\\n    \"papers/D4/paper_draft.tex\", \"papers/D8/paper_draft.tex\",\\n    \"papers/D8/bibliography.bib\", \"src/core/citations.py\",\\n    \"src/core/visualizations.py\",\\n)]\\nstale = re.compile(r\"quant-ph/0505030(?:v\\\\d+)?[\\\\s,]*(?:§\\\\s*|Sec(?:tion)?\\\\.?\\\\s*)3\\\\.3\\\\b\", re.I)\\nrequire(not any(stale.search(p.read_text(encoding=\"utf-8\")) for p in sources),\\n        \"no obsolete Dawson §3.3 in current consumer roots\")\\nfor module in (\\n    \"CliffordCCZSU8Calibration\", \"GenericSUdHeadlineForm\", \"GenericSUdSKCompileBounds\",\\n    \"GenericSUdSkHeadlineCascade2IngredientFinal\", \"GenericSUdSkLengthExponent\",\\n    \"TrappedIonSU4Calibration\",\\n):\\n    citation = re.compile(\\n        r\"quant-ph/0505030v2, §3 \\\\(Analysis\\\\), Eq\\\\. \\\\(8\\\\), p\\\\. 7 and §5\\\\.1, p\\\\. 11\"\\n    )\\n    require(citation.search(compact(read(lean / (module + \".lean\")))),\\n            \"correct current v2 locator in \" + module)\\nfor name, anchors in (\\n    (lean / \"SolovayKitaevLengthBound.lean\",\\n     (\"§3 (Analysis), Eqs. (8)–(9), p. 7\", \"word-length exponent\",\\n      \"runtime exponent\", \"pointer reuse\")),\\n    (Path(\"docs/roadmaps/Phase6y_Roadmap.md\"),\\n     (\"§3 (Analysis), Eq. (8), p. 7\", \"Section 5.1 (p. 11)\",\\n      \"pointer-compressed classical runtime exponent\", \"base lookup construction cost\")),\\n):\\n    s = compact(read(name))\\n    require(\"quant-ph/0505030v2\" in s and all(a in s for a in anchors),\\n            \"correct current v2 attribution in \" + str(name))\\nd4 = read(\"papers/D4/paper_draft.tex\")\\nd8 = read(\"papers/D8/paper_draft.tex\")\\nfor name, tex, start, end, extra in (\\n    (\"D4\", d4, r\"\\\\subsection{The exponent}\", r\"\\\\subsection{The constant\",\\n     (r\"\\\\frac{\\\\log 5}{\\\\log(3/2)}\", r\"Eq.~(8) in Sec.~3 (Analysis), p.~7\",\\n      r\"Eq.~(9) gives the classical runtime exponent\", \"pointers reuse subsequences\")),\\n    (\"D8\", d8, r\"\\\\label{sec:sud-exponent}\", r\"\\\\begin{figure}\",\\n     (r\"\\\\frac{\\\\log 5}{\\\\log (3/2)}\", r\"Eq.~(8), Sec.~3 (Analysis), p.~7\",\\n      r\"Equation~(9) on the same page gives the classical runtime exponent\",\\n      \"pointer reuse of subsequences\", \"Section~5.1 (p.~11)\", \"fixed $d$\",\\n      \"dimension-dependent constants\", \"cost for constructing the base approximation table\",\\n      r\"\\\\cite{Selinger2015}\", r\"\\\\cite{KMM2013ancilla}\", \"instantiations use the same length exponent\",\\n      \"calibration aliases refer to the canonical\")),\\n):\\n    section = compact(tex.split(start, 1)[1].split(end, 1)[0])\\n    require(all(a in section for a in (\\n        r\"arXiv:quant-ph/0505030v2~\\\\cite{DawsonNielsen2006}\",\\n        r\"$\\\\log 3/\\\\log(3/2) \\\\approx 2.71$\", \"arithmetic precision costs\",\\n        \"fivefold\", *extra,\\n    )), name + \" direct primary attribution and separate length/runtime\")\\n    require(\"% TODO\" not in section and \"abstract\" not in section.lower(),\\n            name + \" stale abstract-only attribution narrative\")\\nexp_docs = compact(read(lean / \"GenericSUdSkLengthExponent.lean\"))\\nrequire(all(s in exp_docs for s in (\\n    \"Some headline statements spell out the same logarithm ratio.\",\\n    \"Clifford+CCZ calibration aliases use this definition.\",\\n    \"the two definitions use the same real logarithm ratio.\",\\n    \"uses the denominator `Real.log (3 / 2)` to set the recursion depth.\",\\n)), \"scope of canonical definition and definitional equality\")\\nfig = next(m for m in re.findall(r\"\\\\\\\\begin\\\\{figure\\\\}(.*?)\\\\\\\\end\\\\{figure\\\\}\", d8, re.S)\\n           if r\"\\\\label{fig:recursion}\" in m)\\nrequire(all(a in compact(fig) for a in (\\n    \"d8_fig3_sk_recursion.png\", \"giving the length exponent\",\\n    r\"\\\\gamma = \\\\log 5/\\\\log(3/2) \\\\approx 3.97\",\\n    r\"\\\\cite{Selinger2015,KMM2013ancilla}\",\\n)) and \"2.71\" not in fig, \"D8 Fig. 3 caption\\'\"'\"'s corroborating attribution and length exponent\")\\nvisual = read(\"src/core/visualizations.py\")\\nfigure_source = visual.split(\"def fig_d8_sk_recursion(\", 1)[1].split(\"\\\\n\\\\ndef \", 1)[0]\\nrequire(\"SK_LENGTH_EXPONENT = float(np.log(5) / np.log(3 / 2))\" in visual\\n        and all(a in figure_source for a in (\\n            \"Dawson–Nielsen recursion\", \"length exponent  log 5 / log(3/2) ≈ 3.97\",\\n            \"length = [N0 * 5 ** n for n in levels]\",\\n        )) and \"2.71\" not in figure_source,\\n        \"D8 Fig. 3 generator\\'\"'\"'s Dawson attribution and word-length quantity\")\\nprint(\"Pinned Dawson–Nielsen v2 identity and length/runtime attribution propagation match.\")\\n'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.8",
+      "status": "fixed",
+      "evidence": "Both original deferred D8 figures now use source-verified bounds and alphabet coverage. Independent inspection verified exact source and PNG bytes, rendered pages, and all 174 plotted samples. The declared Verify passed the candidate and rejected altered assets, labels, manifest and baseline even under Python optimization.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_FIGURE_1_8_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-06",
+      "commit": "dec5feba32a580564e98af2c7dfa7dd590d5672d",
+      "verified_by": {
+        "command": "python3 -B -c 'exec('\"'\"'from hashlib import sha256\\nfrom pathlib import Path\\nimport json\\nimport re\\n\\ndef require(condition, message):\\n    if not condition:\\n        raise SystemExit(\"D8 figure 1.8: \" + message)\\n\\npaper = Path(\"papers/D8\")\\ntex = (paper / \"paper_draft.tex\").read_text(encoding=\"utf-8\")\\nrequire(r\"\\\\figuredeferred\" not in tex, \"figure deferrals remain\")\\nmanifest = json.loads((paper / \"figures/review_manifest.json\").read_text(encoding=\"utf-8\"))\\nfigures = re.findall(r\"\\\\\\\\begin\\\\{(figure\\\\*?)\\\\}(.*?)\\\\\\\\end\\\\{\\\\1\\\\}\", tex, flags=re.S)\\nfor name, label, digest in (\\n    (\"d8_fig1_alphabet_dimension_map\", \"fig:d8-coverage\",\\n     \"916aa0770bae2cf96d2ac17b41c42a4947b482c428a54c6e90e17c746e93c51b\"),\\n    (\"d8_fig4_length_comparison\", \"fig:d8-length-comparison\",\\n     \"054e12a55e99d267d96ca3e2e3d07fc09e0954ea9a9b452c338bc49712fc83ae\"),\\n):\\n    png = name + \".png\"\\n    marker = rf\"\\\\label{{{label}}}\"\\n    matching = [body for _, body in figures if marker in body]\\n    asset = re.escape(\"figures/\" + png)\\n    include = rf\"\\\\\\\\includegraphics(?:\\\\[[^\\\\]]*\\\\])?\\\\s*\\\\{{{asset}\\\\}}\"\\n    require(tex.count(marker) == 1 and len(matching) == 1 and\\n            re.search(include, matching[0]) is not None,\\n            f\"{png} is not paired with {label} in one figure\")\\n    entries = [row for row in manifest[\"figures\"] if row[\"png\"] == png]\\n    require(len(entries) == 1 and entries[0][\"name\"] == name,\\n            f\"missing or duplicate manifest entry for {png}\")\\n    file = paper / \"figures\" / png\\n    require(file.is_file() and sha256(file.read_bytes()).hexdigest() == digest,\\n            f\"missing or altered reviewed PNG: {png}\")\\n\\nprint(\"D8 figure 1.8: both reviewed PNGs are pinned, paired with their manuscript labels, and registered.\")\\n'\"'\"')'",
+        "declared": "python3 -B -c 'exec('\"'\"'from hashlib import sha256\\nfrom pathlib import Path\\nimport json\\nimport re\\n\\ndef require(condition, message):\\n    if not condition:\\n        raise SystemExit(\"D8 figure 1.8: \" + message)\\n\\npaper = Path(\"papers/D8\")\\ntex = (paper / \"paper_draft.tex\").read_text(encoding=\"utf-8\")\\nrequire(r\"\\\\figuredeferred\" not in tex, \"figure deferrals remain\")\\nmanifest = json.loads((paper / \"figures/review_manifest.json\").read_text(encoding=\"utf-8\"))\\nfigures = re.findall(r\"\\\\\\\\begin\\\\{(figure\\\\*?)\\\\}(.*?)\\\\\\\\end\\\\{\\\\1\\\\}\", tex, flags=re.S)\\nfor name, label, digest in (\\n    (\"d8_fig1_alphabet_dimension_map\", \"fig:d8-coverage\",\\n     \"916aa0770bae2cf96d2ac17b41c42a4947b482c428a54c6e90e17c746e93c51b\"),\\n    (\"d8_fig4_length_comparison\", \"fig:d8-length-comparison\",\\n     \"054e12a55e99d267d96ca3e2e3d07fc09e0954ea9a9b452c338bc49712fc83ae\"),\\n):\\n    png = name + \".png\"\\n    marker = rf\"\\\\label{{{label}}}\"\\n    matching = [body for _, body in figures if marker in body]\\n    asset = re.escape(\"figures/\" + png)\\n    include = rf\"\\\\\\\\includegraphics(?:\\\\[[^\\\\]]*\\\\])?\\\\s*\\\\{{{asset}\\\\}}\"\\n    require(tex.count(marker) == 1 and len(matching) == 1 and\\n            re.search(include, matching[0]) is not None,\\n            f\"{png} is not paired with {label} in one figure\")\\n    entries = [row for row in manifest[\"figures\"] if row[\"png\"] == png]\\n    require(len(entries) == 1 and entries[0][\"name\"] == name,\\n            f\"missing or duplicate manifest entry for {png}\")\\n    file = paper / \"figures\" / png\\n    require(file.is_file() and sha256(file.read_bytes()).hexdigest() == digest,\\n            f\"missing or altered reviewed PNG: {png}\")\\n\\nprint(\"D8 figure 1.8: both reviewed PNGs are pinned, paired with their manuscript labels, and registered.\")\\n'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:1.1",
+      "status": "fixed",
+      "evidence": "Exact reviewed D1/F donor requalified on the current draft. All three supported zero-bath occupation crossings, full noise floors, thermal coefficients and cutoff placements pass. JSON, charter, manuscript and F agree. The legacy accessibility proxy is scoped, and the broader physical common-unit BUILD stays open.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D1_CROSSOVER_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-06",
+      "commit": "45dc34875bf882043fe603dd49bc363eab209482",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.9",
+      "status": "fixed",
+      "evidence": "Independent current source readback verified the definitional compiler unfolding and both related density and bounded residual claim strings. Original Verify passed, seven existing lane mappings restore review ingestion, and both production apex checks passed at unchanged thresholds.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_CLAIM_ROUTING_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-06",
+      "commit": "8db3cca325548754320571329ce24414a976af8c",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent review confirmed the corrected Fibonacci ownership, both exact Read–Rezayi recurrence and reduced output word bounds with finite-cover maxima, and D9 ownership of the consumed Kronecker bound. Both manuscripts compiled and rendered, all three original Verify commands passed, and the four existing apex and Verify checks passed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_PROOF_OWNERSHIP_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-06",
+      "commit": "a1980ddbfc756b931d67951d9b4838c784ec78e3",
+      "verified_by": {
+        "command": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "declared": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent review confirmed the corrected Fibonacci ownership, both exact Read–Rezayi recurrence and reduced output word bounds with finite-cover maxima, and D9 ownership of the consumed Kronecker bound. Both manuscripts compiled and rendered, all three original Verify commands passed, and the four existing apex and Verify checks passed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_PROOF_OWNERSHIP_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-06",
+      "commit": "a1980ddbfc756b931d67951d9b4838c784ec78e3",
+      "verified_by": {
+        "command": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "declared": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.3",
+      "status": "fixed",
+      "evidence": "Independent review confirmed the corrected Fibonacci ownership, both exact Read–Rezayi recurrence and reduced output word bounds with finite-cover maxima, and D9 ownership of the consumed Kronecker bound. Both manuscripts compiled and rendered, all three original Verify commands passed, and the four existing apex and Verify checks passed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_PROOF_OWNERSHIP_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-06",
+      "commit": "a1980ddbfc756b931d67951d9b4838c784ec78e3",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.5",
+      "status": "fixed",
+      "evidence": "Independent source and rendered review verified the held Ross-Selinger v3, KMM v4 and Mukhopadhyay v1 PDFs, exact corrected formal attributions and all nine summary labels. The canonical registry and sidecar now point at the three held artifacts, and the original file-presence Verify passed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_PRIMARY_SOURCE_PROPAGATION_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-06",
+      "commit": "0823bd6fe1ed50a61a47cb46dce753cbb261d410",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf",
+      "artifact_sha256": "4792f897a1326cb5e039e167d13620d5d7d8c0ef82a3de6ce891a9ab4ed74a70",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf",
+          "sha256": "4792f897a1326cb5e039e167d13620d5d7d8c0ef82a3de6ce891a9ab4ed74a70"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf",
+          "sha256": "0946f767e7120ce6526b5e235b00a5cc8d5ded827920cdf5589422458c3d55c5"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+          "sha256": "16b5c2c30086a872f9584f7a7f324c84d7e01c4936f16be172eb5d665c5ebdbd"
+        }
+      ],
+      "verified_by": {
+        "command": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "declared": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.7",
+      "status": "fixed",
+      "evidence": "The independently replayed existing parser repair excludes the eight reproduced D8 non-findings and preserves real findings, malformed action labels, active dependencies and ledger identities. The amended declared Verify failed against the old parser and a removed actionable finding and passed on the reviewed source.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_NON_FINDING_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "40977d5b0a488ad02a4b0d5f63a1e59406408c4f",
+      "verified_by": {
+        "command": "python3 -B -c 'exec('\"'\"'import sys\\n\\nsys.path.insert(0, \"scripts\")\\nfrom build_graph import extract_review_finding_nodes\\n\\noriginal = \"review:2026-05-31-bundle-stage13:D8:\"\\nrerun = \"review:2026-05-31-1500-bundle-stage13-rerun:D8:\"\\nfinding = \"review:2026-08-15-d8-stage10-redraft:D8:1.7\"\\nexcluded = {original + n for n in (\"3.1\", \"7\")} | {\\n    rerun + n for n in (\"1.1\", \"3\", \"5.1\", \"5.2\", \"6.1\", \"6.2\")\\n}\\nrequired = {original + n for n in (\"1.1\", \"1.2\", \"5.1\", \"5.2\", \"6.1\", \"6.2\")} | {\\n    rerun + n for n in (\"1.2\", \"1.3\")\\n} | {finding}\\nnodes = {node[\"id\"]: node for node in extract_review_finding_nodes()}\\nunexpected = sorted(excluded.intersection(nodes))\\nmissing = sorted(required.difference(nodes))\\nif unexpected or missing:\\n    raise SystemExit(f\"D8 1.7: artifact IDs still minted: {unexpected}. Required findings missing: {missing}.\")\\nif nodes[finding][\"meta\"][\"severity\"] != \"major\":\\n    raise SystemExit(\"D8 1.7: the actionable finding lost its major severity.\")\\nprint(\"D8 1.7: eight artifact IDs excluded and all nine required findings retained.\")\\n'\"'\"')'",
+        "declared": "python3 -B -c 'exec('\"'\"'import sys\\n\\nsys.path.insert(0, \"scripts\")\\nfrom build_graph import extract_review_finding_nodes\\n\\noriginal = \"review:2026-05-31-bundle-stage13:D8:\"\\nrerun = \"review:2026-05-31-1500-bundle-stage13-rerun:D8:\"\\nfinding = \"review:2026-08-15-d8-stage10-redraft:D8:1.7\"\\nexcluded = {original + n for n in (\"3.1\", \"7\")} | {\\n    rerun + n for n in (\"1.1\", \"3\", \"5.1\", \"5.2\", \"6.1\", \"6.2\")\\n}\\nrequired = {original + n for n in (\"1.1\", \"1.2\", \"5.1\", \"5.2\", \"6.1\", \"6.2\")} | {\\n    rerun + n for n in (\"1.2\", \"1.3\")\\n} | {finding}\\nnodes = {node[\"id\"]: node for node in extract_review_finding_nodes()}\\nunexpected = sorted(excluded.intersection(nodes))\\nmissing = sorted(required.difference(nodes))\\nif unexpected or missing:\\n    raise SystemExit(f\"D8 1.7: artifact IDs still minted: {unexpected}. Required findings missing: {missing}.\")\\nif nodes[finding][\"meta\"][\"severity\"] != \"major\":\\n    raise SystemExit(\"D8 1.7: the actionable finding lost its major severity.\")\\nprint(\"D8 1.7: eight artifact IDs excluded and all nine required findings retained.\")\\n'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.6",
+      "status": "fixed",
+      "evidence": "Independently reconciled all 19 live D8 citation keys against the 20-entry bibliography and manuscript passages, with per-anchor dispositions and a synchronized prompt. The dated historical verdict is preserved, the current gaps are explicit and the original Verify passed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_ATTRIBUTION_ROSTER_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-07",
+      "commit": "35be4c94cc9000a508407733cd224cf950d85f19",
+      "verified_by": {
+        "command": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "declared": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-trapped-ion-proof-attribution:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent source and rendered review verified author v1 Theorem 1.3, the actual positive-even-grid tensor-Pauli flow proof, every scoped claim and the regenerated figure. The declared Verify passed and the versioned source artifact is anchored.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_TRAPPED_ION_ATTRIBUTION_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "46ecaa29ce4b71ea89b2ceb80d7143373c1cc978",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf",
+      "artifact_sha256": "d646d64aabe5fe70762cfae67cd2c371a753df96e3683ac8bf241293a3b13cd3",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf",
+          "sha256": "d646d64aabe5fe70762cfae67cd2c371a753df96e3683ac8bf241293a3b13cd3"
+        }
+      ],
+      "verified_by": {
+        "command": "grep -Fq 'gate \\emph{imprimitive}' papers/D8/paper_draft.tex && grep -Fq 'Tensor-Pauli closure flows' papers/D8/paper_draft.tex && grep -Fq 'density via the span and closure flows of fifteen tensor-Pauli tangents' papers/D8/bundle_metadata.json && grep -Fq 'Tensor-Pauli closure flows' src/core/visualizations.py",
+        "declared": "grep -Fq 'gate \\emph{imprimitive}' papers/D8/paper_draft.tex && grep -Fq 'Tensor-Pauli closure flows' papers/D8/paper_draft.tex && grep -Fq 'density via the span and closure flows of fifteen tensor-Pauli tangents' papers/D8/bundle_metadata.json && grep -Fq 'Tensor-Pauli closure flows' src/core/visualizations.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-compiler-definition:D8:1.1",
+      "status": "fixed",
+      "evidence": "The independent review reproduced both declared commands, the exact definition and proof attribution, 13-page compilation, and the same-source G5 transition.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_COMPILER_DEFINITION_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-07",
+      "commit": "86faaa0e1243ac4c3eb845cce5c6c071edb494e9",
+      "verified_by": {
+        "command": "grep -Fq 'def:compile-recursion' papers/D8/paper_draft.tex && grep -Fq 'GenericSU2.cliffordTCompile' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile\\_correct' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile_eq_recursion' papers/D8/bundle_metadata.json",
+        "declared": "grep -Fq 'def:compile-recursion' papers/D8/paper_draft.tex && grep -Fq 'GenericSU2.cliffordTCompile' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile\\_correct' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile_eq_recursion' papers/D8/bundle_metadata.json",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-compiler-definition:D8:1.2",
+      "status": "fixed",
+      "evidence": "The independent review reproduced both declared commands, the exact definition and proof attribution, 13-page compilation, and the same-source G5 transition.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_COMPILER_DEFINITION_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-07",
+      "commit": "86faaa0e1243ac4c3eb845cce5c6c071edb494e9",
+      "verified_by": {
+        "command": "test \"$(grep -Fc 'a tensor-Pauli closure-flow construction' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'an entangling-gate criterion' papers/D8/paper_draft.tex",
+        "declared": "test \"$(grep -Fc 'a tensor-Pauli closure-flow construction' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'an entangling-gate criterion' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-recursion-arithmetic:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent review checked the exact Lean recurrence, depth at epsilon0, both prose occurrences, the stale-copy mutation, and the rendered draft.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_RECURSION_ARITHMETIC_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "0683662dc36d92a447b6908684cdbc3e52700e56",
+      "verified_by": {
+        "command": "grep -Fq '\\varepsilon_{n+1} = K\\varepsilon_n^{3/2}' papers/D8/paper_draft.tex && grep -Fq 'K^2 \\cdot 2\\varepsilon_0 = 1/4' papers/D8/paper_draft.tex",
+        "declared": "grep -Fq '\\varepsilon_{n+1} = K\\varepsilon_n^{3/2}' papers/D8/paper_draft.tex && grep -Fq 'K^2 \\cdot 2\\varepsilon_0 = 1/4' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-recursion-arithmetic:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent review checked the exact Lean recurrence, depth at epsilon0, both prose occurrences, the stale-copy mutation, and the rendered draft.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_RECURSION_ARITHMETIC_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "0683662dc36d92a447b6908684cdbc3e52700e56",
+      "verified_by": {
+        "command": "grep -Fq '\\log_4(1/(K^2\\varepsilon_0)) = 3/2' papers/D8/paper_draft.tex && test \"$(grep -Fc 'recursion depth $1$.' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'recursion depth $0$' papers/D8/paper_draft.tex",
+        "declared": "grep -Fq '\\log_4(1/(K^2\\varepsilon_0)) = 3/2' papers/D8/paper_draft.tex && test \"$(grep -Fc 'recursion depth $1$.' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'recursion depth $0$' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independently verified the original forward and inverse recovery model, one-way zero-decay implication with zero-distance control, and the group-velocity assumption at exact c3ce76a10. Original PolaritonTier1 source bytes match the reviewed module pin. Scoped source correction only.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-07-pr118-letter-source-transport/SCOPED_REVIEW.md",
+      "date": "2026-11-07",
+      "commit": "c3ce76a107e060741f438e67e8e468a58a02d8ca",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_ge_one'\"'\"')); assert r'\"'\"'N_{\\rm emit} = A N_{\\rm meas}'\"'\"' in t and r'\"'\"'N_{\\rm meas} = N_{\\rm emit}/A'\"'\"' in t; assert '\"'\"'multiplying'\"'\"' in c and '\"'\"'dividing'\"'\"' not in c'",
+        "declared": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_ge_one'\"'\"')); assert r'\"'\"'N_{\\rm emit} = A N_{\\rm meas}'\"'\"' in t and r'\"'\"'N_{\\rm meas} = N_{\\rm emit}/A'\"'\"' in t; assert '\"'\"'multiplying'\"'\"' in c and '\"'\"'dividing'\"'\"' not in c'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independently verified the original forward and inverse recovery model, one-way zero-decay implication with zero-distance control, and the group-velocity assumption at exact c3ce76a10. Original PolaritonTier1 source bytes match the reviewed module pin. Scoped source correction only.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-07-pr118-letter-source-transport/SCOPED_REVIEW.md",
+      "date": "2026-11-07",
+      "commit": "c3ce76a107e060741f438e67e8e468a58a02d8ca",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_eq_one_at_zero_decay'\"'\"')); assert '\"'\"'exactly at'\"'\"' not in t and '\"'\"'exactly at'\"'\"' not in c; assert '\"'\"'zero propagation distance'\"'\"' in t'",
+        "declared": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_eq_one_at_zero_decay'\"'\"')); assert '\"'\"'exactly at'\"'\"' not in t and '\"'\"'exactly at'\"'\"' not in c; assert '\"'\"'zero propagation distance'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.3",
+      "status": "fixed",
+      "evidence": "Independently verified the original forward and inverse recovery model, one-way zero-decay implication with zero-distance control, and the group-velocity assumption at exact c3ce76a10. Original PolaritonTier1 source bytes match the reviewed module pin. Scoped source correction only.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-07-pr118-letter-source-transport/SCOPED_REVIEW.md",
+      "date": "2026-11-07",
+      "commit": "c3ce76a107e060741f438e67e8e468a58a02d8ca",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'v_g = c_s'\"'\"' in t and r'\"'\"'c_s/v_g'\"'\"' in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'v_g = c_s'\"'\"' in t and r'\"'\"'c_s/v_g'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-abstract-contract:E1:1.1",
+      "status": "fixed",
+      "evidence": "Exact independently reviewed E1 transport retained the declared primary APS provenance and self-contained citation-free abstract. The repository proxy reports 581 of 600 characters at exact c3ce76a10. This closes the scoped abstract defect.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-07-pr118-letter-source-transport/SCOPED_REVIEW.md",
+      "date": "2026-11-07",
+      "commit": "c3ce76a107e060741f438e67e8e468a58a02d8ca",
+      "verified_by": {
+        "command": "python3 -c 'import sys,json,re; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from validation.checks.bundles_readiness import abstract_plain_text; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); a=re.search(r'\"'\"'\\\\begin\\{abstract\\}(.*?)\\\\end\\{abstract\\}'\"'\"',t,re.S).group(1); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=m['\"'\"'length_target'\"'\"']['\"'\"'abstract_ceiling'\"'\"']; assert c['\"'\"'ceiling'\"'\"']==600 and c['\"'\"'source_verified'\"'\"'] is True; assert len(abstract_plain_text(t))<=c['\"'\"'ceiling'\"'\"']; assert r'\"'\"'\\cite'\"'\"' not in a'",
+        "declared": "python3 -c 'import sys,json,re; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from validation.checks.bundles_readiness import abstract_plain_text; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); a=re.search(r'\"'\"'\\\\begin\\{abstract\\}(.*?)\\\\end\\{abstract\\}'\"'\"',t,re.S).group(1); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=m['\"'\"'length_target'\"'\"']['\"'\"'abstract_ceiling'\"'\"']; assert c['\"'\"'ceiling'\"'\"']==600 and c['\"'\"'source_verified'\"'\"'] is True; assert len(abstract_plain_text(t))<=c['\"'\"'ceiling'\"'\"']; assert r'\"'\"'\\cite'\"'\"' not in a'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e2-greybody-readout:E2:1.1",
+      "status": "fixed",
+      "evidence": "Exact independently verified E2 transport distinguishes the 2014 infrared BEC result from adopted graphene transmission and electrical response, and restores the corrected model figure. Original compound Verify passed on exact 2c0b8d8fc with the held v3 source. Historical 2013 guard and physical calibration are separate.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-07-pr118-letter-source-transport/SCOPED_REVIEW.md",
+      "date": "2026-11-07",
+      "commit": "c3ce76a107e060741f438e67e8e468a58a02d8ca",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+      "artifact_sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+          "sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+      "status": "fixed",
+      "evidence": "Regenerated the publication figure with the corrected dimensionless clocks and isolated legend, and replaced the right panel with the adopted cutoff crossing and separately shaded branches. The independent R2 review at docs/audits/2026-10-17-publication-substance-construction/L3_REGIME_FIGURE_INDEPENDENT_REVIEW_R2.md matched 343 numeric samples and all three compiled consumers.",
+      "superseded_by": null,
+      "date": "2026-11-07",
+      "commit": "0f9cb7908681bbca322c02840e6e46126d986ca3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.2",
+      "status": "fixed",
+      "evidence": "Regenerated the publication figure with the corrected dimensionless clocks and isolated legend, and replaced the right panel with the adopted cutoff crossing and separately shaded branches. The independent R2 review at docs/audits/2026-10-17-publication-substance-construction/L3_REGIME_FIGURE_INDEPENDENT_REVIEW_R2.md matched 343 numeric samples and all three compiled consumers.",
+      "superseded_by": null,
+      "date": "2026-11-07",
+      "commit": "0f9cb7908681bbca322c02840e6e46126d986ca3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'M_c' in s, 'right panel does not show the critical-mass crossing'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'M_c' in s, 'right panel does not show the critical-mass crossing'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
     }
   ]
 }

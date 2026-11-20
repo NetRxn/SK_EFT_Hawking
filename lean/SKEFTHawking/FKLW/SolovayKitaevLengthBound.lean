@@ -27,7 +27,10 @@ the total length bound becomes `L(ε) = O((log(1/ε))^(log 5 / log(3/2)))`.
   - Invariant #15 (no new axioms): RESPECTED.
 
 Primary source: Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006), 81–95;
-                arXiv:quant-ph/0505030, §3.3 (length analysis).
+                arXiv:quant-ph/0505030v2, §3 (Analysis), Eqs. (8)–(9), p. 7.
+Equation (8) gives the word-length exponent. Equation (9) gives the classical
+runtime exponent `log 3 / log(3/2) ≈ 2.71` with pointer reuse and without
+accounting for finite-precision arithmetic costs.
 -/
 
 import Mathlib
@@ -47,9 +50,10 @@ open Matrix SKEFTHawking.FKLW SKEFTHawking.FKLW.SolovayKitaevRecursion
 
 The exponent `c := log 5 / log(3/2) ≈ 3.97` arises from solving:
   - Length recurrence: `L_{n+1} = 5 · L_n` (branching factor 5 per level)
-  - Error recurrence: `ε_{n+1} = ε_n^(3/2)` (3/2 super-quadratic shrinkage)
+  - Error recurrence in the normalized variable `f_n = K² · ε_n`:
+    `f_{n+1} = f_n^(3/2)` (superlinear contraction when `0 < f_n < 1`)
 
-Solving jointly:
+Up to the base constants and integer rounding of the depth:
   `n(ε) = log_{3/2} log(1/ε)`,  `L(ε) = 5^{n(ε)} = (log(1/ε))^{log 5 / log(3/2)}`.
 
 The value `c = log 5 / log(3/2) ≈ 3.97` is the canonical Dawson-Nielsen

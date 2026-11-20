@@ -212,21 +212,18 @@ Ref.~\cite{Balbinot2005PRD} below it. What the criterion adds is that the
 comparison against $\Mc$ decides between them, which is the statement
 neither source makes.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=0.96\columnwidth]{figures/fig_T_H_evolution_regime_partition.png}
-  \caption{Opposite signs of $d\Thawk/dt$ under evaporation. The
-  Schwarzschild branch (amber, dashed) heats and terminates in finite time,
-  while the sonic branch (blue, solid) cools and reaches zero temperature
-  only asymptotically; the right panel shows the substrate response
-  $\dADW = (\aADW - 1)\Ladw$ vanishing at the bare induced limit
-  $\aADW = 1$. The critical mass separating the branches is
-  Eq.~\eqref{eq:Mc}, equivalently Eq.~\eqref{eq:Mccutoff}. Formal
-  witnesses: \texttt{T\_H\_schwarzschild\_strict\_decreasing} and
-  \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}, combined by
-  \texttt{regime\_partition\_criterion}.}
+  \includegraphics[width=0.86\textwidth]{figures/fig_T_H_evolution_regime_partition.png}
+  \caption{Left: illustrative evaporation trajectories in units of each
+  branch's initial temperature. The time coordinate is $t/\tau_{\rm cool}$
+  for the sonic model and $5t/t_{\rm evap}$ for Schwarzschild.
+  Right: the emergent gravitational length $\GNem M$ (solid) and the
+  cutoff length $\Ladw^{-1}$ (horizontal), both in units of the cutoff
+  length. The adopted matching condition is $M=\Mc$
+  [Eqs.~\eqref{eq:Mc} and~\eqref{eq:Mccutoff}].}
   \label{fig:regime}
-\end{figure}
+\end{figure*}
 
 Two of the four laws of black-hole mechanics enter the development, and
 neither in full. The first-law slot fixes the positivity $0 < \GNem$ that

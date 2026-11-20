@@ -194,18 +194,17 @@ def test_no_missing_from_registry():
 # ────────────────────────────────────────────────────────────────────────
 
 @pytest.mark.slow
-def test_extract_missing_bibkeys_emits_no_orphans():
+def test_extract_missing_bibkeys_emits_no_orphans(tmp_path):
     """Re-run the extractor; after promotion all citations resolve so 0 stubs."""
     import extract_missing_bibkeys as ext  # noqa
-    rc = ext.main(["--out", str(SK_ROOT / "docs" / ".test_missing_stubs.json")])
+    output = tmp_path / "missing_stubs.json"
+    rc = ext.main(["--out", str(output)])
     assert rc == 0
     payload = json.loads(
-        (SK_ROOT / "docs" / ".test_missing_stubs.json").read_text(encoding="utf-8")
+        output.read_text(encoding="utf-8")
     )
     assert payload["n_stubs"] == 0, (
         f"Post-promotion extractor still finds {payload['n_stubs']} unregistered "
         f"bibkeys: {[s['bibkey'] for s in payload['stubs'][:8]]}"
     )
     assert payload["n_orphans"] == 0
-    # Tidy up
-    (SK_ROOT / "docs" / ".test_missing_stubs.json").unlink(missing_ok=True)

@@ -755,7 +755,7 @@
      },
      {
       "kind": "theorem",
-      "target": "Torus"
+      "target": "SKEFTHawking.TopologicalBand.Torus"
      }
     ],
     "completeness": "full"
@@ -1441,7 +1441,7 @@
     "links": [
      {
       "kind": "theorem",
-      "target": "Torus"
+      "target": "SKEFTHawking.TopologicalBand.Torus"
      }
     ],
     "completeness": "full"

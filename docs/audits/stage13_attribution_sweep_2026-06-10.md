@@ -117,6 +117,43 @@ pass rather than guessed. The citation resolves correctly for E1's use either wa
 
 ## D8 — Kernel-Verified Universal Quantum Gate Compilation  {#d8}
 
+**2026-11-07 anchor readback.** Each live manuscript citation is accounted
+for below. SUPPORTED covers the scoped attribution. PENDING identifies a
+remaining passage or correspondence check. INTERNAL identifies a companion
+manuscript. The historical aggregate remains a dated record. The present
+readback leaves the bundle-wide Stage-13 verdict open.
+
+| Citation key | Current manuscript use | Verdict | Evidence |
+| --- | --- | --- | --- |
+| AKN1998 | Operator-norm to diamond-distance conversion | SUPPORTED | Held arXiv:quant-ph/9806029v1, Lemma 12(6), bounds the conjugation-channel difference for contractions with the factor of two in the diamond norm. |
+| AaronsonGottesman2004 | Stabilizer context in the SU(8) Clifford+T route | PENDING | Project-authored summary only. Check the exact stabilizer attribution to arXiv:quant-ph/0406196 separately from the manuscript's density proof. |
+| AharonovArad2011 | General compilation and Solovay–Kitaev context | PENDING | Verbatim abstract cache for arXiv:quant-ph/0605181. The compilation passage remains unchecked. |
+| Brylinski2002 | Two-qubit gate universality as context for the trapped-ion row | SUPPORTED | Held author preprint arXiv:quant-ph/0108062v1, p. 2, Theorem 1.3 and preceding definition. The entangling case is imprimitive. The manuscript and apex identify the independent Lean construction using tensor-Pauli closure flows on the positive even grid. |
+| DawsonNielsen2006 | Solovay–Kitaev recursion, gate-sequence length and separate runtime | SUPPORTED | See the [Dawson–Nielsen review](2026-10-17-publication-substance-construction/D4_D8_DAWSON_ATTRIBUTION_ACCEPTANCE_R2.md). Held author v2, §3 Eqs. (8) and (9), and §5.1 for fixed dimension. |
+| GilesSelinger2013 | Column synthesis and parity argument context | PENDING | Held arXiv:1212.0506v3, Lemma 5, confirms the column-synthesis reference. The manuscript-specific parity argument still needs a passage comparison. |
+| Hietala2020VOQC | Verified exact circuit optimization in Coq | SUPPORTED | The held alias `Hietala2021VOQC.pdf` is arXiv:1912.02250v3. Its opening abstract and introduction describe VOQC, SQIR and semantics-preserving circuit transformations. The canonical pointer still names the project summary. |
+| KMM2013 | Exact single-qubit Clifford+T synthesis | SUPPORTED | See the [source and render review](2026-10-17-publication-substance-construction/D8_PRIMARY_SOURCE_PROPAGATION_INDEPENDENT_REVIEW_R1.md). Held arXiv:1206.5236v4, Theorem 1, Algorithm 1 and Corollary 1. |
+| KMM2013ancilla | Two-ancilla construction, four-square reduction and length scaling | SUPPORTED | Held arXiv:1212.0822v2, §§1 and 2.1, gives the length context and four-square construction. The manuscript derives its own explicit constants. |
+| KitaevShenVyalyi2002 | General Solovay–Kitaev background | SOURCE-MISSING | The textbook passage remains unchecked. |
+| Lewis2021VerifQC | Survey of verified quantum programming and tools | PENDING | Project-authored summary only. Check the named tool coverage in the survey itself. |
+| Meiburg2025PhysLib | Trace-norm Hölder transfer from a community Lean library | PENDING | Held arXiv:2510.08672v1. The exact imported declaration and the transfer still need source-code correspondence. |
+| Mukhopadhyay2024 | Clifford channel image, dyadic entries, exponent rule and search conjecture | SUPPORTED | See the [source and render review](2026-10-17-publication-substance-construction/D8_PRIMARY_SOURCE_PROPAGATION_INDEPENDENT_REVIEW_R1.md). Held arXiv:2401.08950v1. Conjecture 4.8 concerns the search heuristic. |
+| ReadRezayi1999 | Physical family and filling fraction motivating the two alphabets | PENDING | Project-authored summary only. Check the physical passage separately from the named Lean algebraic proof. |
+| RoehmD4Topological | Fibonacci braid and categorical foundations | INTERNAL | Internal companion D4 manuscript and ownership evidence. |
+| RoehmD6FaultTolerant | Fault-tolerant substrate | INTERNAL | Internal companion D6 manuscript. |
+| RoehmD9Certification | Channel certification and the Kronecker operator-norm bound | INTERNAL | Internal companion D9 manuscript and independently reconciled Kronecker-bound ownership. |
+| RossSelinger2016 | Grid, norm equation and conditional residual route | SUPPORTED | See the [source and render review](2026-10-17-publication-substance-construction/D8_PRIMARY_SOURCE_PROPAGATION_INDEPENDENT_REVIEW_R1.md). Held arXiv:1403.2975v3. Algorithm 7.6, Hypothesis 8.3, Propositions 8.8 and 8.11 and Appendix C are distinguished from the project's bounded witness premise. |
+| Selinger2015 | Gate-length exponent context | SUPPORTED | Held arXiv:1212.6253v2, §1, reports the Solovay–Kitaev gate-complexity exponent near 3.97. |
+
+The roster follows the draft's citation commands and bibliography.
+`BMPRV1999` is a bibliography entry without a current manuscript citation.
+
+### Historical 2026-06-10 D8 sweep
+
+The archived aggregate cannot be reconstructed as per-anchor evidence.
+Use the dated readback above for the current roster and source status.
+
+
 **Verifier:** read-only agent (full-text where cached). **Verdict: GREEN.** 10 anchors —
 3 SUPPORTED / 7 CAVEAT / 0 NOT-SUPPORTED. The highest-risk newer 6AM–6AP content verified:
 AKN1998 Lemma 12.6 diamond bound (‖V V†−W W†‖_◇ ≤ 2‖V−W‖) verbatim; KMM2013ancilla

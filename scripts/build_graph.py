@@ -2208,6 +2208,17 @@ def extract_review_finding_nodes() -> list[dict]:
 
     nodes = []
     seen_ids: set[str] = set()
+    duplicate_ids: set[str] = set()
+    non_findings: set[str] = set()
+    marker = "<!-- skeft: non-finding -->"
+    action_fields = ('Severity', 'Verify', 'Fix', 'Expected', 'Lane', 'Location',
+                     'Needs-operator', 'Blocked-by', 'Blocked by')
+    action_heading = re.compile(r"^#{3,5}\s+(?:BLOCKER|REQUIRED)\s+", re.IGNORECASE)
+    conflict_field = re.compile(
+        r"^\s*(?:[-*]\s+)?(?:\*\*)?"
+        r"(?:Severity|Verify|Fix|Expected|Lane|Location|Needs-operator|Blocked[- ]by)"
+        r"(?:\*\*)?[ \t]*(?::|$)", re.IGNORECASE | re.MULTILINE,
+    )
     for md_path in sorted(reviews_dir.glob("*/*.md")):
         date_dir = md_path.parent.name        # e.g. "2026-04-12"
         review_name = md_path.stem            # e.g. "CitationReview-01"
@@ -2280,6 +2291,9 @@ def extract_review_finding_nodes() -> list[dict]:
             start = m.end()
             end = matches[idx + 1].start() if idx + 1 < len(matches) else len(source)
             body = source[start:end].strip()
+            marked = body.partition("\n")[0] == marker
+            if marked:
+                body = body.partition("\n")[2].lstrip()
 
             # If the matched heading was "### Class N — ...", tag the section
             # number with a 'C' prefix to avoid ID collisions.
@@ -2392,6 +2406,7 @@ def extract_review_finding_nodes() -> list[dict]:
 
             finding_id = mint_finding_id(date_dir, review_name, section_num)
             if finding_id in seen_ids:
+                duplicate_ids.add(finding_id)
                 continue
             seen_ids.add(finding_id)
             # ⚠️ HEADING-PARSE CANNOT CLOSE A BLOCKING FINDING (added 2026-07-31, D12
@@ -2434,6 +2449,13 @@ def extract_review_finding_nodes() -> list[dict]:
                 'needs_operator': ((_parse_finding_field(body, 'Needs-operator') or '')
                                    .strip().strip('`').lower() or None),
             }
+            if marked:
+                if (severity != 'advisory' or action_heading.match(heading_line)
+                        or conflict_field.search(body)
+                        or any(_parse_finding_field(body, field) for field in action_fields)):
+                    logger.warning("Ignoring conflicting non-finding declaration for %s", finding_id)
+                else:
+                    non_findings.add(finding_id)
             _KNOWN_STATUSES = ('open', 'fixed', 'accepted')
             # ⚠️ `reopened` is WRITABLE (`close_finding.VALID_STATUSES`) and must read back
             # as `open`. It currently lands in the unrecognised-token bucket, which is the
@@ -2498,6 +2520,22 @@ def extract_review_finding_nodes() -> list[dict]:
                 'detail': body[:400].replace("\n", " "),
                 'meta': meta,
             })
+
+    if non_findings:
+        protected = set(supersessions) | duplicate_ids
+        for row in supersessions.values():
+            target = row.get('superseded_by')
+            if isinstance(target, str):
+                protected.add(target)
+        for node in nodes:
+            meta = node['meta']
+            protected.update(meta['blocked_by'])
+            if meta['blocked_by'] or meta['needs_operator']:
+                protected.add(node['id'])
+        for finding_id in sorted(non_findings & protected):
+            logger.warning("Ignoring protected non-finding declaration for %s", finding_id)
+        excluded = non_findings - protected
+        nodes = [node for node in nodes if node['id'] not in excluded]
 
     if nodes:
         from collections import Counter as _C

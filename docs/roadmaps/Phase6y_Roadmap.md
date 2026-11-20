@@ -518,8 +518,12 @@ of `K`/`ε₀` closes it; only a concrete construction does.
       S141-surfaced caveat was diagnosed (fresh literature search + 6 corroborating in-project sources) as a
       **2026-05-27 dev-time mis-transcription** in commit `866396e`: the SU(d) headline forms hardcoded the
       word-length exponent **`log 5 / log 2 ≈ 2.32`** and mis-attributed it to Dawson-Nielsen. The canonical
-      Dawson-Nielsen exponent is **`log 5 / log(3/2) ≈ 3.97`** (arXiv:quant-ph/0505030 §3.3: 5× word growth +
-      ε^(3/2) contraction), matching the SU(2) `skLengthExponent`, the level chooser `skLevel_polylog_sud`
+      Dawson-Nielsen word-length exponent is **`log 5 / log(3/2) ≈ 3.97`** (arXiv:quant-ph/0505030v2,
+      §3 (Analysis), Eq. (8), p. 7). It comes from 5× word growth and order-3/2 error contraction. Equation (9)
+      gives the separate pointer-compressed classical runtime exponent `log 3 / log(3/2) ≈ 2.71` under
+      the stated arithmetic cost model. Section 5.1 (p. 11) carries both exponents to fixed dimension
+      with dimension-dependent constants and base lookup construction cost. The length exponent
+      matches the SU(2) `skLengthExponent`, the level chooser `skLevel_polylog_sud`
       (already `log(3/2)`), the Phase 6u roadmap, and the public README. `log 5 / log 2` would require
       quadratic ε² contraction the project does not prove, so it was NEVER achievable — a wrong statement, not
       a harder target. **Fix (3 commits):** (1) `b572711` corrected all 24 occurrences across 17 FKLW files

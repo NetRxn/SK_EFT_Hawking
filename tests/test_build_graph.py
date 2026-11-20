@@ -1491,3 +1491,57 @@ class TestSeedMarkerDoesNotSuppressMinting:
             "gate. This is the leg that matters: a fabricated finding is only harmful "
             "because it lands open."
         )
+
+
+def test_review_non_finding_marker_preserves_actionable_and_referenced_sections(
+    tmp_path, monkeypatch, caplog
+):
+    import json
+
+    import build_graph as bg
+
+    date = "2026-11-03-probe"
+    review_dir = tmp_path / "papers" / "AutomatedReviews" / date
+    review_dir.mkdir(parents=True)
+    marker = "<!-- skeft: non-finding -->"
+    prefix = f"review:{date}:D8:"
+    sections = [
+        ("1.1", f"{marker}\n\nThe check passed."),
+        ("1.2", f"The defect quotes {marker} in its description."),
+        ("1.3", f"{marker}\n\n- **Verify:** `exit 1`"),
+        ("1.4", f"{marker}\n\nThe check passed."),
+        ("1.5", f"- **Blocked-by:** `{prefix}1.4`"),
+        ("1.6", f"{marker}\n\nThe check passed."),
+        ("1.7", f"{marker}\n\n- **Blocked-by:** `{prefix}1.5`"),
+        ("1.8", f"{marker}\n\nThe check passed."),
+        ("1.8", "A duplicate with actionable content."),
+        ("1.9", f"{marker}\n\nThe check passed."),
+        ("1.10", f"{marker}\n\n- **Severity:**"),
+        ("1.11", f"{marker}\n\n- **Verify** `exit 1`"),
+        ("BLOCKER 1.12", f"{marker}\n\nThe check passed."),
+        ("1.13", f"{marker}\n\nThe check passed."),
+        ("1.14", f"{marker}\n\n- **Severity**"),
+        ("1.15", f"{marker}\n\n- **Verify**"),
+    ]
+    (review_dir / "D8.md").write_text(
+        "\n\n".join(f"### {number} — Example\n\n{body}" for number, body in sections)
+    )
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "review_finding_supersessions.json").write_text(json.dumps({
+        "supersessions": [
+            {"finding_id": prefix + "1.6", "status": "reopened"},
+            {"finding_id": prefix + "1.2", "superseded_by": prefix + "1.9"},
+            {"finding_id": prefix + "1.13", "superseded_by": []},
+        ]
+    }))
+    monkeypatch.setattr(bg, "PROJECT_ROOT", tmp_path)
+
+    nodes = bg.extract_review_finding_nodes()
+
+    assert [node["id"] for node in nodes] == [
+        prefix + f"1.{number}" for number in range(2, 16)
+    ]
+    assert nodes[0]["meta"]["status"] == "open"
+    assert bg.blocked_by_unresolved(nodes) == {}
+    assert prefix + "1.3" in caplog.text

@@ -143,18 +143,7 @@ which delegates a decidable computation to compiled code and adds a
 per-theorem axiom (Sec.~\ref{sec:ising}, Sec.~\ref{sec:trust}).}
 \label{tab:grades}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Grade & Meaning \\
-\colrule
-Theorem & A substantive statement, kernel-checked, no assumed hypothesis. \\
-Theorem (evaluated) & Substantive and correct, but discharged by
-  \texttt{native\_decide}; the trust base is the Lean compiler, not the kernel. \\
-Conditional & Substantive, kernel-checked, but consumes a hypothesis
-  the project has not discharged. \\
-Instance & Verified for named finite cases, not for a general object. \\
-Encoding & The statement unfolds to the definition it names; it fixes a
-  convention and proves nothing about it. \\
-\end{tabular}
+\input{tables/grades.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -404,21 +393,14 @@ exponent enters the length bound as a real power and a formalisation
 that only ever manipulated a numeral would not have established that the
 quantity it manipulates lies where the analysis needs it.
 
-The value $\log 5/\log(3/2)$ is the exponent produced by the standard
-balanced group-commutator recursion, in which each level replaces one
-approximation by five words and improves the error exponent from
-$\delta$ to $\delta^{3/2}$.
-
-% TODO: this project's citation cache attributes the specific exponent
-% log 5 / log(3/2) to Dawson-Nielsen 2006. Only the ABSTRACT of that paper
-% is held locally, and the abstract states the exponent as "c is
-% approximately 2", not approximately 3.97. The two are not reconcilable
-% from the abstract alone: 3.97 is the exponent of the basic balanced
-% recursion, and a value near 2 would reflect a sharper analysis. The prose
-% above therefore attributes the ALGORITHM and its recursion to
-% Dawson-Nielsen and states the exponent as the one this development
-% defines and proves, WITHOUT attributing that numerical value to them.
-% Acquire the full text and reconcile before making the attribution.
+Dawson and Nielsen derive the gate-sequence length exponent
+$\log 5/\log(3/2)$ from fivefold word growth per level and a balanced
+group-commutator error bound of order $\delta^{3/2}$ at error $\delta$.
+The length bound is Eq.~(8) in Sec.~3 (Analysis), p.~7 of the author
+preprint arXiv:quant-ph/0505030v2~\cite{DawsonNielsen2006}. On the same
+page, Eq.~(9) gives the classical runtime exponent
+$\log 3/\log(3/2) \approx 2.71$ when pointers reuse subsequences and
+arithmetic precision costs are excluded.
 
 \subsection{The constant is a number, not a symbol}
 

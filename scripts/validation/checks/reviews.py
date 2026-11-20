@@ -932,7 +932,7 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
 #: 2026-08-11: 121 -> 109. I1's Stage-10 re-review replaced its `claims_review.json`,
 #: and the rewritten records resolve twelve links the previous pass left dangling.
 #: Repayment, not a predicate change.
-UNRESOLVED_CHAIN_LINK_CEILING = 109
+UNRESOLVED_CHAIN_LINK_CEILING = 106
 
 _LEAN_LINK_KINDS = frozenset({"theorem", "axiom", "lemma"})
 

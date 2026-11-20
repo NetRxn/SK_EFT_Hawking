@@ -1032,6 +1032,27 @@ class TestBundleManuscriptLength:
         value, _unit, note = bru._measure_manuscript("D1")
         assert value is None and "older" in note
 
+    def test_word_equivalents_include_single_and_double_column_figures(
+            self, tmp_path, monkeypatch):
+        import shutil
+        import subprocess
+
+        papers = self._setup(tmp_path, monkeypatch,
+                            {"L3": self._blob(unit="word_equivalents")})
+        draft = papers / "L3"
+        (draft / "paper_draft.tex").write_text(
+            "\n".join((r"\begin{figure}a\end{figure}",
+                       r"\begin{figure*}b\end{figure*}",
+                       r"% \begin{figure*}c\end{figure*}")))
+        (draft / "paper_draft.pdf").write_bytes(b"%PDF-1.4")
+        monkeypatch.setattr(shutil, "which", lambda _: "/fixture/pdftotext")
+        monkeypatch.setattr(subprocess, "run",
+                            lambda *a, **kw: subprocess.CompletedProcess(
+                                a[0], 0, stdout="rendered words"))
+
+        assert bru._measure_manuscript("L3") == (
+            602, "word_equivalents", "2 figure(s) at 300 words each")
+
     def test_a_missing_pdf_names_the_command_that_fixes_it(self, tmp_path, monkeypatch):
         papers = self._setup(tmp_path, monkeypatch, {"D1": self._blob()})
         (papers / "D1" / "paper_draft.tex").write_text("x")
@@ -2015,15 +2036,27 @@ class TestSentenceLengthRatchet:
         by = {d.name: d for d in br.check_bundle_sentence_length().details}
         assert by["over_60_words"].warning is False
 
-    def test_ratchet_is_sensitive_to_a_seeded_regression(self, monkeypatch):
-        """Lower the population by raising nothing: drop the ceiling below the
-        live count and the gate must fail. Proves it is not vacuous."""
-        import sys, pathlib
-        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+    def test_ratchet_is_sensitive_to_a_seeded_regression(self, tmp_path, monkeypatch):
+        """Included scalar definitions are invisible. Included prose still gates."""
         from src.core import constants
+
         monkeypatch.setattr(constants, "SENTENCE_OVER_100_CEILING", 0)
-        res = self._run()
-        assert not res.passed, "ceiling 0 must fail — the gate would otherwise be inert"
+        bundle = tmp_path / "D1"
+        bundle.mkdir()
+        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path)
+        (bundle / "paper_draft.tex").write_text("\\input{counts}\n")
+        included = bundle / "counts.tex"
+        definitions = "".join(f"\\newcommand{{\\count{'a' * n}}}{{{n}}}\n"
+                              for n in range(1, 111))
+        included.write_text(definitions)
+        clean = self._run()
+        assert clean.passed, [d.message for d in clean.details]
+
+        included.write_text(definitions + " ".join(["word"] * 101) + ".\n")
+        seeded = self._run()
+        over_limit = next(d for d in seeded.details if d.name == "over_100_words")
+        assert not seeded.passed
+        assert over_limit.message.startswith("1 sentence(s) over 100 words")
 
     def test_ceiling_matches_the_live_measurement(self):
         """A ratchet frozen above the live value is slack that hides a

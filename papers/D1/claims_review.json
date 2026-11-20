@@ -1,12 +1,25 @@
 {
   "paper": "D1",
   "bundle_target": "D1",
-  "review_round": 4,
-  "review_date": "2026-05-06T20:30:00Z",
+  "review_round": 5,
+  "review_date": "2026-11-07T11:57:27Z",
   "reviewer_version": "claims-reviewer-v2",
-  "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:bundle-D1:2026-05-06T20:30:00Z",
-  "verdict": "green",
+  "reviewer_model": "codex",
+  "reviewer_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+  "review_scope": {
+    "mode": "scoped backing refresh",
+    "source_commit": "9f8608351d9c5c94ed9d18df24ea2649087e8fd5",
+    "historical_review_blob": "7d9c6d0a6ab35691777b2694c7010861108f3d83",
+    "refreshed_rows": 7,
+    "carried_historical_rows": 11,
+    "replaced_historical_ids": [
+      "sentence:D1:exact-wkb:r4anchor2",
+      "sentence:D1:polariton:r4anchor3",
+      "sentence:D1:graphene:r4anchor4"
+    ],
+    "notes": "The other rows, prior findings, round-4 notes, and cross-bundle consistency observations are carried as historical evidence. This scope does not reopen or close those findings or certify Stage 10 or Stage 13."
+  },
+  "verdict": "yellow",
   "total_findings": 6,
   "findings_by_class": {
     "IA": 1,
@@ -406,109 +419,257 @@
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:D1:exact-wkb:r4anchor2",
+      "id": "sentence:D1:the-modified-unitarity-ansatz-and-its-one-parameter:a36a4b4b",
       "raw_id_parts": {
         "paper": "D1",
-        "section_slug": "exact-wkb",
-        "quote_hash": "r4anchor2",
+        "section_slug": "the-modified-unitarity-ansatz-and-its-one-parameter",
+        "quote_hash": "a36a4b4b",
         "hash_algorithm": "sha256_first_8"
       },
-      "section": "Exact WKB connection: three non-perturbative effects",
-      "section_ordinal": 5,
-      "tex_line_start": 337,
-      "tex_line_end": 410,
-      "quote": "Three non-perturbative effects: modified unitarity |alpha|^2 - |beta|^2 = 1 - delta_k with delta_k = 2 Gamma_H/kappa; FDR-mandated noise floor n_noise = delta_k/2; spectral floor at omega_x ~ T_H ln(2/delta_diss).",
-      "quote_normalized": "three non-perturbative effects: modified unitarity, fdr-mandated noise floor, spectral floor",
+      "section": "The modified-unitarity ansatz and its one parameter",
+      "tex_line_start": 1042,
+      "tex_line_end": 1046,
+      "quote": "Equation~\\eqref{eq:modified-unitarity} is an ansatz, and the formal\nlayer treats it as one. \\texttt{WKBConnection.ModifiedBogoliubov} is a\nstructure whose fields are $|\\alpha|^2 \\geq 0$, $|\\beta|^2 \\geq 0$ and\nEq.~\\eqref{eq:modified-unitarity} itself; the theorems of the module are\nconsequences of inhabiting it.",
+      "quote_normalized": "equation~ is an ansatz, and the formal layer treats it as one. wkbconnection.modifiedbogoliubov is a structure whose fields are $|\\alpha|^2 \\geq 0$, $|\\beta|^2 \\geq 0$ and eq.~ itself; the theorems of the module are consequences of inhabiting it.",
       "type": "formal-claim",
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {"kind": "theorem", "target": "SKEFTHawking.WKBConnection", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.WKBSpectrum", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.GreybodyFactor", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.SpectralFloor", "link_state": "resolved"}
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.ModifiedBogoliubov"
+          }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "D1 anchor #2 + #6 reproduces from r3. WKBConnection/WKBSpectrum/GreybodyFactor/SpectralFloor all resolve in lean_deps.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-06T20:30:00Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": "sentence:D1:exact-wkb:r3anchor2",
+      "agent_notes": "Conditional carrier; the law is an input field. Scope is a Lean structure, not a theorem deriving modified unitarity.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": "sentence:D1:exact-wkb:r4anchor2",
       "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:exact-wkb",
-      "lift_action": "Lift-section"
+      "bundle_destination": "D1"
     },
     {
-      "id": "sentence:D1:polariton:r4anchor3",
+      "id": "sentence:D1:the-crossover-frequency:91e5d3ce",
       "raw_id_parts": {
         "paper": "D1",
-        "section_slug": "polariton",
-        "quote_hash": "r4anchor3",
+        "section_slug": "the-crossover-frequency",
+        "quote_hash": "91e5d3ce",
         "hash_algorithm": "sha256_first_8"
       },
-      "section": "Polariton platform: stimulated Hawking and reservoir",
-      "section_ordinal": 7,
-      "tex_line_start": 517,
-      "tex_line_end": 547,
-      "quote": "the universal threshold omega/kappa = ln(3)/(2 pi) approx 0.175 at G(omega) = 0.5 ... N_probe ~ 100 probe photons per mode (factor 10^3-10^6 improvement over spontaneous-correlation detection)",
-      "quote_normalized": "universal threshold omega/kappa = ln(3)/(2pi) ~ 0.175 at g=0.5; n_probe ~ 100",
+      "section": "The crossover frequency",
+      "tex_line_start": 1083,
+      "tex_line_end": 1091,
+      "quote": "This is \\texttt{WKBConnection.noiseFloor} with\n\\texttt{noise\\_floor\\_eq\\_delta\\_diss}; non-negativity is\n\\texttt{noise\\_floor\\_nonneg} and vanishing exactly at zero damping is\n\\texttt{noise\\_floor\\_zero\\_iff}. Both are unfoldings of the definition\n$n_{\\rm noise} := \\delta_k/2$, so what Eq.~\\eqref{eq:noise-floor}\ncontributes is not a proof but a bookkeeping identity: the same number\nthat measures the unitarity deficit, divided by two, is the floor. Its\nforce comes from Eq.~\\eqref{eq:cgl-fdr}, and it is exactly as\nconditional as that relation.",
+      "quote_normalized": "this is wkbconnection.noisefloor with noise\\_floor\\_eq\\_delta\\_diss; non-negativity is noise\\_floor\\_nonneg and vanishing exactly at zero damping is noise\\_floor\\_zero\\_iff. both are unfoldings of the definition $n_{\\rm noise} := \\delta_k/2$, so what eq.~ contributes is not a proof but a bookkeeping identity: the same number that measures the unitarity deficit, divided by two, is the floor. its force comes from eq.~, and it is exactly as conditional as that relation.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noiseFloor"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_nonneg"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_zero_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Defined scalar floor and its elementary properties. Physical FDR is an input.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": "sentence:D1:exact-wkb:r4anchor2",
+      "tombstone": false,
+      "bundle_destination": "D1"
+    },
+    {
+      "id": "sentence:D1:the-crossover-frequency:60f444e9",
+      "raw_id_parts": {
+        "paper": "D1",
+        "section_slug": "the-crossover-frequency",
+        "quote_hash": "60f444e9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The crossover frequency",
+      "tex_line_start": 1125,
+      "tex_line_end": 1130,
+      "quote": "The corresponding inequality is\n\\texttt{WKBConnection.noise\\_dominates\\_when\\_beta\\_small}, which states\nthat $|\\beta|^2 < n_{\\rm noise}(1-\\delta_k)$ implies\n$n_{\\rm Hawking} < n_{\\rm noise}$; as a formal statement it is the\nrearrangement of a quotient inequality, and the content of\nEq.~\\eqref{eq:crossover} is arithmetic performed here.",
+      "quote_normalized": "the corresponding inequality is wkbconnection.noise\\_dominates\\_when\\_beta\\_small, which states that $|\\beta|^2 < n_{\\rm noise}(1-\\delta_k)$ implies $n_{\\rm hawking} < n_{\\rm noise}$; as a formal statement it is the rearrangement of a quotient inequality, and the content of eq.~ is arithmetic performed here.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_dominates_when_beta_small"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Conditional quotient inequality with delta_k < 1 and supplied beta bound. The physical spectral crossover is not a Lean consequence of this statement.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": "sentence:D1:exact-wkb:r4anchor2",
+      "tombstone": false,
+      "bundle_destination": "D1"
+    },
+    {
+      "id": "sentence:D1:attenuation-and-where-the-model-provably-fails:0f98cbc8",
+      "raw_id_parts": {
+        "paper": "D1",
+        "section_slug": "attenuation-and-where-the-model-provably-fails",
+        "quote_hash": "0f98cbc8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Attenuation, and where the model provably fails",
+      "tex_line_start": 1927,
+      "tex_line_end": 1932,
+      "quote": "Assuming unit greybody factor,\n$\\Gamma(\\omega) = 1$, the condition $G > 1/2$ reads\n$\\exp(2\\pi\\omega/\\kappa_{\\rm eff}) < 3$, that is\n$\\omega/\\kappa_{\\rm eff} < \\ln 3/(2\\pi) \\approx 0.175$. That threshold\nholds only under the unit-greybody model, not a measured transmission\nprofile.",
+      "quote_normalized": "assuming unit greybody factor, $\\gamma(\\omega) = 1$, the condition $g > 1/2$ reads $\\exp(2\\pi\\omega/\\kappa_{\\rm eff}) < 3$, that is $\\omega/\\kappa_{\\rm eff} < \\ln 3/(2\\pi) \\approx 0.175$. that threshold holds only under the unit-greybody model, not a measured transmission profile.",
       "type": "numeric",
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {"kind": "formula", "target": "feasibility.py:polariton_shot_count", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.PolaritonTier1", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.StimulatedHawking", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.LKBDevice", "link_state": "resolved"}
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_gain"
+          }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "D1 anchor #3 reproduces from r3. D1<->E1 cross-bundle agreement (G > 0.5, N_probe = 100, omega/kappa = ln(3)/(2pi) ~ 0.175) carries forward.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-06T20:30:00Z",
-      "gates_invoked": ["Gate4_ComputationCorrectness"],
-      "rewrite_of": "sentence:D1:polariton:r3anchor3",
+      "agent_notes": "Unit-greybody adopted gain; log(3)/(2*pi)=0.17484957628 (0.08603 percent from printed 0.175). At the boundary G=0.5. No calibrated detection.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": "sentence:D1:polariton:r4anchor3",
       "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:polariton",
-      "lift_action": "Lift-companion"
+      "bundle_destination": "D1"
     },
     {
-      "id": "sentence:D1:graphene:r4anchor4",
+      "id": "sentence:D1:attenuation-and-where-the-model-provably-fails:7641aef3",
       "raw_id_parts": {
         "paper": "D1",
-        "section_slug": "graphene",
-        "quote_hash": "r4anchor4",
+        "section_slug": "attenuation-and-where-the-model-provably-fails",
+        "quote_hash": "7641aef3",
         "hash_algorithm": "sha256_first_8"
       },
-      "section": "Graphene Dirac-fluid platform",
-      "section_ordinal": 8,
-      "tex_line_start": 593,
-      "tex_line_end": 611,
-      "quote": "92% Lean theorem reuse / 109 of 119 1+1D theorems apply unchanged",
-      "quote_normalized": "92% lean theorem reuse / 109 of 119 1+1d theorems apply unchanged",
+      "section": "Attenuation, and where the model provably fails",
+      "tex_line_start": 1934,
+      "tex_line_end": 1938,
+      "quote": "For shot-noise-limited detection of a probe\ncarrying $N_{\\rm probe}$ photons per mode, a single-shot\nsignal-to-noise ratio $\\sqrt{N_{\\rm probe}}\\,G = 5$ needs\n$N_{\\rm probe} = 25/G^2$, of order $10^2$ photons per mode at\n$G = 1/2$ in this ideal readout model.",
+      "quote_normalized": "for shot-noise-limited detection of a probe carrying $n_{\\rm probe}$ photons per mode, a single-shot signal-to-noise ratio $\\sqrt{n_{\\rm probe}}\\,g = 5$ needs $n_{\\rm probe} = 25/g^2$, of order $10^2$ photons per mode at $g = 1/2$ in this ideal readout model.",
       "type": "numeric",
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {"kind": "formula", "target": "109/119 = 91.6%", "computed_value": "91.6%"},
-          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.GrapheneDirac", "link_state": "resolved"},
-          {"kind": "theorem", "target": "SKEFTHawking.QuasiOneDReduction", "link_state": "resolved"}
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_snr"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.StimulatedHawking.detection_threshold"
+          }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "D1 anchor #4 reproduces from r3. D1<->E2 cross-bundle agreement (T_H ~ 2.4 K, delta_disp ~ -2.8%, delta_diss ~ 10^-13, 92% Lean reuse, Wiedemann-Franz violation > 200x) carries forward.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-06T20:30:00Z",
-      "gates_invoked": ["Gate4_ComputationCorrectness"],
-      "rewrite_of": "sentence:D1:graphene:r3anchor4",
+      "agent_notes": "Ideal single-shot model: G=0.5 and N=100 give SNR=5. The theorem is sufficient for a supplied positive gain; it is not a physical device threshold.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": "sentence:D1:polariton:r4anchor3",
       "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:graphene",
-      "lift_action": "Lift-companion"
+      "bundle_destination": "D1"
+    },
+    {
+      "id": "sentence:D1:the-21d-acoustic-metric-and-the-quasi-one-dimensional-reduction:5b9954ad",
+      "raw_id_parts": {
+        "paper": "D1",
+        "section_slug": "the-21d-acoustic-metric-and-the-quasi-one-dimensional-reduction",
+        "quote_hash": "5b9954ad",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The 2+1D acoustic metric and the quasi-one-dimensional reduction",
+      "tex_line_start": 1382,
+      "tex_line_end": 1387,
+      "quote": "Of the \\reusePopulation{} theorems in the modules constituting\nthe one-dimensional treatment, \\reuseTransferred{} are stated\nparametrically in $c_s$ and transfer under $c_s \\to v_F/\\sqrt{2}$ with no\nchange of statement or proof, the remainder being condensate-specific;\nthe substantive content of that transfer is carried by the named theorems\nquoted here, not by the fraction.",
+      "quote_normalized": "of the \\reusepopulation{} theorems in the modules constituting the one-dimensional treatment, \\reusetransferred{} are stated parametrically in $c_s$ and transfer under $c_s \\to v_f/\\sqrt{2}$ with no change of statement or proof, the remainder being condensate-specific; the substantive content of that transfer is carried by the named theorems quoted here, not by the fraction.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Deterministic count_theorem_reuse.classify gives 107/120=89.17%, 13 platform-specific. Machine ownership is docs/counts.tex via update_counts.py; no graph link kind for this census script, and the count does not certify physical transfer.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": "sentence:D1:graphene:r4anchor4",
+      "tombstone": false,
+      "bundle_destination": "D1"
+    },
+    {
+      "id": "sentence:D1:the-21d-acoustic-metric-and-the-quasi-one-dimensional-reduction:90cd306d",
+      "raw_id_parts": {
+        "paper": "D1",
+        "section_slug": "the-21d-acoustic-metric-and-the-quasi-one-dimensional-reduction",
+        "quote_hash": "90cd306d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The 2+1D acoustic metric and the quasi-one-dimensional reduction",
+      "tex_line_start": 1387,
+      "tex_line_end": 1390,
+      "quote": "The map performing the binding is\n\\texttt{DiracFluidWKB.toExactWKB}, which sends the graphene parameters to\nthe platform-independent parameter record of Sec.~\\ref{sec:wkb} with\n$c_s = v_F/\\sqrt{2}$.",
+      "quote_normalized": "the map performing the binding is diracfluidwkb.toexactwkb, which sends the graphene parameters to the platform-independent parameter record of sec.~ with $c_s = v_f/\\sqrt{2}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.DiracFluidWKB.toExactWKB"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.DiracFluidWKB.soundSpeed"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Algebraic parameter binding into ExactWKBParams. No scattering, boundary, or readout equivalence follows.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-11-07:scoped-backing-refresh",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": "sentence:D1:graphene:r4anchor4",
+      "tombstone": false,
+      "bundle_destination": "D1"
     }
   ],
   "non_reproducing_prior_findings": [
@@ -535,10 +696,10 @@
     }
   ],
   "summary": {
-    "total_sentences_walked": 14,
+    "total_sentences_walked": 7,
     "by_type": {
-      "numeric": 4,
-      "theorem-ref": 1,
+      "numeric": 5,
+      "theorem-ref": 4,
       "citation": 1,
       "parameter": 1,
       "formal-claim": 3,
@@ -548,9 +709,9 @@
       "metaclaim": 4
     },
     "by_verdict": {
-      "PASS": 8,
+      "PASS": 11,
       "FAIL": 1,
-      "WARN": 5,
+      "WARN": 6,
       "INFO": 0,
       "UNGROUNDED": 0,
       "TRANSITION": 0
@@ -565,7 +726,8 @@
     "non_reproducing_count": 2,
     "non_reproducing_auto_closed": 1,
     "non_reproducing_candidates": 1,
-    "agent_text": "Round-4 stub-closure verification walked 14 sentences (4 absorbed-section stubs now PASS+tombstone; 4 D1 anchor PASS reproductions; 6 advisory carryforwards from r3). Verdict GREEN (was YELLOW in r3). The single round-3 BLOCKER (block:r3:1: 4 post-bibliography section stubs from bundle_append.py) deterministically closed and auto-superseded by Session-2 systematic cleanup: zero live \\section{ between \\end{thebibliography} (line 982) and \\end{document} (line 1040); 4 commented \\section{ + 4 commented \\label{ confirmed in-place; bookkeeping anchors preserved as LaTeX comments. The 6 round-3 advisories (IA abstract 5229->5837 theorem-count drift; TN section 2.2 SecondOrderSK.lean attribution; TN abstract 'two routes' graphene noise; Citation 4 WKB bibkeys missing from CITATION_REGISTRY; SD 92% wording on 109/119; TN bundle-anchor list freshness at claims-reviewer-bundle-prompts.md:86) all carry forward unchanged - they require independent fixes that are out-of-scope for a stub-closure round. All 4 D1 anchor claims (delta_diss, exact-WKB three effects, polariton shot-count, graphene 92% reuse) PASS. Cross-bundle D1<->E1 polariton + D1<->E2 graphene reproduce from r3."
+    "agent_text": "Scoped refresh of seven current passages replaces three archived round-4 rows. Eleven historical rows and all previous finding dispositions are carried. Six passages have scoped PASS evidence. The census passage has partial graph backing and remains WARN. Stage 10 and Stage 13 remain open.",
+    "active_rows": 18
   },
   "blocking_issues": [],
   "non_blocking_followups": [

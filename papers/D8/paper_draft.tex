@@ -17,6 +17,7 @@
 %% All headline theorems kernel-pure {propext, Classical.choice, Quot.sound}; 0 project-local axioms.
 
 \newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\leanbreak}[1]{{\def\_{\char`\_\allowbreak}\texttt{#1}}}
 \newcommand{\su}[1]{\mathrm{SU}(#1)}
 \newcommand{\sud}{\mathfrak{su}(d)}
 \newcommand{\opn}[1]{\lVert #1 \rVert}
@@ -28,7 +29,6 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{hypothesis}[theorem]{Hypothesis}
 
-\input{../../docs/figuredeferred.tex}
 
 \begin{document}
 
@@ -98,7 +98,7 @@ dimension in any proof assistant.
 Sec.~\ref{sec:alphabets} is the evidence for the reusability claim rather than
 a survey: four alphabets, whose density witnesses range over an
 algebraic-integer obstruction, a Chebyshev factorization, a triple-angle
-identity and an entangling-gate criterion, all pass through the interface
+identity and a tensor-Pauli closure-flow construction, all pass through the interface
 without modifying it. Sec.~\ref{sec:su8} treats the three-qubit case at length,
 because there the question of which gate carries the universality has a
 complete answer: the doubly controlled-$Z$ gate is necessary, is sufficient
@@ -108,9 +108,8 @@ through the channel representation.
 The second question, circuit length, is Sec.~\ref{sec:length}. Three verified
 mechanisms reach it, and none dominates: the commutator recursion is
 unconditional at exponent $\approx 3.97$; the Ross--Selinger grid
-route~\cite{RossSelinger2016} reaches the optimal exponent $1$ but rests on a
-number-theoretic existence that is open, which we isolate as a single stated
-hypothesis rather than an atmosphere of caveats; and the
+route~\cite{RossSelinger2016} gives a word-length exponent of $1$ under a
+stated bounded residual-witness hypothesis; and the
 Kliuchnikov--Maslov--Mosca ancilla route~\cite{KMM2013ancilla} reaches exponent
 $1$ unconditionally, at the price of two ancillas and a weaker form of
 contract. Between the first and second questions sits a third thing a compiler
@@ -148,24 +147,7 @@ Table~\ref{tab:results} is the map.
 their hypotheses in the theorem statement; unconditional ones have none.}
 \label{tab:results}
 \begin{ruledtabular}
-\begin{tabular}{llc}
-Result & Statement & Conditional \\
-\colrule
-SK over an abstract alphabet & Thm~\ref{thm:substrate} & yes \\
-Logarithm with named radius & Thm~\ref{thm:mercator} & no \\
-SK at arbitrary $\su d$ & Thm~\ref{thm:sud} & yes \\
-Clifford$+T$ density & Thm~\ref{thm:accpt} & no \\
-Clifford$+T$ compilation & Thm~\ref{thm:cliffordt} & no \\
-$T$-free density at $\su 8$ & Thm~\ref{thm:literal} & no \\
-Clifford-only is not dense & Thm~\ref{thm:notdense} & no \\
-Toffoli-count lower bound & Thm~\ref{thm:toffoli} & no \\
-Compiler correctness & Thm~\ref{thm:compile} & no \\
-Grid-route length, exponent $1$ & Thm~\ref{thm:rslength} & yes \\
-Grid route from the hypothesis & Thm~\ref{thm:rssynth} & yes \\
-Ancilla route, exponent $1$ & Thm~\ref{thm:kmm} & no \\
-Operator norm to diamond & Thm~\ref{thm:akn} & no \\
-End-to-end channel certificate & Thm~\ref{thm:capstone} & no \\
-\end{tabular}
+\input{tables/sk_results.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -303,7 +285,7 @@ in the Lie algebra, and conjugation spreads that line to the whole algebra.
 
 The two recurrences these produce are
 \[
-  \varepsilon_{n+1} = K^{2}\varepsilon_n^{3/2},
+  \varepsilon_{n+1} = K\varepsilon_n^{3/2},
   \qquad
   L(n+1) = 5\,L(n) + \beta ,
 \]
@@ -442,17 +424,26 @@ resulting compilation theorems are unconditional.
 \label{sec:sud-exponent}
 
 The recursion contracts error as $\varepsilon \mapsto O(\varepsilon^{3/2})$
-while expanding word length fivefold per level. Solving the pair gives a
-recursion depth $n(\varepsilon) = \log_{3/2}\log(1/\varepsilon)$ and a length
-$5^{n(\varepsilon)} = (\log 1/\varepsilon)^{\gamma}$ with
+while expanding word length fivefold per level. For a fixed base precision
+within the contraction regime, the resulting depth is
+$n(\varepsilon) = \log_{3/2}\log(1/\varepsilon) + O(1)$ as $\varepsilon \to 0$.
+The resulting length bound is $O((\log(1/\varepsilon))^{\gamma})$ with
 \[
-  \gamma \;=\; \frac{\log 5}{\log (3/2)} \;\approx\; 3.97 ,
+  \gamma \;=\; \frac{\log 5}{\log (3/2)} \;\approx\; 3.97 .
 \]
-which agrees with the value reported for the balanced-commutator algorithm by
-Selinger~\cite{Selinger2015} and by Kliuchnikov, Maslov and
-Mosca~\cite{KMM2013ancilla}. The exponent is defined once and referenced by
-every dimension-generic module, so the value cannot drift between the statement
-of Theorem~\ref{thm:sud} and the instantiations that consume it. The frequently
+Dawson and Nielsen derive this gate-length exponent in Eq.~(8), Sec.~3
+(Analysis), p.~7 of the author preprint
+arXiv:quant-ph/0505030v2~\cite{DawsonNielsen2006}.
+Equation~(9) on the same page gives the classical runtime exponent
+$\log 3/\log(3/2) \approx 2.71$ with pointer reuse of subsequences and
+without accounting for arithmetic precision costs. Section~5.1 (p.~11)
+extends both bounds to fixed $d$ with dimension-dependent constants and
+a dimension-dependent cost for constructing the base approximation table.
+Selinger~\cite{Selinger2015} and Kliuchnikov, Maslov and
+Mosca~\cite{KMM2013ancilla} also report the length exponent.
+Theorem~\ref{thm:sud} and its per-alphabet instantiations use the same
+length exponent. In Lean, the trapped-ion and Clifford+CCZ calibration
+aliases refer to the canonical $\su d$ definition. The frequently
 quoted $\log 5/\log 2 \approx 2.32$ corresponds to a quadratic contraction
 $\varepsilon \mapsto O(\varepsilon^2)$, which the balanced commutator does not
 provide and which this development does not claim.
@@ -486,70 +477,67 @@ net, the Baker--Campbell--Hausdorff estimate and the Cartan step from
 Theorem~\ref{thm:substrate} or Theorem~\ref{thm:sud}. The rightmost column is
 the whole of the alphabet-specific work.}
 \label{tab:alphabets}
+\setlength{\tabcolsep}{4pt}
 \begin{ruledtabular}
-\begin{tabular}{lll}
-Alphabet & Target & Alphabet-specific input \\
-\colrule
-Clifford$+T$ & $\su 2$ & $\sqrt 2 \sin(\pi/8)$ not an algebraic integer \\
-Read--Rezayi $k=5$ & $\su 2$ & Chebyshev factorization of $T_7(x)+1$ \\
-Read--Rezayi $k=7$ & $\su 2$ & triple-angle collapse at $\cos(\pi/9)$ \\
-Trapped-ion M\o lmer--S\o rensen & $\su 4$ & Brylinski entangling criterion \\
-Clifford$+$CCZ (with $T$) & $\su 8$ & density of the $\{H,T,\mathrm{CNOT}\}$ part \\
-Clifford$+$CCZ ($T$-free) & $\su 8$ & $\mathrm{tr} = 1/\sqrt2$ not an algebraic integer \\
-\end{tabular}
+\input{tables/alphabet_inputs.tex}
 \end{ruledtabular}
 \end{table}
 
-\figuredeferred{fig:d8-coverage}{the existing alphabet-by-dimension coverage
-figure shows a Fibonacci row, which Ref.~\cite{RoehmD4Topological} owns and
-this paper no longer claims; recutting it against
-Table~\ref{tab:alphabets} requires a regenerated figure from the project's
-canonical visualization module}
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/d8_fig1_alphabet_dimension_map.png}
+\caption{Coverage of the four alphabet families in Table~\ref{tab:alphabets}.
+The two Read--Rezayi levels and two Clifford$+$CCZ variants are shown
+separately. The amber marker identifies the $T$-free Clifford$+$CCZ
+variant. The annotations name the alphabet-specific density inputs.}
+\label{fig:d8-coverage}
+\end{figure*}
 
 The two Read--Rezayi rows are the sharpest evidence for the interface claim,
 because their number theory is genuinely unlike the Clifford$+T$ case and the
 interface absorbs it unchanged. We give both.
 
 \paragraph{Read--Rezayi at $k=5$.} The Read--Rezayi states at filling
-$\nu = k/(k+2)$ are the non-Abelian fractional quantum Hall family beyond
-Fibonacci~\cite{ReadRezayi1999}. At $k = 5$ the relevant braid generator has
-trace $2\cos(\pi/7)$, and the obstruction is that $\cos(\pi/7)$ satisfies a
-cubic rather than a quadratic. The route is the Chebyshev identity
+$\nu=k/(k+2)$ extend the non-Abelian fractional quantum Hall
+family~\cite{ReadRezayi1999}. The product $H_{\rm SU}T_{\rm RR5}$ has trace
+$\sqrt{2}\sin(\pi/14)$, whose square is $1-\cos(\pi/7)$.
+Finite order would make the trace, and hence $x=\cos(\pi/7)$, an algebraic
+integer. The factorization
 \[
-  T_7(x) + 1 \;=\; (x+1)\,\big(8x^3 - 4x^2 - 4x + 1\big)^2 ,
+  T_7(x)+1=(x+1)\big(8x^3-4x^2-4x+1\big)^2
 \]
-whose right-hand factor is the minimal polynomial of $2\cos(\pi/7)$ up to
-normalization. A finite-order element would force $2\cos(\pi/7)$ into a
-cyclotomic field of degree incompatible with that cubic, so the element has
-infinite order and the density witness follows.
+gives $2x^3-x^2-x=-1/4$ at this $x$. The left side would be integral,
+but a rational algebraic integer must be an integer. This proves
+infinite order (\lean{H\_SU\_mul\_T\_RR5\_infinite\_order}).
 
-\paragraph{Read--Rezayi at $k=7$.} At $k = 7$ the corresponding angle is
-$\pi/9$, and the obstruction is different in kind: it is not that the minimal
-polynomial has large degree but that the triple-angle identity
-$\cos(3\cdot \pi/9) = \cos(\pi/3) = 1/2$ pins $\cos(\pi/9)$ as a root of
-$4x^3 - 3x = 1/2$, which is irreducible over $\mathbb{Q}$. The same
-finite-order contradiction then applies.
+\paragraph{Read--Rezayi at $k=7$.} For $H_{\rm SU}T_{\rm RR7}$ the
+trace is $\sqrt{2}\sin(\pi/18)$, so finite order would again force
+$x=\cos(\pi/9)$ to be an algebraic integer. This time the triple-angle
+identity gives $4x^3-3x=1/2$, the rational noninteger contradiction
+(\lean{H\_SU\_mul\_T\_RR7\_infinite\_order}).
 
-Neither argument touches the recursion, the net, the
-Baker--Campbell--Hausdorff estimate or the Cartan step. Both produce a
-quantitative compilation theorem of the shape of Theorem~\ref{thm:cliffordt},
-unconditionally.
+The respective Pauli case analyses complete the density witnesses.
+For each alphabet and $0<\varepsilon\le\varepsilon_0$, the
+specialized compiler attains error at most $\varepsilon$ and satisfies
+the polylogarithmic recurrence bound. The finite-cover constructions
+also bound the length of the reduced output word by the recursion
+evaluated at that alphabet's maximum base word length. The proof index
+lists the declarations for both bounds.
 
-\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The two-qubit gate set
-realized on production trapped-ion hardware consists of single-qubit rotations
-together with the M\o lmer--S\o rensen entangling gate at a discrete grid of
-angles. Here the density witness is supplied not by a trace obstruction but by
-the Brylinski--Brylinski criterion~\cite{Brylinski2002}: a two-qubit gate $V$,
-together with all single-qubit gates, generates a dense subgroup of $\su 4$ if
-and only if $V$ is \emph{primitive}, meaning it maps some product state to an
-entangled one. The M\o lmer--S\o rensen gate at any angle that is not a
-multiple of $\pi$ is entangling by inspection of its action on
-$\lvert 00\rangle$, so the criterion applies directly and the alphabet-specific
-work reduces to exhibiting one such angle in the grid. The resulting
-compilation theorem holds for every even grid resolution $N > 0$ and is
-unconditional. This row is the strongest evidence that the interface is not
-tuned to number theory: the witness here is geometric, and it enters through
-the same predicate as the others.
+\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The alphabet
+combines single-qubit rotations with M\o lmer--S\o rensen gates on the
+angle grid $k\pi/N$. For positive even $N$, it contains $\mathrm{MS}(\pi/2)$,
+which maps $\lvert 00\rangle$ to an entangled state. The
+Brylinski--Brylinski theorem~\cite[Theorem~1.3]{Brylinski2002} calls such a
+gate \emph{imprimitive} and characterizes universality in the presence of
+all single-qubit gates.
+
+The formal density witness constructs the flows of all fifteen tensor-Pauli
+tangents in the closure of the actual alphabet. It obtains the six local
+directions from per-ion containment and the nine entangling directions
+by conjugation using the grid entangler and single-qubit Clifford gates.
+The tangents span $\mathfrak{su}(4)$. This establishes the density input
+to the compilation theorem for every positive even $N$.
 
 \paragraph{Clifford$+$CCZ at $\su 8$.} The three-qubit case admits two density
 mechanisms that are structurally different, and the contrast between them is
@@ -678,7 +666,8 @@ $\mathrm{sde}_2(\widehat U) \le T^{\mathrm{of}}(U)$.
 \end{theorem}
 
 The proof telescopes three facts, following the resource theory of
-Mukhopadhyay~\cite{Mukhopadhyay2024}: $\mathrm{sde}_2(\widehat{\mathbf 1}) = 0$;
+Mukhopadhyay~\cite[Theorem~3.8, Fact~3.9 and Lemma~3.16]{Mukhopadhyay2024}.
+Here $\mathrm{sde}_2(\widehat{\mathbf 1}) = 0$;
 $\mathrm{sde}_2$ does not increase under multiplication by a Clifford gate,
 because the channel representation of a Clifford is a signed permutation and
 permuting entries does not change the maximum; and $\mathrm{sde}_2$ increases
@@ -700,17 +689,13 @@ $\mathrm{sde}_2(\widehat U)$ readable as a smallest-denominator exponent in a
 dyadic ring rather than merely as the $2$-part of a rational denominator. The
 lower bound holds either way.
 
-Two scope statements. The bound is stated for unitaries exactly implementable
-in Clifford$+$CCZ, which is the domain on which $T^{\mathrm{of}}$ is meaningful.
-And the matching upper bound, that is minimality, is not addressed: establishing
-it requires the meet-in-the-middle search behind Mukhopadhyay's Conjecture~4.8,
-and the lower bound stands on its own without it.
-% TODO: Mukhopadhyay2024 (arXiv:2401.08950) is held as a project-authored
-% abstract summary, not as source text. The section, lemma and conjecture
-% numbers cited here follow the formalization's internal cross-references and
-% have not been checked against the paper itself. Acquire the primary source
-% before this bundle goes green. The same applies to KMM2013 (arXiv:1206.5236),
-% cited in Sec.~\ref{sec:length-rs} and likewise held only as a summary.
+The bound concerns exactly implementable Clifford$+$CCZ unitaries.
+Mukhopadhyay's Lemma~3.10 gives the dyadic entry statement, and
+Definition~3.13 and Fact~3.14 define the dyadic exponent and bound it under
+sums~\cite{Mukhopadhyay2024}. We prove a lower bound and leave the exact
+minimum open. Mukhopadhyay's Conjecture~4.8 concerns the size of the
+intermediate sets and retention of an optimal decomposition in the
+divide-and-select search~\cite{Mukhopadhyay2024}.
 
 \section{From existence to an algorithm}
 \label{sec:compiler}
@@ -730,17 +715,19 @@ taking a target and a precision to a word in the free group on the two
 generators $H$ and $T$. Its verification has the shape of a loop-correctness
 proof, and each part is a separate statement.
 
-\begin{lemma}[Termination at finite depth]
-\label{lem:compile-term}
-For every $U$ and $\varepsilon$, $\mathrm{cliffordTCompile}(U,\varepsilon)$
-equals the structural balanced-commutator recursion run to depth
-$n(\varepsilon) = \lceil \log_{3/2}\big(\log_4 (1/(K^2\varepsilon))\big)\rceil$.
-\end{lemma}
-
-Because the recursion is structural in the depth, termination is by
-construction rather than by a measure argument. Lemma~\ref{lem:compile-term} is
-what makes the remaining statements about a function rather than about a
-process.
+\begin{definition}[Compilation by finite recursion]
+\label{def:compile-recursion}
+The function $\mathrm{cliffordTCompile}(U,\varepsilon)$ is the
+balanced-commutator recursion applied to $U$ at the natural-valued depth
+$n(\varepsilon)$, defined for every real tolerance. For
+$0 < \varepsilon \le \varepsilon_0$ this depth is
+\[
+  n(\varepsilon) =
+  \left\lceil \log_{3/2}\!\big(\log_4 (1/(K^2\varepsilon))\big)\right\rceil_{\mathbb N}.
+\]
+The ceiling takes values in the natural numbers. Each recursive call
+decreases the depth, and depth zero uses the base finder.
+\end{definition}
 
 \begin{lemma}[Initialization]
 \label{lem:compile-base}
@@ -785,8 +772,9 @@ the constructive $\varepsilon_0$-cover's maximum word length, not the
 information-theoretically optimal constant, which is precisely the gap
 Sec.~\ref{sec:length} addresses. And the accompanying worked instantiation,
 which witnesses that the contract is not vacuous, is evaluated at $U = \mathbf 1$
-and $\varepsilon = \varepsilon_0$, that is at the identity target and the base
-precision, so it exercises the contract at recursion depth $0$ and not beyond.
+and $\varepsilon = \varepsilon_0$. The threshold gives
+$\log_4(1/(K^2\varepsilon_0)) = 3/2$, so this instance exercises the
+compiler at recursion depth $1$.
 
 Finally, the scope boundary. The compiler is a mathematical function inside the
 proof assistant, verified once for all inputs. Engineering it into a runnable,
@@ -809,31 +797,42 @@ section.
 every axis; the table is the comparison a compiler author actually needs.}
 \label{tab:mechanisms}
 \begin{ruledtabular}
-\begin{tabular}{llll}
-Mechanism & Exponent & Conditional on & Ancillas \\
-\colrule
-Balanced commutator & $3.97$ & nothing & none \\
-Ross--Selinger grid & $1$ & Hypothesis~\ref{hyp:residual} & none \\
-Kliuchnikov--Maslov--Mosca & $1$ & nothing & two \\
-\end{tabular}
+\input{tables/compilation_mechanisms.tex}
 \end{ruledtabular}
 \end{table}
 
-\figuredeferred{fig:d8-length-comparison}{a figure comparing the three verified
-length bounds as functions of precision, plotted directly from the theorem
-statements of this section, requires a plotting function in the project's
-canonical visualization module; the bounds themselves are proved and appear in
-Table~\ref{tab:mechanisms}}
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/d8_fig4_length_comparison.png}
+\caption{Three verified length bounds in their native precision and
+counting conventions. Left: the balanced-commutator recursion-level
+bound $1000[\ln(1/\varepsilon)]^{\log 5/\log(3/2)}$ in the
+$\ell^\infty$ operator-norm target regime $0<\varepsilon\leq 2^{-23}$.
+This curve bounds the recurrence-level length.
+Center: the increment $8k$ in the Ross--Selinger single-qubit
+word-length bound $N_3+8k$, conditional on grid success.
+The fixed overhead $N_3$ is symbolic and the first-column precision
+parameter is $\delta=(1+\sqrt 2)/\sqrt 2^{\,k}$.
+Right: the unconditional KMM three-qubit word-length bound
+$50400k+812$ with two ancillas, for the squared initialized-state
+$\ell^2$ distance bound $9(2/4^k+2\sqrt 2/2^k)$ up to global phase.
+Each panel uses its own axes. Heights across panels do not rank
+algorithms at a common error or cost.}
+\label{fig:d8-length-comparison}
+\end{figure*}
 
 \subsection{The grid route and its one hypothesis}
 \label{sec:length-rs}
 
-For $z$-rotations, Ross and Selinger~\cite{RossSelinger2016} achieve the
-optimal exponent by reducing approximate synthesis to a lattice problem over
-the ring $\mathbb Z[\omega]$, $\omega = e^{i\pi/4}$, and then solving an exact
-synthesis problem over $\mathbb Z[\omega][1/\sqrt 2]$ in the manner of
-Kliuchnikov, Maslov and Mosca~\cite{KMM2013}. We verify the efficiency layer of
-that route.
+For $z$-rotations, Ross and Selinger's Algorithm~7.6
+reduces approximate synthesis to a grid problem over
+$\mathbb Z[\omega]$, $\omega = e^{i\pi/4}$, followed by an exact synthesis
+problem~\cite{RossSelinger2016}. Kliuchnikov, Maslov and Mosca's
+Theorem~1 characterizes exact synthesis over
+$\mathbb Z[\omega][1/\sqrt 2]$, and their Algorithm~1 and Corollary~1
+give the synthesis procedure and its length bound~\cite{KMM2013}.
+Here we verify a word-length bound for the grid route when the finder
+returns a residual witness.
 
 \begin{theorem}[Grid-route length]
 \label{thm:rslength}
@@ -865,17 +864,18 @@ delivers the full conclusion of Theorem~\ref{thm:rslength} with
 $\lvert W\rvert \le N_3 + 8k$.
 \end{theorem}
 
-Theorem~\ref{thm:rssynth} isolates the gap exactly. What is known about
-Hypothesis~\ref{hyp:residual} is this. The source
-literature discharges it as a randomized algorithm under a prime-distribution
-assumption, which appears as Hypothesis~8.3 of Ref.~\cite{RossSelinger2016} and,
-in the same form, as Hypothesis~29 of Ref.~\cite{Selinger2015}. An
-unconditional discharge would require the existence of relative norms of
-prescribed form in growing windows, which is a short-interval statement in
-analytic number theory. Hypothesis~\ref{hyp:residual} is strictly weaker than
-the prime-distribution assumption, since it asks for a relative norm rather
-than a prime. It is open in the formalized-mathematics ecosystem, and in its
-primality form it is open in the literature.
+Theorem~\ref{thm:rssynth} uses the bounded witness in
+Hypothesis~\ref{hyp:residual} as its explicit completeness input.
+Ross and Selinger's Algorithm~7.6 instead enumerates grid candidates and
+tests residual norm equations. Their Hypothesis~8.3 models primality of
+integers produced by that algorithm. Without a factoring oracle,
+Proposition~8.8 gives an expected $T$-count equal to the second-optimal
+$T$-count up to an additive $O(\log\log(1/\varepsilon))$ under that model.
+Proposition~8.11 gives expected runtime polylogarithmic in
+$1/\varepsilon$~\cite{RossSelinger2016}. The theorem here uses a different input,
+a coordinate-bounded residual witness for the candidate in
+Hypothesis~\ref{hyp:residual}. Establishing that witness remains open in
+this development.
 
 Hypothesis~\ref{hyp:residual} appears in the statement of every theorem that
 consumes it. It is never an axiom, so the zero-project-local-axiom property of
@@ -892,11 +892,12 @@ number theory actually lives.
 
 Here $\dagger$ is the ring automorphism of $\mathbb Z[\omega]$ sending
 $\omega \mapsto \omega^{-1}$, an element $\xi$ of the fixed ring
-$\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is positive under both
-real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$, and $\xi$ is
-\emph{$\dagger$-decomposable} when it is a relative norm $t^{\dagger}t$ for some
-$t \in \mathbb Z[\omega]$. Solvability is thus decomposability, and the chain
-below reduces decomposability to a congruence condition on prime factors.
+$\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is nonnegative under
+both real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$. An element $\xi$ is \emph{$\dagger$-decomposable} when
+$\xi=u t^{\dagger}t$ for some $t\in\mathbb Z[\omega]$ and unit
+$u\in\mathbb Z[\sqrt 2]^\times$. This permits a unit factor in the norm
+equation. The next steps remove that factor when the signs permit it
+and reduce the decomposability question to prime-power cases.
 
 \begin{lemma}[Units]
 \label{lem:c2}
@@ -907,9 +908,8 @@ square.
 Lemma~\ref{lem:c2} is what makes the criterion below independent of the choice
 of associate: the unit group of $\mathbb Z[\sqrt 2]$ is generated by $-1$ and
 the fundamental unit $1+\sqrt 2$, whose norm is $-1$, so a doubly positive unit
-has even exponent on the fundamental unit and is therefore a square. Without
-it, decomposability could fail merely because a representative was multiplied by
-a unit.
+has even exponent on the fundamental unit and is therefore a square. This is
+the unit calculation in Ross and Selinger's Lemma~C.2~\cite{RossSelinger2016}.
 
 \begin{lemma}[Solvability criterion]
 \label{lem:c16}
@@ -917,10 +917,14 @@ $t^{\dagger}t = \xi$ is solvable in $\mathbb Z[\omega]$ if and only if $\xi$ is
 doubly positive and $\dagger$-decomposable.
 \end{lemma}
 
-Double positivity is necessary because a relative norm is a sum of squares under
-each real embedding. That it is, with decomposability, also sufficient is the
-content, and it is a biconditional rather than an implication, which is what
-lets the grid search reject a candidate rather than merely fail to accept it.
+A relative norm is nonnegative under both real embeddings. For a
+nonzero decomposable element with those signs, the unit factor is
+positive under both embeddings, so it is a square by Lemma~\ref{lem:c2}.
+Absorbing its square root into $t$ gives an exact solution; zero has
+the solution $t=0$. This is the integral-ring version of
+Ross and Selinger's Lemma~C.16, with decomposability as in their
+Definition~C.15. Their statements use the dyadic rings.
+Their Lemma~C.17 treats denominator clearing separately~\cite{RossSelinger2016}.
 
 \begin{lemma}[Multiplicativity]
 \label{lem:c19}
@@ -928,33 +932,36 @@ $\dagger$-decomposability is multiplicative across coprime factors: a product of
 coprime factors is $\dagger$-decomposable if and only if each factor is.
 \end{lemma}
 
-Lemma~\ref{lem:c19} is what turns the criterion into a decision procedure: it
-reduces a question about $\xi$ to independent questions about the prime powers
-in its factorization. The two lemmas that follow answer those questions.
+This is the coprime product step in Ross and Selinger's
+Lemma~C.19~\cite{RossSelinger2016}. Given a prime factorization, it reduces the
+question to the corresponding prime-power cases.
 
-\begin{lemma}[The obstruction at $p \equiv 7 \bmod 8$]
+\begin{lemma}[Prime-case construction and obstruction]
 \label{lem:c20}
-An element whose norm is a power of a prime $p \equiv 7 \pmod 8$ is not
-$\dagger$-decomposable when that power is odd, and for a prime dividing the
-norm squared there is a constructive decomposition in the remaining cases.
+Let $\xi$ be prime in $\mathbb Z[\sqrt 2]$. If its image in
+$\mathbb Z[\omega]$ divides $w^{\dagger}w$ but does not divide
+$w-w^{\dagger}$, the gcd of that image with $w$ supplies a
+$\dagger$-decomposition. Separately, if the norm of $\xi$ is
+$\pm p^m$ with $p>0$, $p\equiv 7\pmod 8$ and $m$ odd, then
+$\xi$ is not $\dagger$-decomposable.
 \end{lemma}
 
-The congruence class is not arbitrary: $2$ ramifies in $\mathbb Z[\sqrt 2]$ and
-the splitting of an odd prime $p$ is governed by whether $2$ is a quadratic
-residue modulo $p$, which holds exactly for $p \equiv \pm 1 \pmod 8$. The
-residue class $7 \bmod 8$ is the one where $p$ splits in $\mathbb Z[\sqrt 2]$
-but the resulting primes fail to be relative norms from $\mathbb Z[\omega]$, and
-a mod-$8$ count of the valuation is what detects it.
+The gcd implication formalizes a construction used in Ross and
+Selinger's Lemma~C.20. Their full criterion is stated for a prime
+$\xi$ and the rational prime below it. The formal obstruction instead
+takes the norm explicitly and uses the impossibility of a sum of
+two squares congruent to $7$ modulo $8$~\cite{RossSelinger2016}.
 
 \begin{lemma}[Even-power criterion]
 \label{lem:c21}
-For $\xi$ of norm $\pm p$ with $p \equiv 7 \pmod 8$, the power $\xi^m$ is
-$\dagger$-decomposable if and only if $m$ is even.
+For $\xi$ of norm $\pm p$ with $p>0$ and $p \equiv 7 \pmod 8$, the power
+$\xi^m$ is $\dagger$-decomposable if and only if $m$ is even.
 \end{lemma}
 
-Lemma~\ref{lem:c21} is again a biconditional, and it closes the chain: combined
-with Lemma~\ref{lem:c19} it decides decomposability for any $\xi$ whose
-factorization is known, which is what the grid finder needs at each candidate.
+Lemma~\ref{lem:c21} is the explicit-norm case of Ross and Selinger's
+Lemma~C.21. Their Lemma~C.23 takes a prime factorization as input to the
+general norm-solving procedure~\cite{RossSelinger2016}. The bounded grid
+finder checks a candidate residual directly.
 
 The greatest-common-divisor machinery these lemmas consume requires that
 $\mathbb Z[\omega] = \mathbb Z[\zeta_8]$ be a Euclidean domain, an instance
@@ -977,12 +984,9 @@ Lemma~\ref{lem:grid} is what makes the asymmetric case usable, in which a tiny
 $\varepsilon$-region is paired against a large disk and neither interval alone
 meets the naive bound while their product does.
 
-% TODO: RossSelinger2016 (arXiv:1403.2975) is not held by this project in any
-% form; the Appendix-C lemma numbering, the Hypothesis 8.3 reference and the
-% Lemma 4.4 attribution above are taken from the formalization's internal
-% cross-references and from secondary deep-research notes, not from the paper.
-% The mathematical statements are the formalization's own and are kernel-checked;
-% the attributions are not verified. Acquire the primary source before green.
+The product condition is Ross and Selinger's Lemma~4.4
+for the two intervals in the conjugate-embedding grid
+problem~\cite{RossSelinger2016}.
 
 \subsection{The ancilla route, unconditionally}
 \label{sec:length-kmm}
@@ -1011,7 +1015,7 @@ produces a state within squared $\ell^2$ distance
 of $(c^{-1}U(\alpha\lvert 0\rangle + \beta\lvert 1\rangle))\otimes\lvert 00\rangle$.
 \end{theorem}
 
-The error scale is $\varepsilon \sim 2^{-k}$ up to constants, so the length is
+The squared error bound decays as $O(2^{-k})$, so the length is
 $O(\log 1/\varepsilon)$ with exponent exactly $1$, unconditionally. The proof
 combines Lagrange's four-square theorem with a constructive dimension-four
 column lemma in the style of the exact-synthesis analysis of Giles and
@@ -1154,19 +1158,16 @@ Clifford$+$CCZ, which is where its right-hand side is defined. The
 ancilla-assisted synthesis (Theorem~\ref{thm:kmm}) is a state-level contract on
 ancilla-initialized inputs, not an operator-norm statement. And the worked
 instantiation accompanying Theorem~\ref{thm:compile} is evaluated at the
-identity target and the base precision, so it witnesses non-vacuity at
-recursion depth $0$.
+identity target and the base precision. It witnesses non-vacuity at
+recursion depth $1$.
 
 \subsection{What is outside}
 
-Three sources this paper cites are not held by the project in full text, and
-the affected attributions are marked in the manuscript source. They are the
-grid-synthesis paper of Ross and Selinger, the exact-synthesis paper of
-Kliuchnikov, Maslov and Mosca, and the resource-theory paper of Mukhopadhyay.
-In each case the mathematical statements formalized here are the formalization's
-own and are kernel-checked; what is unverified is the correspondence between
-those statements and the section, lemma and hypothesis numbers under which the
-sources state them.
+The ancilla-free grid theorem depends on the bounded residual witness in
+Hypothesis~\ref{hyp:residual}. Its norm-solvability results concern integral
+rings (Sec.~\ref{sec:length-appc}). The Toffoli lower bound in
+Theorem~\ref{thm:toffoli} applies to exact circuits, and the optimal cost
+and performance of heuristic searches lie beyond that bound.
 
 \section{Scope and outlook}
 \label{sec:scope}
@@ -1196,7 +1197,7 @@ is alphabet-specific from what is not, and lifting the latter to arbitrary
 dimension, the cost of verifying a new universal gate set reduces to a single
 density witness, and Sec.~\ref{sec:alphabets} shows that witnesses as different
 as an algebraic-integer obstruction, a Chebyshev factorization, a triple-angle
-identity and an entangling-gate criterion all pass through the same interface
+identity and a tensor-Pauli closure-flow construction all pass through the same interface
 unchanged. The $\su 8$ result suggests a further use: formal verification here
 is not only checking known compilation results but settling a structural
 question, namely whether a gate is doing work in a universality proof, that is
@@ -1227,19 +1228,27 @@ evaluation; every finite check in the corpus is kernel-checked
 Theorem~\ref{thm:substrate} is \lean{GenericSU2} and \lean{GenericSUd}
 \lean{SolovayKitaevHeadline}; Theorem~\ref{thm:accpt} is
 \lean{cliffordT\_accPt\_one\_unconditional}; Theorem~\ref{thm:cliffordt} is
-\lean{solovayKitaev\_dawson\_nielsen\_quantitative\_cliffordT\_strict\_constructive\_tight\_unconditional};
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_cliffordT\_strict\_constructive\_tight\_unconditional};
 Theorem~\ref{thm:mercator} is \lean{exp\_matrixMercatorLog};
 Theorem~\ref{thm:sud} is
-\lean{solovayKitaev\_dawson\_nielsen\_quantitative\_generic\_sud\_strict\_constructive\_tight};
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_generic\_sud\_strict\_constructive\_tight};
+the Read--Rezayi compilation declarations are
+\begin{quote}
+\footnotesize
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_rr5\_strict\_constructive\_tight}\par
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_rr7\_strict\_constructive\_tight}\par
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_readRezayiK5\_strict\_concrete\_constructive\_unconditional}\par
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_readRezayiK7\_strict\_concrete\_constructive\_unconditional}.
+\end{quote}
 Theorem~\ref{thm:literal} is \lean{cliffordCCZLiteral\_dense};
 Theorem~\ref{thm:notdense} is \lean{cliffordOnly\_not\_dense};
 Theorem~\ref{thm:toffoli} is \lean{channelSde2\_le\_toffoliCost}, with entry
 rationality \lean{channelRep\_interp\_isRat}; Theorem~\ref{thm:compile} is
-\lean{cliffordTCompile\_correct}, with Lemmas~\ref{lem:compile-term},
-\ref{lem:compile-base} and~\ref{lem:compile-inv} being
-\lean{cliffordTCompile\_eq\_recursion},
+\lean{cliffordTCompile\_correct}.
+Definition~\ref{def:compile-recursion} gives \lean{GenericSU2.cliffordTCompile}.
+Lemmas~\ref{lem:compile-base} and~\ref{lem:compile-inv} are
 \lean{cliffordTCompile\_recursion\_base} and
-\lean{cliffordTCompile\_loop\_invariant};
+\lean{cliffordTCompile\_loop\_invariant}.
 Theorem~\ref{thm:rslength} is \lean{rossSelinger\_log\_length\_explicit};
 Hypothesis~\ref{hyp:residual} enters through
 \lean{gridFindT\_isSome\_of\_residual} and Theorem~\ref{thm:rssynth} is
@@ -1266,16 +1275,7 @@ Mathlib at the pin used here.
 \caption{Components with use beyond this development.}
 \label{tab:reusable}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Component & Where it arises \\
-\colrule
-Banach-algebra logarithm, named radius & Theorem~\ref{thm:mercator} \\
-Euclidean domain instance for $\mathbb Z[\zeta_8]$ & Sec.~\ref{sec:length-appc} \\
-Euler $Z$--$X$--$Z$ decomposition of $\su 2$ & Sec.~\ref{sec:length-kmm} \\
-Dimension-generic BCH order-two cubic estimate & Sec.~\ref{sec:substrate} \\
-$\su d$ Cartan density-from-witness lemma & Sec.~\ref{sec:sud} \\
-Matrix-exponential local homeomorphism at $\mathbf 1$ & Sec.~\ref{sec:sud} \\
-\end{tabular}
+\input{tables/reusable_components.tex}
 \end{ruledtabular}
 \end{table}
 

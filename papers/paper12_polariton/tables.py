@@ -2,7 +2,7 @@
 
 Three tables — measured c_s values across groups (literature aggregate),
 Paris platform horizon parameters (Falque 2025 + computed), platform
-feasibility comparison (Falque-measured κ, projected lifetimes).
+cavity-loss comparison (measured and projected lifetimes).
 """
 
 from scripts.paper_tables import Col
@@ -34,14 +34,13 @@ TABLES = {
         ],
     },
     'table3_platform_comparison': {
-        'description': 'Platform feasibility comparison for polariton + BEC Hawking detection',
+        'description': 'Nominal scales and polariton cavity decay ratios',
         'rows': polariton_platform_comparison,
         'columns': [
             Col('platform',    'Platform',                align='l'),
             Col('T_H',         '$T_H$',                   align='c'),
             Col('tau',         r'$\tau_{\text{pol}}$',    align='c'),
-            Col('kappa_tau',   r'$\kappa\tau$',           align='c'),
-            Col('feasibility', 'Feasibility',             align='l'),
+            Col('decay_ratio', r'$\Gamma_{\rm pol}/\kappa$', align='c'),
         ],
     },
 }

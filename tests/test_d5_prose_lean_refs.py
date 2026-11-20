@@ -399,3 +399,179 @@ class TestTheoremNameEmbeddedCitations:
         assert any(x.name.startswith("no_inferable_author:") for x in r.details), (
             "a declaration skipped for having no inferable author left no record — "
             "silence here reads as coverage")
+
+
+def _generated_fixture(tmp_path, monkeypatch, spec, files, draft=""):
+    _index(monkeypatch)
+    paper = _bundle(tmp_path, monkeypatch, "D1", draft) / "D1"
+    (paper / "tables.py").write_text(spec)
+    tables = paper / "tables"
+    tables.mkdir()
+    for name, content in files.items():
+        (tables / name).write_text(content)
+    return paper
+
+
+class TestRegisteredTableCoverage:
+    def test_source_scope_uses_registered_outputs(self, tmp_path, monkeypatch):
+        _generated_fixture(
+            tmp_path, monkeypatch, "TABLES = {'witness': {}}",
+            {"witness.tex": "\\lean{ghost_registered_theorem}\n",
+             "orphan.tex": "\\lean{ghost_orphan_theorem}\n"},
+            r"\newcommand{\lean}[1]{\texttt{#1}}",
+        )
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda *args, **kwargs: "ABSENT")
+        result = plr.check_prose_theorem_reference_coverage()
+        detail = {d.name: d.message for d in result.details}
+        assert not result.passed
+        assert "papers/D1/tables/witness.tex:1" in detail[
+            "unresolved:D1:ghost_registered_theorem"]
+        assert "unresolved:D1:ghost_orphan_theorem" not in detail
+
+    def test_bad_ownership_fails_the_checker(self, tmp_path, monkeypatch):
+        import pytest
+        from render_paper_tables import spec_output_paths
+
+        paper = _generated_fixture(
+            tmp_path, monkeypatch, "TABLES = {'witness': {}}", {},
+        )
+        spec = paper / "tables.py"
+        for invalid in (
+            "raise RuntimeError('broken spec')",
+            "TABLES = ['bad shape']",
+            "TABLES = {'witness': {}}; SCALARS = {'witness': {}}",
+            "TABLES = {'../witness': {}}",
+            "TABLES = {'witness': {}}",
+        ):
+            spec.write_text(invalid)
+            # Prevent same-size same-tick spec edits from reusing a fixture .pyc.
+            for cached in paper.glob("__pycache__/*"):
+                cached.unlink()
+            result = plr.check_prose_theorem_reference_coverage()
+            assert not result.passed, invalid
+            assert any(d.name.startswith("table_source:D1:") and not d.passed
+                       for d in result.details), invalid
+        path = tmp_path / "outside.tex"
+        path.write_text("escaped")
+        (paper / "tables/witness.tex").symlink_to(path)
+        with pytest.raises(ValueError, match="symlink|escapes"):
+            spec_output_paths(spec, strict=True)
+
+    def test_spec_symlink_is_rejected_before_execution(self, tmp_path, monkeypatch):
+        paper = _generated_fixture(tmp_path, monkeypatch, "", {})
+        spec = paper / "tables.py"
+        spec.unlink()
+        target = tmp_path / "outside.py"
+        marker = tmp_path / "executed"
+        target.write_text(f"from pathlib import Path\nPath({str(marker)!r}).touch()\n")
+        spec.symlink_to(target)
+        result = plr.check_prose_theorem_reference_coverage()
+        assert not result.passed
+        assert not marker.exists()
+
+
+def test_retained_recorder_distinguishes_active_orphan_and_path_escape(tmp_path):
+    import pytest
+    from compile_bundle_pdf import recorded_table_inputs
+
+    paper = tmp_path / "papers" / "D9"
+    tables = paper / "tables"
+    tables.mkdir(parents=True)
+    spec = paper / "tables.py"
+    spec.write_text("TABLES = {'owned': {}}")
+    for name in ("owned", "orphan"):
+        (tables / f"{name}.tex").write_text("")
+    draft = paper / "paper_draft.tex"
+    draft.write_text("")
+    recorder = tmp_path / "paper_draft.fls"
+    header = f"PWD {paper}\nINPUT ./paper_draft.tex\nINPUT /usr/share/texmf/article.cls\n"
+    recorder.write_text(header + "INPUT ./tables/owned.tex\nINPUT tables/owned.tex\n")
+    assert recorded_table_inputs(paper, recorder) == ("tables/owned.tex",)
+    recorder.write_text(header + "INPUT tables/orphan.tex\n")
+    with pytest.raises(ValueError, match="unowned"):
+        recorded_table_inputs(paper, recorder)
+
+    outside = tmp_path / "outside.tex"
+    outside.write_text("")
+    (tables / "owned.tex").unlink()
+    (tables / "owned.tex").symlink_to(outside)
+    recorder.write_text(header + "INPUT ./tables/owned.tex\n")
+    with pytest.raises(ValueError, match="escape"):
+        recorded_table_inputs(paper, recorder)
+    (tables / "owned.tex").unlink()
+    (tables / "owned.tex").write_text("")
+
+    other = paper.parent / "D8" / "tables"
+    other.mkdir(parents=True)
+    (other / "other.tex").write_text("")
+    for raw in ("../D8/tables/other.tex", str(other / "other.tex")):
+        recorder.write_text(header + f"INPUT {raw}\n")
+        with pytest.raises(ValueError, match="escape"):
+            recorded_table_inputs(paper, recorder)
+    recorder.write_text(f"PWD {other}\nINPUT ./paper_draft.tex\n")
+    with pytest.raises(ValueError, match="working directory"):
+        recorded_table_inputs(paper, recorder)
+    recorder.unlink()
+    with pytest.raises(ValueError, match="recorder"):
+        recorded_table_inputs(paper, recorder)
+
+
+def test_live_d9_generated_reference_in_active_else_is_caught():
+    """Seed the renderer-owned artifact with the original rendered R2 false pass."""
+    import pytest
+    from seed_journal import outstanding, seeded_mutation
+
+    draft = _H.PAPERS_DIR / "D9" / "paper_draft.tex"
+    table = draft.parent / "tables" / "exact.tex"
+    if not table.exists():
+        pytest.skip("D9 canonical generated table is absent")
+    original_input = r"\input{tables/exact.tex}"
+    original_ref = r"\lean{diamondDist\_dephasing\_eq}"
+    assert draft.read_text().count(original_input) == table.read_text().count(original_ref) == 1
+    old_journal = outstanding(include_live=True)
+    original = {path: (path.read_bytes(), path.stat().st_mtime_ns)
+                for path in (draft, table)}
+
+    def adverse_draft(source):
+        wrapped = r"\iffalse\ifthenelse{1=1}{True}{False}\else" + original_input + r"\fi"
+        return source.replace(r"\usepackage{graphicx}", "\\usepackage{graphicx}\n\\usepackage{ifthen}").replace(
+            original_input, wrapped)
+
+    with seeded_mutation(draft, adverse_draft, reason="D9 active table in else branch"):
+        with seeded_mutation(
+            table, lambda source: source.replace(
+                original_ref, r"\lean{d9\_registered\_table\_missing\_probe}"),
+            reason="D9 generated theorem-reference diagnostic",
+        ):
+            result = plr.check_prose_theorem_reference_coverage()
+            assert result.measured and not result.passed
+            [detail] = [d for d in result.details
+                        if d.name == "unresolved:D9:d9_registered_table_missing_probe"]
+            assert not detail.passed
+            assert "papers/D9/tables/exact.tex:9" in detail.message
+    assert outstanding(include_live=True) == old_journal
+    assert all((path.read_bytes(), path.stat().st_mtime_ns) == before
+               for path, before in original.items())
+
+
+def test_generated_reference_after_literal_percent(tmp_path, monkeypatch):
+    _generated_fixture(
+        tmp_path, monkeypatch, "TABLES = {'witness': {}}",
+        {"witness.tex": (
+            r"\verb|%| \lean{ghost_after_percent}" "\n"
+            r"\verb*%payload% \lean{ghost_after_delimiter}" "\n"
+            r"\% \lean{ghost_after_escaped_percent}" "\n"
+            r"% \verb|%| \lean{ghost_in_real_comment}" "\n"
+            r"\\verb|%| \lean{ghost_after_escaped_command}" "\n"
+        )},
+        r"\newcommand{\lean}[1]{\texttt{#1}}",
+    )
+    monkeypatch.setattr(plr, "_resolve_prose_ref", lambda *args, **kwargs: "ABSENT")
+    result = plr.check_prose_theorem_reference_coverage()
+    findings = {d.name: d.message for d in result.details}
+    for line, name in enumerate((
+        "ghost_after_percent", "ghost_after_delimiter", "ghost_after_escaped_percent",
+    ), 1):
+        assert f"papers/D1/tables/witness.tex:{line}" in findings[f"unresolved:D1:{name}"]
+    assert "unresolved:D1:ghost_in_real_comment" not in findings
+    assert "unresolved:D1:ghost_after_escaped_command" not in findings
