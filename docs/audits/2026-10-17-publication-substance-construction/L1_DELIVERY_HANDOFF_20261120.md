@@ -2,6 +2,8 @@
 
 20 November 2026 · ROOT owns publication delivery. Executor owns the commissioned physical construction. The operator asked to complete the L1 accounting before starting the already selected L3 lane.
 
+The [follow-up sanity check](L1_READINESS_SANITY_CHECK.md) expands the registered-worktree inventory and identifies original-model Lean to reuse from the primary recovery bundle and wt1.
+
 ## Delivery and custody
 
 | Where | What is retained | Disposition |
