@@ -1,0 +1,940 @@
+{
+  "schema": "H100-whole-author-nonrecursive-seals/v1",
+  "task": "publication-hook-H99-complete-current-admission-repair-author-20261022-r100",
+  "at": "2026-10-22T00:32:34.034428+00:00",
+  "status": "AUTHOR_UNGRANTED_SOURCE_DATA_COMPLETE_PENDING_WHOLE_INDEPENDENT_REVIEW",
+  "artifacts_before_terminal": {
+    "FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628078060881390,
+      "size": 1860,
+      "sha256": "31064b6f69b35fac6ac92d723ff04bd3c435617afb0c89fc0bd13e03e18e534e"
+    },
+    "MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628078060978141,
+      "size": 935,
+      "sha256": "a476eb3eeb013b2622aeed5b9676cb38536dd86e34d2222696a64936ce8aece0"
+    },
+    "CONSTRUCTION.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628289803594620,
+      "size": 13467,
+      "sha256": "db06fd18c3db917cb4e77f4b56605e5bdcfa8178f4a9c2b691812be2bf5eb69c"
+    },
+    "REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792629030300132133,
+      "size": 17359,
+      "sha256": "b67f2d85e96ae745afcfd77f6e959e04e7c5bca71d8a08ef28c4d9684ff1d784"
+    },
+    "admission-construction.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628854838608177,
+      "size": 14408,
+      "sha256": "8b3bde1ca24a93af0d8b56b4b29823f80782434d56ad67b8f1d6a564bbca9aec"
+    },
+    "commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792629154023107707,
+      "size": 3126,
+      "sha256": "7efc1145c83f6dbf3d628df24a4958229050c201ff4cc9cdada0037b45046461"
+    },
+    "driver.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628391523630870,
+      "size": 27857,
+      "sha256": "8e27ad2838765f0bdef3e7939c91c9ed88dbb304e4783e92979202fd899ee1c8"
+    },
+    "evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792629154022780330,
+      "size": 4310717,
+      "sha256": "fccc68eece3bf37612acfc938d381ec2cd4ab4b852c2e5b02595c8ebafcc2f5a"
+    },
+    "execution-config-DATA.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628478811299087,
+      "size": 4871819,
+      "sha256": "c6ff789f33cfacc6b38344db63bd6706990e279ad5fb4ee4c70e167335708c11"
+    },
+    "inert-admission-cases.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628735645732131,
+      "size": 14080005,
+      "sha256": "63b8243554d86bff594004b9da37ff3b7050761eb6fdd6c11bb465d352390920"
+    }
+  },
+  "external_input_pins": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-08-01-publication-readiness/REMEDIATION_PLAN.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792296766718391102,
+      "size": 19936,
+      "sha256": "8a99167d6ca4ab98195f539a7ddb8ca66fbe2ae4ed8dbabae119384b932204e6"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792618752405959488,
+      "size": 313183,
+      "sha256": "5e284054c506e0dbd39daf6b4dcd9585070d2a0de6b017ec353862e2699a24b2"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1788987408810068117,
+      "size": 3444,
+      "sha256": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1786988562172978510,
+      "size": 24018,
+      "sha256": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1786981108105464721,
+      "size": 56206,
+      "sha256": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792571356891313043,
+      "size": 92920,
+      "sha256": "8b783a2a2698dd2e9e5808f992fbb2a8115a89454d34a4926c78843d4b21a164"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1788987408810915584,
+      "size": 2868,
+      "sha256": "bbb5c52cff5f8269b6007e6faa170ad74d0fae790a71705abc0c4925d152de29"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1788987408812307265,
+      "size": 4457,
+      "sha256": "6276f6e4912bc46d63fa7b1e7bba102882ee68e08e4157572aa581ead6c1ba46"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H96-whole-complete-source-review-20261021-r97.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792615477008165236,
+      "size": 36839,
+      "sha256": "992361ae15c218b5f4cb38fd0bf27aebfdcd083fb76548cf82de4337501861a5"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H97-whole-complete-source-lead-acceptance-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792616159945894361,
+      "size": 1530,
+      "sha256": "5f7061fa4d2531f6b2807cc0c4ff66d1a718d61af2bddf18516c22dbafa16254"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H96-complete-cleanup-source-author-lead-intake-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615471303046987,
+      "size": 111398,
+      "sha256": "6524a3ebddd6994a81615506c3278ea2d1131a27df350141cf30a791108552dd"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H86-full-failed-runtime-lead-intake-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792602363797328307,
+      "size": 3323,
+      "sha256": "fadf84d89aff28e8b8c9726557a748a4000e1f3500420505fc9fb9e1f3e36526"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-notebook-r102-map-r37-curation-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792618752407407909,
+      "size": 2716,
+      "sha256": "add8b6aad17fd21a3bda288139429cd83f6c7d17f616d071dcd684282c22faa7"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792610786330066130,
+      "size": 1722,
+      "sha256": "bbee67006265e77b7cbd77c9f46f4f83442e4327a768f7a78d10899612e27d1f"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792610786330147880,
+      "size": 1161,
+      "sha256": "201818b3e8aa6c877e300cc2baabf39cbdb490d0a721372abb27844ff94cc37e"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/CONSTRUCTION.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612721805491504,
+      "size": 37941,
+      "sha256": "e2ab7f5e03cb50ba816ee079cb6d2b70969d2de6902e34aebbf123faab5723d7"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612878900192589,
+      "size": 15011,
+      "sha256": "15095b4b955f64b5c2e01d9ff3ead5236917609dcef30fec4c1ef8fcad8b1f9c"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612878900989842,
+      "size": 117914,
+      "sha256": "4fe50519a2f51e8db35a73190c9ef304a3eae3ac2ef09e35c7de24663db1df83"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/runtime.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612426267542025,
+      "size": 15588,
+      "sha256": "d68c59c174a30a2367b842d723f505f83bbf9fba1d369c245d45a2617e861ecd"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612878915751094,
+      "size": 7297687,
+      "sha256": "3a0aa939dbd2f64e5f6e26b95c89a592110253c5c4f1ee7b1758cfd0bb637034"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/source-images.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612722836895590,
+      "size": 3711492,
+      "sha256": "85bc5843a6d92892a9a3265940dd38f4f16afcc0cca94aea719eb5a9e36cdd7d"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612878979116823,
+      "size": 14113,
+      "sha256": "7eba894a7d76c739e3b9e57815290059d992e97a734cab0fb678b22366af51a9"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H93-complete-fixture-source-author-20261021-r94/FINAL.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792612922599923605,
+      "size": 1963,
+      "sha256": "3d965896acf2e059eec65fa80ac0aded68739f1a1f7694ef606fde7c31387ef1"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615018668512063,
+      "size": 98234,
+      "sha256": "bcda04ecd1d78ab6799913f1d9f4081e05e6dd6d85f9edf2b365431d2af483d0"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/docs/architecture/VALIDATION_GATE_TOPOLOGY.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615018668812605,
+      "size": 71299,
+      "sha256": "d03d5effe0abe61d17c5547a55ebb172501a787a5f6dc9de76f90ad77c376ac0"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/docs/superpowers/plans/2026-10-19-precommit-notebook-worktree-routing.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615018669116564,
+      "size": 91641,
+      "sha256": "6b3d6d76becaac18da9313e28d5c31036ca331c620041f67034edfd4c6fce2d0"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/docs/superpowers/specs/2026-10-19-precommit-notebook-worktree-routing-design.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615018669631399,
+      "size": 196334,
+      "sha256": "fc7a99a6537e3c9aa837b75a63b4b175e2bb1d8e6a6d43cb8b9994bfb1a9433b"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/papers/AutomatedReviews/2026-10-21-hook-native-fixture-premises/infra.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615018669875900,
+      "size": 18535,
+      "sha256": "09ce927229c5f129c839fb9a41e0e04a53cc2920b4ab1c65690f63d5dd00e633"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/tests/test_pre_commit_notebooks.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614803548727899,
+      "size": 494133,
+      "sha256": "7dce20a35e963a98ebc9dbbac9b5ee527655a41f5cbd9b622d078b8f7a10c364"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H93-complete-fixture-source-author-20261021-r94.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792610747821607597,
+      "size": 41004,
+      "sha256": "5966aef4ad941a10323ef9fc29bc25aabe207ccb065abfa471912d046c63234c"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H94-complete-source-author-lead-intake-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792613078897019586,
+      "size": 2684,
+      "sha256": "9ec357fc171bef718fa57c48a64cdb3ddc10eec142fe277aca2a44d526bc3f01"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H93-whole-design-lead-acceptance-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792610747564200934,
+      "size": 865,
+      "sha256": "912de4b9631bf6c2fe79c1c89ba891667934e25489329767423b039a1ac8f3f4"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/AGENTS.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792443568212559511,
+      "size": 3444,
+      "sha256": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/CLAUDE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792443568212769553,
+      "size": 24018,
+      "sha256": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/docs/WAVE_EXECUTION_PIPELINE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792443568218236955,
+      "size": 56206,
+      "sha256": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/plugins/skeft-qa/skills/architecture-change/SKILL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1786990977973621326,
+      "size": 7977,
+      "sha256": "d57e5bde2ac84c34672adce940ab41376f7574c1531522163db4b171db5e2d15"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/CONSTRUCTION.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615018670019692,
+      "size": 41758,
+      "sha256": "b24e3beeb662cf52ac2857b00ad7b6d2ed16c5f30c7c5d06e6897a53c1bb3404"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/FINAL.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615396293069074,
+      "size": 1848,
+      "sha256": "c80c69ee19fcc351cb8351be2005893ae49545dad938072b895573a707ab92cf"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614519180840855,
+      "size": 1443,
+      "sha256": "113215471b7088204b61d1aaefd6727a113a74cadedf4ad163e34c0b5003d724"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614519180922606,
+      "size": 699,
+      "sha256": "69727f1d48a03cf068cfcce845f8f2192f91f96f28fa6bdf907f09b82e5ea355"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615370341427277,
+      "size": 14972,
+      "sha256": "6f5dd15133f709546024f9090e5a9df7c5738376d6f0ebb7d79e9ae6da044b07"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615370341961236,
+      "size": 67514,
+      "sha256": "34f93034007a38c6798d1b9b89dcd858c904c47617feb7dc9eaa8db16e5cc77a"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/development-baseline.stderr": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614561406594699,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/development-baseline.stdout": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614650352544055,
+      "size": 190,
+      "sha256": "86333dc6dab216276b833b432330586b30fc1814d0c47535d84d154e67843bfb"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/development-baseline.xml": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614650329254117,
+      "size": 61906780,
+      "sha256": "d9391708311f42b60a1f0e81c78ab5ae5af1ce970b84cb47bc49ade1e0f0e770"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/development-current.stderr": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614803826559992,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/development-current.stdout": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614893402336847,
+      "size": 191,
+      "sha256": "d5db9770548bae9927b04632434009ff85f24e20c4d999c8ee8fa29d34a81591"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/development-current.xml": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614893377538030,
+      "size": 62138069,
+      "sha256": "a4aaa9193052ad6e314c8038b179fc22c4e2f8fb93e9d4ddc28a1b9474bf69e4"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615370353951769,
+      "size": 6170628,
+      "sha256": "7a3e2f1fa67416014b123d7096e40ce73216ddd59f75ba7aa0428a69ddea573e"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615370416430273,
+      "size": 10085,
+      "sha256": "8ce538285b470891965f924fe4c00c8345a4045d1e337b8eccd4f939596f5f12"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/runtime.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614893432591472,
+      "size": 6110,
+      "sha256": "a98884ac2a77fafceb4c55430bc84bab01d1e8d3cc78b7d4f6b11cd6dfea2def"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H95-complete-cleanup-source-repair-author-20261021-r96/source-images.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615108397048966,
+      "size": 3851533,
+      "sha256": "a298cbca1b8c6202cf413b80127bf131c8b84b250bae06098ee0466ca56184cb"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H94-whole-complete-source-evidence-review-20261021-r95.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792613113904439981,
+      "size": 21984,
+      "sha256": "7b39231875b92fad8c90170fd9590a56603a87862ecbfb6e9705d454e81d774c"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H95-complete-cleanup-source-repair-author-20261021-r96.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792614488432734604,
+      "size": 51058,
+      "sha256": "44ce4f48af18956bc530e7276959eaa79e10fdd00c09ca9ea78529c5c3c8d23d"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-notebook-r101-map-r36-curation-20261021-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792614488025425796,
+      "size": 1977,
+      "sha256": "1d12115c137a02854ca6ee99f872c582d565641fba647e7dd24ba5cc2e1248e3"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/PRE_DECISIONS.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1786461310562734093,
+      "size": 15799,
+      "sha256": "3ef9c74f50f1e5985596c12c8ad3fb53ac551e64ef24ba4e7a8df6cd4a160282"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792602132212788174,
+      "size": 11677,
+      "sha256": "2782814cb2cbb67a87adedda5a700370669cae8e35d6441e6569949ede91e416"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/driver.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792600728834068130,
+      "size": 8803,
+      "sha256": "703bbdaffb0244383cbb34b08ecdb25f66905b5907448cf44891126dcdf1e6d5"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/runtime.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792601741505612084,
+      "size": 423272,
+      "sha256": "640065d0c950835df3c97402848d701fe27bebf43b912957b303ae52cebb7f4f"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792601930576622309,
+      "size": 14443598,
+      "sha256": "c222c7bed399c570fe2bbaa0461fbc0745d05327ed634d8f9c783aade24cf1e4"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792602132286770626,
+      "size": 3037,
+      "sha256": "67b5d81c997e4890e7443d934fa3332e0119106a9ea6e35c20628d90ba8786e3"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/FINAL.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792602132681251441,
+      "size": 1736,
+      "sha256": "bff4ee8a3c0c2a6d397a10e93708bbcbcb7351806a1e32d978b79f08bebb3f9d"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/scripts/pre-commit-notebooks.sh": {
+      "kind": "file",
+      "mode": 33261,
+      "mtime_ns": 1792587809922420211,
+      "size": 138149,
+      "sha256": "6fcdc28717e7b61aa816c0a8b5687a0a9ebee9ed92209e3400e6325bbb5d388b"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/uv.lock": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792443569164008142,
+      "size": 311549,
+      "sha256": "32560afb000b4ee296c0621083a9337afac1a7d2bc4482b8eba7603358373cc4"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615557189388022,
+      "size": 1632,
+      "sha256": "01ec769193bd53376e322675afceacf505da4e63ad755dd12438c25d0c38e6d2"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615557189530898,
+      "size": 1002,
+      "sha256": "e1d15505b51cad33958443815de41b14189c04d911eeed5a58c86d809945a25e"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792616004870668888,
+      "size": 26278,
+      "sha256": "42c0668ee7fe5ae3e66d68e76c731a06a03a71332dcc8b07b24e112ad2a598f7"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792616004871313931,
+      "size": 5384,
+      "sha256": "aee01602e87dfb33ce8d960ecba7a7b3e1a196c7fb56e35cfc99acddea7a802d"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792615861047011018,
+      "size": 908248,
+      "sha256": "29bdfe118d95ffee2036086ca9868a930c7fbf2b3b8e3d75ba68872122148ea9"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792616053061032709,
+      "size": 38106,
+      "sha256": "8786b25e7f11312a46c51edaace45a1684469e355ef6d3c0d1598c37da476f10"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H96-whole-complete-source-evidence-review-20261021-r97/FINAL.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792616076197149733,
+      "size": 2854,
+      "sha256": "eda9c5b93651dfc3da46378c46409c0ec6bf72925f737ca3f1c538d89ad65d50"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792600466718083373,
+      "size": 1407,
+      "sha256": "55e87e2752d298959f2f24275e80abae4b8a84f8cb513f15cdc79cf1ab252281"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792600479407707175,
+      "size": 1223,
+      "sha256": "2bef8e14876274bb3a0c8e2206295f043845c9540d4e26da2b37971b1094168d"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792602095507858194,
+      "size": 427922,
+      "sha256": "67ccda6bc5e733ac9a5a355cd8fd77e42528492b97d75ca55de48f6625b03181"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/failures.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792602095508049611,
+      "size": 22441,
+      "sha256": "e5749893ec3b6c01ef092c1b5ccd30f1990af9ff485603340cefd04fe2a19198"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/fixture-custody.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792601993493630454,
+      "size": 72340417,
+      "sha256": "b42ed27adaefce40b42f525cacc05d946ab9f25f81ca1d80c8d18af2bbefeec0"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/full.stderr": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792600750580027767,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/full.stdout": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792601732128416498,
+      "size": 9540450,
+      "sha256": "af8d77c4e3012f9b3d83e4e01540ad1d859744a9b3aae47c4aca816d91f27ee7"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/full.xml": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792601731940008543,
+      "size": 220507,
+      "sha256": "b3f59c429650233540c03abbc9ad37164c9f63dff663ea51023bb1fc6b0ced3a"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/imports.stderr": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792600740563771851,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/imports.stdout": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792600741800723880,
+      "size": 2245,
+      "sha256": "b38aed93365f0e749588ffd7809983a64ff3182b9f8ef053e220d69ed1185903"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H84-current-full-postreview-runtime-qualification-20261021-r86/original-IDs.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792601741503656868,
+      "size": 295033,
+      "sha256": "35b2cba356f3f56d23dec50b65f743a4b9e43ffb6655dfa72d9a9e511fb9315d"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/CLAUDE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1787002240434142371,
+      "size": 8994,
+      "sha256": "a258070cbf664eb582b4cb44817714eea421786a26fbe256e559dbe93de7f164"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/architecture/README.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1788987408811254295,
+      "size": 15362,
+      "sha256": "ddecc555614aac8bcde90f68cdb32233a3cbf128c3768bf91210a5aed208de14"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H97-current-full-qualification-driver-author-20261021-r98.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792626141716792632,
+      "size": 54291,
+      "sha256": "12b1893ca2194b1215a68b5c76ab997efcb2ffb4d58fe2118f1b0a01af2c782c"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/src/__init__.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792443569115587828,
+      "size": 5250,
+      "sha256": "1e64cc1fcba908d9dccc468d9b49c069bb43615c666eb92914e13536ea1f95f1"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/pytest/__init__.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1777653324852499609,
+      "size": 5582,
+      "sha256": "7be7a1e2218dc59a19d1ad131e4abe21172a295087efc72898938248782e8766"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/nbconvert/__init__.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1777653324820545330,
+      "size": 1364,
+      "sha256": "da3efd975b8592ec9e908827ea582eb97602af57f1b0d843269df910183b4383"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/nbclient/__init__.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1774317439253122629,
+      "size": 164,
+      "sha256": "90e928c78ae2103d36dd5eb68810c930a6c8d55707dcb33a54445a5fd97abfa7"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/nbformat/__init__.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1774317439267518475,
+      "size": 6314,
+      "sha256": "6c9b408a8eec0cdf065c84c022214a693e8b7ab9853f1fab5b0b6a08bc5e29d9"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/jupyter_client/__init__.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1772594354048927264,
+      "size": 540,
+      "sha256": "1b2722f7e4165154e9d9b62f465a3161c2007c467f2599271b27f3ad346b013b"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python": {
+      "kind": "symlink",
+      "mode": 41453,
+      "mtime_ns": 1788980929201605002,
+      "size": 86,
+      "target": "/Users/johnroehm/.local/share/uv/python/cpython-3.14-macos-aarch64-none/bin/python3.14"
+    },
+    "/Users/johnroehm/.local/share/uv/python/cpython-3.14.8-macos-aarch64-none/bin/python3.14": {
+      "kind": "file",
+      "mode": 33261,
+      "mtime_ns": 1791153619379359176,
+      "size": 18952864,
+      "sha256": "02f23beea109ccb3ad0f4b211bbea0810b912a94840de34374ad4a8c04f32222"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/pyproject.toml": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792443569094521435,
+      "size": 5557,
+      "sha256": "2e6289d8d006805bdfccbf7fdaad94148806ffcb8ea6bb3f35820a0f9cd7ae39"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H79-current-full-runtime-qualification-20261021-r81/full.xml": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792592783917580574,
+      "size": 4055452,
+      "sha256": "19e07f1f85df4bb12e7d2155084f59feaaa717e72507c3b80d0e82329c0e7662"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/CONSTRUCTION.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792626902141031827,
+      "size": 16237,
+      "sha256": "836f0222b0904300129638df286dde30b54906650395c85068c6f27b43eee4fd"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/FINAL.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627052073824731,
+      "size": 2058,
+      "sha256": "fb2678600c82e646631ff1d6d09d691ea11d8db98b4dd6226c2f80031e773c29"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792626247113568465,
+      "size": 1854,
+      "sha256": "661332e2c0781fb51deed0f22bcb73caf2715d8799e4a1960d599bb250268974"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792626247113692840,
+      "size": 781,
+      "sha256": "ecf3c8b62d7672267c5685400a897d8e5d5a7e54fe846271dfa853a046d677b3"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792626902161952626,
+      "size": 11004,
+      "sha256": "a22c85a915892d22cf2aaaf5b38eb32112ca839fa5209eb355dcb7257726b896"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627039081356481,
+      "size": 3881,
+      "sha256": "49efd73f14064b816c0de46dbfb2aa4874354657e47c74377c03a8d74463d9ec"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/driver.py": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792626732762723085,
+      "size": 19657,
+      "sha256": "6901b5bed6e5820d6603ce1e852be25049ff74a6efea084b7b262cc059761435"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627039081020563,
+      "size": 5062658,
+      "sha256": "552fb7627cb4cf621f0229aaf8182130310a48906df68f1048d3e23c6fa365aa"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/execution-config-DATA.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792626723046193707,
+      "size": 4846435,
+      "sha256": "596832c47dbedee9366eee0cbb946bd46ccbae0440e3b9ded7639f371ecb0379"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H97-current-full-qualification-driver-author-20261021-r98/manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627039086701837,
+      "size": 43015,
+      "sha256": "78c70b027120ca21c931d8822551d29406c1df93ca87244670428574e71ccd3e"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/FIRST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627314030892917,
+      "size": 2562,
+      "sha256": "e759e28e69876fd46b814c975039bb1eea5ff61c766f696c8052e74a67b8de1c"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/MODEL.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627314031011834,
+      "size": 1545,
+      "sha256": "8a783ef96cb37bd96799ea321476ee266586089b0de3bfabd96a6aea891a2574"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/REPORT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627847622507747,
+      "size": 28228,
+      "sha256": "a8930c854de02ea53ec8ca68cc78d9b77e49cb20f7b35b75fa34128ae63ef8e0"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/commands.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627945734486540,
+      "size": 7573,
+      "sha256": "9eb395ca73c9db43b53b8e25803a6f0371e943fdd8a303dcf5a6be67954e9a5e"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/evidence.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627896087198141,
+      "size": 11050841,
+      "sha256": "5a9c207f6cef029aa4144761f728e88accff2a180a079aa3b208909aeebae969"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627945862917472,
+      "size": 108677,
+      "sha256": "f6a44fc7391b7eec2b7145c2304183c2bc2497abca191f2590c3cc015df34854"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/hook-H98-whole-full-qualification-driver-review-20261021-r99/FINAL.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792627949695376225,
+      "size": 3501,
+      "sha256": "f6291ec91bc743368e9a5c0cef7417b377806e243c14bb5d11db2cc46c390dc7"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H99-whole-driver-request-changes-lead-intake-20261022-r1.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628050121882992,
+      "size": 5926,
+      "sha256": "5f6e0229f859811297c1b4529d76e63ea801c11288af44b7b1eef26bb445d3d9"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H98-whole-full-qualification-driver-review-20261021-r99.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792627271850451163,
+      "size": 51080,
+      "sha256": "bbe4c8dc24006b0489ee3d0238b767d5003e25b4519110df90b94004fab47ec4"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/plugins/skeft-qa/skills/architecture-change/references/adr-012-worked-example.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1786667262799846495,
+      "size": 14077,
+      "sha256": "9ae070fffe16dd48400b2acf9ecad3bedc31e4ce5a8aeca82c902b98b3f0b2a8"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-hook-H99-complete-current-admission-repair-author-20261022-r100.json": {
+      "kind": "file",
+      "mode": 33152,
+      "mtime_ns": 1792628050480714210,
+      "size": 69813,
+      "sha256": "26f3bf12f9db2fea83d1936f4f5a76b9b4bf1d230ed7e0ab0a881291d6f5527c"
+    },
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/architecture/CHECK_AUTHORING_GUIDE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1786813703679629948,
+      "size": 22007,
+      "sha256": "3d786aa7fa44e9fbac3c615ddece78274d442501ebbbacf7fb6613774a842524"
+    }
+  },
+  "original_actual_FIRST_raw": {
+    "/private/tmp/publication-hook-H100-FIRST-actual-raw/rawrc": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628078059648551,
+      "size": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/private/tmp/publication-hook-H100-FIRST-actual-raw/stdout": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628078060096470,
+      "size": 204,
+      "sha256": "6741d052813259befe7f64aeb2250f9d03925687148167680cb4d70eb2c077f5"
+    },
+    "/private/tmp/publication-hook-H100-FIRST-actual-raw/stderr": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628078060159095,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/private/tmp/publication-hook-H100-FIRST-actual-raw/invocation.json": {
+      "kind": "file",
+      "mode": 33188,
+      "mtime_ns": 1792628078060279513,
+      "size": 944,
+      "sha256": "f8d4d9b02888cf24196e23b6a3e96199abdbf9118cf40b25597f0eb55bc606f3"
+    }
+  },
+  "known_custody_and_admission_evidence": "Full exact known I/P/B/input/index/ref state in evidence.json and config; no root census or selfbaseline.",
+  "source_pair": {
+    "driver_sha256": "8e27ad2838765f0bdef3e7939c91c9ed88dbb304e4783e92979202fd899ee1c8",
+    "config_sha256": "c6ff789f33cfacc6b38344db63bd6706990e279ad5fb4ee4c70e167335708c11"
+  },
+  "actual_current_collection": "UNMEASURED_UNRUN",
+  "all55_actual_campaigns": "SEPARATELY_UNRUN",
+  "candidate_execution": false,
+  "independent_selfacceptance": false,
+  "runtime_grant": false,
+  "terminal_contract": "After this complete nonrecursive manifest, one actual canonical FINAL persists original separate raw rc/stdout/stderr/argv/cwd/start/end before interpretation; only exclusive FINAL.json follows then freeze. No postobserver/replay/refresh."
+}

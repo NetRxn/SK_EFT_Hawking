@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "-B",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/codex_continuity.py",
+    "check",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-native-NS109-complete-current-admission-and-recovery-author-20261021-r110.json"
+  ],
+  "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019",
+  "env_override": {
+    "GIT_OPTIONAL_LOCKS": "0"
+  },
+  "started": "2026-10-22T00:56:50.706164+00:00",
+  "ended": "2026-10-22T00:56:51.060204+00:00",
+  "elapsed_ns": 353971416,
+  "returncode": 1,
+  "raw_directory": "/private/tmp/publication-NS110-FINAL-4vlbka3c",
+  "stdout_base64": "ewogICJmcmVzaCI6IGZhbHNlLAogICJjaGFuZ2VkIjogWwogICAgIm93bmVkLWZpbGVzIgogIF0sCiAgInRhc2siOiAicHVibGljYXRpb24tbmF0aXZlLU5TMTA5LWNvbXBsZXRlLWN1cnJlbnQtYWRtaXNzaW9uLWFuZC1yZWNvdmVyeS1hdXRob3ItMjAyNjEwMjEtcjExMCIsCiAgIm1lYW5pbmciOiAiUmVjb25jaWxpYXRpb24gcmVxdWlyZWQ7IGxlYWQgbXVzdCBpbnNwZWN0IGN1cnJlbnQgaW5wdXRzIGFuZCBleHBsaWNpdGx5IGlzc3VlIGEgbmV3IHJldmlzaW9uLiIKfQo=",
+  "stderr_base64": "",
+  "stdout": "{\n  \"fresh\": false,\n  \"changed\": [\n    \"owned-files\"\n  ],\n  \"task\": \"publication-native-NS109-complete-current-admission-and-recovery-author-20261021-r110\",\n  \"meaning\": \"Reconciliation required; lead must inspect current inputs and explicitly issue a new revision.\"\n}\n",
+  "stderr": "",
+  "preterminal_manifest_sha256": "62159f7c448590986442fa3170784073bce750facd8844f4f83a14df41a9494b",
+  "protocol": "ONE actual canonical FINAL; raw separate rc/stdout/stderr/real clocks BEFORE interpretation; FINAL exclusive last owned write then freeze; no postFINAL reads/observers",
+  "actual_interpretation_after_raw_capture": {
+    "fresh": false,
+    "changed": [
+      "owned-files"
+    ],
+    "task": "publication-native-NS109-complete-current-admission-and-recovery-author-20261021-r110",
+    "meaning": "Reconciliation required; lead must inspect current inputs and explicitly issue a new revision."
+  }
+}

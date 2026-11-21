@@ -1,0 +1,92 @@
+{
+  "schema": "native-NS110-nonrecursive-preterminal-manifest/v1",
+  "status": "UNAPPLIED_UNRUN_UNACCEPTED_DATA_FROZEN_AT_SOLE_FINAL",
+  "created": "2026-10-22T00:56:43.768066+00:00",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-native-NS109-complete-current-admission-and-recovery-author-20261021-r110.json",
+  "seals": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/CONSTRUCTION.md",
+      "name": "CONSTRUCTION.md",
+      "bytes": 12332,
+      "sha256": "79ceb1e70226d2a9c9c068eaa5b13a44c29dca9c6ca34641c45429d88bbe1d6a"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/FIRST.json",
+      "name": "FIRST.json",
+      "bytes": 1923,
+      "sha256": "c1718855f790de5adf0aad68e4666259eae67df86702cffc9a7402ec199d72f1"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/MODEL.md",
+      "name": "MODEL.md",
+      "bytes": 1313,
+      "sha256": "c42687df2f380dd078f4967fe29ec0e240b2ccce0dda6a1566b5e4dffd7d55ed"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/REPORT.md",
+      "name": "REPORT.md",
+      "bytes": 37596,
+      "sha256": "e03172de5dceec8f846e7620b0ca18677f4e9ad89235c810cc41fc82db47b451"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/commands.json",
+      "name": "commands.json",
+      "bytes": 176275,
+      "sha256": "e8d787b20fdb5384b04bf9318dbdabc4eecd5de4c2476ea3d296cb6c4770632d"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/control-bindings.json",
+      "name": "control-bindings.json",
+      "bytes": 3696903,
+      "sha256": "ba67a3f4de64a265ca36d30eabfe185018bc4453545076078a40612e734d3077"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/evidence.json",
+      "name": "evidence.json",
+      "bytes": 11732945,
+      "sha256": "e2c9e760833102edd30452d434390d1b0022b185be72e647f0d714e5f51c14ef"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/execution-binding-DATA.json",
+      "name": "execution-binding-DATA.json",
+      "bytes": 54421855,
+      "sha256": "7d35eea9d87139c3c3331f2bda737eca143b1de1d293f26bd2143ab15b7254a2"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/independent-journal-observer.py",
+      "name": "independent-journal-observer.py",
+      "bytes": 98984,
+      "sha256": "5afd34f10e39d06b1b082bd4610b97cfc7cc565e4f49c57791e656a9b9d53e82"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/intent-coverage.json",
+      "name": "intent-coverage.json",
+      "bytes": 362099,
+      "sha256": "8500e284e75d8d76dfc832bfcf5ba0de8e62c1b3a4a0550a096b8edcbee4af2e"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/recovery-dispositions.json",
+      "name": "recovery-dispositions.json",
+      "bytes": 222148,
+      "sha256": "17c385392379208af94c7a22a5d27449396f51ad816970a4a71a546f194ece65"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/resource-control-harness.py",
+      "name": "resource-control-harness.py",
+      "bytes": 125090,
+      "sha256": "622201679e1f5af815d5ba911c89bef6d45a363431fdde95c81151b3ef6db7e7"
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110/source-images.json",
+      "name": "source-images.json",
+      "bytes": 77662811,
+      "sha256": "8c3c01219bed156cc0210493730839f870056aa2be634aee67607c597c338d5f"
+    }
+  ],
+  "excluded": [
+    "manifest.json",
+    "FINAL.json"
+  ],
+  "seal_count": 13,
+  "terminal_protocol": "All13 seals precede ONE actual canonical FINAL; FINAL exclusive lastwrite then freeze, no postFINAL read/observer/amendment. No acceptance or execution/resource/recovery authority."
+}

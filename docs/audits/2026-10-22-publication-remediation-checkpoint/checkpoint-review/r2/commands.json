@@ -1,0 +1,51 @@
+{
+  "schema": "reviewer-r2-command-description-log/v1",
+  "scope": "Actual shell source/output is in tool transcript; this is legible operation indexing, not invented raw OS metadata or candidate execution.",
+  "interpreter": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+  "flags": [
+    "-B"
+  ],
+  "operations": [
+    {
+      "chunk": "6fba31",
+      "actual_exit_code": 0,
+      "description": "FIRST actual subprocess canonical check with original separate raw capture before interpretation; immutable FIRST/MODEL; full packet parse, display clipped"
+    },
+    {
+      "chunk": "51d638",
+      "actual_exit_code": 0,
+      "description": "Complete required scope/repair receipt/README and all nine evidence selection/omission schemas"
+    },
+    {
+      "chunk": "12e99a",
+      "actual_exit_code": 0,
+      "description": "All76pins/exact6changes, all9archives/original inventory/128channels/62XML/fullmember seals; broad listing clipped"
+    },
+    {
+      "chunk": "c87f12",
+      "actual_exit_code": 0,
+      "description": "Original r1 seals,14sourcearchives/allmembers,462cells/27refs, complete openfindings/forwardplan/restoration. Initial derived nested backup path absent was explicitly not asserted; later exact flat paths supplied and verified"
+    },
+    {
+      "chunk": "eccb95",
+      "actual_exit_code": 1,
+      "description": "Read-only DATA schema TypeError indexing scalar evidence.children. No target write; actual traceback retained"
+    },
+    {
+      "chunk": "a10c72",
+      "actual_exit_code": 0,
+      "description": "All6preserved-before exact flat hashes, actual63commands-child/128channel relationships, original manifest and latest tracker heads"
+    },
+    {
+      "chunk": "d9dce7",
+      "actual_exit_code": 0,
+      "stderr_diagnostics": "Three actual SyntaxWarning invalid decimal literal notices from compact own script tokens; not candidate execution",
+      "description": "Comprehensive all76/65/recovery/archive/raw/XML/gate/remote checks; exclusive evidence write"
+    },
+    {
+      "description": "Current own DATA report/commands/seal writer; evidence records original warnings; no target repair",
+      "status": "current operation"
+    }
+  ],
+  "pending_final": "One actual prepared Ppython-B positional checker assignedD/GIT0 with separate original channels/rc/clocks durable before interpretation. Actual result only in FINAL, then freeze/no postobserver."
+}
