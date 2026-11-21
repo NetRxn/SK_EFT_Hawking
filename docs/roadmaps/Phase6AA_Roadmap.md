@@ -71,6 +71,13 @@ by `2/m` for nominal selection mass `m`, is strictly below the nominal
 decision margin, the certificate proves positive observed selection and a
 joint readout beating every binary memory-only effect.
 
+The early and late arms can also use independently calibrated copy,
+training and offset gates in the same basis and phase convention. Sum
+the three gate errors within each arm to obtain budgets `eEarly` and
+`eLate`. The bound is then `(1 + r) / 2` times the sum of the two
+budgets before amplification by `2/m`. Taking the three calibrated
+gates to be the same in both arms recovers the shared-gate certificate.
+
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
 - All metrics carry explicit physical units; every numerical bound is `norm_num`-backed and falsifiable.
