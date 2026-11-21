@@ -129508,7 +129508,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_raw_branch_error",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordSelectionStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_traceNorm_error",
@@ -129517,7 +129526,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_and_joint_optima",
@@ -137026,6 +137035,15 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_conditioned_prior_sub_le",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordSelectionStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_conjTranspose",
       "module": "SKEFTHawking.QuantumNetwork.MixedState",
       "atlas_kind": "TRUE",
@@ -137140,7 +137158,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_hermitian",
@@ -137284,7 +137302,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 10
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_one_fin_one",
@@ -137329,7 +137347,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 20
+      "frontier_impact": 23
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_pt2_bellDiagState",
@@ -137476,13 +137494,22 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_traceNormalized_sub_le",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordSelectionStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_triangle",
       "module": "SKEFTHawking.QuantumNetwork.MixedState",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_unitary_conj",
@@ -137496,6 +137523,15 @@
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_zero",
       "module": "SKEFTHawking.QuantumNetwork.MixedState",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.traceNormalized_posSemidef",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordSelectionStability",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -137717,6 +137753,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.trace_traceNormalized_re",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordSelectionStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.twoState_excited_probability",
@@ -226199,7 +226244,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24493,
+    "theorem_nodes": 24498,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226210,7 +226255,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24093,
+      "TRUE:PROVED": 24098,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
