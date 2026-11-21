@@ -4087,6 +4087,7 @@ import SKEFTHawking.QuantumNetwork.BinaryMemoryFixture
 import SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction
 import SKEFTHawking.QuantumNetwork.FiniteInstrument
 import SKEFTHawking.QuantumNetwork.FiniteInstrumentBranchContraction
+import SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
 import SKEFTHawking.FinitePositiveKernel
 import SKEFTHawking.QuantumNetwork.FiniteGibbsClock
 import SKEFTHawking.QuantumNetwork.FiniteNontracialThermalRotation

@@ -128176,7 +128176,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.sum_weight_eq_eventEffect",
@@ -129342,6 +129342,33 @@
     {
       "fqn": "SKEFTHawking.QuantumNetwork.MatrixNormBridge.l2_opNorm_le_sqrt_card_mul_of_rowSum_le",
       "module": "SKEFTHawking.QuantumNetwork.MatrixNormBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.one_record_readout_weights",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.rational_coherent_mass",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_density_contrast",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -225929,7 +225956,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24463,
+    "theorem_nodes": 24466,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -225940,7 +225967,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24063,
+      "TRUE:PROVED": 24066,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
