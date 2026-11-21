@@ -53,6 +53,11 @@ The graph is assembled at several sites that each derive from scratch — the pr
 
 `provenance_dashboard` serves `/api/graph*` from an in-process cache invalidated by `_graph_fingerprint()`. **The key is derived from the read set the last build actually opened** — captured through an `open` audit hook, plus every repo `.py` currently imported, since a module already in `sys.modules` is never re-opened — plus the sorted listing of every ancestor directory of those files. Cost ~15 ms against a 7.1 s rebuild.
 
+Python bytecode cache opens, including atomic-write temporary files, are recorded
+against their source when that source exists. A cold import can probe or write
+bytecode during a build without changing the graph's inputs. Real missing inputs
+still participate in the key so their later appearance invalidates the graph.
+
 ⛔ **Never replace this with a hand-listed set of inputs.** It was one until 2026-08-14, and it was wrong: `papers/AutomatedReviews/**/*.md` and `docs/review_finding_supersessions.json` were absent, so filing a finding — or closing one through `close_finding.py` — did not invalidate the cache and the dashboard served the pre-change finding set. A hand-listed key asserts a proxy for what the build reads, so it is correct only until someone adds an input, and then it fails silently in the green direction. The ancestor directories are what cover files that do not exist yet: a newly filed finding is in no previous read set, and its new dated directory changes a watched listing. Guarded by `tests/test_dashboard_graph_cache.py`.
 
 ### PG+AGE Parallel Write
