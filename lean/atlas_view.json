@@ -56005,7 +56005,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.localErrorBound_projectorAllowance",
@@ -56152,6 +56152,24 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.shiftedClock_record_success_optimal",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.spectator_readout_separation",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.sum_leafState_error_le",
       "module": "SKEFTHawking.StoppingRetainedClockErrorBudget",
       "atlas_kind": "TRUE",
@@ -56176,7 +56194,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.sum_trace",
@@ -56203,7 +56221,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.adaptive_halfTurn",
@@ -127933,7 +127951,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 10
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.branch_smul",
@@ -127988,6 +128006,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.lift_branch_kronecker",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.lift_branch_posSemidef",
@@ -128113,7 +128140,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.sum_traceNorm_branch_le",
@@ -129967,7 +129994,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.binaryDiagonalState_traceDist",
@@ -130021,7 +130048,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.binaryOneEffect_probability",
@@ -132058,6 +132085,42 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_effect_optimum_sub_record_optimum",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_randomized_record_success_le",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_record_optimum_le_effect_optimum",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_record_success_optimal",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_success_le_prior_guess_add",
       "module": "SKEFTHawking.StoppingRetainedClockBinaryDecision",
       "atlas_kind": "TRUE",
@@ -132074,6 +132137,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_success_record_only",
+      "module": "SKEFTHawking.StoppingRetainedClockRecordDecision",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.finite_effect_score_abs_le_half",
@@ -135511,7 +135583,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.self_inner_eq",
@@ -136771,7 +136843,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_hermitian",
@@ -136798,7 +136870,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_hermitian_triangle",
@@ -225830,7 +225902,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24452,
+    "theorem_nodes": 24460,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -225841,7 +225913,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24052,
+      "TRUE:PROVED": 24060,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
