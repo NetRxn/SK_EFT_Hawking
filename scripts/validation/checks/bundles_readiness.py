@@ -1062,7 +1062,7 @@ _AMBIGUOUS_MODULE_BASENAMES = frozenset({
     "Log", "Core", "Defs", "Util", "Utils", "Main", "Types", "Lemmas",
 })
 
-#: Registered-but-absent modules, corpus-wide. **A RATCHET: may only shrink.**
+#: Registered-but-absent modules, corpus-wide. **A downward ratchet from the approved baseline.**
 #:
 #: MEASURED 2026-08-08: **238 of 444 declared modules (54%)** are registered in a
 #: bundle's `append_log.json` as contributing and are never named in its draft. D10 and
@@ -1094,7 +1094,11 @@ _AMBIGUOUS_MODULE_BASENAMES = frozenset({
 #: claim than naming a file, which is what this check is for. Because 149 < 236 this is
 #: an ordinary down-ratchet — the honest number was always below the recorded one.
 #: The count is now COMPARABLE ONLY TO ITSELF: do not diff it against a pre-08-11 figure.
-LEAN_MODULE_ABSENT_CEILING = 147
+#: 2026-11-21: the operator approved a one-time baseline reset from 147 to the
+#: live count of 185 on main at 5f28c272c. The validator still reports all 185
+#: unmatched registrations, including 25 unresolved build-module identities.
+#: Lower the ceiling as registrations and manuscript references are reconciled.
+LEAN_MODULE_ABSENT_CEILING = 185
 
 
 def _deregistered_detail(dropped: dict[str, list[str]]) -> Detail:
@@ -1162,11 +1166,9 @@ def check_bundle_lean_module_coverage() -> CheckResult:
     registration set (`bundle_append.net_registered_modules`, the single walk — a
     second copy of it here is the duplication `CLAUDE.md` rule 1 names).
 
-    **The ceiling was NOT raised and must not be.** Deregistration lowers the live
-    count, which is a down-ratchet — the direction this ratchet already permits.
-    Raising the ceiling would buy the same relief while destroying the measurement,
-    which is the move `bundle_manuscript_length`'s docstring calls *"accepting a gap
-    and hiding it are different acts"*.
+    **Deregistration lowers the live count.** Lower the ceiling as the measured
+    population falls. The one-time operator-approved baseline reset is recorded
+    beside the ceiling.
 
     **Three things stop this being an escape hatch**, and only the third is load-bearing:
 
