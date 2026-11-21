@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-20T23:54:54.496498",
+  "generated": "2026-11-21T00:20:32.534627",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43577,
-    "theorems_total": 24406,
-    "theorems_substantive": 24380,
+    "total_declarations": 43588,
+    "theorems_total": 24415,
+    "theorems_substantive": 24389,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24313,
+    "theorems_kernel_substantive": 24322,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2100,
+    "modules": 2101,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1993,6 +1993,7 @@
       "SKEFTHawking.SteenrodA1",
       "SKEFTHawking.StimulatedHawking",
       "SKEFTHawking.StoppingRetainedClockInstrument",
+      "SKEFTHawking.StoppingRetainedClockRobustness",
       "SKEFTHawking.StringNet",
       "SKEFTHawking.StrongCPTopologicalDE",
       "SKEFTHawking.SubstrateAxion",
@@ -2118,7 +2119,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13483,
+    "definitions": 13484,
     "structures": 486,
     "instances": 980,
     "inductives": 104,
