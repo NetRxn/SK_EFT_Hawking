@@ -2,7 +2,7 @@
 
 **Phase:** 6w
 **Wave:** 6w.4 (Aalto-style Chebyshev TN methods + Penrose-tiling-style aperiodic lattices)
-**Status:** ✅ SHIPPED 2026-05-26 PM. 16 substantive theorems across `lean/SKEFTHawking/{ChebyshevTN,AperiodicLattice}.lean`. Build clean 8711 jobs; zero new axioms; zero sorries; key theorems verified kernel-only `[propext, Classical.choice, Quot.sound]`.
+**Historical source receipt — 2026-05-26:** elementary Chebyshev/lattice-predicate source and build8711/zero-sorry/kernel reports were recorded. These are retained, not current physical tensor-contraction/complexity or genuine Chern-bridge completion. Those original B2 consumer objectives remain BUILD.
 **Bundle target:** I1 substrate; later D7 candidate.
 **LoE:** ~3-4 sessions per Phase6w_Roadmap.md
 
@@ -66,7 +66,7 @@ demarcation).
   imports.
 - `lake build` clean.
 
-## Acceptance criteria (Wave 6w.4)
+## Historical source acceptance criteria (not physical B2/Chern completion)
 
 - ✅ ≥10 substantive theorems shipped across both modules.
 - ✅ Modules build clean; zero new project-local axioms; zero sorries.

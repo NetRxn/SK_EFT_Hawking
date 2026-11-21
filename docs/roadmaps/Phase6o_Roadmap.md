@@ -358,11 +358,13 @@ SKEFTHawking/ETH/
 
 ---
 
-## Wave 3b — I3 Itô + LDP-α + LDP-β (community Mathlib4 contribution) ✅ SHIPPED Session 40 (status refreshed 2026-05-23 audit; 12 modules verified on disk: 6 under `lean/SKEFTHawking/Itô/` + 6 under `lean/SKEFTHawking/LDP/`). I3 bundle architecture user-auth GRANTED Phase 6n Session 4. Mathlib upstream PR campaign is the Phase 6s Track 2 deliverable (still pending user-auth on Wave 2a).
+## Wave 3b — I3 Itô + LDP-α + LDP-β: historical Session40 twelve-module predicate-substrate shipment; substantive/native I3 remains OPEN. The actual all-real-MGF Cramér and finite-horizon Brownian Novikov constructions now have separate full independent manual acceptance, not installed native theorems. In-repo construction is authorized; external Mathlib submission remains separately gated.
 
 **🚨 USER AUTHORIZATION GATE (Pipeline Invariant #14):** **GRANTED 2026-05-04 (Phase 6n Session 4).** Bundle architecture went 13 → 14. Scoping document at `temporary/working-docs/phase6n/i3_bundle_scoping.md`. Bundle directory scaffolded at `papers/I3/` with `bundle_metadata.json`, `source_manifest.md`, `change_log.md`, `append_log.json`. PAPER_STRATEGY.md §2.4 updated with Tier-3 #3 entry. PAPER_DRAFT_MAPPING.md headline updated. claims-reviewer-bundle-prompts.md gains I3 anchor block. `_VALID_BUNDLE_TARGETS` / `_TIER_OF` / `_BUNDLE_TITLES` / `_BUNDLE_TARGET_JOURNAL` / `_BUNDLE_SUBPHASE` (in `scripts/sentence_state.py`, `scripts/bundle_source_manifest.py`, `scripts/datastar_bundles.py`) all updated. Phase 6o Wave 3b is now unblocked at the bundle-target layer; remaining gate is the substantive Lean module work itself.
 
 **Itô-explore agent verdict (2026-05-04, Phase 6n Session 4):** Mathlib4 + Degenne brownian-motion repo supply nearly complete foundational infrastructure — martingale theory full + filtrations + adapted/predictable processes + stopping times + local-martingale `Locally` framework + Markov kernels (defs/composition/disintegration) + conditional expectation in Banach spaces + sub-Gaussian + Doob + Kolmogorov extension + Kolmogorov-Chentsov continuity + Gaussian processes — **but explicitly lack** stochastic integral + semimartingale decomposition + quadratic variation + Itô's lemma + Stratonovich + Novikov. Gap = 4-5 mid-sized self-contained modules well-supported by existing API. **No blocking fundamental gaps; choice is upstream-vs-in-program engineering.** Program has historical precedent for in-program build with future upstream-PR intent (Phase 5o W5 lean-tensor-categories; analogous structure).
+
+**Current manual milestones:** [actual Cramér](../audits/2026-10-17-publication-substance-construction/B8_CRAMER_PROBABILITY.md) proves closed limsup/open liminf bounds for actual iid laws with MGF finite for every real parameter, including the original sub-Gaussian class; [Brownian Novikov](../audits/2026-10-17-publication-substance-construction/B8_NOVIKOV_STOCHASTIC_EXPONENTIAL.md) constructs the predictable L² integral/isometry/bracket and exact half-energy class-D exponential martingale on a finite horizon. Full original reviews are linked in each note. Native carriers/interfaces, general Itô/Girsanov drift, other I3 consumers and external submission remain separate. The decomposition below states targets; current predicate bodies are not proofs of those identities.
 
 **Sub-wave decomposition (proposed):**
 
@@ -374,7 +376,7 @@ SKEFTHawking/ETH/
 - **Wave 3b.Itô-β.3 (Semimartingale.lean):** decomposition: martingale + finite-variation; in-program path `lean/SKEFTHawking/Itô/Semimartingale.lean`.
 - **Wave 3b.Itô-β.4 (ItoIsometry.lean):** E[|∫ H dW|²] = E[∫ H² ds]; in-program path `lean/SKEFTHawking/Itô/ItoIsometry.lean`.
 - **Wave 3b.Itô-β.5 (ItoLemma.lean):** change-of-variables for semimartingales; in-program path `lean/SKEFTHawking/Itô/ItoLemma.lean`.
-- **Wave 3b.Itô-β.6 (Novikov.lean):** E[exp(½ ∫ θ² ds)] < ∞ ⟹ ∫ θ dW martingale; in-program path `lean/SKEFTHawking/Itô/Novikov.lean`.
+- **Wave 3b.Itô-β.6 (Novikov.lean):** E[exp(½ ∫ θ² ds)] < ∞ yields the unit-mass uniformly-integrable stochastic exponential exp(∫ θ dW − ½∫ θ² ds), on the declared finite Brownian horizon; manual proof accepted, native interface remains. In-program path: `lean/SKEFTHawking/Itô/Novikov.lean`.
 
 **Mathlib-PR-readiness convention.** Each `lean/SKEFTHawking/Itô/*.lean` module uses Mathlib's naming style + lint-clean + uses Mathlib's existing namespaces + minimal program-specific dependencies. When user authorizes upstream PR (post-Phase-6o), each module lifts cleanly to `Mathlib/Probability/StochasticCalculus/`. **At this phase, no Mathlib upstream PR is drafted** — internal first.
 
@@ -407,7 +409,7 @@ SKEFTHawking/Itô/
   Semimartingale.lean            -- decomposition: martingale + finite-variation
   ItoIsometry.lean               -- E[|∫ H dW|²] = E[∫ H² ds]
   ItoLemma.lean                  -- change-of-variables for semimartingales
-  Novikov.lean                   -- E[exp(½ ∫ θ² ds)] < ∞ ⟹ ∫ θ dW martingale
+  Novikov.lean                   -- target: critical Novikov stochastic exponential is UI with unit mass
 
 SKEFTHawking/LDP/
   CramerIID.lean                 -- iid Cramér upper bound
