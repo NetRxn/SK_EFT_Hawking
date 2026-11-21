@@ -1,5 +1,6 @@
 import SKEFTHawking.StoppingRetainedClockInstrument
 import SKEFTHawking.QuantumNetwork.FiniteInstrumentBranchContraction
+import SKEFTHawking.QuantumNetwork.UnitaryDiamond
 
 /-! Additive branch-state error budgets for record-dependent stopping and clock perturbations. -/
 
@@ -268,5 +269,94 @@ theorem StoppingSchedule.shiftedClock_leaf_error_le_meanDuration (ω ℏ E β : 
   rw [S.weightedBudget_uniform_eq] at hb
   simp_rw [S.zero_clockPolicy_leafState ω ℏ E β A] at hb
   rwa [S.durationInstrument_lift_mean_eq ω ℏ E β A Y]
+
+section ProjectorDrift
+
+open scoped Matrix.Norms.L2Operator
+
+private theorem evolvedProjector_opNorm_le_one (ω ℏ E t : ℝ) (a : Fin 3) :
+    ‖evolvedProjector ω ℏ E t a‖ ≤ 1 := by
+  let P := evolvedProjector ω ℏ E t a
+  have ha : Pᴴ = P := evolvedProjector_adjoint ω ℏ E t a
+  have hp : P * P = P := by simpa using evolvedProjector_mul ω ℏ E t a a
+  apply opNorm_le_one_of_mul_conjTranspose_le_one
+  change ((1 : Mat) - P * Pᴴ).PosSemidef
+  rw [ha, hp]
+  have hc : (1 - P)ᴴ * (1 - P) = 1 - P := by
+    rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_one, ha, Matrix.sub_mul, Matrix.one_mul,
+      Matrix.mul_sub, Matrix.mul_one, hp, sub_self, sub_zero]
+  rw [← hc]
+  exact Matrix.posSemidef_conjTranspose_mul_self _
+
+/-- A single decision's allowance is computed on the clock Hilbert space. -/
+def clockProjectorAllowance (ω ℏ E t t' : ℝ) : ℝ :=
+  2 * ∑ a, ‖evolvedProjector ω ℏ E t a - evolvedProjector ω ℏ E t' a‖
+
+/-- The same allowance bounds the joint branch-state error for any finite auxiliary system. -/
+theorem clockInstrument_lift_localError_le (ω ℏ E t t' : ℝ) (A : Type u)
+    [Fintype A] [DecidableEq A] {Y : Matrix (Level × A) (Level × A) ℂ} (hY : Y.PosSemidef) :
+    (∑ a, QuantumNetwork.traceNorm (((clockInstrument ω ℏ E t).lift A).branch a Y -
+      ((clockInstrument ω ℏ E t').lift A).branch a Y)) ≤
+      clockProjectorAllowance ω ℏ E t t' * Y.trace.re := by
+  let I : Matrix A A ℂ := 1
+  let P := evolvedProjector ω ℏ E t
+  let Q := evolvedProjector ω ℏ E t'
+  calc
+    _ ≤ ∑ a, (2 * ‖P a - Q a‖) * Y.trace.re := by
+      apply Finset.sum_le_sum
+      intro a _
+      rw [clockInstrument_lift_branch_sandwich, clockInstrument_lift_branch_sandwich]
+      change QuantumNetwork.traceNorm
+          ((P a ⊗ₖ I) * Y * (P a ⊗ₖ I)ᴴ - (Q a ⊗ₖ I) * Y * (Q a ⊗ₖ I)ᴴ) ≤ _
+      have hP := (KroneckerOpNorm.l2_opNorm_kronecker_one_le (p := A) (P a)).trans
+        (evolvedProjector_opNorm_le_one ω ℏ E t a)
+      have hQ := (KroneckerOpNorm.l2_opNorm_kronecker_one_le (p := A) (Q a)).trans
+        (evolvedProjector_opNorm_le_one ω ℏ E t' a)
+      have hdiff : ‖P a ⊗ₖ I - Q a ⊗ₖ I‖ ≤ ‖P a - Q a‖ := by
+        have he : (P a - Q a) ⊗ₖ I = P a ⊗ₖ I - Q a ⊗ₖ I := by
+          ext i j
+          exact sub_mul (P a i.1 j.1) (Q a i.1 j.1) (I i.2 j.2)
+        rw [← he]
+        exact KroneckerOpNorm.l2_opNorm_kronecker_one_le _
+      rw [← traceNorm_posSemidef hY]
+      exact (traceNorm_conj_diff_le hP hQ Y).trans <|
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hdiff (by norm_num))
+          (traceNorm_nonneg Y)
+    _ = _ := by rw [← Finset.sum_mul, ← Finset.mul_sum, clockProjectorAllowance]
+
+/-- Use the two actual clock times at each prefix to compute the allowances. -/
+def StoppingSchedule.projectorAllowance (ω ℏ E β : ℝ) :
+    (S : StoppingSchedule) → (List (Fin 3) → ℝ) → S.Allowances
+  | .done, _ => ()
+  | .measure s next, shift =>
+    ⟨clockProjectorAllowance ω ℏ E (-β * ℏ * (s + shift [])) (-β * ℏ * s),
+      fun a => (next a).projectorAllowance ω ℏ E β (fun pre => shift (a :: pre))⟩
+
+theorem StoppingSchedule.localErrorBound_projectorAllowance (ω ℏ E β : ℝ) (A : Type u)
+    [Fintype A] [DecidableEq A] (S : StoppingSchedule) (shift : List (Fin 3) → ℝ) :
+    S.LocalErrorBound (S.clockPolicy ω ℏ E β A shift) (S.clockPolicy ω ℏ E β A (fun _ => 0))
+      (S.projectorAllowance ω ℏ E β shift) := by
+  induction S generalizing shift with
+  | done => trivial
+  | measure s next ih =>
+    refine ⟨?_, fun a => ih a (fun pre => shift (a :: pre))⟩
+    intro X hX
+    simpa only [StoppingSchedule.clockPolicy, StoppingSchedule.projectorAllowance, add_zero] using
+      clockInstrument_lift_localError_le ω ℏ E (-β * ℏ * (s + shift [])) (-β * ℏ * s) A hX
+
+/-- Projector drift bounds the terminal branch-state error without a separate local premise. -/
+theorem StoppingSchedule.shiftedClock_leaf_error_le_projectorBudget (ω ℏ E β : ℝ) (A : Type u)
+    [Fintype A] [DecidableEq A] (S : StoppingSchedule) (shift : List (Fin 3) → ℝ)
+    {X Y : Matrix (Level × A) (Level × A) ℂ} (hX : X.PosSemidef) (hY : Y.PosSemidef) :
+    (∑ r : S.Record, QuantumNetwork.traceNorm
+      (S.leafState (S.clockPolicy ω ℏ E β A shift) r X -
+        ((S.instrument ω ℏ E β).lift A).branch (S.recordEquiv r) Y)) ≤
+      QuantumNetwork.traceNorm (X - Y) +
+        S.weightedBudget (S.projectorAllowance ω ℏ E β shift)
+          (S.clockPolicy ω ℏ E β A (fun _ => 0)) Y := by
+  exact S.shiftedClock_leaf_error_le ω ℏ E β A shift _
+    (S.localErrorBound_projectorAllowance ω ℏ E β A shift) hX hY
+
+end ProjectorDrift
 
 end SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock
