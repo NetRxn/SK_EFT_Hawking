@@ -1,3 +1,33 @@
+import SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+import SKEFTHawking.ADW.FiniteGrassmannEvaluation
+import SKEFTHawking.ADW.GaussianGrassmannAuxiliary
+import SKEFTHawking.ADW.FiniteGrassmannCoframe
+import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
+import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
+import SKEFTHawking.ADW.GaussianAuxiliaryComplex
+import SKEFTHawking.ADW.GaussianPolynomialStein
+import SKEFTHawking.ADW.GaussianHaarPolynomialStein
+import SKEFTHawking.ADW.PolynomialPerturbationCoeff
+import SKEFTHawking.ADW.FiniteGrassmannShiftedDiracBerezin
+import SKEFTHawking.ADW.FiniteGrassmannSourceInsertion
+import SKEFTHawking.ADW.FiniteGrassmannSourceGenerating
+import SKEFTHawking.ADW.FiniteGrassmannComplementaryMinor
+import SKEFTHawking.ADW.FiniteDeterminantSubsetDP
+import SKEFTHawking.ADW.FiniteDeterminantRawJet
+import SKEFTHawking.ADW.FiniteDiracExecutableAssembly
+import SKEFTHawking.ADW.FiniteDiracQuaternionSpecialization
+import SKEFTHawking.ADW.QuaternionSU2Sphere
+import SKEFTHawking.ADW.QuaternionSU2Haar
+import SKEFTHawking.ADW.QuaternionSU2RadialMoments
+import SKEFTHawking.ADW.QuaternionSU2HaarMonomial
+import SKEFTHawking.ADW.QuaternionSU2HaarAnchored
+import SKEFTHawking.ADW.QuaternionSU2HaarPolynomial
+import SKEFTHawking.ADW.QuaternionSU2HaarAssembly
+import SKEFTHawking.ADW.QuaternionSU2SymbolicSource
+import SKEFTHawking.ADW.QuaternionSU2SymbolicWeight
+import SKEFTHawking.ADW.GaussianPolynomialAffine
+import SKEFTHawking.ADW.GaussianPolynomialHermite
+import SKEFTHawking.ADW.GaussianPolynomialIBP
 import SKEFTHawking.Basic
 -- Array helper lemmas (bang-indexed ofFn simp lemma) for cyclotomic-substrate
 -- symbolic reasoning. Upstream-contribution-quality; gating step for the
@@ -4054,6 +4084,48 @@ import SKEFTHawking.QuantumNetwork.FiniteMemoryProcess
 import SKEFTHawking.QuantumNetwork.BinaryMemoryRobustness
 import SKEFTHawking.QuantumNetwork.FiniteMemoryResetMixture
 import SKEFTHawking.QuantumNetwork.BinaryMemoryFixture
+import SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction
+import SKEFTHawking.QuantumNetwork.FiniteInstrument
+import SKEFTHawking.QuantumNetwork.FiniteInstrumentBranchContraction
+import SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+import SKEFTHawking.FinitePositiveKernel
+import SKEFTHawking.QuantumNetwork.FiniteGibbsClock
+import SKEFTHawking.QuantumNetwork.FiniteNontracialThermalRotation
+import SKEFTHawking.QuantumNetwork.FiniteClockHandReadout
+import SKEFTHawking.FinitePositiveKernelDynamics
+import SKEFTHawking.FinitePositiveKernelTransfer
+import SKEFTHawking.FinitePositiveKernelChannel
+import SKEFTHawking.FiniteGibbsDephasing
+import SKEFTHawking.FiniteGibbsDephasingConvergence
+import SKEFTHawking.FiniteDiagonalLindblad
+import SKEFTHawking.FiniteBlockConditionalExpectation
+import SKEFTHawking.FiniteGibbsReset
+import SKEFTHawking.FiniteBlockModularCompatibility
+import SKEFTHawking.FiniteBlockGibbsProjection
+import SKEFTHawking.RetainedGibbsModular
+import SKEFTHawking.ContinuousRetainedModular
+import SKEFTHawking.RetainedGibbsClockReadout
+import SKEFTHawking.ProperRetainedClockReadout
+import SKEFTHawking.ProperRetainedClockInstrument
+import SKEFTHawking.AdaptiveRetainedClockInstrument
+import SKEFTHawking.StoppingRetainedClockInstrument
+import SKEFTHawking.StoppingRetainedClockRobustness
+import SKEFTHawking.StoppingRetainedClockErrorBudget
+import SKEFTHawking.StoppingRetainedClockTimeShift
+import SKEFTHawking.StoppingRetainedClockReadoutStability
+import SKEFTHawking.StoppingRetainedClockBinaryDecision
+import SKEFTHawking.QuantumNetwork.FiniteBinaryOptimumStability
+import SKEFTHawking.StoppingRetainedClockRecordDecision
+import SKEFTHawking.StoppingRetainedClockRecordSufficiency
+import SKEFTHawking.QuantumNetwork.OneRecordCoherentDecision
+import SKEFTHawking.QuantumNetwork.OneRecordCoherentPrior
+import SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout
+import SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap
+import SKEFTHawking.QuantumNetwork.OneRecordMemoryGapMargin
+import SKEFTHawking.QuantumNetwork.OneRecordMemoryErrorBudget
+import SKEFTHawking.QuantumNetwork.OneRecordSelectionStability
+import SKEFTHawking.QuantumNetwork.OneRecordTimingOperatorStability
+import SKEFTHawking.QuantumNetwork.OneRecordTimingGateStability
 -- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
 -- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
 import SKEFTHawking.QuantumNetwork.DistillationRateBound
@@ -5244,6 +5316,8 @@ import SKEFTHawking.SingularSurfaceIntersectionFormInstances
 import SKEFTHawking.SymTFT.CenterLinear
 import SKEFTHawking.SymTFT.ElectricSeparable
 import SKEFTHawking.SymTFT.VecGLinear
+import SKEFTHawking.MertensCancellationBackport
+import SKEFTHawking.PowerLogTail
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

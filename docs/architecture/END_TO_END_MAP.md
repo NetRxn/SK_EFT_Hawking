@@ -78,9 +78,9 @@ entirely unmechanized. **This is the single largest ungated seam in the map.**
 `except Exception: return None`, so an unreadable or absent roadmap is indistinguishable from
 one with nothing to say.
 
-The [`docs/KNOWLEDGE_GRAPH.md`](../KNOWLEDGE_GRAPH.md) schema defines the sentence-level
-audit nodes, edges and replay model. The [`docs/roadmaps/Phase5v_Roadmap.md`](../roadmaps/Phase5v_Roadmap.md)
-records the wave that introduced them.
+The [graph schema](../KNOWLEDGE_GRAPH.md#graph-schema) defines the sentence, audit and
+claim-cluster nodes and their backing, audit and membership edges. The Phase 5v roadmap records
+the implementation history.
 
 ---
 
@@ -88,7 +88,9 @@ records the wave that introduced them.
 
 Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
 `docs/dev-loops/HARNESS_GUIDE.md`. Implementation in `.claude/plugins/skeft-qa/`. The hook
-roster is in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#hooks).
+roster is in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#hooks), along with the versioned
+Git pre-commit sync implementation. The [sync workflow](../../.claude/plugins/skeft-qa/skills/sync/SKILL.md)
+checks installation and the hook chain for the active checkout.
 
 Every hook fails open except the `PreToolUse(WebSearch|WebFetch)` **egress guard**, which is
 the one unambiguously fail-closed control in the system.

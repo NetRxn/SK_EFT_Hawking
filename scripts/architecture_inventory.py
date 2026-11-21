@@ -136,7 +136,7 @@ def graph_types() -> dict:
 
 
 def hooks() -> list[dict]:
-    """Claude-Code hooks from the plugin manifest, plus git hooks on disk."""
+    """Claude Code hook declarations and the public Git sync implementation."""
     out: list[dict] = []
     manifest = PLUGIN / "hooks" / "hooks.json"
     if manifest.exists():
@@ -151,13 +151,11 @@ def hooks() -> list[dict]:
                                 "matcher": entry.get("matcher", "*"),
                                 "command": h.get("command", "")[:200],
                                 "timeout": h.get("timeout")})
-    git_hooks = PROJECT_ROOT / ".git" / "hooks"
-    if git_hooks.is_dir():
-        for f in sorted(git_hooks.iterdir()):
-            if f.is_file() and not f.name.endswith(".sample"):
-                out.append({"kind": "git", "event": f.name,
-                            "matcher": "-", "command": str(
-                                f.relative_to(PROJECT_ROOT)), "timeout": None})
+    commit_sync = SCRIPT_DIR / "pre-commit-sync.sh"
+    if commit_sync.is_file():
+        out.append({"kind": "git-implementation", "event": "pre-commit",
+                    "matcher": "-", "command": commit_sync.relative_to(PROJECT_ROOT).as_posix(),
+                    "timeout": None})
     return out
 
 
@@ -381,6 +379,9 @@ def render(inv: dict) -> str:
 
     h = inv["hooks"]
     a(f"## Hooks — {len(h)}")
+    a("")
+    a("Claude Code declarations come from the plugin manifest. The Git row names the public")
+    a("pre-commit sync implementation. The sync workflow verifies checkout-local installation.")
     a("")
     a("| kind | event | matcher | command |")
     a("|---|---|---|---|")

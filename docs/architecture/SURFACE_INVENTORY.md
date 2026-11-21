@@ -163,6 +163,9 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 
 ## Hooks — 7
 
+Claude Code declarations come from the plugin manifest. The Git row names the public
+pre-commit sync implementation. The sync workflow verifies checkout-local installation.
+
 | kind | event | matcher | command |
 |---|---|---|---|
 | claude-code | `PreCompact` | `*` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_precompact.py" 2>/dev/null || true` |
@@ -171,7 +174,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | claude-code | `PreToolUse` | `AskUserQuestion` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_question_guard.py" 2>/dev/null || true` |
 | claude-code | `PreToolUse` | `WebSearch|WebFetch` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py" || printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionR` |
 | claude-code | `PreToolUse` | `Bash` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_worker_shell_guard.py" || printf '{}'` |
-| git | `pre-commit` | `-` | `.git/hooks/pre-commit` |
+| git-implementation | `pre-commit` | `-` | `scripts/pre-commit-sync.sh` |
 
 ## Agents — 10
 

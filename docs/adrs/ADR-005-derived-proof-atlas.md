@@ -58,6 +58,25 @@ All atlas metadata stays **out of theorem statements and proofs**. The only in-s
 
 ---
 
+
+### D-G.2 cache serialization
+
+The extractor writes its local caches with Lean's compact JSON serializer.
+Each cache keeps its existing JSON payload shape and keying rules. The
+reader continues to accept JSON with whitespace. Dependency and extractor
+source changes continue to invalidate pin-keyed entries. The canonical
+dependency index keeps its existing deterministic record order and writer.
+
+### D-G.2 module lookup
+
+Package membership and module labels use the declaration's module index to
+read the corresponding entry of `EnvironmentHeader.modules`. The entry's
+`module` field is the same name that Lean exposes by projecting the full
+array through `moduleNames`. An absent or out-of-range index is outside the
+package. Module labels use `<current>` for an absent index and `<unknown>`
+for an out-of-range index. The extractor source participates in its cache
+pin, so the first run after changing the lookup regenerates pin-keyed rows.
+
 ## Consequences
 
 **Positive.** A single, queryable, **auto-extending** map of the proof landscape on both fronts (positive / negative / open) plus a live *provable frontier*, derived from the substrate already maintained — no parallel store, no per-wave hand-registration, no theorem-file pollution. The atlas becomes first-class graph data (Cypher-queryable alongside papers/QA when PG is up) yet remains fully available DB-free. The honesty firewall (apex-never-silently-closed, AXIOM_TAINTED) is the same soundness contract the 0-axiom/0-sorry posture already enforces, now made explicit for open targets.
