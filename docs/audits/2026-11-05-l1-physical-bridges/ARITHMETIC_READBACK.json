@@ -1,0 +1,9 @@
+{
+  "scope": "Exact arithmetic readback of previously reviewed source-note quantities only; not fresh coefficient replay or physical matching",
+  "closed_pair_ratio": "12745269872/8783002710823",
+  "pair_ratio_in_zero_one": true,
+  "scalar_temporal_sum_matches": true,
+  "affine_scalar_contact_assembly_matches": true,
+  "full_source_path_signs_opposite": true,
+  "physical_B3_or_state_closed": false
+}

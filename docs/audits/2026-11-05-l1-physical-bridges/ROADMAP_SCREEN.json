@@ -1,0 +1,1990 @@
+{
+  "head": "8b6da1c2fd87f07b3dde29e68e590ca324887d42",
+  "predicate": "\\bL1\\b|paper25|GravitationalWaves|vestigial.{0,25}(?:suscept|gravit)|second.sound|Phase6a|Phase5y|Phase6e|Phase5d",
+  "roadmaps": [
+    {
+      "path": "docs/roadmaps/AttributionContentSweep_Roadmap.md",
+      "sha256": "7a9a8ca32adc80cf95f6da909a326cb0f03983281f7ef3ebcb1e872eceee629e",
+      "hits": [
+        {
+          "line": 19,
+          "text": "**Pass 1 \u2014 Stage-13 re-invocation** (obligation from the 2026-06-10 edits; per pipeline rule \"the re-run is evidence\"). Touched bundles: F, D1, D2, D3, D5, D6, D7, E2, I1, I2, L1, L2 (+ E1/L3/D4/D8 only if their re-review dates predate any substantive edit)."
+        },
+        {
+          "line": 27,
+          "text": "1. **L1, D5, D3** \u2014 falsification-critical claims (GW170817, dark-sector no-go ledgers, emergent-gravity bounds)."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/D10_Discharge_Roadmap.md",
+      "sha256": "486e4742806d3c8685c827fd95fcb32051f2246a92b8f1a2a5ef2455efd149d8",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/FormulaRefSweep_Roadmap.md",
+      "sha256": "31f08a52b05bb546bf16d1dce8f0c4ea2bda78a5ef819f02ae87e2884aa40ac0",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase1_Roadmap.md",
+      "sha256": "3936a74a0bac8a419ad553dd2ebac53f896973a888f80b77065638c4049f4df5",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase2_Roadmap.md",
+      "sha256": "d9907d82e3135151b1e47963b560d39b5a439519de3033a4fa3ad8bde6ce8b93",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase3_Roadmap.md",
+      "sha256": "34d50ef15f717741842681fe3957a0e54cccb7cf107c56b18c30fc71f814909b",
+      "hits": [
+        {
+          "line": 138,
+          "text": "- [x] `ADW_gap_equation_emergent_gravity.txt` \u2014 ADW interaction Hamiltonian, Wen's lattice QED model, Hubbard-Stratonovich decomposition, Vergeles unitarity proof dependencies, vestigial gravity details, existing gap equation calculations"
+        },
+        {
+          "line": 259,
+          "text": "**Risk:** High. The gap equation may have no nontrivial solution, or the solution may break the wrong symmetry. Either outcome is publishable but a negative result redirects toward Level 1 (vestigial gravity) rather than Level 2."
+        },
+        {
+          "line": 308,
+          "text": "| Wave 3 | Gap equation fails | Publish negative result; pivot to vestigial gravity (Level 1) | N/A (opposite outcome) |"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase4_Roadmap.md",
+      "sha256": "55497c0f478bbf68f387a7ebfe49f92a5ca31d35a2d3cdfcf1dbdc539e2f4092",
+      "hits": [
+        {
+          "line": 1,
+          "text": "# Phase 4: Vestigial Gravity, Fracton Layer 2, and Experimental Predictions"
+        },
+        {
+          "line": 20,
+          "text": "2. Test vestigial gravity (Level 1) numerically via Monte Carlo"
+        },
+        {
+          "line": 118,
+          "text": "- [x] `Phase4_1R_vestigial_lattice_hamiltonian.txt` \u2014 Lattice Hamiltonian for vestigial gravity simulation"
+        },
+        {
+          "line": 124,
+          "text": "- `Lattice Hamiltonian for vestigial gravity Monte Carlo simulation.md`"
+        },
+        {
+          "line": 137,
+          "text": "**Goal:** Numerically test Volovik's vestigial gravity by measuring the metric correlator g_mu_nu = eta_ab <E^a_mu E^b_nu> in the disordered-tetrad phase of a lattice model with ADW-type interaction."
+        },
+        {
+          "line": 140,
+          "text": "**Research:** `Lit-Search/Phase-4/Lattice Hamiltonian for vestigial gravity Monte Carlo simulation.md`"
+        },
+        {
+          "line": 174,
+          "text": "- [ ] `lean/SKEFTHawking/VestigialGravity.lean` \u2014 Structural theorems"
+        },
+        {
+          "line": 293,
+          "text": "### 3C. Vestigial Gravity Paper [LLM Pipeline]"
+        },
+        {
+          "line": 295,
+          "text": "**Goal:** If 2A succeeded, write the full paper with numerical evidence for vestigial gravity. If 2A produced a negative result, write the negative result paper."
+        },
+        {
+          "line": 314,
+          "text": "**Goal:** Synthesize all gravity results \u2014 ADW (Paper 5), vestigial (Paper 6/3C), fracton-gravity (3A) \u2014 into a unified assessment of all paths to emergent spin-2 gravity. Compare Level 1 (vestigial), Level 2 (ADW), and fracton alternatives."
+        },
+        {
+          "line": 369,
+          "text": "| Paper 6 (3C) | PRD | Vestigial gravity simulation (+ or -) | TBD | TBD |"
+        },
+        {
+          "line": 419,
+          "text": "Phase 4 added 5 new Lean modules (ChiralityWall, VestigialGravity, FractonHydro, FractonGravity, FractonNonAbelian) with 86 theorems total. These were written by subagents and have not been Aristotle-tested. Submit all 86 theorems as `--target` one-by-one to confirm they are at maximum strength."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5_Roadmap.md",
+      "sha256": "e8099e56ef6466df5baa63263a6ad1de7f236f872a5087c7f055bb55ed54ce7c",
+      "hits": [
+        {
+          "line": 14,
+          "text": "*Prepared 2026-03-28 | Follows Phase 4 (vestigial gravity, fracton Layer 2, experimental predictions) and Wave 5 quality hardening*"
+        },
+        {
+          "line": 41,
+          "text": "- ADW gap equation: qualified positive, vestigial gravity numerically confirmed (3-phase structure)"
+        },
+        {
+          "line": 106,
+          "text": "3. Spatial attenuation correction: N_H_corr(k) = N_H_meas(k) * exp[Gamma_pol * (L1/v_g(k_s) + L2/v_g(k_H))]"
+        },
+        {
+          "line": 157,
+          "text": "- [x] `Phase5_vestigial_correlator_simulation_scoping.txt` \u2192 **Complete**: `Monte Carlo simulation of vestigial gravity in ADW lattice models.md`"
+        },
+        {
+          "line": 169,
+          "text": "- `Monte Carlo simulation of vestigial gravity in ADW lattice models.md`"
+        },
+        {
+          "line": 553,
+          "text": "- [x] `fig_vestigial_susceptibility_split` \u2014 susceptibility split transition (2026-03-30)"
+        },
+        {
+          "line": 580,
+          "text": "**Paper 6 update: vestigial gravity** (production MC results)"
+        },
+        {
+          "line": 680,
+          "text": "| Vestigial MC scoping | `Monte Carlo simulation of vestigial gravity in ADW lattice models.md` | Complete | Workstation-tractable at 8\u2074. Sign problem likely absent. Fermion-bag recommended |"
+        },
+        {
+          "line": 1067,
+          "text": "### 9E. Vestigial Gravity: Correct Physics Assessment [COMPLETE]"
+        },
+        {
+          "line": 1074,
+          "text": "- [x] `Lit-Search/Phase-5/Vestigial metric susceptibility from ADW tetrad condensation.md` \u2014 analytical susceptibility derivation"
+        },
+        {
+          "line": 1076,
+          "text": "- [x] `Lit-Search/Phase-5/Feasibility of 4D HOTRG for vestigial gravity transitions in the ADW model.md` \u2014 TRG feasibility"
+        },
+        {
+          "line": 1088,
+          "text": "## 10. Wave 6 \u2014 Analytical Vestigial Susceptibility [Pipeline: Stages 1-12]"
+        },
+        {
+          "line": 1090,
+          "text": "**Research basis:** `Lit-Search/Phase-5/Vestigial metric susceptibility from ADW tetrad condensation.md`"
+        },
+        {
+          "line": 1136,
+          "text": "- [x] Stage 3 \u2014 `lean/SKEFTHawking/VestigialSusceptibility.lean` \u2014 16 sorry-stub theorems, `lake build` clean (2026-04-01)"
+        },
+        {
+          "line": 1159,
+          "text": "  - `fig_vestigial_susceptibility` (fig63) \u2014 \u03c7_g\u207b\u00b9 vs G/G_c for u_g = 0.3, 0.5, 1.0, 2.0"
+        },
+        {
+          "line": 1169,
+          "text": "- [ ] Stage 10 \u2014 Paper 6: add section on analytical vestigial susceptibility derivation, exponential window prediction, RPA formula, G_ves < G_c theorem. Remove prior MC-based vestigial claims. Reference Lean theorems."
+        },
+        {
+          "line": 1309,
+          "text": "## 12. Wave 8 \u2014 4D ATRG for Vestigial Gravity (CONDITIONAL \u2014 see decision below)"
+        },
+        {
+          "line": 1311,
+          "text": "**Research basis:** `Lit-Search/Phase-5/Feasibility of 4D HOTRG for vestigial gravity transitions in the ADW model.md`"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5a_Roadmap.md",
+      "sha256": "92d3410499c2d16843971d71f4551965176fb56a34d64441cbf4076c699c16ea",
+      "hits": [
+        {
+          "line": 29,
+          "text": "- Vestigial: analytical susceptibility proved (G_ves < G_c whenever u_g > 0), RHMC production in flight"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5b_Roadmap.md",
+      "sha256": "8a2eaec03ae7bcf454afa63ca65d04771ab785e976a284a37c00648ce50b832e",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5c_Roadmap.md",
+      "sha256": "1a764745fd48cbffb8c2d6a2613e1b6f330dcee94d42d23bb9085a124478dfd9",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5d_Roadmap.md",
+      "sha256": "1f2edfee835ecd23464b49cc26e18a89c7b4394c2b48cc895a511bdfce2a8db6",
+      "hits": [
+        {
+          "line": 41,
+          "text": "- `VestigialSusceptibility.lean` \u2014 16 theorems: gamma trace, bubble integral \u03a0\u2080, RPA susceptibility, vestigial_before_tetrad, exponential window"
+        },
+        {
+          "line": 58,
+          "text": "- `Lit-Search/Phase-5/Vestigial metric susceptibility from ADW tetrad condensation.md` \u2014 Explicit V_eff, G_c = 8\u03c0\u00b2/(N_f \u039b\u00b2), vestigial window exponentially narrow in 4D. RPA bubble formalism. Lean formalizability assessed."
+        },
+        {
+          "line": 72,
+          "text": "- `Lit-Search/Tasks/complete/Phase5_vestigial_analytical_susceptibility.txt` \u2014 Analytical susceptibility"
+        },
+        {
+          "line": 151,
+          "text": "**Goal:** Solve the gap equation numerically for 4D tetrad channel and compare to vestigial susceptibility."
+        },
+        {
+          "line": 209,
+          "text": "- [x] `notebooks/Phase5d_TetradGap_Technical.ipynb` \u2014 computation notebook (pre-MC)"
+        },
+        {
+          "line": 210,
+          "text": "- [x] `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` \u2014 accessible narrative (pre-MC)"
+        },
+        {
+          "line": 246,
+          "text": "  - [ ] Update Lean theorem counts (VestigialSusceptibility + new TetradGapEquation)"
+        },
+        {
+          "line": 257,
+          "text": "- [x] `notebooks/Phase5d_TetradGap_Technical.ipynb` \u2014 gap equation derivation, cross-validation, phase diagram (pre-MC, update after Wave 3)"
+        },
+        {
+          "line": 258,
+          "text": "- [x] `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` \u2014 accessible narrative (pre-MC, update after Wave 3)"
+        },
+        {
+          "line": 261,
+          "text": "- [ ] `docs/stakeholder/Phase5d_Implications.md`"
+        },
+        {
+          "line": 262,
+          "text": "- [ ] `docs/stakeholder/Phase5d_Strategic_Positioning.md`"
+        },
+        {
+          "line": 359,
+          "text": "- [ ] `notebooks/Phase5d_Polariton_Technical.ipynb`"
+        },
+        {
+          "line": 360,
+          "text": "- [ ] `notebooks/Phase5d_Polariton_Stakeholder.ipynb`"
+        },
+        {
+          "line": 466,
+          "text": "- 2 stakeholder docs: Phase5d_Implications, Phase5d_Strategic_Positioning"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5e_Roadmap.md",
+      "sha256": "41e9d77c4a16029c0d3d4834a30d96ad1136175628d9c702d8c917910b081ad6",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5f_Roadmap.md",
+      "sha256": "9ec9092c80b04df472b4bc66a4078c224ff3ee2d8259b4d6ef211aa75dd0e4a4",
+      "hits": [
+        {
+          "line": 63,
+          "text": "- [x] Volovik vestigial gravity (metric without tetrad) as potential bypass"
+        },
+        {
+          "line": 67,
+          "text": "**Impact:** Changes the research program \u2014 perturbative Wen\u2192ADW path is closed. Instanton and vestigial gravity paths remain open. Paper 5 needs updated discussion."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5g_Roadmap.md",
+      "sha256": "a7a4e90b8982993ebae35a1f23b7df228e0446857a01e387c636180322eefdff",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5h_Roadmap.md",
+      "sha256": "09ef81de5cc9844f8cf9b59565977ebb29d4e91defea0a9002dbb8c076947561",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5i_Roadmap.md",
+      "sha256": "a90f10a6d5fd1e3401e5eab8e4454c82c203cb646226ae4cc847c1949754f686",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5j_Roadmap.md",
+      "sha256": "9128a46cce537862b4c609526caccd183f089f8e4a485407d8b144a3f72e8dcc",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5k_Roadmap.md",
+      "sha256": "e3c86476267db03aa7834a11659ec6b997782d36ca89e66d2bd9c1ba6611306a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5l_Roadmap.md",
+      "sha256": "d973f45b41cc3c7c0ce97a3b2d009dbcd9e2fe0ccf93a2c42956c69acf9ea0d4",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5m_Roadmap.md",
+      "sha256": "53ad7c4cf1f45010b028e83ba719efd9ad9601ef82c046565febee76aaf9331b",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5n_Roadmap.md",
+      "sha256": "611bc1cd478f59459c60c5d61c69165b0cdc8a274c7d42da3531d72c4b36d5f6",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5o_Roadmap.md",
+      "sha256": "f23c1302f05a72c8b2e59831433fc60f46b491bbba24947e8980e822847c5bdd",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5p_Roadmap.md",
+      "sha256": "70bb913f794897684b26f3b44bf13220e7320f4db35e93110b88694b63156102",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qB_RokhlinTopoDischarge_Plan.md",
+      "sha256": "d5647935b5986d280e33a87e7e8381d28230f692b8ed126cdb8bdec8bb781f27",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qB_SpectraFreeSpinBordism_Roadmap.md",
+      "sha256": "4ac26e61ee41fc412ff21d7dc2ea50da42a73f2722517a0e8352a9270d015b18",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qC_ArfBridge_Roadmap.md",
+      "sha256": "4f0ad17dc0b74133465928f8e03c6800851e832a758271295bc52b5202196424",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qD_AdamsABP_Frontier_Roadmap.md",
+      "sha256": "c8bb9360190d08ccd564ce989d9f693cec969261c42023c0d89253d791d191e3",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qE_SixteenConvergence_Roadmap.md",
+      "sha256": "efca76a495f0f2915e47e42d77344a11e42f619162ec0e146dded1709c40e64b",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "sha256": "22fd22764f5b6011837ef4870f4bfd155832dbad71eb59564f3b32ae28364124",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qG_GenuineUnconditional_Roadmap.md",
+      "sha256": "8da1670950467d994ef521b4b81c7072d6e91665ac0ff4139f197ab58db81f00",
+      "hits": [
+        {
+          "line": 46,
+          "text": "geometric **w\u2082/Wu tower L1\u2192L5**, of which **L2 (Poincar\u00e9 duality via the cap-product MV connecting square)"
+        },
+        {
+          "line": 105,
+          "text": "The L1\u2192L5 w\u2082/Wu tower is the route: L1 `[M]` fundamental class \u2705 \u2192 **L2 Poincar\u00e9 duality (the unlock \u2014"
+        },
+        {
+          "line": 132,
+          "text": "| L1 fundamental class | `fundamentalClass_ne_zero`, `homologyTopEquivZMod2` (genuine: CompactSpace + ChartedSpace, no posit) | `SingularFundamentalClassExist.lean` |"
+        },
+        {
+          "line": 352,
+          "text": "- **Target:** w\u2082(TM) bordism-invariance (from the L1\u2013L3 tower) \u27f9 the `\u03a9^O` floor is refined away for the"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qH_LiteratureGradeUnconditional_Roadmap.md",
+      "sha256": "5a564117a09875d112e0a2e672486fbaba31f114b319ce6279037b76a058d8d0",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5qT_ExtSubstantiation_Roadmap.md",
+      "sha256": "e9a513e63c4e1168107b89833510a4fdf0dc3235c25953aa4b28b0bc83cf89fb",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5q_Roadmap.md",
+      "sha256": "e491f5e90a21abf8f332effb696ddb87b8738a88514fc6ec9005bdebc3363f36",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5r_Roadmap.md",
+      "sha256": "e62508103095ff89e33e44397dcb6039396c96bab78694681255164e5ccf4061",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5s_Roadmap.md",
+      "sha256": "18ea29d462fda212d54f8c44aa5ae865130359e47533601a29e30a630f1f895a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5t_Roadmap.md",
+      "sha256": "f0d6e4987d2b22ebec06d86ef145e99eba69817b3e68a575c54834e019da17f0",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5u_Paper_Revision_Roadmap.md",
+      "sha256": "f5417ca84faef6e88de22c61f5993161c8bf2e73b99f5adf457d8a0e1242f75a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5v_Roadmap.md",
+      "sha256": "08045263694189e444718f081c45d5eb955754686d581034dd4a891735d2dc4e",
+      "hits": [
+        {
+          "line": 566,
+          "text": "5. The Proof-Chain-Viz design (`Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard`) needs wiring \u2014 registry fields (`chain_id`, `is_milestone`), three endpoints (`/api/chain/{id}/summary|milestones|subgraph`), and a dashboard tab with L0/L1/L2 zoom levels."
+        },
+        {
+          "line": 621,
+          "text": "  - `GET /api/chain/{id}/milestones` \u2014 L1 milestone DAG with `hop_count` computed via bounded BFS (depth \u2264 5) through non-milestone intermediates"
+        },
+        {
+          "line": 625,
+          "text": "  - L1 milestone DAG via deterministic topo-layered layout (`layoutDAG()` \u2014 no force sim; figures must be reproducible)"
+        },
+        {
+          "line": 718,
+          "text": "- [x] **9h-6 Port chains_tab.** 436 LOC \u2192 131 LOC (70% reduction). L1 milestone DAG now renders as SSR SVG (layoutDAG ported to Python) rather than client-side D3-free geometry."
+        },
+        {
+          "line": 979,
+          "text": "- [x] **Research Status (chains) tab kept** as a curated traversal \u2014 L1 milestone DAG with editorial `chain_overlays.yaml` headroom (Wave 9d-followup) is a different role than the KG tab's free-form filtering. Not folded."
+        },
+        {
+          "line": 1126,
+          "text": "| 9d | \u2014 | 0 (done 2026-04-24) | Dynamic chain viz \u2014 9 chains, L0/L1 tab, 4 endpoints, Playwright-verified |"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5w_Roadmap.md",
+      "sha256": "f19bba6ebcf700531f4f800df69e61976a836808a4e83080244a1cdd376dc728",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase5x_Roadmap.md",
+      "sha256": "d871f95ba9b3d340f4096e79de89f9cb2fc938f0279a55e1f1b19007a213d62e",
+      "hits": [
+        {
+          "line": 34,
+          "text": "**Scope:** Investigate how the emergent gravity, anomaly, and dissipative EFT infrastructure developed in Phases 1-5w connects to dark matter and dark energy. Three tracks: (A) anomaly-forced hidden sector + cosmological constant from condensation equilibrium (highest priority \u2014 builds on machine-ve"
+        },
+        {
+          "line": 43,
+          "text": "**Why a separate phase:** The dark sector is a *distinct physical domain* from the analog gravity experiments (BEC, polariton, graphene) and the formal verification program. However, it connects to the same theoretical infrastructure \u2014 \u2124\u2081\u2086 anomaly computation, ADW tetrad condensation, vestigial grav"
+        },
+        {
+          "line": 86,
+          "text": "- **Source:** `Lit-Search/Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md`"
+        },
+        {
+          "line": 98,
+          "text": ">    - `Vestigial Gravity Phase Relics as Dark Matter Candidates.md` \u2192 Waves 6, 8"
+        },
+        {
+          "line": 105,
+          "text": ">    - `lean/SKEFTHawking/VestigialGravity.lean` \u2014 `vestigial_has_metric_no_tetrad`, `ep_violation_in_vestigial`, `phase_hierarchy` (18 theorems)"
+        },
+        {
+          "line": 129,
+          "text": "| **VestigialGravity.lean** | 18 | `vestigial_has_metric_no_tetrad`, `ep_violation_in_vestigial`, `phase_hierarchy`, `phase_levels_ordered` | Vestigial relics, DM from phase transitions. Deep research: L=6,8 insufficient \u2014 MUST extend MC to L=10,12,16 |"
+        },
+        {
+          "line": 137,
+          "text": "| **AcousticMetric.lean** | ~12 | Painlev\u00e9-Gullstrand acoustic metric structure | SFDM acoustic metric specialization (Theorem L1 in deep research) |"
+        },
+        {
+          "line": 156,
+          "text": "| `Lit-Search/Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md` | Phase transition order TBD, KZ relic abundance, EP violation, GL(4)/SO(3,1) homotopy, STEP mission | **COMPLETE** |"
+        },
+        {
+          "line": 160,
+          "text": "| `Lit-Search/Phase-5/Vestigial metric susceptibility` | Three-phase structure, \u039b_cosm, EP violation in vestigial phase | Prior |"
+        },
+        {
+          "line": 192,
+          "text": "| 5 | `Tasks/Phase5x_vestigial_gravity_relics_dark_matter.md` | `Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md` | B | MC extension required; EP violation distinguishing; 5 priority questions |"
+        },
+        {
+          "line": 373,
+          "text": "- [ ] Priority computation: vestigial susceptibility \u03c7_v from gap equation at one loop (feeds Paper 10/11)"
+        },
+        {
+          "line": 377,
+          "text": "**Lean infrastructure reuse:** ADWMechanism (21), VestigialGravity (18), HawkingUniversality (8). **Estimated: 6 new theorems.**"
+        },
+        {
+          "line": 462,
+          "text": "| L1 | `sfdm_acoustic_metric` | Easy | Specialize Painlev\u00e9-Gullstrand to BK SFDM with P~\u03c1\u00b3 |"
+        },
+        {
+          "line": 472,
+          "text": "- [x] **Shipped 2026-04-22 session 4** \u2014 `lean/SKEFTHawking/SFDMMergerForecast.lean` (30 theorems, 0 sorry, 0 new axioms). Covers: BK fiducial constants + monotonicity across halo masses; `sfdm_sound_speed_sq` + positivity + linear-\u03bc / inverse-m scaling (L1); Landau criterion + decidable `MergerRegi"
+        },
+        {
+          "line": 489,
+          "text": "### Wave 6 \u2014 Vestigial Gravity Relics as DM [Pipeline: Stages 1-8] \ud83d\udea7 BLOCKED by MC Extension"
+        },
+        {
+          "line": 543,
+          "text": "**Lean infrastructure reuse:** VestigialGravity (18), ADWMechanism (21), SO4Weingarten (16). **Estimated: 5 new theorems.**"
+        },
+        {
+          "line": 761,
+          "text": "| `Lit-Search/Phase-5x/Vestigial Gravity Phase Relics as Dark Matter Candidates.md` | W6, W8, W9 | MC extension needed; GUT-scale T_c; EP violation unique; GL(4)/SO(3,1) homotopy; 5 priority questions |"
+        },
+        {
+          "line": 780,
+          "text": "| `Lit-Search/Phase-5/Vestigial metric susceptibility from ADW tetrad condensation` | W3, W6 | Three-phase structure, \u039b_cosm, EP violation in vestigial phase |"
+        },
+        {
+          "line": 825,
+          "text": "| W3 | CosmologicalConstant.lean | 3 historical near-term slots: T1 algebra retained; T2 physical equilibrium and native regulated-potential T3 still open | 3 historical T4\u2013T6 slots; microscopic ADW and magnitude remain BUILD | 200-400 historical estimate | ADWMechanism (21), VestigialGravity (18), "
+        },
+        {
+          "line": 826,
+          "text": "| W4 | (no new module) | 0 | 0 | 0 | ADWMechanism, VestigialGravity (assessment only) |"
+        },
+        {
+          "line": 827,
+          "text": "| W5 | SFDMAcousticMetric.lean | 4 (L1-L2 easy, L3 L6 med) | 2 (L4-L5 hard) | 200-400 | WKBConnection (18), WKBAnalysis (17), HawkingUniv (8), AcousticMetric (12) |"
+        },
+        {
+          "line": 828,
+          "text": "| W6b | VestigialRelics.lean | 4 (coset homotopy, EP bound, skyrmion \u03c4, self-int) | 1 (KZ density) | 150-300 | VestigialGravity (18), ADWMechanism (21), SO4Weingarten (16) |"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5y_Roadmap.md",
+      "sha256": "2076415a2e19d9fafd868b034b21240cf04d11a462c0a45c1716b24290959c20",
+      "hits": [
+        {
+          "line": 3,
+          "text": "## Current L1 follow-on status \u2014 2026-10-17"
+        },
+        {
+          "line": 5,
+          "text": "The dated terminal research/harvest closure below is preserved. It does not supply a universal impossibility theorem for every later propagating-mode construction or close the original L1 physical targets. **B3 susceptibility/window, propagating mode/matter coupling and physical transport/frequency "
+        },
+        {
+          "line": 7,
+          "text": "H1's historical COMPLETE/NO-GO disposition remains scoped to its assessed identification and assumptions. A missing derived propagating degree of freedom is a construction obligation, not a generic no-go proof. Next substantive work must construct the actual metric response/propagator and coupling, "
+        },
+        {
+          "line": 20,
+          "text": "> [`docs/stakeholder/Phase5y_Closure_Summary.md`](../stakeholder/Phase5y_Closure_Summary.md)."
+        },
+        {
+          "line": 28,
+          "text": "> - \u2705 Wave 6 \u2014 Extensions: `VestigialGravity` +7, `VestigialSusceptibility` +8, `TetradGapEquation` +4"
+        },
+        {
+          "line": 33,
+          "text": "*Supersedes `Phase5y_Roadmap.md` v1 (2026-04-22). Closes the phase after six rounds of deep research returned dual NO-GO on the original headline bet and the reframed alternatives. Follows the Phase 5s convention: decompose a program-level outcome (\"5y is closed, harvest what was learned\") into trac"
+        },
+        {
+          "line": 35,
+          "text": "**Entry state:** 3021 Lean theorems, 0 sorry, 1 axiom across 133 modules. `ADWMechanism` (21), `VestigialGravity` (18), `VestigialSusceptibility` (16), `TetradGapEquation` (20), `WetterichNJL` (18), `FractonFormulas` (45), `FractonHydro` (17), `FractonGravity` (20) provide the Layer-1\u2192Layer-2 machin"
+        },
+        {
+          "line": 37,
+          "text": "**Strategic framing:** Rounds 3, 4a, 4b, 5 executed the original q-theory \u2192 DESI spine and returned NO-GO via a Gibbs-Duhem structural theorem covering all four KV realizations (4-form, 2-brane, fermionic-crystal, unimodular). Rounds H1 and H4 executed the reframe alternatives (Volovik second-sound "
+        },
+        {
+          "line": 48,
+          "text": ">    - `Phase5y_qtheory_desi_derivation.md` (Round 3)"
+        },
+        {
+          "line": 49,
+          "text": ">    - `Phase5y_qtheory_deltaq_extension.md` + `Phase5y_Round4a_Validation.md` (Round 4a)"
+        },
+        {
+          "line": 50,
+          "text": ">    - `Phase5y_aether_3form_literature.md` (Round 4b)"
+        },
+        {
+          "line": 51,
+          "text": ">    - `Phase5y_fermionic_crystal_elasticity_tetrad.md` (Round 5)"
+        },
+        {
+          "line": 52,
+          "text": ">    - `Phase5y_H1_second_sound_graviton.md` (H1)"
+        },
+        {
+          "line": 53,
+          "text": ">    - `Phase5y_H4_vestigial_gravity_EOS.md` (H4)"
+        },
+        {
+          "line": 55,
+          "text": "> 5. Related prior phases: Phase 3 Wave 3 (ADW), Phase 4 Wave 2 (vestigial MC), Phase 5f (EmergentGravityBounds). 5y **closes and harvests**; it does not reopen or re-scope."
+        },
+        {
+          "line": 72,
+          "text": "- Lean formalization of the H4 original vestigial-gravity effective fluid EOS derivation"
+        },
+        {
+          "line": 76,
+          "text": "- Extensions to existing `VestigialGravity`, `VestigialSusceptibility`, `TetradGapEquation` modules"
+        },
+        {
+          "line": 198,
+          "text": "H4 produced what appears to be the first closed-form derivation of the effective fluid EOS `(w_vest, c_s\u00b2, \u03b6_vest)` for a Volovik vestigial gravitational phase, via systematic analogy with the Fernandes-Fu charge-4e GL free energy. Key results: `w_vest(\u03c4) = (1 \u2212 \u03c4\u00b2)/(5\u03c4\u00b2 \u2212 1)` (H4 EQ.117), `c_s\u00b2(\u03c4) "
+        },
+        {
+          "line": 204,
+          "text": "**Goal:** Formalize the charge-4e GL template and the explicit dictionary to vestigial-tetrad gravity."
+        },
+        {
+          "line": 214,
+          "text": "- Cross-references existing `VestigialGravity.lean` for target side"
+        },
+        {
+          "line": 251,
+          "text": "### Wave 6 \u2014 Extensions to Existing Vestigial-Gravity Modules [Pipeline: Stages 1\u20135]"
+        },
+        {
+          "line": 253,
+          "text": "**Goal:** Extend `VestigialGravity.lean`, `VestigialSusceptibility.lean`, `TetradGapEquation.lean` with the new bridging content from Track B."
+        },
+        {
+          "line": 258,
+          "text": "- `lean/SKEFTHawking/VestigialGravity.lean` (current: 18 theorems) \u2014 add vestigial-phase definition formalization matching H4 EQ.96 (`\u27e8\u0113^a_\u03bc\u27e9 = 0`, `g_\u03bc\u03bd = \u03b7_ab \u27e8\u0113^a_\u03bc \u0113^b_\u03bd\u27e9 \u2260 0`); Z4 symmetry structure per Volovik arXiv:2406.00718; fermion-vs-boson WEP-violation structural lemma. Add ~6 theorems \u2192"
+        },
+        {
+          "line": 259,
+          "text": "- `lean/SKEFTHawking/VestigialSusceptibility.lean` (current: 16 theorems) \u2014 add Kubo formula connection to bulk viscosity (H4 EQ.121), RPA-summed susceptibility closed form at FRW, FDT connection to dissipation. Add ~8 theorems \u2192 24 theorems."
+        },
+        {
+          "line": 311,
+          "text": "  - The tested mechanisms (KV q-theory in four realizations; Volovik vestigial gravity; Volovik two-fluid de Sitter / second-sound graviton)"
+        },
+        {
+          "line": 334,
+          "text": "- `docs/stakeholder/Phase5y_Impact_on_5x.md` \u2014 dark matter phase inherits no NO-GO from 5y; different mechanisms, different obstruction landscape; 5x scoping proceeds independently"
+        },
+        {
+          "line": 335,
+          "text": "- `docs/stakeholder/Phase5y_Impact_on_5u.md` \u2014 polariton Hawking Tier A work entirely unaffected; 5y cosmological-scale obstructions do not propagate to lab-scale analog gravity; Paris LKB collaboration preparation proceeds unchanged"
+        },
+        {
+          "line": 336,
+          "text": "- `docs/stakeholder/Phase5y_Impact_on_5d.md` \u2014 RHMC ADW fermion-bootstrap unaffected; ADW condensation as a mechanism for generating tetrad physics is orthogonal to the dark-energy application"
+        },
+        {
+          "line": 337,
+          "text": "- `docs/stakeholder/Phase5y_Impact_on_5w.md` \u2014 graphene Dirac fluid phase unaffected; pure Layer-2 physics with experimental handles independent of cosmology"
+        },
+        {
+          "line": 338,
+          "text": "- `docs/stakeholder/Phase5y_Closure_Summary.md` \u2014 one-page closure summary for any future reader (collaborator, reviewer, future-self): what 5y attempted, what it found, what remains valuable"
+        },
+        {
+          "line": 376,
+          "text": "  Wave 4 (CondensedMatterAnalog + VestigialMapping) \u2192 Wave 5 (VestigialEOS) \u2192 Wave 6 (extensions to VestigialGravity/Susceptibility/TetradGapEquation)"
+        },
+        {
+          "line": 401,
+          "text": "| Wave 6 | B | Extensions to `VestigialGravity`, `VestigialSusceptibility`, `TetradGapEquation` | 1.5 weeks | Waves 4, 5 | **TIER 1** |"
+        },
+        {
+          "line": 416,
+          "text": "| Round 3 | q-theory \u2192 DESI derivation (procedural recipe) | `Lit-Search/Phase-5y/Phase5y_qtheory_desi_derivation.md` | **COMPLETE \u2014 NO-GO verdict** |"
+        },
+        {
+          "line": 417,
+          "text": "| Round 4a | \u03b4q Klein-Gordon extension + KV 2016 validation | `Lit-Search/Phase-5y/Phase5y_qtheory_deltaq_extension.md` + `Phase5y_Round4a_Validation.md` | **COMPLETE \u2014 NO-GO verdict** |"
+        },
+        {
+          "line": 418,
+          "text": "| Round 4b | 3-form aether literature survey | `Lit-Search/Phase-5y/Phase5y_aether_3form_literature.md` | **COMPLETE \u2014 no new mechanism** |"
+        },
+        {
+          "line": 419,
+          "text": "| Round 5 | Fermionic-crystal elasticity-tetrad realization (KV 2019) | `Lit-Search/Phase-5y/Phase5y_fermionic_crystal_elasticity_tetrad.md` | **COMPLETE \u2014 NO-GO verdict; strengthened Gibbs-Duhem theorem** |"
+        },
+        {
+          "line": 420,
+          "text": "| H1 | Kronecker-anomaly second-sound graviton | `Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md` | **COMPLETE \u2014 NO-GO with PARTIAL footnote** |"
+        },
+        {
+          "line": 421,
+          "text": "| H4 | Vestigial-gravity effective fluid EOS via charge-4e analog | `Lit-Search/Phase-5y/Phase5y_H4_vestigial_gravity_EOS.md` | **COMPLETE \u2014 NO-GO for DESI, PARTIAL for framework; original derivation** |"
+        },
+        {
+          "line": 441,
+          "text": "- Extensions to three existing vestigial-gravity modules (18 theorems total)."
+        },
+        {
+          "line": 452,
+          "text": "- 3 extended modules: `VestigialGravity`, `VestigialSusceptibility`, `TetradGapEquation`"
+        },
+        {
+          "line": 477,
+          "text": "- Does not claim vestigial gravity is ruled out as a concept. The H4 verdict is NO-GO for DESI under the natural mapping; PARTIAL for the framework. A future tetrad-condensation cosmology with dynamical gap scale might revive elements."
+        },
+        {
+          "line": 484,
+          "text": "- The vestigial-gravity effective fluid EOS admits a closed-form derivation via charge-4e analogy, and this derivation quantitatively fails DESI under natural parameter values."
+        },
+        {
+          "line": 494,
+          "text": "- Phase 4 Wave 2 (Vestigial gravity simulation) \u2014 `src/vestigial/`, `VestigialGravity.lean`, `VestigialSusceptibility.lean`"
+        },
+        {
+          "line": 507,
+          "text": "- `Phase5y_Roadmap.md` v1 (2026-04-22) \u2014 the pre-deep-research exploratory scoping; this document replaces it"
+        },
+        {
+          "line": 517,
+          "text": "- Round H1: Kronecker-anomaly second-sound graviton \u2014 NO-GO"
+        },
+        {
+          "line": 518,
+          "text": "- Round H4: vestigial-gravity EOS via charge-4e \u2014 NO-GO + original derivation"
+        },
+        {
+          "line": 522,
+          "text": "*Phase 5y terminal roadmap. Revised 2026-04-24, replacing `Phase5y_Roadmap.md` v1. All six deep-research rounds complete; five NO-GO verdicts plus one original derivation harvested. Roadmap structure follows [Phase 5s template](https://github.com/NetRxn/SK_EFT_Hawking/blob/main/docs/roadmaps/Phase5s"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase5z_Roadmap.md",
+      "sha256": "2e752c5fa8236a9a39da10754076bfca00b5d1b8ce40cba1f06b437a3ba48a43",
+      "hits": [
+        {
+          "line": 29,
+          "text": "**Entry state (calibration, 2026-04-22 Inventory_Index snapshot):** 150 modules, 3300+ theorems, 0 sorry, 1 axiom. Core rung machinery in place: `WetterichNJL.lean` (18, scalar/pseudoscalar/vector channels + NJL\u2013ADW correspondence), `TetradGapEquation.lean` (20, generic NJL-type gap equation + bifur"
+        },
+        {
+          "line": 42,
+          "text": "> 4. Re-read Phase 5y closure context: `docs/roadmaps/Phase5y_Roadmap.md` + `docs/stakeholder/Phase5y_Closure_Summary.md` (5z does NOT inherit 5y's NO-GO \u2014 different physical domain)"
+        },
+        {
+          "line": 108,
+          "text": "- Integrates with `WetterichNJL.lean`, `TetradGapEquation.lean`, `VestigialSusceptibility.lean`, `FermiPointTopology.lean`, `ADWMechanism.lean`"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AA_Roadmap.md",
+      "sha256": "f501bc2017bcc87b7971cb84d9b066a5b6e514c25390d765a381ec712322eb5d",
+      "hits": [
+        {
+          "line": 50,
+          "text": "  - **Stage-13 GREEN** (`docs/audits/stage13_phase6AA_2026-06-01.md`): 5/5 checks PASS; the 1 REQUIRED (root-import disconnection) remediated (`c1b38fae`, counts regenerated); ADVISORY-1 fixed; ADVISORY-2 (D6 `\\cite`) deferred to pre-external-review."
+        },
+        {
+          "line": 51,
+          "text": "  - **Bridging preprint** draft in `papers/phase6AA_qnetwork_preprint/` (leak-clean)."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AB_Roadmap.md",
+      "sha256": "40fcc5292c831d3448b142f802327e0d020c55b73ad4f1ada8d35d0afd5e387f",
+      "hits": [
+        {
+          "line": 3,
+          "text": "**Status:** OPEN (2026-06-01). Bundle-target D6 \u00a76. Builds on **Phase 6AA** (DONE, Stage-13 GREEN \u2014 see `Phase6AA_Roadmap.md` for the inherited decisions D1\u2013D3, Tier discipline, and the shipped `SKEFTHawking.QuantumNetwork.*` substrate). Extends the idealized memoryless swap-chain envelope to realis"
+        },
+        {
+          "line": 14,
+          "text": "| **W5** | Packaging: D6 \u00a76 extended (compile-clean) + preprint \u00a73a + fresh-context Stage-13 \u2192 FULLY CLEAN (`bbaf7d8a`; review `docs/audits/stage13_phase6AB_2026-06-01.md`) | \u2705 DONE |"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AC_Roadmap.md",
+      "sha256": "50d2096cf84220700c8465360bb02e7894994c0fe075d95fa9c6e4956cc58995",
+      "hits": [
+        {
+          "line": 13,
+          "text": "| **W4** | Packaging: D6 \u00a76 + preprint extended with W1\u2013W3 + fresh-context Stage-13 \u2192 FULLY CLEAN | \u2705 DONE (D6 \u00a76 + preprint \u00a73b, LaTeX compile PASS; Stage-13 GREEN \u2014 `docs/audits/stage13_phase6AC_2026-06-01.md`) |"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AD_Roadmap.md",
+      "sha256": "b3050233903c2650b3a83f50768e69aecfe5f3bd2306a2dca4de317ace6ec49b",
+      "hits": [
+        {
+          "line": 15,
+          "text": "All three Bucket-3 reference-richness items closed kernel-clean: Haar\u2013Pauli integral discharged (teleportation unconditional), W1\u2032 Tier-1 anchors shipped, DEJMPS general map structure + sub-basin convergence + non-monotonicity nuance. Counts 768 mod / 10056 thm / 0 axiom / 0 sorry. Stage-13 GREEN (`"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AE_Roadmap.md",
+      "sha256": "6d82564a97df32b3888ca05f28f7335f6c46ae27fe8e659c6dac353c6e045a81",
+      "hits": [
+        {
+          "line": 21,
+          "text": "DONE criterion met: the step-1 **PSD\u2192trace bridge `traceNorm_posSemidef` is PROVEN** kernel-pure (the linchpin), plus density=1 and the `partialTrace`/`choiMatrix` channel substrate; the deep analytic core (triangle, traceDist\u22641, fidelity/FvdG, contractivity, diamond-norm sup+axioms) is left as a **"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AF_Roadmap.md",
+      "sha256": "576bb56eadd422d3114b7bff0dfbf9236871827635d0f2c26e03eaf6852f7b14",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AG_Roadmap.md",
+      "sha256": "a0c893bf8904725d174b210694afc984a8d5740a42ffd21c70e322abefd5f554",
+      "hits": [
+        {
+          "line": 96,
+          "text": "regenerated (`scripts/update_counts.py`); D6 \u00a76 + `papers/phase6AA_qnetwork_preprint/preprint_draft.md`"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AH_Roadmap.md",
+      "sha256": "1f2a674a0e90fb598abe064325abe168f6453a3f7818266d40f93a59ffb22bd5",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AI_Roadmap.md",
+      "sha256": "c2d28b216277e98b1f5b5400db3d294b830f476def6e9f13f2501f6d8793d6dc",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AJ_Roadmap.md",
+      "sha256": "1015c9a1f5f2586fb894117502865f0338e1fdd78403f555d9440f2ee64f5527",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AK_Roadmap.md",
+      "sha256": "eb6ef1722714e75db61355cffd98474ee604ac1cc6d2a027d479f5168d058bf0",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AL_Roadmap.md",
+      "sha256": "e961e60fef3c10fb0a9040d0207bbc6dbc42f480268b87381550b5f237c558ca",
+      "hits": [
+        {
+          "line": 126,
+          "text": "## \ud83d\udd0c EXTERNAL-DEPENDENCY INTEL \u2014 PhysLib `QuantumInfo` (2026-06-04) \u2192 PINNED; see Phase6AM for adoption plan"
+        },
+        {
+          "line": 131,
+          "text": "The full adoption plan (Kraus\u2194MState bridge, DPI/SSA/REE consumption) lives in **`Phase6AM_Roadmap.md`**."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AM_Roadmap.md",
+      "sha256": "a49d21e5c71ca90a836bac79e03087648cfb686b8a4f6b7c5eeb9d52e91e1492",
+      "hits": [
+        {
+          "line": 84,
+          "text": "**`Phase6AL_Roadmap.md` (Gap 1)**; the unconditional `log d` Fannes certificate ships meanwhile."
+        },
+        {
+          "line": 311,
+          "text": "primary-source verification (Phase6AO_Roadmap.md \u00a7\"PRIMARY-SOURCE VERIFICATION COMPLETE\" \u2014 the"
+        },
+        {
+          "line": 329,
+          "text": "## Historical Phase6AM closure receipt (2026-06-09, user-approved)"
+        },
+        {
+          "line": 339,
+          "text": "See `Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase6AO_Roadmap.md` for the strengthening phase that closes all unachieved objectives."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AN_Roadmap.md",
+      "sha256": "4a72685a19bdfca99a54913ce6d936498ae4d570f517e0a883d8b3a51cc9bdae",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AO_Roadmap.md",
+      "sha256": "9e1bebefab7f466cfa9e7279f4a0b37ac5ca84d335be1004234ef356f51475e2",
+      "hits": [
+        {
+          "line": 349,
+          "text": "    LOC**; then T1 (~2000\u20133900) + T3 (~3000\u20135700). Full LOC map: memory `[[project_phase6AO_progress_2026_06_09]]`."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AP_Roadmap.md",
+      "sha256": "e507bd8f3c1329f6a5f01498341d4292a17d5ebfcfa9c63be8e4687dd17dc212",
+      "hits": [
+        {
+          "line": 86,
+          "text": "  `Phase6AO_Roadmap.md` \u00a7\"PRIMARY-SOURCE VERIFICATION COMPLETE\", the citation source of truth,"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6AQ_Roadmap.md",
+      "sha256": "c33aa9b9bca569063f0f07bc7f88f57121ca56df29e699b22b0b86c570753433",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6BA_Roadmap.md",
+      "sha256": "10d6ccc5d05ec0d3678b9ae21b1cbc514bb888742e5d9c4e39df93d5079bf575",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6BB_Roadmap.md",
+      "sha256": "22646df0984c5638892a97e7360bda9ed6de271679a397dc978d0dda55d9b8ae",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6BC_Roadmap.md",
+      "sha256": "16612c178be57db4abded9106098fa0ec3f3baeb5a67a782e871f90775383ae8",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6BD_Roadmap.md",
+      "sha256": "a2012bcba4fdd4192fdf402247df3ef74f455fa0dbf8c497a4b8019040c188fd",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6CA_Roadmap.md",
+      "sha256": "9638383942a85c6fd7cc6f7e8381b287a97f1904f94c26b8d307ca66bc6eb0fd",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6CA_prime_Roadmap.md",
+      "sha256": "23abbe1e487cda689433e386b6edcbb4670a7a4d7d5ed0f0f4c7231e21291fed",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6CB_Roadmap.md",
+      "sha256": "77e328101d80b19c108d4b6121331636a8511a11a1409a577b34afc41f991160",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6CC_Roadmap.md",
+      "sha256": "ed87f75d4c1b6ad09f41a1b9b71ddb3e564cd5e71d43f4ba296495ab98f5fe53",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6CD_Roadmap.md",
+      "sha256": "83feb28dbaed24e3effcb54da56aec3294d10b1abf0e6e9dad2f1550e4d4e523",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6CE_Roadmap.md",
+      "sha256": "3e0b114d07d9dd1c088114777553179a23fb55017505a83551a59572a54e5409",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6DA_Roadmap.md",
+      "sha256": "598cf07d66d8c95dff4fea9e25e9413281b70f1e7f2a4130c81f695b4cec43f3",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6EA_Roadmap.md",
+      "sha256": "66eccf9d231d67da9caa283a2627b2c0ec877f0f5c2c9a04892b3f930138b388",
+      "hits": [
+        {
+          "line": 152,
+          "text": "**The only form supported by evidence today** (hedged to knowledge, not asserted as fact): Mathlib supplies the surrounding decision theory and a sub-Gaussian Chernoff bound, and PhysLib supplies quantum hypothesis testing and fidelity; *to our knowledge* the Poisson Bhattacharyya closed form, the z"
+        },
+        {
+          "line": 245,
+          "text": "- [x] All three waves' AC boxes checked; per-wave post-strengthening audits logged in `docs/dev-loops/Phase6EA/LAB_NOTEBOOK.md`."
+        },
+        {
+          "line": 251,
+          "text": "Full analysis: `docs/dev-loops/Phase6EA/Phase6EA_Stage2_StatementFreeze.md`. The four items below were escalated"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6EB_Roadmap.md",
+      "sha256": "919425f2d9d9ffce42cc3088e63d66789b91311687aad4288bb51ccda966a817",
+      "hits": [
+        {
+          "line": 3,
+          "text": "**Status: COMPLETE \u2014 all three waves SHIPPED (authorized 2026-07-27; closed 2026-07-29).** Second phase of the `6E*` series (*verified device-physics metrology*). Consumes Phase 6EA (Poisson/Gaussian floors); consumed by 6EC (electrothermal detectors) and 6EE (composite readout ceilings). See `Phase"
+        },
+        {
+          "line": 19,
+          "text": "> 1. **Bootstrap reads, in order:** workspace `../../CLAUDE.md` + `SK_EFT_Hawking/CLAUDE.md` \u2192 `docs/WAVE_EXECUTION_PIPELINE.md` \u2192 `SK_EFT_Hawking_Inventory_Index.md` \u2192 `docs/roadmaps/Phase6EA_Roadmap.md` (series head)."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6EC_Roadmap.md",
+      "sha256": "9346141cee71ebd9b88429001bc3c50947abd3f71eb0efdd8970486ef9cc190e",
+      "hits": [
+        {
+          "line": 9,
+          "text": "> **Deferral list CLEARED 2026-07-29 (slot wt1).** The reviewer items held over from the physics correction \u2014 I4, I5, I7\u2013I10 and M1\u2013M7, plus the two 6EB minors \u2014 all shipped; see the *Post-review remediation* section below for the per-item disposition and the new declarations. The headline consequen"
+        },
+        {
+          "line": 26,
+          "text": "> 1. **Bootstrap reads, in order:** workspace `../../CLAUDE.md` + `SK_EFT_Hawking/CLAUDE.md` \u2192 `docs/WAVE_EXECUTION_PIPELINE.md` \u2192 `SK_EFT_Hawking_Inventory_Index.md` \u2192 `Phase6EA_Roadmap.md` (series head) \u2192 `Phase6EB_Roadmap.md` (consumed layer)."
+        },
+        {
+          "line": 156,
+          "text": "- **UNKNOWN-1 \u2014 RESOLVED 2026-07-29 (Wave-2 Stage 2), and resolved *past* the Pareto floor.** The prescribed test was \"decide by whether 6EE consumes it\". **Evidence: it does not.** `Phase6EE_Roadmap.md` Wave 3's Bricks list is entirely DC/static (`avgAssignmentError_rational_floor`, `readoutDecayPr"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6ED_Roadmap.md",
+      "sha256": "709f558818e5706e5630260ea8544fe04cc6e208cfbc0d1125b05e82e71daa96",
+      "hits": [
+        {
+          "line": 5,
+          "text": "> **\u26a0\ufe0f REVIEW OUTCOME \u2014 read before consuming Waves 1\u20132.** A fresh-context adversarial review found two BLOCKERs and seven IMPORTANT findings against the first pass. Both BLOCKERs are remediated in-tree (see the Wave records below): (1) the claim that the Bloch-phase form \"holds for **any** primitiv"
+        },
+        {
+          "line": 16,
+          "text": "> 1. **Bootstrap reads, in order:** workspace `../../CLAUDE.md` + `SK_EFT_Hawking/CLAUDE.md` \u2192 `docs/WAVE_EXECUTION_PIPELINE.md` \u2192 `SK_EFT_Hawking_Inventory_Index.md` \u2192 `Phase6EA_Roadmap.md` (series head) \u2192 `docs/roadmaps/Phase6CA_Roadmap.md` + `lean/SKEFTHawking/TopologicalBand/BlochFHS.lean` (the "
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6EE_Roadmap.md",
+      "sha256": "b12bba90896971db4f068f5485e496110b92d03573bf601f0e1547358b06346a",
+      "hits": [
+        {
+          "line": 256,
+          "text": "Consumes 6EA (detection floors), 6EB (filtered-readout floors), 6EC (detector floors), and the existing readout-metrology corpus; 6ED feeds material-parameter seams optionally. See `Phase6EA_Roadmap.md` for the series framing."
+        },
+        {
+          "line": 267,
+          "text": "> 1. **Bootstrap reads, in order:** workspace `../../CLAUDE.md` + `SK_EFT_Hawking/CLAUDE.md` \u2192 `docs/WAVE_EXECUTION_PIPELINE.md` \u2192 `SK_EFT_Hawking_Inventory_Index.md` \u2192 `Phase6EA_Roadmap.md` (series head) \u2192 `lean/SKEFTHawking/QuantumNetwork/ReadoutRelaxationBound.lean` + `ThermalAssignmentFloor.lean"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6FA_Roadmap.md",
+      "sha256": "50442ea98770032d58ac3cb84bf33509c2912aeb088342959af13bfc8ef88db6",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6GA_Roadmap.md",
+      "sha256": "e9f7f423944c7007318557aa2f7691e583274f9a41505d8e0879f93ea19c3e05",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6_Deferred_Targets.md",
+      "sha256": "10610300d2ea08ba609a47210679193c7252164d0e68494ac160a0b6b7f405bc",
+      "hits": [
+        {
+          "line": 29,
+          "text": "9. **L1 arXiv voucher** \u2014 program-level gate for the first Tier-2 PRL submissions."
+        },
+        {
+          "line": 36,
+          "text": "12. **Vestigial-gravity Monte Carlo at L \u2265 8** \u2014 RHMC in flight; the matrix-free stencil unlocks L = 12+."
+        },
+        {
+          "line": 49,
+          "text": "18. **`6E*` \u2014 verified device-physics metrology** \u2192 bundle **D12** (authorized 2026-07-27; **6ED \u2192 D11**): **6EA** Poisson/Gaussian discrimination floors \u2014 Bhattacharyya/Le Cam universal floor + dark-baseline optimum + kernel-checked folklore-`e^(\u2212N_diff)` refutations + shot/thinning algebra + the P"
+        },
+        {
+          "line": 188,
+          "text": "- See Phase5d_Roadmap.md Wave 5 for full scope"
+        },
+        {
+          "line": 437,
+          "text": "| 5d | Tetrad gap equation, polariton, MTC instances, QG extensions | Phase5d_Roadmap.md | 13 waves, Aristotle pending |"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6_Roadmap.md",
+      "sha256": "652e6d2a52eb937d84124c0dfd8e27bc1a24249fd9def3cc2061458499f60c2e",
+      "hits": [
+        {
+          "line": 92,
+          "text": "### ~~6C. 4D ATRG for Vestigial Gravity~~ \u2192 MOVED TO PHASE 5 WAVE 8"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6_VerifiedStatistics_Roadmap.md",
+      "sha256": "9cf13a92597a93d66688b4ebd43d975d324ef6a52514b3dcb7834734858b355a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6a_Roadmap.md",
+      "sha256": "f37c9e1606b640408c58887c2607ad75caf1036278d3731d5fe6ad53d60c014e",
+      "hits": [
+        {
+          "line": 3,
+          "text": "## Current L1 scientific successors \u2014 2026-10-17"
+        },
+        {
+          "line": 7,
+          "text": "**Accepted substantive milestone:** the exact sharp-four-momentum-cutoff scalar bubble and remainder bounds, plus conditional RPA-zero analysis, were independently accepted in `publication-substance-ownership-audit-20261017-r1/construction-L1-bubble-r1/CONSTRUCTION.md` SHA256 `9ad73436a0ae121725b60c"
+        },
+        {
+          "line": 9,
+          "text": "Next milestones: derive the actual metric-channel operator/source/projector, regulator and normalization to chi_vest and independently justified parameter/stability conditions deriving the original stated O(Lambda\u00b2/16pi\u00b2) normalization so [0.1,10] is a RESULT; a different computed interval requires "
+        },
+        {
+          "line": 18,
+          "text": "**Entry state (calibration, 2026-04-22 Inventory_Index snapshot):** 150 modules, 3300+ theorems, 0 sorry, 1 axiom. Gravity-side anchors: `ADWMechanism.lean` (21, critical coupling + Vergeles NG-mode counting), `KerrSchild.lean` (7, gravitational solutions scaffolding), `VestigialSusceptibility.lean`"
+        },
+        {
+          "line": 35,
+          "text": "> `Phase6a_Wave8_goal_prompt.md` (A), `Phase6a_Wave7B_goal_prompt.md` (B),"
+        },
+        {
+          "line": 36,
+          "text": "> `Phase6a_Wave9_goal_prompt.md` (C). **Unattended overnight execution chains all three via"
+        },
+        {
+          "line": 37,
+          "text": "> `Phase6a_CenterBridge_chained_goal_prompt.md` (Wave 8 \u2192 7B \u2192 9, strict sequence).**"
+        },
+        {
+          "line": 46,
+          "text": ">    - 6a.2 \u2014 `VestigialSusceptibility.lean`, `VestigialGravity.lean`, `SecondOrderSK.lean`, Volovik 2024 two-fluid cosmological framework (`Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md` for negative evidence \u2014 second-sound-graviton identification is NOT derived, see O.1 below)"
+        },
+        {
+          "line": 48,
+          "text": ">    - 6a.4 \u2014 6a.1 (prerequisite), Phase 5y q-theory modules, `docs/stakeholder/Phase5y_Closure_Summary.md`"
+        },
+        {
+          "line": 61,
+          "text": "- Gravitational wave propagation speed + dispersion from vestigial susceptibility"
+        },
+        {
+          "line": 165,
+          "text": "  - **Correctness-push theorem:** `FLRW_from_ADW_matches_DESI_preferred_region_iff_\u03c1_\u039b_from_vestigial_NGO` \u2014 ties emergent-gravity Hubble expansion to the Phase 5y obstruction landscape (5y proved no tested Volovik-family mechanism produces DESI-compatible time-evolving `w(z)`)"
+        },
+        {
+          "line": 191,
+          "text": "- `GravitationalWaves.lean`: 17 theorems, 0 sorry, 0 new axioms."
+        },
+        {
+          "line": 193,
+          "text": "- `papers/paper25_gravitational_waves/`: PRD draft, 4 pages, 421 KB, compiles clean."
+        },
+        {
+          "line": 196,
+          "text": "- Phase 5y H1 caveat encoded as the existential meta-theorem `second_sound_graviton_not_derived_DOF`."
+        },
+        {
+          "line": 197,
+          "text": "- Tracked-hypothesis bundle `H_VestigialModeIsGraviton` (positivity \u2227 LigoSatisfied \u2227 luminal) with three falsifier theorems (lower, upper, zero)."
+        },
+        {
+          "line": 208,
+          "text": "### Wave 2 \u2014 `GravitationalWaves.lean` [Pipeline: Stages 1\u201312]"
+        },
+        {
+          "line": 210,
+          "text": "**Goal:** GW propagation speed + dispersion from vestigial-phase susceptibility. Volovik's identification of second sound as graviton made quantitative \u2014 with explicit caveats from Phase 5y H1 (NO-GO with PARTIAL footnote)."
+        },
+        {
+          "line": 215,
+          "text": "- `lean/SKEFTHawking/GravitationalWaves.lean`"
+        },
+        {
+          "line": 216,
+          "text": "  - GW propagation equation from linearized `h_{\u03bc\u03bd}` in a vestigial-susceptibility medium"
+        },
+        {
+          "line": 217,
+          "text": "  - Sound speed `c_GW` expressed from vestigial-phase susceptibility `\u03c7_vest`"
+        },
+        {
+          "line": 220,
+          "text": "  - Phase 5y H1 caveat theorem: `second_sound_graviton_not_derived_DOF` \u2014 documents that the second-sound mode is NOT a derived propagating DOF (H1 finding) and this module operates in a \"use-as-identified\" mode"
+        },
+        {
+          "line": 225,
+          "text": "  - `c_GW_computation.py` \u2014 numerical `c_GW` from vestigial susceptibility"
+        },
+        {
+          "line": 230,
+          "text": "- Depends on `VestigialSusceptibility.lean` (with 5y Wave 6 extensions), `VestigialGravity.lean`, `SecondOrderSK.lean`"
+        },
+        {
+          "line": 231,
+          "text": "- Cross-references `Phase5y_H1_second_sound_graviton.md` deep research"
+        },
+        {
+          "line": 237,
+          "text": "- PRD paper `papers/paper25_gravitational_waves/paper_draft.tex`"
+        },
+        {
+          "line": 242,
+          "text": "**Risk:** Medium. The Phase 5y H1 finding (second-sound mode not derived as propagating DOF) limits what this wave can claim \u2014 scope must be explicit about operating in identified-mode mode."
+        },
+        {
+          "line": 244,
+          "text": "**Correctness-push highlight.** LIGO bound is extreme. Any deviation at the $10^{-15}$ level falsifies the vestigial-second-sound identification \u2014 publishable outcome either direction."
+        },
+        {
+          "line": 608,
+          "text": "tautology in a paper-headline module). **Goal prompt:** `Phase6a_Wave8_goal_prompt.md`."
+        },
+        {
+          "line": 672,
+          "text": "C-spike). **Goal prompt:** `Phase6a_Wave7B_goal_prompt.md`."
+        },
+        {
+          "line": 799,
+          "text": "induced-gravity / \u03b3-irrelevant narrative.** Goal prompt: `Phase6a_Wave9_goal_prompt.md`; runs as"
+        },
+        {
+          "line": 800,
+          "text": "the third link of `Phase6a_CenterBridge_chained_goal_prompt.md`."
+        },
+        {
+          "line": 910,
+          "text": "`Phase6a_Wave7C_goal_prompt.md`."
+        },
+        {
+          "line": 978,
+          "text": "6a.2 (GravitationalWaves) \u2014 independent; parallel with 6a.1"
+        },
+        {
+          "line": 995,
+          "text": "| 6a.2 | `GravitationalWaves.lean` + PRD paper + LIGO check | 2\u20134 | None; parallel with 6a.1 | **TIER 1** |"
+        },
+        {
+          "line": 1005,
+          "text": "- 7 new Lean modules (`LinearizedEFE`, `GravitationalWaves`, `BHEntropyMicroscopic`, `FLRWDynamics`, `BHThermodynamicsFourLaws`, `PositiveMassTheorem`, `LaplaceMethodAsymptotic`)"
+        },
+        {
+          "line": 1015,
+          "text": "**O.1 \u2014 Historical disposition: RESOLVED 2026-04-25; current physical successors OPEN (2026-10-17).** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in \"use-as-identified\" mode with explicit caveat theorem `second_sound_graviton_not_derived_D"
+        },
+        {
+          "line": 1045,
+          "text": "- Phase 4 Wave 2 (Vestigial gravity) \u2014 `VestigialGravity.lean`, `VestigialSusceptibility.lean`"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6b_Roadmap.md",
+      "sha256": "04b990d168e85af7f673a6260d16c9e148c608994e1221ecc54ed6cc21a5d216",
+      "hits": [
+        {
+          "line": 7,
+          "text": "**Entry state (calibration, 2026-04-22 Inventory_Index snapshot):** 150 modules, 3300+ theorems, 0 sorry, 1 axiom. Relevant anchors: `Z16AnomalyComputation.lean` (23), `HiddenSectorClassification.lean` (9, COMPLETE 2026-04-22), Phase 5y closure modules (`GibbsDuhemTheorem` 16, `QTheoryNoGoTheorem` 1"
+        },
+        {
+          "line": 23,
+          "text": ">    - 6b.3 \u2014 `VestigialSusceptibility.lean` (with 5y W6 extensions), Phase 6a.1 `LinearizedEFE.lean`; deep research on Koivisto-Nunes-Mulryne 3-form inflation (`Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md` \u00a7H3 notes where available)"
+        },
+        {
+          "line": 132,
+          "text": "- `lean/SKEFTHawking/CosmologicalPerturbations.lean`: **22 substantive theorems** (16 first-pass + 6 strengthening) / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only via `lean_verify`). Strengthening pass added: `self_lt_cosh_of_pos` (reusable cosh-self-bound helper); `"
+        },
+        {
+          "line": 221,
+          "text": "  - Slow-roll parameters `\u03b5_vest(\u03c7)`, `\u03b7_vest(\u03c7)` derived from vestigial susceptibility"
+        },
+        {
+          "line": 238,
+          "text": "- Integrates with `VestigialSusceptibility.lean`, `VestigialEOS.lean`, Phase 5y closure modules"
+        },
+        {
+          "line": 345,
+          "text": "- Phase 4 Wave 2 (`VestigialSusceptibility`, `VestigialGravity`) \u2014 foundational for 6b.3"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6c_Roadmap.md",
+      "sha256": "7f3cf8abe4668e50d6e7f2aae7a012d643c113c638949ad87f8f115a91a73dcc",
+      "hits": [
+        {
+          "line": 7,
+          "text": "**Entry state (calibration, 2026-04-22 Inventory_Index snapshot):** 150 modules, 3300+ theorems, 0 sorry, 1 axiom. Primary pillars for bridging: `Z16AnomalyComputation.lean` (23), `ModularInvarianceConstraint.lean` (12), `ChiralityWallMaster.lean` (17), `GaugingStep.lean` (34, SM anomaly 16 \u2261 0 mod "
+        },
+        {
+          "line": 23,
+          "text": ">    - 6c.3 \u2014 `VestigialGravity.lean` (EP-violation theorem), Phase 5x W4\u20137 memos in `docs/dark_sector/`"
+        },
+        {
+          "line": 166,
+          "text": "- Cross-bridges: `vestigial_microscope_violation_consistent` (links to `ClassificationTableDark.MicroscopeStatus.violated`); `VestigialGravity.ep_violation_in_vestigial` consumed."
+        },
+        {
+          "line": 174,
+          "text": "**Prerequisites:** Phase 5x Waves 4/5/6/7 memos in `docs/dark_sector/` (read directly). `VestigialGravity.lean` EP-violation theorem."
+        },
+        {
+          "line": 189,
+          "text": "- Integrates `VestigialGravity.lean` EP-violation theorem, Phase 5x W4/W5/W6/W7 memos"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6d_Roadmap.md",
+      "sha256": "ed6d9766364df77dad1e80f6105f6088559e88b50e8563e30c257724dd533de1",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6e_Roadmap.md",
+      "sha256": "2bfaee4e38a46a5d35eadcbb1092a2f33f9a0439cedc49986cab45a8fe977c9e",
+      "hits": [
+        {
+          "line": 3,
+          "text": "## Current L1/ADW correspondence boundary \u2014 2026-10-17"
+        },
+        {
+          "line": 5,
+          "text": "The dated six-wave formal delivery and action calculations below are preserved. They do not themselves discharge the separately owed physical tetrad-channel correspondence in Phase5d or the original L1 B3/mode/transport targets in Phase6a. **Those scientific successors remain OPEN BUILD.** This is a"
+        },
+        {
+          "line": 7,
+          "text": "For L1, construct the metric-channel source/projector and normalized response, a stable constrained propagating mode with matter coupling, and the actual dissipative/frequency map before using the GW arrival-time bound. The accepted scalar bubble/RPA-zero manual milestone (`construction-L1-bubble-r1"
+        },
+        {
+          "line": 39,
+          "text": ">    - 6e.6 \u2014 6e.1\u20136e.5, `VestigialGravity.lean`, Einstein-Cartan literature (Hehl+)"
+        },
+        {
+          "line": 40,
+          "text": "> 5. Deep research prompts (likely needed): heat-kernel expansion coefficients for 8-fermion effective actions; nonlinear diff-invariance check strategies (path-b direct vs path-a symmetry-enhancement); CC problem in emergent-gravity contexts. Drop into `Lit-Search/Tasks/Phase6e_*` folders as needed"
+        },
+        {
+          "line": 209,
+          "text": "- Notebooks: `Phase6e3_NonlinearDiffInvariance_{Technical,Stakeholder}.ipynb` (22+10 cells; both execute clean per validate.py notebook_exec)."
+        },
+        {
+          "line": 342,
+          "text": "**Prerequisites:** Waves 1\u20135 substantially complete. `VestigialGravity.lean` (24 after 5y W6) provides torsion-related machinery."
+        },
+        {
+          "line": 360,
+          "text": "- Integrates `VestigialGravity.lean`"
+        },
+        {
+          "line": 473,
+          "text": "- Phase 5y closure (vestigial extensions) \u2014 `VestigialGravity.lean`"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6f_Roadmap.md",
+      "sha256": "91b221543cb0feb8aa1123e385d2d299b1fe69b90c269f4ae1fa995d13d3c6a9",
+      "hits": [
+        {
+          "line": 122,
+          "text": "**2026-04-29 update \u2014 Wave 6f.6 SHIPPED \u2014 Phase 6f FULLY CLOSED.** `TetradFormalism.lean` ships **6 substantive theorems + 1 marker / 0 sorry / 0 new axioms** (verified `propext, Classical.choice, Quot.sound` only). Tetrad (vierbein) formulation of GR at the algebraic / point-wise level. **\u00a72 Tetrad"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6g_Roadmap.md",
+      "sha256": "a0057e2abd606f8acdd49856c2e5fc8ab53310ffd6359eb0120bbeb6a660cbf1",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6h_Roadmap.md",
+      "sha256": "82413d7c99b7259bbd430b40e4d6bb96575c6b5a20f1ee6099a3a9e6821269e0",
+      "hits": [
+        {
+          "line": 62,
+          "text": ">    - `Lit-Search/Phase-1-and-Background/Tier-2/The fermion bootstrap problem in emergent gravity.md` \u2014 Vergeles-style fundamental-Grassmann route vs emergent-fermion route; SMG's relation to vestigial gravity"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6i_Roadmap.md",
+      "sha256": "f17298f8a6ba4260357fbce682532bc8fca86922bd26203e048154a1a24170d2",
+      "hits": [
+        {
+          "line": 234,
+          "text": "**Status (2026-04-29):** **SHIPPED \u2014 Phase 6i FULLY CLOSED across all 5 tracks (A\u2013E).** Six sub-waves (7.1\u20137.6) shipped end-to-end through Stages 1, 7, 12\u201314: bundle-aware schema + migration (sentence_state.py + bundle_migration.py + cluster_bundle_index.json), per-bundle anchor list + reviewer plug"
+        },
+        {
+          "line": 250,
+          "text": "  - `bundle_destination`: enum `[\"F\", \"D1\", \"D2\", \"D3\", \"D4\", \"D5\", \"L1\", \"L2\", \"L3\", \"I1\", \"I2\", \"E1\", \"E2\"]` or list-of-enum (for sentences that lift to multiple bundles, e.g., L1 + D3)."
+        },
+        {
+          "line": 262,
+          "text": "- `tests/test_bundle_clusters.py` \u2014 verifies cross-bundle cluster computation for a fixture mirroring the mapping (e.g., GW170817 vs vestigial-graviton claim appears in both L1 and D3 \u00a76 and is detected as cross-bundle)."
+        },
+        {
+          "line": 271,
+          "text": "- Stand-alone PRL bundles (L1, L2, L3): single-paper depth. Reviewer does not penalize the absence of broader-scope content \u2014 each PRL is judged stand-alone. Reviewer carries a specific Stage-13 anchor per PRL (e.g., LIGO \u0394c/c bound for L1; 24 | c\u208b chain for L2; Balbinot 2005 + Hawking 1975 for L3)."
+        },
+        {
+          "line": 273,
+          "text": "- Flagship bundle (F): review-paper-style review against the *published* forms of L1\u2013L3 and D1\u2013D5. Specifically the reviewer pulls the published-version DOIs/arXiv-IDs from the citation-cache (Phase 6i Wave 1 infrastructure) and verifies each cited claim resolves correctly."
+        },
+        {
+          "line": 294,
+          "text": "- The check runs against the *bundle-level* claim, so a sentence that ships in both L1 and D3 must say the same numerical thing in both \u2014 a regression that drifts the claim is caught here."
+        },
+        {
+          "line": 302,
+          "text": "- `tests/test_bundle_consistency.py` \u2014 fixture-driven test of the check, including a deliberate mismatch case (L1 says \"7\u00d710\u00b9\u2074\" while D3 says \"5\u00d710\u00b9\u2074\" \u2192 check FAILS)."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6j_Roadmap.md",
+      "sha256": "eabd47bd049821ffea1a62316a500958bd97868caeef98a2c012d59048d945aa",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6k_Roadmap.md",
+      "sha256": "593d8ca141a73a0dea5b7342ecdfacf5115e738b2ea24a88f6838c8841cb236a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6l_Roadmap.md",
+      "sha256": "5531856ee5fff818134d5a99dbb9137e1a30af9167059084587200ef133ae3bb",
+      "hits": [
+        {
+          "line": 68,
+          "text": ">    - `Phase6l_W2_substrate_axion_mass_coupling.md` \u2014 request synthesis on whether SK-EFT substrate dynamics (vestigial gravity, ADW tetrad) produce an axion-like field; primary literature: Peccei-Quinn 1977; Weinberg 1978; Wilczek 1978; Kim 1979; Shifman-Vainshtein-Zakharov 1980 (KSVZ); Dine-Fisch"
+        },
+        {
+          "line": 195,
+          "text": "**Goal.** Investigate whether the SK-EFT substrate produces an axion-like field (Peccei-Quinn analog) emergent from the substrate's vestigial gravity / ADW tetrad / \u2124_16 structure. If so, derive substrate-predicted axion mass `m_a` and decay constant `f_a`, falsifiable against ADMX bounds + cosmolog"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6m_Roadmap.md",
+      "sha256": "378dd582b9f775fc9a110c59cf3925dd2e5ad4cd4723f984518d3a62e1b205a2",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6n_Roadmap.md",
+      "sha256": "c29dcd82b6d6509636fce77f71fc5af65bb6111a1a73fd0b35a048ff9aab92e9",
+      "hits": [
+        {
+          "line": 15,
+          "text": "**Entry state (2026-05-04 Inventory_Index snapshot):** ~5229 substantive theorems / ~243 modules / 0 sorry / 1 axiom. Phase 6m FULLY CLOSED at Lean-formalization scope (R1\u2013R6 + strengthening + cross-module proof-chain). Phase 7 in flight: 13 of 13 bundles reviewer-triple-closed at GREEN (I1, I2, L1,"
+        },
+        {
+          "line": 781,
+          "text": "- L1 pre-existing revtex4-2 `\\begin{theorem}` env undefined warning FIXED (`\\usepackage{amsthm}` + `\\newtheorem{theorem}{Theorem}`)."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6o_Roadmap.md",
+      "sha256": "87d91429f87ca9925d2f8ae26335e22b907ae4feaee5494a7608565579634b13",
+      "hits": [
+        {
+          "line": 203,
+          "text": "- *Integrates with:* program's existing NO-GO landscape (Volovik q-theory, vestigial-graviton, Fang-Gu, fracton-GR, perturbative Wen-ADW, Phase 6n Wave 2b Perarnau-Llobet quantum no-go); CGL SK-EFT axiomatic; Akyuz-Penco arXiv:2508.18346; Chowdhury-Hartnoll-Hebbar-Khondaker arXiv:2509.18255; arXiv:2"
+        },
+        {
+          "line": 552,
+          "text": "NO-GO scope bounded to \"current axioms\" leaving room for future revision. Axiom replacement set required for positive result enumerated (per Modular Bootstrap DR \u00a73). Joins program's NO-GO landscape (gauge erasure, Volovik q-theory, vestigial-graviton, Fang-Gu, fracton-GR, perturbative Wen-ADW, Phas"
+        },
+        {
+          "line": 604,
+          "text": "- **6o.\u03b2 (Wave 1b)** \u2014 Kerr-Schild + 3-obstruction BCJ NO-GO \u2192 D3 \u00a76 + L1 cross-bridge + F \u00a76 + E1 polariton ringdown."
+        },
+        {
+          "line": 623,
+          "text": "- **6o.\u03b2 (Wave 1b)** Kerr-Schild + 3-obstruction BCJ NO-GO \u2192 D3 \u00a76 + L1 cross-bridge + F \u00a76 + E1 polariton ringdown \u2014 appended."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6o_prime_Roadmap.md",
+      "sha256": "d66c67c2bf92349af4779d4b98fe6a9bbfe99ce42ecbcbceff475271dab7ea74",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6p_Roadmap.md",
+      "sha256": "50197a559f0c9d8b7bb3e9c4ec0a102d3dd1e0af54ed8152005f9fea35734af3",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6q_Roadmap.md",
+      "sha256": "64e15322fa937f6925ca780507b4b6814219f173d46aec0f2d87cd3fe65ea832",
+      "hits": [
+        {
+          "line": 330,
+          "text": "- **Wave 2c.1 (L2 vs D5 placement decision):** working doc identifying which bundle the Phase 6q positioning paper lives in. Same convention as Phase 6o Wave 1c (L2 vs D5; deferred to Wave 1c.3 close). Decision criteria: (a) is the Phase 6q result a positive uniqueness theorem (probably L2 \u2014 compani"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6r_Roadmap.md",
+      "sha256": "eb39ec88b036be3543b87ee25e1a6f5ca3461a35d82d27604075220196af1848",
+      "hits": [
+        {
+          "line": 426,
+          "text": "- *Integrates with:* All prior Phase 6r waves; F flagship paper draft; bundle architecture; all the program's existing bundles (D1-D5, L1-L3, I1-I3, E1-E2)."
+        },
+        {
+          "line": 589,
+          "text": "UNCHANGED from Phase 6r close. The bundle absorption (D2 + D4 + D5 + L1 + flagship-F) is HELD for the unified user-authorized event after M-R closes. Joint Phase 6r + 6r-prime substrate will be absorbed additively."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6r_prime_Roadmap.md",
+      "sha256": "3d2f27a5b8e7367d498e48db9ec34dcef561a4b850557acc10e6ee2367cef914",
+      "hits": [
+        {
+          "line": 128,
+          "text": "| **W4** | APS-\u03b7 + Witten-Yonekura inflow | \u23f3 NOT STARTED | D2 + L1 additive \u2014 DEFERRED | #4 | none |"
+        },
+        {
+          "line": 415,
+          "text": "**Bundle absorption.** D2 + L1 additive subsections (substrate content); HELD for unified bundle-absorption pass."
+        },
+        {
+          "line": 526,
+          "text": "**Substrate.** Existing format from `H_VestigialModeIsGraviton` entry (well-documented in current `PERMANENT_TRACKED_HYPOTHESES.md`)."
+        },
+        {
+          "line": 1148,
+          "text": "HELD throughout. Will be unified user-authorized event at the joint Phase 6r + 6r-prime bundle-absorption pass during Phase 7. The four bundle targets \u2014 D2 (Pin\u207a Z\u2081\u2086), D4 (Drinfeld center + Lagrangian algebra), D5 (paper-17 dark sector), L1 (APS-\u03b7 anomaly inflow), flagship-F (program identity) \u2014 wil"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6s_Roadmap.md",
+      "sha256": "6e705272e67a764cf107c87d1f75a9f945c0eca79605e00fa5f4bfe2ae30951a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6t_Roadmap.md",
+      "sha256": "dee2f62ad300ad226445209d33c10bf32a5d027eae29b22da72f247e99a8b4e8",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6u_Roadmap.md",
+      "sha256": "0410e56f15d87624d66b33c11c2b1929bd0b093c01de8ed3ce54ea017efe7751",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.1_Roadmap.md",
+      "sha256": "22781a781d8f5aa1668a761bc83eddc2eebc4e53b303bee4992c8d9a07d90b77",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.2_Roadmap.md",
+      "sha256": "ff0c766194e9b71198009047ce6d7e23245653d50c305db6dad088fe1ef58730",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.3_Roadmap.md",
+      "sha256": "83e54e216f28e41d830099870e35522150498e56a1400839720ed0064a0cfb0a",
+      "hits": [
+        {
+          "line": 65,
+          "text": "Wave 6v.3 added the bibkeys `YinLucas2022LiebRobinsonBosons` and `KuwaharaSaito2021LiebRobinsonBosons` to `papers/E1/paper_draft.tex` `used_in` list. This surfaced the previously-latent fact that *bundle keys* (D1\u2013D5, L1\u2013L3, F, I1\u2013I3, E1, E2) are not registered in `PAPER_TO_PHASE`. An attempt to add"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.4_Roadmap.md",
+      "sha256": "4cfc8ab2cfdd31c8ec76aa51e0259dd98d48f732588468547dfb9edffdb7ab33",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.5_Roadmap.md",
+      "sha256": "77720f21674896b8434ac1b0330eac650e91a5dfb982e355a5f6ea91ab4a72e0",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.6_Roadmap.md",
+      "sha256": "49b9420a3535ede2fe9e62737551339b3b8036d6ac99091403e36ec1d93eae35",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v/Wave_6v.8_Roadmap.md",
+      "sha256": "38bc750ec84f2dfd1e92ab288dae2124812d4f8b7c7eed044093c62e468d3e86",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6v_Roadmap.md",
+      "sha256": "e96d93aa00dfee6f58c2ec5e4b8525798cc1966ea28a26122e3294c27865d9c2",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.1_Roadmap.md",
+      "sha256": "7d54cbaf7701792467dbb4ef02fd3012296c39a4044aea059290be93abe459de",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.2_Roadmap.md",
+      "sha256": "64ac54ad0bc1c937ee3d5db5be0b505ef1dc756e127a49deca3f72e9c3d682d5",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.3_Roadmap.md",
+      "sha256": "744e6005c1ad38400997e33e5edc4e271fa50fa2d24aa8a73a4951b61787b4ef",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.4_Roadmap.md",
+      "sha256": "e2b13b7917c3e06a06507208efb445c7170078f09ed648a905a7c49060c718c6",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.5_Roadmap.md",
+      "sha256": "221f632885fe0c39853226345f1892a7be24ff607253337e236d93c341846c2a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.6_Roadmap.md",
+      "sha256": "2a8861d9ca2c0b1ea14fac8e15e5b711c605244d2f6f60621cd0f148df278462",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w/Wave_6w.7_Roadmap.md",
+      "sha256": "3b7a6c11d131058f6c3c3d88b7d0480b267475236362bc9d6e7af523afd2197a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6w_Roadmap.md",
+      "sha256": "84467aa6262d444546b1f037c1beb3ae3eeabc1cef3ba30356a0dc8422ebd430",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6x_Roadmap.md",
+      "sha256": "bed5f9cb5c55450cc5bff087cc05f05af8377455814ebd6c2bd326c2a0c71927",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6x_prime_Roadmap.md",
+      "sha256": "1933340de5a031cad53d742d8ef14ab4432ff6a61d238d55688af6bcf1e42b23",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6y_Roadmap.md",
+      "sha256": "8ee7de0158e6b069c26c0f6ebcb5a8cd477a0512a69fb1f53d48d02d93133619",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6z/Citations.md",
+      "sha256": "b4426d594a96e6b568b58393404f0674fadb31aaf3e9753cc5029be7a5bcc17d",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6z/Mathlib_Decls.md",
+      "sha256": "82c24101eeecad6ce3186412b58eb1c4d5e7c7ddcd3eb638d7e17dee94937544",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6z/PreLean_CAS_Gates.md",
+      "sha256": "257cd103b98d8a53975035eebff155f9a2c70bfac6937db59533b6645ca13b32",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6z/Substrate_Inventory.md",
+      "sha256": "afc95517225ae04acc04ffa5e11003d287772b2000d8af9eddd39c72f6dd58e2",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase6z_Roadmap.md",
+      "sha256": "cc67baa064be2f0114c35e047cb2986ee4776a9634b7c52917e2b0ec25a932c2",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/Phase7_Roadmap.md",
+      "sha256": "39795aa39f67b2edfbc975f6df4f0302ea68d375ca83f96379cd7b1cc993aa21",
+      "hits": [
+        {
+          "line": 33,
+          "text": "| **L1** | 2 | 1 | 0 | 0 | \ud83d\udfe2 | paper25; submission-ready |"
+        },
+        {
+          "line": 54,
+          "text": "| **7b** | D5 + L1 + L3 (Waves 3\u20135; Phase 6m material absorption + first deep paper + 2 Tier-2 splashes) | (planned post-7a Gate 7a.5) | scoped |"
+        },
+        {
+          "line": 61,
+          "text": "Sub-phase ordering: 7a establishes infrastructure on lightweight bundles; 7b absorbs Phase 6m material while fresh; 7c handles the heaviest deep paper after L1+L3 splashes are extracted (avoids splash-vs-deep cross-bundle redrafting); 7d-7f draft remaining Tier-1 + Tier-2 + Tier-4 bundles; 7g closes"
+        },
+        {
+          "line": 75,
+          "text": "**Per-bundle Stage-13 profile** per `docs/agents/claims-reviewer-bundle-prompts.md`: Tier 0 (F) review-paper style; Tier 1 (D1\u2013D5) intra+cross-bundle consistency; Tier 2 (L1\u2013L3) stand-alone PRL depth; Tier 3 (I1, I2) software/methodology with reproducible-traces; Tier 4 (E1, E2) lightweight + device"
+        },
+        {
+          "line": 215,
+          "text": "### Wave 4 \u2014 `papers/L1/` \u2014 GW170817 falsifies vestigial-second-sound graviton [Tier 2]"
+        },
+        {
+          "line": 217,
+          "text": "**Goal.** Lift `paper25` (Phase 6a Wave 2) into `papers/L1/paper_draft.tex` \u2014 4-page PRL splash. **paper25 already \ud83d\udfe2 entry-state with 0 findings.**"
+        },
+        {
+          "line": 219,
+          "text": "**Why L1 fourth.** First Tier-2 PRL splash. Establishes the deep-paper-to-PRL extraction pattern. paper25 is already submission-ready at the per-paper level; L1 is largely a packaging exercise."
+        },
+        {
+          "line": 221,
+          "text": "**Per `PAPER_STRATEGY.md` \u00a73:** L1 is the recommended first arXiv-voucher submission once Phase 7 closes. Drafting L1 in Wave 4 (ahead of D3 in Wave 12) is consistent \u2014 L1's content is paper25 standalone, not extracted from D3's later sections (D3 \u00a76 in turn lifts from paper25 too)."
+        },
+        {
+          "line": 239,
+          "text": "**Goal.** Lift the 21-source roster (paper3, paper5, paper6 [conditional on RHMC], paper20, paper21, paper22, paper33, paper23, paper25, paper26, paper27, paper35, paper36, paper37, paper38, paper39, paper40, paper41, paper42, paper42b, paper43, paper44, Phase 6f-6g substrate rosters) into `papers/D"
+        },
+        {
+          "line": 241,
+          "text": "**Why D3 sixth.** Heaviest deep paper (21 sources, 32 blockers entering Phase 7). Doing it after I1 + I2 + D5 + L1 + L3 lets the lift workflow harden on smaller/simpler bundles first. L1 and L3 also extract from paper25 + paper27 respectively; once those PRL splashes are drafted, D3's \u00a76 (gravitatio"
+        },
+        {
+          "line": 246,
+          "text": "- L1 Wave 4 completed (D3 \u00a76 references but does not duplicate L1)"
+        },
+        {
+          "line": 314,
+          "text": "**Goal.** Integrate every prior bundle's content into the 80\u2013150pp flagship review. Bundle F cites D1\u2013D5 + I1 + I2 + L1\u2013L3 + E1 + E2 in their *Phase-7-drafted* (not yet published) form. Carries `ARCHITECTURE_SCOPE.md` \u00a7 2 + \u00a7 10 verbatim per strategy."
+        },
+        {
+          "line": 331,
+          "text": "- 14.3: F final-pass cross-references resolved to published-form D1-D5 + L1-L3 (still all in `papers/<bundle>/paper_draft.tex` at this point \u2014 published form means \"Phase 7-final\")."
+        },
+        {
+          "line": 343,
+          "text": "- 15.1: Run `physics-qa:claims-reviewer` + `physics-qa:figure-reviewer` with `bundle_target=<bundle>` on each of F, D1-D5, L1-L3, I1, I2, E1, E2 (13 invocations)."
+        },
+        {
+          "line": 358,
+          "text": "**Parallelism opportunities:** Waves 1, 2 (I1, I2) can run in parallel with Wave 0 if Wave 0 sub-waves are partitioned; Waves 4, 5 (L1, L3) can run in parallel with Wave 3 (D5) once Wave 0 finishes; Waves 10, 11 (E1, E2) can run in parallel with Wave 12 (D4). Effective wall-clock with reasonable par"
+        },
+        {
+          "line": 451,
+          "text": "Phase 7b sub-wave numbering evolved beyond the original Phase 7a \u00a77b candidate-scope plan (which envisioned 7b.0 heatmap regen + 7b.1-3 D5/L1/L3 lifts + 7b.4 cross-bundle + 7b.5 procedure update + 7b.6 trigger gate). **Actual sub-wave execution through 2026-05-04:**"
+        },
+        {
+          "line": 454,
+          "text": "- **7b.1** \u2014 L1 (paper25) Tier-2 PRL splash lifted (memory `project_phase7b_0_l1_shipped.md`)."
+        },
+        {
+          "line": 462,
+          "text": "**Reviewer-triple-closed bundle count (Stage 9 + 10 + 13 all GREEN):** 8 of 13 (L1+L2+L3+D5+I1+I2+E1+E2). Source-finding-layer GREEN: 13 of 13."
+        },
+        {
+          "line": 490,
+          "text": "- L1, L2, L3, D5, I1, I2, E1, E2 (carryover)"
+        },
+        {
+          "line": 508,
+          "text": "**Heatmap at session-end: 10 of 13 bundles reviewer-triple-closed** (D1 + D2 + D5 + I1 + I2 + L1 + L2 + L3 + E1 + E2). D4 Stage-13 pending. D3 Stage-10 r3 pending (4 BLOCKER fixes scoped). F awaits all-12 gate."
+        },
+        {
+          "line": 556,
+          "text": "**Heatmap at session-end: 11 of 13 bundles reviewer-triple-closed** (D1 + D2 + D4 + D5 + I1 + I2 + L1 + L2 + L3 + E1 + E2)."
+        },
+        {
+          "line": 575,
+          "text": "- 7g.3 (`9fabdc8`): all 12 sections substantively drafted (\u00a73 gauge erasure; \u00a74 D1+E1+E2 analog Hawking; \u00a75 D2+L2 chirality wall + modular invariance; \u00a76 D3+L1+L3 emergent gravity through BH thermo, the heaviest at ~30pp scope; \u00a77 D4 topological QC; \u00a78 D5 dark sector; \u00a79 I1+I2 methodology; \u00a710 subst"
+        },
+        {
+          "line": 592,
+          "text": "F + D1 + D2 + D3 + D4 + D5 + I1 + I2 + L1 + L2 + L3 + E1 + E2 all at Stage 9 + Stage 10 + Stage 13 GREEN. The substrate program is at submission-ready state pending Wave 15 pre-submission Stage-13 sweep + user authorization."
+        },
+        {
+          "line": 627,
+          "text": "| **L1** | 2 | \ud83d\udfe2 | \ud83d\udfe2 | \ud83d\udfe2 | 6o Wave 1b cross-bridge |"
+        },
+        {
+          "line": 643,
+          "text": "- L1 pre-existing revtex4-2 `\\begin{theorem}` env warning fixed."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/Phase7a_Roadmap.md",
+      "sha256": "af434d64f6cf4dd310664c88ada7ab5d0181fbe359ce8251f79c7283fb46676b",
+      "hits": [
+        {
+          "line": 29,
+          "text": "- Bundle readiness from 2026-04-29 sweep: 4 \ud83d\udfe2 (L1, I1, I2, E2) + 4 \ud83d\udfe1 (D1, D2, E1, L2) + 5 \ud83d\udd34 (F, D3, D5, L3, D4)"
+        },
+        {
+          "line": 204,
+          "text": "    - **Per-bundle profile (per Phase 6i Wave 7.2):** Tier 0 (F) review-paper style; Tier 1 (D1\u2013D5) intra-bundle consistency + cross-bundle cross-bridge checks; Tier 2 (L1\u2013L3) stand-alone PRL depth; Tier 3 (I1, I2) software/methodology review; Tier 4 (E1, E2) lightweight letter + device-parameter au"
+        },
+        {
+          "line": 407,
+          "text": "**Phase 7b candidate scope:** D5 bundle consolidation (Phase 7 umbrella Wave 3) + initial Tier-2 PRL extraction L1, L3 (Waves 4\u20135; the two Tier-2 PRLs that don't depend on Tier-1 deep papers being drafted first because their sources are paper25 + paper27 standalone)."
+        },
+        {
+          "line": 444,
+          "text": "- **Tier 2 (L1\u2013L3):** stand-alone PRL depth; do not penalize absent broader scope; carry the bundle-specific anchor"
+        },
+        {
+          "line": 619,
+          "text": "**Phase 7b \u2014 D5 Consolidation + Tier-2 PRL Splashes (paper25, paper27)**"
+        },
+        {
+          "line": 624,
+          "text": "- 7b.2: L1 lift (paper25 standalone)"
+        },
+        {
+          "line": 626,
+          "text": "- 7b.4: D5 \u2194 L1 cross-bundle consistency (D5 \u00a76 references L1)"
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/SIGGateHardening_Roadmap.md",
+      "sha256": "dda28737ddf0a2a39e99a3042fcad12a81a4087f8cec1f9000520e1c9485891d",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    },
+    {
+      "path": "docs/roadmaps/SubstrateIntegrityGates_Roadmap.md",
+      "sha256": "4f4dcb9591e1a8ee5d3ed5f8d20137602f0e5bea2a619b0636c6fcbfac2770d2",
+      "hits": [
+        {
+          "line": 54,
+          "text": "**Problem this wave fixes (verified 2026-06-13):** there are TWO hand-maintained tracked-hypothesis ledgers \u2014 `HYPOTHESIS_REGISTRY` (constants.py, 7 entries) and `PERMANENT_TRACKED_HYPOTHESES.md` (docs, 7 entries) \u2014 and they are **disjoint (intersection = \u2205)**: the registry holds the generation-cons"
+        },
+        {
+          "line": 56,
+          "text": "- **Collapse to ONE source of truth = `HYPOTHESIS_REGISTRY`** (machine-readable, rich schema, already has `dependent_theorems`/`status`/`elimination_path`/`circularity_note`; already consumed by validate.py + dashboard + claims-reviewer \u2014 a markdown file cannot be queried by a check). Add a `prose`/"
+        },
+        {
+          "line": 113,
+          "text": "- **L1:** `TRACKED_HYPOTHESIS_NON_LOAD_BEARING` dict now exists (was referenced via getattr-default)."
+        }
+      ],
+      "screen": "candidate"
+    },
+    {
+      "path": "docs/roadmaps/SymTFT_S0S1_prime_Roadmap.md",
+      "sha256": "e2c66ce479fea38a6c3286632d03a7d48605218ac1b8f23780d5eb20ffa2159a",
+      "hits": [],
+      "screen": "no lexical direct bridge hit; not proof of independence"
+    }
+  ]
+}

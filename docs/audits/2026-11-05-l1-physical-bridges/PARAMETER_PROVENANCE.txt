@@ -1,0 +1,16 @@
+
+══════════════════════════════════════════════════════════════════════
+  [32m✓ PASS[0m  parameter_provenance: Every experimental parameter has verified provenance
+══════════════════════════════════════════════════════════════════════
+  ✓ coverage  —  All 211 parameters have provenance entries
+  ✓ llm_verification  —  All parameters LLM-verified
+  [33m⚠[0m human_verification  —  83 params not yet human-verified (32 non-PROJECTED; blocks paper submission)
+  [33m⚠[0m value_coverage  —  58 of 211 provenance entries have no comparable code value (at or under the frozen ceiling 58 — inherited debt, repair is ADR-010 scope); 153 value(s) compared against code
+  ✓ value_consistency  —  all 153 comparable provenance values match code
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 1/1 checks passed (2 warnings)
+  [32mALL CHECKS PASSED[0m
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.1s

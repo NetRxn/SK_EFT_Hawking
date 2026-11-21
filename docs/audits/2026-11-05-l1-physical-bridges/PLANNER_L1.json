@@ -1,0 +1,74 @@
+{
+  "dispatch": [],
+  "queued_groups": [
+    {
+      "target": "papers/L1/paper_draft.tex",
+      "files": [
+        "papers/L1/paper_draft.tex"
+      ],
+      "lane": "prose",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-14-l1-stage13:L1:3.4",
+        "review:2026-08-14-l1-stage13:L1:5.3"
+      ],
+      "closable": [
+        "review:2026-08-14-l1-stage13:L1:3.4",
+        "review:2026-08-14-l1-stage13:L1:5.3"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "minor"
+      ],
+      "deferred": "beyond the non-isolated fan-out cap"
+    },
+    {
+      "target": "lean/SKEFTHawking/GravitationalWaves.lean",
+      "files": [
+        "lean/SKEFTHawking/GravitationalWaves.lean"
+      ],
+      "lane": "lean",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-14-l1-stage13:L1:4.2"
+      ],
+      "closable": [
+        "review:2026-08-14-l1-stage13:L1:4.2"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "minor"
+      ],
+      "deferred": "no free wtN slot (0 exist)"
+    },
+    {
+      "target": "lean/SKEFTHawking/GravitationalWaves.lean (+1)",
+      "files": [
+        "lean/SKEFTHawking/GravitationalWaves.lean",
+        "papers/L1/paper_draft.tex"
+      ],
+      "lane": "lean",
+      "spans_lanes": null,
+      "findings": [
+        "review:2026-08-14-l1-stage13:L1:3.3"
+      ],
+      "closable": [
+        "review:2026-08-14-l1-stage13:L1:3.3"
+      ],
+      "unverifiable": [],
+      "severity": [
+        "minor"
+      ],
+      "deferred": "no free wtN slot (0 exist)"
+    }
+  ],
+  "scope": "Isolated checkout only; no native-slot availability measurement or worker launch",
+  "head": "8b6da1c2fd87f07b3dde29e68e590ca324887d42",
+  "caveats": [
+    "677 open finding(s) carry no lane this router understands and are NOT dispatched. They are not a backlog of easy work \u2014 they are unrouted, and a default lane would hand physics to an infra worker. Run `uv run python scripts/backfill_lanes.py --propose` and work the proposals.",
+    "37 dispatchable finding(s) declare NO `Verify:` command. They are planned as work but NOT as closable: `close_finding` skips verification when none is declared, so closing them would write `fixed` with an empty `verified_by`. Authoring the verify line is part of the fix.",
+    "33 dispatchable finding(s) name NO target and are not planned. A worker cannot be told where to work, and grouping them under one pseudo-key would render as a work unit while spanning unrelated lanes. This is a FILING defect \u2014 add a `Location:`/`Target:` line to each \u2014 not a task to dispatch.",
+    "10 target(s) carry findings from more than one lane; each is planned under the STRONGEST profile of those lanes, never an arbitrary one.",
+    "no `wtN` worktree slots exist \u2014 Lean and substrate groups cannot be dispatched in isolation. `scripts/setup_lean_worktree_slots.sh` creates them."
+  ]
+}
