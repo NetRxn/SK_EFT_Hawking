@@ -312,4 +312,35 @@ theorem memoryXReadout_effects (ρ : Matrix (Fin 4) (Fin 4) ℂ) :
   rw [hcomp]
   exact plus_weight_trace ρ
 
+/-- Trace out the system using the system-major computational basis. -/
+noncomputable def memoryMarginal (ρ : Matrix (Fin 4) (Fin 4) ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  Matrix.of fun i j => ∑ s : Fin 2, ρ (finProdFinEquiv (s, i)) (finProdFinEquiv (s, j))
+
+/-- The selected coherent memory factors as the unnormalized minus state,
+and the dephased memory is diagonal in the computational basis. -/
+theorem selected_memory_marginals (a b c d : ℝ)
+    (train : a^2 + b^2 = 1) (offset : c^2 + d^2 = 1) :
+    memoryMarginal (coherentSelected a b c d) =
+      ((d^2 / 4 : ℝ) : ℂ) • (!![1, -1; -1, 1] : Matrix (Fin 2) (Fin 2) ℂ) ∧
+    memoryMarginal (dephasedSelected a b c d) =
+      Matrix.diagonal ![((((a * c - b * d)^2 + a^2) / 4 : ℝ) : ℂ),
+                        ((((a * d + b * c)^2 + b^2) / 4 : ℝ) : ℂ)] := by
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+      simp [memoryMarginal, coherentSelected, density, minus, early, late, rotate,
+        xSystem, copyIndex, initial, Matrix.vecMulVec_apply, Fin.sum_univ_two,
+        finProdFinEquiv, Complex.mul_re, Complex.mul_im, Complex.div_ofNat_re,
+        Complex.div_ofNat_im, Complex.sub_re, Complex.sub_im, Complex.add_re, Complex.add_im, pow_two]
+    all_goals first | (ring_nf; done) | linear_combination (d^2 / 4) * train |
+      linear_combination -(d^2 / 4) * train
+  · ext i j
+    fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+      simp [memoryMarginal, dephasedSelected, density, early, late, rotate,
+        xSystem, copyIndex, initial, Matrix.vecMulVec_apply, Fin.sum_univ_two,
+        finProdFinEquiv, Complex.mul_re, Complex.mul_im, Complex.div_ofNat_re,
+        Complex.div_ofNat_im, Complex.sub_re, Complex.sub_im, Complex.add_re, Complex.add_im, pow_two]
+    all_goals first | (ring_nf; done) | linear_combination (a^2 / 4) * offset |
+      linear_combination (b^2 / 4) * offset
+
 end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
