@@ -249,5 +249,122 @@ theorem lift_prepare_trace (ε : Type*) [Fintype ε] [DecidableEq ε]
     · simp
   rwa [he] at h
 
+section Contraction
+
+open scoped ComplexOrder MatrixOrder Matrix.Norms.L2Operator
+
+omit [DecidableEq ι] in
+private theorem star_dot_self_eq_norm_sq (x : ι → ℂ) :
+    star x ⬝ᵥ x = ((‖(EuclideanSpace.equiv ι ℂ).symm x‖ ^ 2 : ℝ) : ℂ) := by
+  let v := (EuclideanSpace.equiv ι ℂ).symm x
+  change star v.ofLp ⬝ᵥ v.ofLp = ((‖v‖ ^ 2 : ℝ) : ℂ)
+  rw [dotProduct_comm, ← EuclideanSpace.inner_eq_star_dotProduct, inner_self_eq_norm_sq_to_K,
+    Complex.ofReal_pow]
+  rfl
+
+private theorem defect_nonneg (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1) : 0 ≤ 1 - Kᴴ * K := by
+  apply Matrix.PosSemidef.nonneg
+  refine Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
+    (Matrix.isHermitian_one.sub (Matrix.posSemidef_conjTranspose_mul_self K).isHermitian) ?_
+  intro x
+  rw [Matrix.sub_mulVec, Matrix.one_mulVec, dotProduct_sub, ← Matrix.mulVec_mulVec,
+    Matrix.dotProduct_mulVec (star x) Kᴴ (K *ᵥ x), Matrix.vecMul_conjTranspose, star_star]
+  rw [star_dot_self_eq_norm_sq x, star_dot_self_eq_norm_sq (K *ᵥ x), ← Complex.ofReal_sub]
+  let v := (EuclideanSpace.equiv ι ℂ).symm x
+  have hv := (K.l2_opNorm_mulVec v).trans (mul_le_of_le_one_left (norm_nonneg v) hK)
+  apply Complex.zero_le_real.mpr
+  exact sub_nonneg.mpr (pow_le_pow_left₀ (norm_nonneg _) hv 2)
+
+private theorem effect_add_sqrt_defect_gram (A : Matrix ι ι ℂ) (hA : 0 ≤ 1 - A) :
+    A + star (CFC.sqrt (1 - A)) * CFC.sqrt (1 - A) = 1 := by
+  rw [(CFC.sqrt_nonneg (1 - A)).star_eq, CFC.sqrt_mul_sqrt_self _ hA]
+  abel
+
+/-- Complete a contraction to a two-outcome instrument whose success
+operator is the contraction itself. -/
+noncomputable def ofContraction (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1) :
+    FiniteInstrument ι 2 where
+  count := 1
+  operators a _ := ![K, CFC.sqrt (1 - Kᴴ * K)] a
+  normalized := by
+    classical
+    simp only [Fin.sum_univ_two, Fin.sum_univ_one, Matrix.cons_val_zero, Matrix.cons_val_one]
+    change Kᴴ * K + star (CFC.sqrt (1 - Kᴴ * K)) * CFC.sqrt (1 - Kᴴ * K) = 1
+    exact effect_add_sqrt_defect_gram (Kᴴ * K) (defect_nonneg K hK)
+
+/-- The success flag uses the exact operator supplied by the caller. -/
+theorem ofContraction_success_operator (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1) :
+    (ofContraction K hK).operators 0 = fun _ => K := rfl
+
+/-- The unnormalized success branch acts by the specified Kraus operator. -/
+theorem ofContraction_success_branch (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1)
+    (X : Matrix ι ι ℂ) : (ofContraction K hK).branch 0 X = K * X * Kᴴ := by
+  simp [ofContraction, branch, krausMap]
+
+/-- Add a failure flag to a finite family of selected Kraus operators
+whose total effect is bounded by the identity. -/
+noncomputable def completeSelectedKraus {k : ℕ} (K : Fin k → Matrix ι ι ℂ)
+    (hK : (∑ i, (K i)ᴴ * K i) ≤ 1) : FiniteInstrument ι 2 where
+  count := k + 1
+  operators a := if a = 0 then Fin.cases 0 K else
+    Fin.cases (CFC.sqrt (1 - ∑ i, (K i)ᴴ * K i)) (fun _ => 0)
+  normalized := by
+    classical
+    rw [Fin.sum_univ_two]
+    simp only [if_true, if_neg (by decide : (1 : Fin 2) ≠ 0), Fin.sum_univ_succ,
+      Fin.cases_zero, Fin.cases_succ, Matrix.conjTranspose_zero, Matrix.zero_mul, zero_add,
+      Finset.sum_const_zero, add_zero]
+    let A : Matrix ι ι ℂ := ∑ i, (K i)ᴴ * K i
+    change A + star (CFC.sqrt (1 - A)) * CFC.sqrt (1 - A) = 1
+    exact effect_add_sqrt_defect_gram A (sub_nonneg.mpr hK)
+
+/-- The success flag keeps all the chosen Kraus terms. -/
+theorem completeSelectedKraus_success_branch {k : ℕ} (K : Fin k → Matrix ι ι ℂ)
+    (hK : (∑ i, (K i)ᴴ * K i) ≤ 1) (X : Matrix ι ι ℂ) :
+    (completeSelectedKraus K hK).branch 0 X = krausMap K X := by
+  change (∑ j : Fin (k + 1), (Fin.cases 0 K j) * X * (Fin.cases 0 K j)ᴴ) = krausMap K X
+  rw [Fin.sum_univ_succ]
+  simp [krausMap]
+
+/-- Complete the dephased timing branch using its two half-scaled arm operators. -/
+noncomputable def halfArmInstrument (E L : Matrix ι ι ℂ) (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    FiniteInstrument ι 2 := completeSelectedKraus ![(1 / 2 : ℂ) • E, (1 / 2 : ℂ) • L] (by
+  rw [Fin.sum_univ_two]
+  change ((1 / 2 : ℂ) • E)ᴴ * ((1 / 2 : ℂ) • E) +
+    ((1 / 2 : ℂ) • L)ᴴ * ((1 / 2 : ℂ) • L) ≤ 1
+  apply sub_nonneg.mp
+  have hE' := (defect_nonneg E hE).posSemidef
+  have hL' := (defect_nonneg L hL).posSemidef
+  have hQuarter : (0 : ℂ) ≤ (1 / 4 : ℂ) := by
+    convert Complex.zero_le_real.mpr (show (0 : ℝ) ≤ 1 / 4 by norm_num) using 1
+    norm_num
+  have hHalf : (0 : ℂ) ≤ (1 / 2 : ℂ) := by
+    convert Complex.zero_le_real.mpr (show (0 : ℝ) ≤ 1 / 2 by norm_num) using 1
+    norm_num
+  have h := ((hE'.smul hQuarter).add (hL'.smul hQuarter)).add
+    ((Matrix.PosSemidef.one : (1 : Matrix ι ι ℂ).PosSemidef).smul hHalf)
+  have he (A : Matrix ι ι ℂ) :
+      ((1 / 2 : ℂ) • A)ᴴ * ((1 / 2 : ℂ) • A) = (1 / 4 : ℂ) • (Aᴴ * A) := by
+    rw [Matrix.conjTranspose_smul, Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+    congr 1
+    simp
+    ring
+  rw [he, he]
+  apply Matrix.PosSemidef.nonneg
+  convert h using 1
+  module)
+
+/-- The selected outcome keeps the two arm densities as separate Kraus terms. -/
+theorem halfArmInstrument_success_branch (E L X : Matrix ι ι ℂ) (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    (halfArmInstrument E L hE hL).branch 0 X =
+      (1 / 4 : ℂ) • (E * X * Eᴴ + L * X * Lᴴ) := by
+  rw [halfArmInstrument, completeSelectedKraus_success_branch, krausMap, Fin.sum_univ_two]
+  change ((1 / 2 : ℂ) • E) * X * ((1 / 2 : ℂ) • E)ᴴ +
+    ((1 / 2 : ℂ) • L) * X * ((1 / 2 : ℂ) • L)ᴴ = _
+  simp only [Matrix.conjTranspose_smul, Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_add]
+  congr 2 <;> simp <;> ring
+
+end Contraction
+
 end FiniteInstrument
 end SKEFTHawking.QuantumNetwork

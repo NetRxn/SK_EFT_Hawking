@@ -1,3 +1,4 @@
+import SKEFTHawking.QuantumNetwork.FiniteInstrument
 import SKEFTHawking.QuantumNetwork.OneRecordSelectionStability
 import SKEFTHawking.QuantumNetwork.UnitaryDiamond
 
@@ -132,5 +133,29 @@ theorem selected_joint_beats_memory_under_timing_operator_error (a b c d r : ℝ
       _ = _ := by ring
   exact selected_joint_beats_memory_under_input_prior_error a b c d r train offset hd hr hr1 hd1
     C' D' hCpos hDpos ((mul_le_mul_of_nonneg_left hErr (by positivity)).trans_lt hbudget)
+
+/-- A finite heralded instrument for the actual antisymmetric timing branch. -/
+noncomputable def coherentTimingInstrument (E L : Matrix (Fin 4) (Fin 4) ℂ)
+    (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    FiniteInstrument (Fin 4) 2 :=
+  FiniteInstrument.ofContraction (antisymmetricTimingOperator E L) (anti_contraction hE hL)
+
+/-- Its success branch is the existing unnormalized coherent timing output. -/
+theorem coherentTimingInstrument_success (E L : Matrix (Fin 4) (Fin 4) ℂ)
+    (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    (coherentTimingInstrument E L hE hL).branch 0 timingInput = coherentTimingOutput E L :=
+  FiniteInstrument.ofContraction_success_branch _ _ _
+
+/-- A normalized finite instrument for dephased timing with an explicit
+failure outcome. The success branch keeps the two operator terms separate. -/
+noncomputable def dephasedTimingInstrument (E L : Matrix (Fin 4) (Fin 4) ℂ)
+    (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    FiniteInstrument (Fin 4) 2 := FiniteInstrument.halfArmInstrument E L hE hL
+
+/-- The success branch equals the existing unnormalized dephased timing output. -/
+theorem dephasedTimingInstrument_success (E L : Matrix (Fin 4) (Fin 4) ℂ)
+    (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    (dephasedTimingInstrument E L hE hL).branch 0 timingInput = dephasedTimingOutput E L :=
+  FiniteInstrument.halfArmInstrument_success_branch E L timingInput hE hL
 
 end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
