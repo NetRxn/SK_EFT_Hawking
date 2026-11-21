@@ -3637,7 +3637,9 @@ _APEX_VACUITY_DISCLOSURE_RE = re.compile(
 #: re-derived and PRINTED BY NAME on every run, disclosed and undisclosed alike, and no
 #: per-declaration exemption key exists to grant. Lower it by strengthening the theorem or
 #: by withdrawing the apex; never by adding a name anywhere.
-APEX_VACUITY_CEILING = 20
+#: 20 -> 19 on 2026-11-21. The E2 redraft (327e33bb3) withdrew its disclosed
+#: definitional temperature apex. Current measurement retains 15 undisclosed rows.
+APEX_VACUITY_CEILING = 19
 
 #: …of which the bundle's own `claims` string does not SAY the declaration is thin.
 #: **A RATCHET — it may only fall.**
