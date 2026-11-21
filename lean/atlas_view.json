@@ -129529,6 +129529,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_separate_arm_gate_error",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingGateStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_timing_gate_error",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingGateStability",
       "atlas_kind": "TRUE",
@@ -129634,7 +129643,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timingOperators_reproduce_selected",
@@ -129670,7 +129679,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timing_arm_error_of_gates",
@@ -129679,7 +129688,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timing_operator_error_bound",
@@ -133495,7 +133504,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.l2opNorm_bound_of_dual_feasible",
@@ -226352,7 +226361,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24510,
+    "theorem_nodes": 24511,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226363,7 +226372,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24110,
+      "TRUE:PROVED": 24111,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
