@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-21T08:14:26.257845",
+  "generated": "2026-11-21T08:48:09.119903",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43730,
-    "theorems_total": 24498,
-    "theorems_substantive": 24472,
+    "total_declarations": 43732,
+    "theorems_total": 24500,
+    "theorems_substantive": 24474,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24405,
+    "theorems_kernel_substantive": 24407,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
