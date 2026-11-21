@@ -51,6 +51,18 @@
   - **Bridging preprint** draft in `papers/phase6AA_qnetwork_preprint/` (leak-clean).
 - **Deferred (NOT required for DONE):** Bell-diagonal Klein-4 general swap map; W1′ link-rate / BSM-modeling-constant anchors; fidelity-under-continuous-decay envelope; Horodecki teleportation (W6, needs Haar lemma); D6 §6 `\cite` (ADVISORY-2).
 
+## One-record timing operation certificate
+
+The early and late gate products are unitary when both rotations are
+normalized. Their antisymmetric and dephased selections reproduce the
+two existing branch densities. When each observed timing arm is an
+operator-norm contraction in the same basis and phase convention,
+the sum of the two operator-norm errors bounds the coherent branch
+error in trace norm. Half of that sum bounds the dephased branch error.
+At the fixed input prior, the weighted raw budget implies positive
+observed selection mass and a joint readout advantage over all
+binary memory-only effects.
+
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
 - All metrics carry explicit physical units; every numerical bound is `norm_num`-backed and falsifiable.
