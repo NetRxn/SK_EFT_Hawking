@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-20T21:57:38.768787",
+  "generated": "2026-11-20T22:55:34.177202",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43458,
-    "theorems_total": 24374,
-    "theorems_substantive": 24348,
+    "total_declarations": 43501,
+    "theorems_total": 24385,
+    "theorems_substantive": 24359,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24281,
+    "theorems_kernel_substantive": 24292,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2098,
+    "modules": 2099,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -66,6 +66,7 @@
       "SKEFTHawking.AcousticBlochOperator",
       "SKEFTHawking.AcousticMetric",
       "SKEFTHawking.AcyclicProjectiveContractionInt",
+      "SKEFTHawking.AdaptiveRetainedClockInstrument",
       "SKEFTHawking.AlgebraicRokhlin",
       "SKEFTHawking.AnalogHawkingDemarcation",
       "SKEFTHawking.AnisotropicGaussianFT",
@@ -2116,10 +2117,10 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13432,
+    "definitions": 13450,
     "structures": 486,
-    "instances": 973,
-    "inductives": 102,
+    "instances": 976,
+    "inductives": 103,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
       "anyon_mtc": 327,
