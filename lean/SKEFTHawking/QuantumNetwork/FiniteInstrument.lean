@@ -249,5 +249,55 @@ theorem lift_prepare_trace (ε : Type*) [Fintype ε] [DecidableEq ε]
     · simp
   rwa [he] at h
 
+section Contraction
+
+open scoped ComplexOrder MatrixOrder Matrix.Norms.L2Operator
+
+omit [DecidableEq ι] in
+private theorem star_dot_self_eq_norm_sq (x : ι → ℂ) :
+    star x ⬝ᵥ x = ((‖(EuclideanSpace.equiv ι ℂ).symm x‖ ^ 2 : ℝ) : ℂ) := by
+  let v := (EuclideanSpace.equiv ι ℂ).symm x
+  change star v.ofLp ⬝ᵥ v.ofLp = ((‖v‖ ^ 2 : ℝ) : ℂ)
+  rw [dotProduct_comm, ← EuclideanSpace.inner_eq_star_dotProduct, inner_self_eq_norm_sq_to_K,
+    Complex.ofReal_pow]
+  rfl
+
+private theorem defect_nonneg (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1) : 0 ≤ 1 - Kᴴ * K := by
+  apply Matrix.PosSemidef.nonneg
+  refine Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
+    (Matrix.isHermitian_one.sub (Matrix.posSemidef_conjTranspose_mul_self K).isHermitian) ?_
+  intro x
+  rw [Matrix.sub_mulVec, Matrix.one_mulVec, dotProduct_sub, ← Matrix.mulVec_mulVec,
+    Matrix.dotProduct_mulVec (star x) Kᴴ (K *ᵥ x), Matrix.vecMul_conjTranspose, star_star]
+  rw [star_dot_self_eq_norm_sq x, star_dot_self_eq_norm_sq (K *ᵥ x), ← Complex.ofReal_sub]
+  let v := (EuclideanSpace.equiv ι ℂ).symm x
+  have hv := (K.l2_opNorm_mulVec v).trans (mul_le_of_le_one_left (norm_nonneg v) hK)
+  apply Complex.zero_le_real.mpr
+  exact sub_nonneg.mpr (pow_le_pow_left₀ (norm_nonneg _) hv 2)
+
+/-- Complete a contraction to a two-outcome instrument whose success
+operator is the contraction itself. -/
+noncomputable def ofContraction (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1) :
+    FiniteInstrument ι 2 where
+  count := 1
+  operators a _ := ![K, CFC.sqrt (1 - Kᴴ * K)] a
+  normalized := by
+    classical
+    simp only [Fin.sum_univ_two, Fin.sum_univ_one, Matrix.cons_val_zero, Matrix.cons_val_one]
+    change Kᴴ * K + star (CFC.sqrt (1 - Kᴴ * K)) * CFC.sqrt (1 - Kᴴ * K) = 1
+    rw [(CFC.sqrt_nonneg (1 - Kᴴ * K)).star_eq, CFC.sqrt_mul_sqrt_self _ (defect_nonneg K hK)]
+    abel
+
+/-- The success flag uses the exact operator supplied by the caller. -/
+theorem ofContraction_success_operator (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1) :
+    (ofContraction K hK).operators 0 = fun _ => K := rfl
+
+/-- The unnormalized success branch acts by the specified Kraus operator. -/
+theorem ofContraction_success_branch (K : Matrix ι ι ℂ) (hK : ‖K‖ ≤ 1)
+    (X : Matrix ι ι ℂ) : (ofContraction K hK).branch 0 X = K * X * Kᴴ := by
+  simp [ofContraction, branch, krausMap]
+
+end Contraction
+
 end FiniteInstrument
 end SKEFTHawking.QuantumNetwork
