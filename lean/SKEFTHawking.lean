@@ -4118,6 +4118,7 @@ import SKEFTHawking.StoppingRetainedClockRecordSufficiency
 import SKEFTHawking.QuantumNetwork.OneRecordCoherentDecision
 import SKEFTHawking.QuantumNetwork.OneRecordCoherentPrior
 import SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout
+import SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap
 -- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
 -- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
 import SKEFTHawking.QuantumNetwork.DistillationRateBound
