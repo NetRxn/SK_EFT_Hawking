@@ -78,6 +78,12 @@ the three gate errors within each arm to obtain budgets `eEarly` and
 budgets before amplification by `2/m`. Taking the three calibrated
 gates to be the same in both arms recovers the shared-gate certificate.
 
+The normalized two-outcome instrument realizes the coherent timing
+output as its unnormalized success branch. The success operator is the
+same antisymmetric combination of the two calibrated arms. The other
+operator is the positive square root of the missing effect, so the two
+outcome weights sum to the input trace.
+
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
 - All metrics carry explicit physical units; every numerical bound is `norm_num`-backed and falsifiable.
