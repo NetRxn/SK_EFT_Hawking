@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-20T18:40:51.721354",
+  "generated": "2026-11-20T19:06:08.903763",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 42797,
-    "theorems_total": 23942,
-    "theorems_substantive": 23916,
+    "total_declarations": 42812,
+    "theorems_total": 23955,
+    "theorems_substantive": 23929,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 23849,
+    "theorems_kernel_substantive": 23862,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2089,
+    "modules": 2090,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -647,6 +647,7 @@
       "SKEFTHawking.FibonacciUniversality",
       "SKEFTHawking.FigureEightKnot",
       "SKEFTHawking.FiniteBlockConditionalExpectation",
+      "SKEFTHawking.FiniteBlockGibbsProjection",
       "SKEFTHawking.FiniteBlockModularCompatibility",
       "SKEFTHawking.FiniteDiagonalLindblad",
       "SKEFTHawking.FiniteGibbsDephasing",
@@ -2107,7 +2108,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13276,
+    "definitions": 13277,
     "structures": 483,
     "instances": 956,
     "inductives": 102,
