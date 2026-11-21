@@ -5294,6 +5294,7 @@ import SKEFTHawking.SingularSurfaceIntersectionFormInstances
 import SKEFTHawking.SymTFT.CenterLinear
 import SKEFTHawking.SymTFT.ElectricSeparable
 import SKEFTHawking.SymTFT.VecGLinear
+import SKEFTHawking.MertensCancellationBackport
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

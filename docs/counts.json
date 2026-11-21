@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-20T21:30:26.167534",
+  "generated": "2026-11-20T21:57:38.768787",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43008,
-    "theorems_total": 24083,
-    "theorems_substantive": 24057,
+    "total_declarations": 43458,
+    "theorems_total": 24374,
+    "theorems_substantive": 24348,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 23990,
+    "theorems_kernel_substantive": 24281,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2097,
+    "modules": 2098,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -969,6 +969,7 @@
       "SKEFTHawking.MaxwellGarnett",
       "SKEFTHawking.MazurSigmaModelRigidity",
       "SKEFTHawking.MembraneIndex",
+      "SKEFTHawking.MertensCancellationBackport",
       "SKEFTHawking.MicroscopicCoefficientMatch",
       "SKEFTHawking.ModularInvarianceConstraint",
       "SKEFTHawking.ModularityTheorem",
@@ -2115,9 +2116,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13320,
-    "structures": 483,
-    "instances": 956,
+    "definitions": 13432,
+    "structures": 486,
+    "instances": 973,
     "inductives": 102,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
