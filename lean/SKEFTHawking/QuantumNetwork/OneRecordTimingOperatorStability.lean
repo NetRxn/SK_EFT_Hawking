@@ -146,4 +146,16 @@ theorem coherentTimingInstrument_success (E L : Matrix (Fin 4) (Fin 4) ℂ)
     (coherentTimingInstrument E L hE hL).branch 0 timingInput = coherentTimingOutput E L :=
   FiniteInstrument.ofContraction_success_branch _ _ _
 
+/-- A normalized finite instrument for dephased timing with an explicit
+failure outcome. The success branch keeps the two operator terms separate. -/
+noncomputable def dephasedTimingInstrument (E L : Matrix (Fin 4) (Fin 4) ℂ)
+    (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    FiniteInstrument (Fin 4) 2 := FiniteInstrument.halfArmInstrument E L hE hL
+
+/-- The success branch equals the existing unnormalized dephased timing output. -/
+theorem dephasedTimingInstrument_success (E L : Matrix (Fin 4) (Fin 4) ℂ)
+    (hE : ‖E‖ ≤ 1) (hL : ‖L‖ ≤ 1) :
+    (dephasedTimingInstrument E L hE hL).branch 0 timingInput = dephasedTimingOutput E L :=
+  FiniteInstrument.halfArmInstrument_success_branch E L timingInput hE hL
+
 end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
