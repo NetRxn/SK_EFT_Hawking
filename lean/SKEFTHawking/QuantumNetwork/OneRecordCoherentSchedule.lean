@@ -512,3 +512,20 @@ theorem timingOperators_reproduce_selected (a b c d : ℝ) :
       density_half, density_half, smul_add]
 
 end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+
+namespace SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+
+/-- The system rotation acting trivially on memory in the common timing basis. -/
+def timingSystemRotation (a b : ℝ) : Matrix (Fin 4) (Fin 4) ℂ := timingRotation a b
+
+/-- The coherent controlled copy used in both timing arms. -/
+def timingMemoryCopy : Matrix (Fin 4) (Fin 4) ℂ := observable copyIndex
+
+theorem timingSystemRotation_unitary (a b : ℝ) (h : a^2 + b^2 = 1) :
+    timingSystemRotation a b ∈ Matrix.unitaryGroup (Fin 4) ℂ :=
+  timingRotation_unitary a b h
+
+theorem timingMemoryCopy_unitary : timingMemoryCopy ∈ Matrix.unitaryGroup (Fin 4) ℂ :=
+  copy_unitary
+
+end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule

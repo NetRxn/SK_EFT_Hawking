@@ -129529,13 +129529,22 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_timing_gate_error",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingGateStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_timing_operator_error",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingOperatorStability",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_traceNorm_error",
@@ -129619,6 +129628,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timingMemoryCopy_unitary",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timingOperators_reproduce_selected",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
       "atlas_kind": "TRUE",
@@ -129639,6 +129657,24 @@
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timingOutputs_positive",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingOperatorStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timingSystemRotation_unitary",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.timing_arm_error_of_gates",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingGateStability",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -133459,7 +133495,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.l2opNorm_bound_of_dual_feasible",
@@ -226316,7 +226352,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24506,
+    "theorem_nodes": 24510,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226327,7 +226363,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24106,
+      "TRUE:PROVED": 24110,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
