@@ -1669,6 +1669,13 @@ def check_bundle_sentence_length() -> CheckResult:
         for src in srcs:
             body = _strip_tex_comments(src.read_text(encoding="utf-8", errors="ignore"))
             body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
+            # Scalar census definitions in an input file are never printed as
+            # prose. Remove the whole definition before stripping macro calls.
+            body = re.sub(
+                r"(?m)^[ \t]*\\newcommand\{\\[A-Za-z]+\}"
+                r"\{(?:[+-]?\d+(?:\.\d+)*|[0-9a-f]{8})\}[ \t]*$",
+                "", body,
+            )
             body = _rows_as_sentences(body)
             body = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?", " ", body)
             for sent in re.split(r"(?<=[.!?])\s+", body):
