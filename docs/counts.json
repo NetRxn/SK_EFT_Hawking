@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-20T20:29:05.858023",
+  "generated": "2026-11-20T21:04:44.041766",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 42958,
-    "theorems_total": 24054,
-    "theorems_substantive": 24028,
+    "total_declarations": 42993,
+    "theorems_total": 24073,
+    "theorems_substantive": 24047,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 23961,
+    "theorems_kernel_substantive": 23980,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2095,
+    "modules": 2096,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1222,6 +1222,7 @@
       "SKEFTHawking.PolyQuotOver",
       "SKEFTHawking.PolyQuotQ",
       "SKEFTHawking.PolyQuotQCharacterisation",
+      "SKEFTHawking.ProperRetainedClockReadout",
       "SKEFTHawking.QCyc15",
       "SKEFTHawking.QCyc15SqrtPhi",
       "SKEFTHawking.QCyc16",
@@ -2113,7 +2114,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13306,
+    "definitions": 13317,
     "structures": 483,
     "instances": 956,
     "inductives": 102,
