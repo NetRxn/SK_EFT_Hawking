@@ -55933,7 +55933,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.durationInstrument_branch",
@@ -56008,6 +56008,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.localErrorBound_uniformTimeShift",
+      "module": "SKEFTHawking.StoppingRetainedClockTimeShift",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.path_length_le_height",
       "module": "SKEFTHawking.StoppingRetainedClockInstrument",
       "atlas_kind": "TRUE",
@@ -56068,11 +56077,20 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.shiftedClock_leaf_error_le_projectorBudget",
       "module": "SKEFTHawking.StoppingRetainedClockErrorBudget",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.shiftedClock_leaf_error_le_timeBound",
+      "module": "SKEFTHawking.StoppingRetainedClockTimeShift",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -56185,7 +56203,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockInstrument_repeat",
@@ -56213,6 +56231,33 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockProjectorAllowance_eq_phase",
+      "module": "SKEFTHawking.StoppingRetainedClockTimeShift",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockProjectorAllowance_eq_sine",
+      "module": "SKEFTHawking.StoppingRetainedClockTimeShift",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockProjectorAllowance_le_time",
+      "module": "SKEFTHawking.StoppingRetainedClockTimeShift",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.event_adjoint",
@@ -136717,7 +136762,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_one_fin_one",
@@ -136762,7 +136807,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 16
+      "frontier_impact": 17
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_pt2_bellDiagState",
@@ -225632,7 +225677,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24430,
+    "theorem_nodes": 24435,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -225643,7 +225688,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24030,
+      "TRUE:PROVED": 24035,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
