@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-21T03:09:01.755956",
+  "generated": "2026-11-21T03:31:59.296408",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43665,
-    "theorems_total": 24452,
-    "theorems_substantive": 24426,
+    "total_declarations": 43675,
+    "theorems_total": 24460,
+    "theorems_substantive": 24434,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24359,
+    "theorems_kernel_substantive": 24367,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2107,
+    "modules": 2108,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1998,6 +1998,7 @@
       "SKEFTHawking.StoppingRetainedClockErrorBudget",
       "SKEFTHawking.StoppingRetainedClockInstrument",
       "SKEFTHawking.StoppingRetainedClockReadoutStability",
+      "SKEFTHawking.StoppingRetainedClockRecordDecision",
       "SKEFTHawking.StoppingRetainedClockRobustness",
       "SKEFTHawking.StoppingRetainedClockTimeShift",
       "SKEFTHawking.StringNet",
@@ -2125,7 +2126,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13502,
+    "definitions": 13503,
     "structures": 486,
     "instances": 980,
     "inductives": 104,
