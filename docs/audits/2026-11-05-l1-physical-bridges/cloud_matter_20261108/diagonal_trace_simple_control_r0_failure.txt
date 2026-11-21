@@ -1,0 +1,16 @@
+2026-11-08 initial candidate control, before any target contraction.
+ScriptSHA256 fced291f44e7c4eb2b1cbb50fe6ab1a98ac5957526437a4c13efb9e59e08d352
+Command: PYTHONDONTWRITEBYTECODE=1 timeout55s python diagonal_trace_simple.py --pilot
+Source tensor controls passed, including direct original closed ordering.
+Then support_control raised AssertionError at `assert ordered == 92160`.
+No representative/factor construction or top contraction executed.
+The initial expectation92160 belongs to the different odd-link H23
+cross-cross source parity, and is not the factorial weight of the310
+even-parity T words enumerated here. The checked multiset partition gives
+128*720 +34*360 +140*90 +8*15 =117120 ordered words.
+Selected128-word subfamily weight remains128*90=11520.
+The revised control uses this exact enumerator census and preserves all310
+words; no word is dropped to fit the inherited count. This is a provenance
+mistake in this candidate's source-parity comparison, not an error in the
+historical H23 support result or a new full-tensor coverage claim. The revised
+candidate separately checks both counts by the ordered-state DP.

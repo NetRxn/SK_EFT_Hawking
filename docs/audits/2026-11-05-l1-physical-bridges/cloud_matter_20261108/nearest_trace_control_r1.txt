@@ -1,0 +1,13 @@
+Historical revision1 source/math control, 2026-11-08.
+ScriptSHA256 3d16fb01fd712259f7a68de11dd4b99e689fe1091a39a5092e4aa0ab746dc969.
+Command: PYTHONDONTWRITEBYTECODE=1 timeout55s python nearest_trace.py --pilot
+Exit0; elapsed4.18792s. Closed source ordering Bdag_Adag_B_A and independent
+forward-order moment comparison passed. Full36-slot tensor and128 necessary
+support/erasure records passed. Pilot0 coefficient11907/256, raw integer
+225434243432448, denominator35184372088832,84peak rows.
+Its printed696 candidate products count ONLY final joins and omit the factory.
+Independent review instrumented864 factory wedge calls with40256 additional
+candidate products. The actual combined wedge work is40952 candidates.
+This receipt is retained as incomplete RESOURCE accounting, superseded by r2.
+Scientific design/pilot accepted; full execution blocked until corrected
+resource guard is independently read back. No full target was run.

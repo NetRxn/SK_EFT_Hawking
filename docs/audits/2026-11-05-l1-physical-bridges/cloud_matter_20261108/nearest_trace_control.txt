@@ -1,0 +1,22 @@
+Cloud candidate revision2,2026-11-08. Full-target execution still awaits
+independent resource/source readback. Historical r0 and r1 receipts retained.
+
+ScriptSHA256 b51f77f8f7cdd1ee27285ef59aeb0915cc736d5a88cc938500c43cce8f1b72b8
+DesignSHA256 9234121105e31e70881b91c57cfa040569119f1048ebd511a8bc0481020d0ccc
+Command (repo root):
+PYTHONDONTWRITEBYTECODE=1 timeout 55s python docs/audits/2026-11-05-l1-physical-bridges/cloud_matter_20261108/nearest_trace.py --pilot
+Exit0. Output:
+CAPS 120000 3000000
+SOURCE_SHA256 l1_nearest_classes.py 4b4e1ce6a018ba1ecdd2fe3db479aa2b51eb1d6588707a60e996beb4577c0655
+SOURCE_SHA256 l1_transverse_top.py 6dc673e63a4dca26e39c41b6db6971f061d0cfe8466111d175f60bb2e99d2c23
+SOURCE_SHA256 l1_direct_a_haar.py ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588
+SOURCE_SHA256 l1_equal_time_private_pairs.py 05f17572df77dd56637eda059886b48a5465b009a3c348d6cbe0867843f24f74
+SOURCE_CONTROL Q [(60, -6), (85, -3), (102, -3), (153, -3), (170, -3), (195, -6)] Q_squared_top 108 tensor_slot_supports [(0, 30), (6, 6)] diagonal_factor 49/216 independence_poison_ratio 48/49 closed_order Bdag_Adag_B_A forward_order_control PASS
+SUPPORT_CONTROL unordered_words 128 orbits 32 three_squared_terms 128 private_erasure_two_planes 128 six_distinct_paired_transports 128
+REPRESENTATIVE 0 orbit_size 4 word [(0, 2, 3, 0, 0), (0, 2, 3, 0, 0), (2, 1, 2, 2, 2), (2, 1, 2, 2, 2), (3, 0, 2, 3, 3), (3, 0, 2, 3, 3)] square_rows [12, 12, 84] stages [('Q0_Q1', 6, 6, 36, 36), ('remote_square_pair', 12, 12, 144, 12), ('source_remote_pair', 36, 12, 432, 72)] peak_rows 84 candidate_products 40952 raw_integer 225434243432448 factory_calls 864 factory_products 40256 final_wedge_calls 3 final_products_with_lookup 696 denominator 35184372088832 raw_g2_6 11907/256 naive_independence_poison 729/16
+ELAPSED_SECONDS 3.824059
+
+git diff --check exited0.
+Only representative0 was evaluated. No full128-word covariance or source jet
+was computed. --all is prospective, includes controls, original row/product
+caps and180-second timer, and requires the pending independent readback.

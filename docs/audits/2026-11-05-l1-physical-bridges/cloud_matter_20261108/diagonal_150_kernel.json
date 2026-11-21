@@ -1,0 +1,38 @@
+{
+  "scope": "known D/H and trace local/nearest plus 150 of 310 diagonal trace words; not full kernel",
+  "raw_diagonal_partial": "133839/10",
+  "normalized_diagonal_partial_g2_squared": "28418923560960/1252309350145403",
+  "normalized_diagonal_partial_hh_g2_squared": "-1951195376342291865521356800/142570791678327415714294730219",
+  "equation": "g2^2 Sigma = known + c*d_remaining + other active/mixed; d_remaining is the normalized 160-word residual times g2^2",
+  "source_equation": "same c multiplies the unknown residual second h jet; every omitted input remains unknown",
+  "momenta": [
+    {
+      "n0": 0,
+      "n1": 0,
+      "known_g2_squared_Sigma": "-1148381826195456/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-61/360",
+      "known_g2_squared_Sigma_second_h": "56141871081643012115151912960/142570791678327415714294730219"
+    },
+    {
+      "n0": 0,
+      "n1": 1,
+      "known_g2_squared_Sigma": "-6107323329257472/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-257/360",
+      "known_g2_squared_Sigma_second_h": "298510969873022376208659578880/142570791678327415714294730219"
+    },
+    {
+      "n0": 1,
+      "n1": 0,
+      "known_g2_squared_Sigma": "-6107323329257472/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-257/360",
+      "known_g2_squared_Sigma_second_h": "298510969873022376208659578880/142570791678327415714294730219"
+    },
+    {
+      "n0": 1,
+      "n1": 1,
+      "known_g2_squared_Sigma": "-11982955820359680/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-9/8",
+      "known_g2_squared_Sigma_second_h": "585760555230518314818094694400/142570791678327415714294730219"
+    }
+  ]
+}

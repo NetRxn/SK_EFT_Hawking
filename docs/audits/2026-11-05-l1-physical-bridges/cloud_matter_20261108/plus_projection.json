@@ -1,0 +1,44 @@
+{
+  "scope": "bare plus-sector contribution only; not full Sigma or physical propagation",
+  "source_pin": "864f4ec25667e345b90e8a8570a00c10c17b198f",
+  "Z8": "1252309350145403/2123366400",
+  "raw_same": "10179913/32",
+  "raw_diag": "-1171/1024",
+  "g2_squared_local_variance": "675490163097600/1252309350145403",
+  "g2_squared_kernel_multiplier": "-84436270387200/1252309350145403",
+  "fourier_covariance_characters": {
+    "00": "675487734912000/1252309350145403",
+    "01": "675492591283200/1252309350145403",
+    "10": "675492591283200/1252309350145403",
+    "11": "675487734912000/1252309350145403"
+  },
+  "unit_mass_momenta": [
+    {
+      "nt": 0,
+      "nx": 0,
+      "K0": "1",
+      "g2_squared_Sigma_D": "-84436270387200/1252309350145403"
+    },
+    {
+      "nt": 0,
+      "nx": 1,
+      "K0": "5",
+      "g2_squared_Sigma_D": "-422181351936000/1252309350145403"
+    },
+    {
+      "nt": 1,
+      "nx": 0,
+      "K0": "5",
+      "g2_squared_Sigma_D": "-422181351936000/1252309350145403"
+    },
+    {
+      "nt": 1,
+      "nx": 1,
+      "K0": "9",
+      "g2_squared_Sigma_D": "-759926433484800/1252309350145403"
+    }
+  ],
+  "relative_gradient_or_mass_shift_from_this_contribution": false,
+  "source_jets_evaluated": false,
+  "full_covariance_evaluated": false
+}

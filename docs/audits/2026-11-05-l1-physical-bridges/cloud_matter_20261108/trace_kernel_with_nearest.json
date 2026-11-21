@@ -1,0 +1,40 @@
+{
+  "scope": "D/H and trace-only finite kernel; other active/mixed channels omitted",
+  "equation": "g2\u00b2Sigma_p=known_p+coefficient_p*d+other omitted channels; d=g2\u00b2<Tx T(x xor3)>",
+  "source_equation": "same coefficient multiplies unknown d_hh; displayed source contribution uses fixed bare coordinates",
+  "nearest_time_equals_space": "explicit axes0/1,sitebit exchange plus internalPin symmetry",
+  "momenta": [
+    {
+      "n0": 0,
+      "n1": 0,
+      "K0": "1",
+      "known_g2_squared_Sigma": "-1143566397480960/1252309350145403",
+      "opposite_trace_coefficient": "-61/360",
+      "known_g2_squared_Sigma_second_h": "55811251865096123771271905280/142570791678327415714294730219"
+    },
+    {
+      "n0": 0,
+      "n1": 1,
+      "K0": "5",
+      "known_g2_squared_Sigma": "-6087035375493120/1252309350145403",
+      "opposite_trace_coefficient": "-257/360",
+      "known_g2_squared_Sigma_second_h": "297118033173800240071329054720/142570791678327415714294730219"
+    },
+    {
+      "n0": 1,
+      "n1": 0,
+      "K0": "5",
+      "known_g2_squared_Sigma": "-6087035375493120/1252309350145403",
+      "opposite_trace_coefficient": "-257/360",
+      "known_g2_squared_Sigma_second_h": "297118033173800240071329054720/142570791678327415714294730219"
+    },
+    {
+      "n0": 1,
+      "n1": 1,
+      "K0": "9",
+      "known_g2_squared_Sigma": "-11950984531353600/1252309350145403",
+      "opposite_trace_coefficient": "-9/8",
+      "known_g2_squared_Sigma_second_h": "583565460432133236469383168000/142570791678327415714294730219"
+    }
+  ]
+}

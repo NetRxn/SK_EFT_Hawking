@@ -1,0 +1,47 @@
+{
+  "scope": "necessary action parity/saturation support only; not coefficients",
+  "G02_G12": [
+    {
+      "z0": 0,
+      "z1": 0,
+      "ordered_action_candidates": 0
+    },
+    {
+      "z0": 0,
+      "z1": 2,
+      "ordered_action_candidates": 5760
+    },
+    {
+      "z0": 1,
+      "z1": 0,
+      "ordered_action_candidates": 5760
+    },
+    {
+      "z0": 1,
+      "z1": 2,
+      "ordered_action_candidates": 11520
+    }
+  ],
+  "G02_squared": [
+    {
+      "z0": 0,
+      "z1": 0,
+      "ordered_action_candidates": 43560
+    },
+    {
+      "z0": 0,
+      "z1": 1,
+      "ordered_action_candidates": 37800
+    },
+    {
+      "z0": 1,
+      "z1": 0,
+      "ordered_action_candidates": 37800
+    },
+    {
+      "z0": 1,
+      "z1": 1,
+      "ordered_action_candidates": 43560
+    }
+  ]
+}

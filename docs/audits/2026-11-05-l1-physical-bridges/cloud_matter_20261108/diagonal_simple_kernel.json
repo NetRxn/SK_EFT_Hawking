@@ -1,0 +1,35 @@
+{
+  "scope": "knownD/H+Tlocal/nearest+128of310diagonalTwords;notfullkernel",
+  "equation": "g2\u00b2Sigma=known+c*d_remaining+otheractive/mixed;d_remaining=g2\u00b2 times normalized182-word residual",
+  "source_equation": "samec multiplies unknown residualsourcejet; noomittedtermsetzero",
+  "momenta": [
+    {
+      "n0": 0,
+      "n1": 0,
+      "known_g2_squared_Sigma": "-1145708422963200/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-61/360",
+      "known_g2_squared_Sigma_second_h": "55822933933726409178286325760/142570791678327415714294730219"
+    },
+    {
+      "n0": 0,
+      "n1": 1,
+      "known_g2_squared_Sigma": "-6096059974656000/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-257/360",
+      "known_g2_squared_Sigma_second_h": "297167251069504885146783252480/142570791678327415714294730219"
+    },
+    {
+      "n0": 1,
+      "n1": 0,
+      "known_g2_squared_Sigma": "-6096059974656000/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-257/360",
+      "known_g2_squared_Sigma_second_h": "297167251069504885146783252480/142570791678327415714294730219"
+    },
+    {
+      "n0": 1,
+      "n1": 1,
+      "known_g2_squared_Sigma": "-11965206175948800/1252309350145403",
+      "coefficient_of_remaining_diagonal_T": "-9/8",
+      "known_g2_squared_Sigma_second_h": "583643021707465459253659238400/142570791678327415714294730219"
+    }
+  ]
+}

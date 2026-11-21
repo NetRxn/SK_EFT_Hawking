@@ -1,0 +1,37 @@
+{
+  "scope": "single already-admitted bounded experiment; no full harder-channel or lattice scaling inference",
+  "script": "remote_source_dirac_loop.py",
+  "arguments": [],
+  "exit_code": 0,
+  "error": null,
+  "python_optimize": 0,
+  "wall_seconds": 168.04290477599716,
+  "user_cpu_seconds": 166.96213,
+  "system_cpu_seconds": 0.36486199999999996,
+  "max_rss_kib_linux": 111640,
+  "events": [
+    {
+      "event": "loop-controls-complete",
+      "wall_seconds": 167.1665538629968,
+      "user_cpu_seconds": 166.160316,
+      "system_cpu_seconds": 0.291309,
+      "max_rss_kib_linux": 76312
+    },
+    {
+      "event": "loop-pilot-built",
+      "wall_seconds": 167.31726872099534,
+      "user_cpu_seconds": 166.311017,
+      "system_cpu_seconds": 0.291317,
+      "max_rss_kib_linux": 76312
+    },
+    {
+      "event": "loop-pilot-result",
+      "wall_seconds": 168.04235749999498,
+      "user_cpu_seconds": 166.961579,
+      "system_cpu_seconds": 0.364861,
+      "max_rss_kib_linux": 111640
+    }
+  ],
+  "child_max_rss_kib_linux": 56160,
+  "rss_definition": "Linux ru_maxrss cumulative process high-water mark, not instantaneous or sum of concurrent RSS"
+}

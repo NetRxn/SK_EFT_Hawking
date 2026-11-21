@@ -1,0 +1,28 @@
+{"anchors": [[1, 0], [2, 0]], "components": [[0, 2], [1, 2]], "degrees": {"0": 6, "1": 1, "2": 1}, "event": "source-boundary", "factory": {"calls": 36864, "candidate_products": 623616, "largest_wedge_product": 144, "peak_single_polynomial_rows": 24}, "rows": 31104}
+{"case": "F", "event": "new-anchor-control", "fixture": "Spin4-0-1", "rows": 128}
+{"case": "F", "event": "new-anchor-control", "fixture": "Spin4-1-2", "rows": 76}
+{"case": "F", "event": "new-anchor-control", "fixture": "Spin4-2-3", "rows": 76}
+{"case": "F", "event": "new-anchor-control", "fixture": "Spin4-3-0", "rows": 136}
+{"case": "F", "event": "new-anchor-control", "fixture": "nonzero-key-0", "rows": 16}
+{"case": "F", "event": "new-anchor-control", "fixture": "nonzero-key-1", "rows": 16}
+{"case": "F", "event": "new-anchor-control", "fixture": "nonzero-key-2", "rows": 36}
+Traceback (most recent call last):
+  File "/tmp/l1-representative-pfhnjw7m/leading.py", line 112, in contract
+    axes, rows, count = L.indexed_join(group[i], group[j], closed,
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/0e29b095f2d2/l1-cloud-repo-20261108/docs/audits/2026-11-05-l1-physical-bridges/cloud_matter_20261108/representative_probes.py", line 193, in join
+    axes, rows, visits = original_join(left, right, closed, row_cap, min(pair_cap, remaining))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/l1-representative-pfhnjw7m/science/legacy.py", line 83, in indexed_join
+    raise RuntimeError(
+RuntimeError: 120001 live row slots exceed cap 120000
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/0e29b095f2d2/l1-cloud-repo-20261108/docs/audits/2026-11-05-l1-physical-bridges/cloud_matter_20261108/representative_probes.py", line 227, in child_case
+    raw, peak, visits = C.contract(factors)
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/tmp/l1-representative-pfhnjw7m/leading.py", line 121, in contract
+    raise RuntimeError(f'{exc}; exact failing join inputs: {context}') from exc
+RuntimeError: 120001 live row slots exceed cap 120000; exact failing join inputs: {'left_axes': (('h', (3, 3), 1), ('i', 64), ('i', 65), ('h', (3, 2), 1), ('i', 52), ('i', 51)), 'right_axes': (('i', 64), ('q', 56), ('q', 67), ('q', 1), ('i', 51), ('i', 52)), 'left_rows': 50560, 'right_rows': 24576, 'degrees': {3: 5, 2: 1}, 'closed_mask': 0, 'ranking_upper_bound': 58720256, 'output_domain_cardinalities': {"('h', (3, 2), 1)": 8, "('i', 65)": 4, "('q', 56)": 8, "('q', 1)": 8, "('h', (3, 3), 1)": 8, "('q', 67)": 8}}
