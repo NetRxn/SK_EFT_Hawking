@@ -32,6 +32,7 @@ from enum import Enum
 from typing import Mapping
 
 from src.dark_sector.adw_cosmological_constant import (
+    KlinkhamerVolovikBranch,
     assess_cosmological_constant_status,
 )
 from src.dark_sector.fracton_dm import (
@@ -55,6 +56,8 @@ from src.dark_sector.z16_hidden_sector import (
 EOS_FG_TRACELESS: float = 1.0 / 3.0
 
 #: ADW cosmological-constant sector EoS (W3).
+#: This vacuum-sector coefficient is not the coupled KV equilibrium component
+#: effective homogeneous EoS or a fitted dark-energy CPL parameter.
 #: Matches Lean ``DarkSectorSynthesis.eos_cosmological_constant``.
 EOS_COSMOLOGICAL_CONSTANT: float = -1.0
 
@@ -358,8 +361,9 @@ CROSS_CONNECTION_MATRIX: tuple[CrossConnection, ...] = (
         waves=("W3", "W5"),
         strength="Conceptual",
         summary=(
-            "Volovik residual Λ ~ T⁴ mechanism and SFDM condensate may share "
-            "a common fermionic-vacuum substrate. No quantitative link."
+            "A candidate vacuum response and SFDM condensate may share a common "
+            "fermionic-vacuum substrate. The nonzero ADW vacuum magnitude and "
+            "any quantitative connection are uncomputed."
         ),
         lean_backing="memo-only (W5 not yet shipped)",
     ),
@@ -482,14 +486,23 @@ def assess_dark_sector_synthesis() -> DarkSectorSynthesisAssessment:
 # ---------------------------------------------------------------------------
 
 
-def phase5x_upstream_wave_reports() -> dict[str, object]:
+def phase5x_upstream_wave_reports(
+    *, kv_branch: KlinkhamerVolovikBranch = KlinkhamerVolovikBranch.UNSELECTED,
+    adw_magnitude_inputs_meV: tuple[float, float] | None = None,
+) -> dict[str, object]:
     """Bundle the upstream-wave structured reports in one call.
 
     Used by the W9 Paper 17 draft pipeline to get every Phase 5x input
     in a single ``dict`` without re-importing from each submodule.
+    KV model/regime selection is forwarded explicitly; omission preserves
+    unselected/uncomputed status instead of asserting a DE prediction.
+    ADW magnitude is uncomputed by default; supplied scales request arithmetic
+    comparison only and cannot establish an independent prediction.
     """
     return {
-        "cosmological_constant": assess_cosmological_constant_status(),
+        "cosmological_constant": assess_cosmological_constant_status(
+            branch=kv_branch, magnitude_inputs_meV=adw_magnitude_inputs_meV,
+        ),
         "fracton_dm": assess_fracton_dm_status(),
         "fracton_preferred_witness": DRILLDOWN_PWAVE_1MeV,
         "z16_dm_candidate_matrix": DM_CANDIDATE_MATRIX,

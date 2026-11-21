@@ -7,24 +7,22 @@ Implements:
 - **Volovik de Sitter double-temperature relation** — T_dS = 2 × T_GH, where
   T_GH = H/(2π) is Gibbons-Hawking and T_dS = H/π is the Volovik
   de Sitter temperature governing local KMS processes.
-- **ADW vacuum energy magnitude** — ρ_vac ~ (2.8 meV)⁴ vs observed
-  ρ_Λ ~ (2.3 meV)⁴ (Planck ΛCDM). The ~20% magnitude match is the
-  surviving empirical hook of the ADW/Klinkhamer-Volovik framework
-  after ⚡W1b (see below).
-- **Klinkhamer-Volovik ⚡W1b correction** — KV oscillating vacuum
-  predicts (w₀, wₐ) = (-1, 0) for the current epoch (CDM-like),
-  excluded at 2.9σ (Pantheon+) to 4.4σ (DESY5) by DESI DR2. The
-  oscillations are Planck-scale (~10⁻⁴⁴ s) with w_eff=0, not
-  cosmological. This module encodes the corrected claims, not the
-  pre-W1b "explains DESI" claim.
-- **Comparative DE context** — QCD topological dark energy bridge
-  (Van Waerbeke-Zhitnitsky 2025) is the strongest surviving
-  DESI-compatible empirical hook from the KV framework.
+- **Magnitude status** — independent magnitude uncomputed. Optional supplied
+  scales permit input arithmetic only. CMB thermal energy, local de Sitter
+  temperature and vacuum-density fourth root are distinct physical scales.
+- **KV model scope** — separate the 2008 dynamical four-form equilibrium
+  and perturbed-chemical-potential branches from the later stepwise plateau
+  scenario considered by the original W1b assessment. No branch is selected
+  implicitly, and no CPL fit or KV-versus-DESI likelihood is computed here.
+- **Comparative context** — QCD alternatives require independent provenance;
+  this report does not establish or rank their DESI compatibility.
 
 Physics references
 ------------------
-- Volovik, JLTP 2025 — de Sitter double-temperature mechanism (T_dS=H/π)
-- Klinkhamer-Volovik, PRD 2024 — oscillating vacuum (now W1b-corrected)
+- Volovik, arXiv:2312.02292v16, Eq22/§VI — distinct vacuum/matter scales
+- Volovik, arXiv:2011.06466v9 (2021), §XI/XII — tetrad equilibrium and 4+0 construction
+- Klinkhamer–Volovik, PRD 78, 063528 (2008), arXiv:0806.2805v7, §V
+- Stepwise relaxation scenario, arXiv:1102.3152v4, §5/6 and Fig1
 - Van Waerbeke-Zhitnitsky 2025, arXiv:2506.14182 — QCD topological DE
 - Planck 2018 + DESI DR2 — observed ρ_Λ ~ (2.3 meV)⁴, evolving-DE
   tension 2.8-4.2σ
@@ -40,47 +38,37 @@ Lean anchors
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from enum import Enum
 
-#: Volovik-predicted vacuum energy scale (in meV).
-#:
-#: Derived from the ADW infrared dominant-energy-density argument.
-#: See Volovik JLTP 2025 §4 and Phase 5x Wave 1 Task 2 deep research.
+#: Legacy illustrative scale (meV), not an independently derived prediction.
+#: Historical name/value retained for compatibility; never a default input.
 T_ADW_PREDICTED_meV = 2.8
 
-#: Observed Planck ΛCDM vacuum energy scale (in meV).
-#:
-#: ρ_Λ^obs ≈ (2.3 meV)⁴ from ρ_crit = 3 H₀² / (8πG) × Ω_Λ with
-#: H₀ ≈ 67.4 km/s/Mpc, Ω_Λ ≈ 0.685.
+#: Legacy reference energy scale (meV), not T_CMB or local T_dS.
+#: This value does not construct or validate an independent prediction.
 T_OBSERVED_meV = 2.3
 
-#: Approximate ADW/observed Λ-magnitude ratio ≈ (2.8/2.3)⁴.
-#:
-#: Equals ``lambda_magnitude_ratio(T_ADW_PREDICTED_meV, T_OBSERVED_meV)``.
-#: ~20% accuracy on the scale, the tightest structural coincidence
-#: known for the CC problem.
+#: Legacy illustrative fourth-power ratio, not a model result or accuracy grade.
 LAMBDA_RATIO_ADW_OBSERVED = (T_ADW_PREDICTED_meV / T_OBSERVED_meV) ** 4
 
 
 def gibbons_hawking_temperature(H: float) -> float:
-    """Gibbons-Hawking de Sitter temperature `T_GH = H / (2π)`.
+    """Gibbons-Hawking temperature arithmetic, T_GH = H/(2*pi).
 
-    Standard horizon temperature from the analytic continuation of the
-    de Sitter metric.
-
+    Natural units hbar=c=k_B=1 with consistent H units. No conversion of a
+    measured Hubble rate to Kelvin or a density fourth root is performed.
     Lean: ``CosmologicalConstant.gibbons_hawking_temperature``.
     """
     return H / (2.0 * math.pi)
 
 
 def de_sitter_temperature_volovik(H: float) -> float:
-    """Volovik de Sitter temperature `T_dS = H / π`.
+    """Local de Sitter temperature arithmetic, T_dS = H/pi.
 
-    Derived from the "modified spatial translation" symmetry
-    r → r - e^{Ht}·a of the de Sitter metric. Governs local de Sitter
-    processes (ionization, proton decay) via KMS at this temperature —
-    distinct from the Gibbons-Hawking horizon temperature.
-
+    Natural units hbar=c=k_B=1; arXiv:2312.02292v16 §III. This differs
+    from horizon temperature, CMB thermal energy and rho_vac**(1/4).
+    Restoring physical units requires explicit unit factors.
     Lean: ``CosmologicalConstant.de_sitter_temperature_volovik``.
     """
     return H / math.pi
@@ -95,15 +83,10 @@ def volovik_gh_ratio() -> float:
 
 
 def lambda_magnitude_ratio(T_predicted_meV: float, T_observed_meV: float) -> float:
-    """Ratio of predicted to observed vacuum energy density magnitudes.
+    """Fourth-power ratio of supplied positive energy scales in matching units.
 
-    Both inputs are IR energy scales in meV; the returned ratio is
-    `(T_predicted / T_observed)⁴` — the factor by which the predicted
-    ρ_vac exceeds the observed ρ_Λ.
-
-    For the W1b-corrected ADW claim: `(2.8/2.3)⁴ ≈ 2.20`, i.e. ~20%
-    accuracy on the energy scale.
-
+    Historical argument names do not identify the scales as temperatures.
+    This algebra establishes neither input provenance nor an ADW prediction.
     Lean: ``CosmologicalConstant.lambda_magnitude_ratio``.
     """
     if T_predicted_meV <= 0 or T_observed_meV <= 0:
@@ -114,74 +97,101 @@ def lambda_magnitude_ratio(T_predicted_meV: float, T_observed_meV: float) -> flo
 
 
 def lambda_energy_density_meV4(T_meV: float) -> float:
-    """Volovik prediction `ρ_vac ≈ T⁴` with T the IR dominant scale.
+    """Fourth power of a supplied energy scale, in (meV)^4.
 
-    Returns the energy density in (meV)⁴ units. Multiply by
-    1.602e-3 to convert to (eV)⁴, or use physical-unit conversions
-    via constants.py for SI/cosmology joules-per-volume.
+    The historical argument name does not identify this scale as a temperature.
+    Multiply the result by 1e-12 for (eV)^4: (1 meV)^4 = 1e-12 (eV)^4.
+    This metric prefix is not an SI J/m^3 conversion; a physical density
+    conversion requires explicit hbar/c unit conventions.
     """
     if T_meV <= 0:
         raise ValueError("T_meV must be positive")
     return T_meV**4
 
 
+class KlinkhamerVolovikBranch(str, Enum):
+    """Model/regime selectors, not fitted cosmological models or CPL pairs."""
+
+    UNSELECTED = "unselected"
+    DYNAMIC_2008_EQUILIBRIUM = "dynamic_2008_equilibrium_mu0"
+    DYNAMIC_2008_PERTURBED = "dynamic_2008_perturbed_chemical_potential"
+    STEPWISE_2011_PLATEAU = "stepwise_2011_plateau"
+
+
 @dataclass(frozen=True)
 class KlinkhamerVolovikPrediction:
-    """Frozen-plateau prediction of the Klinkhamer-Volovik model.
+    """Branch-scoped source report; the historical public name is retained.
 
-    ⚡W1b correction: the original KV prediction of cosmological-scale
-    oscillations was excluded by DESI DR2 (Pantheon+ 2.9σ, DESY5
-    4.4σ). At the current epoch KV predicts (w₀, wₐ) = (-1, 0) —
-    identical to a frozen cosmological constant — and the oscillations
-    are Planck-scale (period ~ 10⁻⁴⁴ s) with time-averaged w_eff = 0.
+    For arXiv:0806.2805v7 §V A/C/E, bare-F w=-1 differs from the
+    equilibrium coupled F+G asymptotic homogeneous w=0; clustering is open.
+    A perturbed chemical potential can give late de Sitter expansion.
+    The stepwise scenario (arXiv:1102.3152v4 §5/6, pp5–9 and Fig1)
+    describes locally approximately vacuum-like plateaux (w approximately -1),
+    with schematic transitions and a conditional neutrino-remnant proposal.
+    It is distinct from the 2008 equilibrium CDM asymptotics; an ideal exact
+    constant plateau would be an additional assumption, not a fitted result.
 
-    See Phase 5x Wave 1b Task 7 deep research for the full analysis.
+    No CPL parameters, calibrated SI period or model likelihood are computed.
+    Legacy numerical attributes remain readable as None and cannot be supplied
+    through this constructor. A supplied number must not impersonate a fit.
     """
 
-    w0: float = -1.0
-    wa: float = 0.0
-    oscillation_period_seconds: float = 1e-44  # Planck scale
-    w_effective_time_averaged: float = 0.0
-    # Provenance (verified against the cached DESI DR2 primary source,
-    # arXiv:2503.14738v3 = PRD 112, 083515 (2025); CITATION_REGISTRY key
-    # 'DESI2025'): the sigmas below are SINGLE-PARAMETER w0 distances of
-    # the KV prediction w0 = -1 from the DESI DR2 w0waCDM posteriors —
-    #   DESI+CMB+Pantheon+ : w0 = -0.838 ± 0.055  (Eq. 26)
-    #       → (1 - 0.838)/0.055 ≈ 2.9σ
-    #   DESI+CMB+DESY5     : w0 = -0.752 ± 0.057  (Eq. 28)
-    #       → (1 - 0.752)/0.057 ≈ 4.4σ
-    # They are NOT the DESI paper's own two-parameter Δχ²_MAP preference
-    # values for w0waCDM over ΛCDM (2.8σ / 4.2σ for the same data
-    # combinations). Derivation: Phase 5x Wave 1b Task 7 DR
-    # (Lit-Search/Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs.
-    # DESI DR2 ...md, Block 4). Documented 2026-06-10.
-    desi_dr2_exclusion_sigma_pantheon_plus: float = 2.9
-    desi_dr2_exclusion_sigma_desy5: float = 4.4
+    branch: KlinkhamerVolovikBranch = KlinkhamerVolovikBranch.UNSELECTED
+    source_arxiv: str | None = field(default=None, init=False)
+    bare_field_w: float | None = field(default=None, init=False)
+    w_effective_time_averaged: float | None = field(default=None, init=False)
+    w0: float | None = field(default=None, init=False)
+    wa: float | None = field(default=None, init=False)
+    oscillation_period_seconds: float | None = field(default=None, init=False)
+    desi_dr2_exclusion_sigma_pantheon_plus: float | None = field(default=None, init=False)
+    desi_dr2_exclusion_sigma_desy5: float | None = field(default=None, init=False)
+    desi_fit_status: str = field(default="not_computed", init=False)
+    clustering_status: str = field(default="not_established", init=False)
+
+    def __post_init__(self) -> None:
+        # Validate direct construction as well as factory calls.
+        branch = KlinkhamerVolovikBranch(self.branch)
+        object.__setattr__(self, "branch", branch)
+        if branch in (
+            KlinkhamerVolovikBranch.DYNAMIC_2008_EQUILIBRIUM,
+            KlinkhamerVolovikBranch.DYNAMIC_2008_PERTURBED,
+        ):
+            object.__setattr__(self, "source_arxiv", "0806.2805v7")
+            object.__setattr__(self, "bare_field_w", -1.0)
+        elif branch is KlinkhamerVolovikBranch.STEPWISE_2011_PLATEAU:
+            object.__setattr__(self, "source_arxiv", "1102.3152v4")
+        if branch is KlinkhamerVolovikBranch.DYNAMIC_2008_EQUILIBRIUM:
+            object.__setattr__(self, "w_effective_time_averaged", 0.0)
 
 
-def klinkhamer_volovik_prediction() -> KlinkhamerVolovikPrediction:
-    """Return the W1b-corrected Klinkhamer-Volovik DE prediction.
+def klinkhamer_volovik_prediction(
+    *, branch: KlinkhamerVolovikBranch = KlinkhamerVolovikBranch.UNSELECTED,
+) -> KlinkhamerVolovikPrediction:
+    """Report a chosen source model/regime with an uncomputed DESI fit.
 
-    This is a **withdrawn** phenomenological claim — the oscillations
-    do not produce cosmological-scale evolving w(z); the observed
-    DESI DR2 dynamics are NOT explained by KV alone. The surviving
-    hooks are: (a) Λ magnitude prediction (see
-    ``lambda_magnitude_ratio``); (b) QCD topological DE bridge
-    (external to this module; see Van Waerbeke-Zhitnitsky 2025).
-
-    Use this return value for KV-vs-DESI comparisons; do not use it
-    as evidence that KV explains the DESI signal.
+    No-argument calls retain the public API but select no physical branch.
+    Bare-field, effective homogeneous, and plateau equations of state are not
+    interchangeable with a finite-redshift dark-energy CPL fit.
     """
-    return KlinkhamerVolovikPrediction()
+    return KlinkhamerVolovikPrediction(branch=branch)
 
 
-def adw_predicted_vs_observed_energy_ratio() -> float:
-    """Canonical ADW/observed Λ-magnitude ratio.
+def adw_predicted_vs_observed_energy_ratio(
+    *, candidate_scale_meV: float | None = None,
+    reference_scale_meV: float | None = None,
+) -> float | None:
+    """Compare explicit inputs; no independent ADW magnitude is computed.
 
-    Equals ``lambda_magnitude_ratio(T_ADW_PREDICTED_meV, T_OBSERVED_meV)``,
-    i.e. (2.8/2.3)⁴ ≈ 2.20. Surviving W1b empirical hook.
+    The historical name/no-argument call remain, but omitted inputs return
+    None. Supplied values give arithmetic only, not predictive accuracy.
     """
-    return lambda_magnitude_ratio(T_ADW_PREDICTED_meV, T_OBSERVED_meV)
+    if candidate_scale_meV is None and reference_scale_meV is None:
+        return None
+    if candidate_scale_meV is None or reference_scale_meV is None:
+        raise ValueError("Supply both candidate and reference energy scales")
+    if not math.isfinite(candidate_scale_meV) or not math.isfinite(reference_scale_meV):
+        raise ValueError("Supplied energy scales must be finite")
+    return lambda_magnitude_ratio(candidate_scale_meV, reference_scale_meV)
 
 
 def quartic_CW_critical_point(A: float, B: float) -> tuple[float, float]:
@@ -206,44 +216,95 @@ def quartic_CW_critical_point(A: float, B: float) -> tuple[float, float]:
 
 @dataclass(frozen=True)
 class CosmologicalConstantAssessment:
-    """Summary of the W1b-corrected ADW cosmological-constant case.
+    """Unknown prediction, optional supplied-input arithmetic and preserved KV scope.
 
-    Fields record: the ADW Λ-magnitude accuracy (surviving hook),
-    the withdrawn KV evolving-DE prediction, and the recommended
-    Paper 17 claim status.
+    Legacy ratio/accuracy fields are readonly and None by default. Accuracy
+    means supplied-scale deviation, never model accuracy. Supplied inputs do
+    not create an independent adw_prediction_meV or a KV fit.
+
+    Explicit inputs must be an exact two-element tuple of builtin int/float
+    values (excluding bool), both finite and positive. Accepted values are
+    stored as an immutable float tuple before arithmetic. Mutable containers,
+    other shapes/types and explicit None elements are rejected with ValueError;
+    only the omitted None sentinel means no supplied comparison.
     """
 
-    lambda_ratio_adw_observed: float
-    lambda_accuracy_percent: float  # deviation in energy scale (not ρ)
     kv_prediction: KlinkhamerVolovikPrediction
-    kv_explains_desi: bool  # ⚡W1b: False; was True pre-W1b
     surviving_hook_notes: tuple[str, ...]
+    magnitude_inputs_meV: tuple[float, float] | None = None
+    lambda_ratio_adw_observed: float | None = field(default=None, init=False)
+    lambda_accuracy_percent: float | None = field(default=None, init=False)
+    magnitude_status: str = field(default="not_computed", init=False)
+    adw_prediction_meV: float | None = field(default=None, init=False)
+    kv_explains_desi: bool | None = field(default=None, init=False)
+    kv_desi_fit_status: str = field(default="not_computed", init=False)
+
+    def __post_init__(self) -> None:
+        if self.magnitude_inputs_meV is None:
+            return
+        inputs = self.magnitude_inputs_meV
+        if type(inputs) is not tuple or len(inputs) != 2:
+            raise ValueError("Magnitude inputs must be a two-element tuple")
+        if any(type(value) not in (int, float) for value in inputs):
+            raise ValueError("Magnitude input elements must be builtin int or float")
+        try:
+            candidate, reference = (float(value) for value in inputs)
+        except (OverflowError, ValueError) as exc:
+            raise ValueError("Magnitude input elements must be finite and positive") from exc
+        if not all(math.isfinite(value) and value > 0.0 for value in (candidate, reference)):
+            raise ValueError("Magnitude input elements must be finite and positive")
+        object.__setattr__(self, "magnitude_inputs_meV", (candidate, reference))
+        ratio = adw_predicted_vs_observed_energy_ratio(
+            candidate_scale_meV=candidate, reference_scale_meV=reference,
+        )
+        object.__setattr__(self, "lambda_ratio_adw_observed", ratio)
+        object.__setattr__(self, "lambda_accuracy_percent",
+                           abs(candidate - reference) / reference * 100.0)
+        object.__setattr__(self, "magnitude_status", "supplied_input_comparison")
 
 
-def assess_cosmological_constant_status() -> CosmologicalConstantAssessment:
-    """Structured W1b-corrected assessment of ADW's CC case.
+def assess_cosmological_constant_status(
+    *, branch: KlinkhamerVolovikBranch = KlinkhamerVolovikBranch.UNSELECTED,
+    magnitude_inputs_meV: tuple[float, float] | None = None,
+) -> CosmologicalConstantAssessment:
+    """Report unknown magnitude, optional supplied inputs and selected KV scope.
 
-    Returns a `CosmologicalConstantAssessment` with the surviving
-    empirical hooks after the Phase 5x Wave 1b deep-research
-    correction. No new claims — just structured reporting.
+    Inputs are (candidate energy scale, reference energy scale), both meV.
+    No physical scale map, magnitude model, CPL fit or likelihood is computed.
     """
-    ratio = adw_predicted_vs_observed_energy_ratio()
-    # Magnitude accuracy on the energy scale:
-    # T_predicted / T_observed = 2.8/2.3 ≈ 1.217; |1 − 1.217| ≈ 21.7%
-    accuracy_pct = abs(T_ADW_PREDICTED_meV - T_OBSERVED_meV) / T_OBSERVED_meV * 100.0
+    kv = klinkhamer_volovik_prediction(branch=branch)
+    if kv.branch is KlinkhamerVolovikBranch.DYNAMIC_2008_EQUILIBRIUM:
+        branch_note = (
+            "At mu=mu0 near equilibrium and asymptotically late times, the "
+            "coupled F+G homogeneous expansion is CDM-like (effective w=0); "
+            "bare-field w=-1 is distinct and clustering is not established."
+        )
+    elif kv.branch is KlinkhamerVolovikBranch.DYNAMIC_2008_PERTURBED:
+        branch_note = (
+            "A perturbation of the equilibrium chemical potential can yield "
+            "late de Sitter expansion, not a computed finite-redshift CPL fit."
+        )
+    elif kv.branch is KlinkhamerVolovikBranch.STEPWISE_2011_PLATEAU:
+        branch_note = (
+            "The 2011 stepwise scenario describes locally approximately vacuum-like "
+            "plateaux (w approximately -1), schematic transitions and conditional "
+            "remnants. It is not the 2008 equilibrium CDM branch or an exact "
+            "constant-plateau CPL prediction; no fit or likelihood is computed."
+        )
+    else:
+        branch_note = "No KV model/regime has been selected."
     return CosmologicalConstantAssessment(
-        lambda_ratio_adw_observed=ratio,
-        lambda_accuracy_percent=accuracy_pct,
-        kv_prediction=klinkhamer_volovik_prediction(),
-        kv_explains_desi=False,  # ⚡W1b
+        kv_prediction=kv,
+        magnitude_inputs_meV=magnitude_inputs_meV,
         surviving_hook_notes=(
-            "ADW predicts ρ_vac ~ (2.8 meV)⁴ vs observed (2.3 meV)⁴ "
-            f"({accuracy_pct:.1f}% accuracy on scale)",
-            "KV oscillations are Planck-scale (~10⁻⁴⁴ s), not cosmological",
-            "DESI DR2 excludes KV (w₀,wₐ)=(-1,0) at 2.9σ Pantheon+ / 4.4σ DESY5",
-            "QCD topological DE (Van Waerbeke-Zhitnitsky 2025) is the "
-            "strongest surviving DESI-compatible bridge from the framework",
-            "Falsifiable: DESI DR3 (2026-2027) will either reinforce or "
-            "weaken the evolving-DE signal",
+            "No independent ADW magnitude is computed. Optional supplied scales "
+            "give input arithmetic only, not predictive accuracy.",
+            branch_note,
+            "The 2008 dynamical source discusses microscopic oscillations; "
+            "no calibrated period in seconds is supplied here.",
+            "KV forward model, CPL fit and DESI likelihood are not computed; "
+            "no KV exclusion significance is established.",
+            "ADW magnitude and QCD topological dark-energy claims require "
+            "independent provenance and numerical validation.",
         ),
     )

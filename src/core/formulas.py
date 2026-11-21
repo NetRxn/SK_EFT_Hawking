@@ -746,43 +746,39 @@ def fdr_noise_floor(delta_k, omega=None, T_env=0.0):
 # ════════════════════════════════════════════════════════════════════
 
 def adw_effective_potential(C, G, Lambda, N_f):
-    """
-    Effective potential for tetrad condensation.
+    """Illustrative regulated scalar mean-field ansatz, not a derived ADW action.
 
-    V_eff(C) = C²/(2G) - (N_f/16π²)[Λ²C² - C⁴ ln(Λ²/C² + 1)]
+    V_exact(C) = C²/(2G) - A[Λ²C² - C⁴ ln(1 + Λ²/C²)], A=N_f/(16π²),
+    continuously extended with V_exact(0)=0 for positive G, Λ and N_f.
+    The numerical V_num below instead returns zero for |C|<1e-15 and uses
+    floating-point arithmetic outside that absolute guard. Exact curvature,
+    scaling and strict-minimum statements concern V_exact, not the flat branch.
 
-    The first term is the tree-level HS potential.
-    The second term is the one-loop Coleman-Weinberg contribution
-    from integrating out N_f Dirac fermions in the tetrad background.
+    For z=C²/Λ², r=G/G_c, V_exact/(AΛ⁴)=z(1/r-1)+z²ln(1+1/z).
+    Its nonzero stationary point depends on r; no universal closed-form
+    C/Λ or depth is supplied. A microscopic HS/fermion-determinant derivation
+    with a specified measure/regulator and ADW field content is UNCOMPUTED.
+    Composite-tetrad and partial-bosonization literature motivates the setting;
+    it does not by itself derive this particular scalar expression.
 
-    Lean: critical_coupling_pos (ADWMechanism.lean) — V_eff structure verified via G_c positivity
+    The recorded grounding establishes adopted G_c positivity only; it does
+    not verify this potential or its physical origin. The manual grounding
+    label records no new model proof or native validation.
+
+    Lean: critical_coupling_pos (ADWMechanism.lean)
     Aristotle: manual
-    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
 
     Args:
-        C: Tetrad magnitude (order parameter)
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
+        C: Scalar order parameter; signed extension of the magnitude ansatz
+        G: Positive supplied coupling
+        Lambda: Positive supplied UV cutoff
+        N_f: Positive supplied species count
 
     Returns:
-        V_eff(C)
+        V_num(C), including its absolute near-origin zero guard
     """
-    # ⚠️ `abs(C)`, NOT `C`. This read `if C < 1e-15`, which caught EVERY negative
-    # tetrad magnitude and returned 0.0 — flattening the entire negative branch of a
-    # DOUBLE WELL to zero. Every term above is even in `C` (`C²`, `C⁴`, and `C²`
-    # inside the log), so `V(-C) = V(C)` identically; measured before the fix:
-    #     V(+0.5, G=1, Λ=10, N_f=4) = -0.49876809672521716
-    #     V(-0.5, …)                =  0.0
-    # The guard's only job is the `Λ²/C²` division at the origin, which is a
-    # statement about |C|.
-    #
-    # LATENT, not observed: every caller today samples C >= 0 only —
-    # `gap_equation.py:334` `np.linspace(0, Lambda, n_points)`, the minimizer's
-    # `bounds=(1e-6 * Lambda, C_max)` at `gap_equation.py:220`, and
-    # `ginzburg_landau.py:683` `np.linspace(0.5, 5.0, …)`. So no published figure
-    # or solver result was wrong. The fix is to keep it that way if a caller ever
-    # sweeps the full double well; `test_effective_potential_even_in_C` is the guard.
+    # The exact ansatz is even in C. Guard the absolute near-origin interval
+    # against division by C²; V_num is flat there, unlike the continuous ansatz.
     if abs(C) < 1e-15:
         return 0.0
     V_tree = C**2 / (2.0 * G)
@@ -793,53 +789,38 @@ def adw_effective_potential(C, G, Lambda, N_f):
 
 
 def adw_critical_coupling(Lambda, N_f):
-    """
-    Critical coupling for tetrad condensation.
+    """Theoretical origin-curvature threshold of the exact scalar ansatz.
 
-    G_c = 8π² / (N_f · Λ²)
+    G_c = 8π²/(N_f Λ²), for positive Λ and N_f.
+    It zeros the coefficient 1/G - N_f Λ²/(8π²) of V_exact, not a
+    derivative of the literal flat numerical branch. For G>G_c the exact
+    ansatz has nonzero scalar minima; this is not a microscopic ADW derivation.
 
-    Derived from d²V_eff/dC²|_{C=0} = 0 with V_eff = C²/(2G) - (N_f/16π²)[...].
-    For G > G_c, the origin becomes unstable and the effective potential
-    develops a nontrivial minimum at C ≠ 0 (tetrad condensation).
+    The recorded grounding supplies conditional positivity only.
+    Physical HS/one-loop ADW identification remains UNCOMPUTED.
 
     Lean: critical_coupling_pos (ADWMechanism.lean)
-    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
-
-    Args:
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        G_c (positive)
     """
     return 8.0 * np.pi**2 / (N_f * Lambda**2)
 
 
 def adw_curvature_at_origin(G, Lambda, N_f):
-    """
-    Second derivative of V_eff at C=0 (curvature at the origin).
+    """Theoretical V_exact curvature coefficient, not V_num's flat derivative.
 
-    d²V_eff/dC²|_{C=0} = 1/G - N_f · Λ² / (8π²)
+    V_exact''(0) = 1/G - N_f Λ²/(8π²), for positive supplied parameters.
+    It is positive below G_c, zero at G_c and negative above G_c. At G_c
+    the exact origin is a strict degenerate minimum, not an inflection point.
+    The numerical potential instead vanishes throughout |C|<1e-15, which is locally constant as an idealized real piecewise prescription.
+    No unrestricted IEEE-function derivative is asserted. This helper is not a numerical
+    differentiation of that branch and does not derive vestigial ordering,
+    a correlation length or a microscopic gravitational phase.
 
-    Positive for G < G_c (origin is a minimum, pre-geometric).
-    Zero at G = G_c (phase transition).
-    Negative for G > G_c (origin is unstable, tetrad condenses).
-
-    In the vestigial phase analysis, this curvature determines the
-    metric correlation length: ξ_metric ~ 1/√curvature. As curvature → 0
-    near G_c, metric correlations grow, producing vestigial ordering.
+    The recorded grounding concerns the conditional coefficient. The run
+    identifier is historical; no new native validation is supplied here.
+    Physical HS/one-loop ADW identification remains UNCOMPUTED.
 
     Lean: curvature_zero_at_Gc (ADWMechanism.lean)
     Aristotle: f8de66d1
-    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
-
-    Args:
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        d²V_eff/dC²|_{C=0}
     """
     return 1.0 / G - N_f * Lambda**2 / (8.0 * np.pi**2)
 

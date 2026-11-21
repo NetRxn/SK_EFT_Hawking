@@ -2,6 +2,26 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{hyperref}
+% Code identifiers may wrap without inserting or removing visible characters.
+% Keep each original argument intact for source-reference extraction.
+\usepackage{seqsplit}
+\let\layoutoriginaltexttt\texttt
+\makeatletter
+\protected\def\texttt#1{%
+  \begingroup
+  \ifmmode
+    \layoutoriginaltexttt{#1}%
+  \else
+    \in@{ }{#1}%
+    \ifin@
+      \layoutoriginaltexttt{#1}%
+    \else
+      \let\seqinsert\allowbreak
+      \layoutoriginaltexttt{\seqsplit{#1}}%
+    \fi
+  \fi
+  \endgroup}
+\makeatother
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{natbib}
@@ -670,8 +690,8 @@ excluded by hypothesis. Formalized as
 \end{proof}
 
 Both hypotheses are load-bearing. Dropping the second admits two parallel factors
-on one bond --- a 4-cycle assembled entirely from arity-2 factors --- so the
-result is about simple interaction graphs, not about pairwise coupling alone.
+on one bond. They form a 4-cycle assembled entirely from arity-2 factors. The
+result therefore concerns simple interaction graphs, not pairwise coupling alone.
 
 The hypothesis of Proposition~\ref{prop:pairwise} is satisfied by every
 two-body Hamiltonian on a simple interaction graph with one factor per bond,
@@ -730,8 +750,10 @@ $\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f =
 which Theorem~\ref{thm:contract}\,(2) upgrades to
 \begin{equation}
 \label{eq:structbicond}
-\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f
+\begin{gathered}
+\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f\\
 \iff I_G(0) = 0 \wedge \forall a\,y,\ 0 \leq f_a(y)
+\end{gathered}
 \end{equation}
 (\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero}); the non-negativity
 conjunct passes through unchanged on both sides, so all of the content
@@ -886,42 +908,42 @@ Proposition~\ref{prop:star} and the worked value of Sec.~\ref{sec:rate}.
 Per-coordinate stabilization, the strong induction that carries the whole engine.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem rankLocalStep_coord_stable
   (hloc : RankLocalStep rank step) (s : E -> b) :
   forall (e : E) (n : N), rank e + 1 <= n ->
     step^[n] s e = step^[rank e + 1] s e
-\end{verbatim}
+\end{lstlisting}
 }
 
 Global convergence, with stabilization and fixedness as separate conjuncts.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem rankLocalStep_converges [Fintype E]
   (hloc : RankLocalStep rank step) (s : E -> b) :
   (forall n, convergenceHorizon rank <= n ->
      step^[n] s = step^[convergenceHorizon rank] s)
   /\ step (step^[convergenceHorizon rank] s)
        = step^[convergenceHorizon rank] s
-\end{verbatim}
+\end{lstlisting}
 }
 
 Rank locality of one belief-propagation sweep, for an arbitrary real factor weight.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem bpStep_rankLocal
   (cert : BPRankCert G)
   (factorWeight : a -> (v -> X) -> R) :
   RankLocalStep cert.rank (bpStep G factorWeight)
-\end{verbatim}
+\end{lstlisting}
 }
 
 The convergence theorem itself, quantified over every initial bundle and every weight.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem bp_converges_on_ranked_acyclic
   (cert : BPRankCert G)
   (factorWeight : a -> (v -> X) -> R)
@@ -934,23 +956,23 @@ theorem bp_converges_on_ranked_acyclic
        ((fun m' => bpUpdate m' factorWeight)^[
           convergenceHorizon cert.rank] m)
        factorWeight
-\end{verbatim}
+\end{lstlisting}
 }
 
 The certificate's own loop-freeness content, which is what makes it a real hypothesis.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem isFourCycleFree_of_bpRankCert
   (G : FactorGraph v a) (cert : BPRankCert G) :
   IsFourCycleFreeFactorGraph G
-\end{verbatim}
+\end{lstlisting}
 }
 
 The non-vacuity witness, on a graph whose incidence graph is the three-node path.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem bp_converges_on_star
   (factorWeight : Fin 1 -> (Fin 2 -> X) -> R)
   (m : BPMessages (Fin 2) (Fin 1) starFactorGraph X) :
@@ -958,101 +980,101 @@ theorem bp_converges_on_star
     ((fun m' => bpUpdate m' factorWeight)^[
        convergenceHorizon bpRankCertStar.rank] m)
     factorWeight
-\end{verbatim}
+\end{lstlisting}
 }
 
 The one-directional strength relation between acyclicity and the 4-cycle screen.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem isAcyclicFactorGraph_imp_fourCycleFree
   (G : FactorGraph v a) (h : IsAcyclicFactorGraph G) :
   IsFourCycleFreeFactorGraph G
-\end{verbatim}
+\end{lstlisting}
 }
 
 The Legendre evaluation, proven by an explicit least-upper-bound argument.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem loopCorrectionRate_eq_neg_log
   (G : FactorGraph v a) :
   loopCorrectionRate G = -Real.log (1 - loopDensity G)
-\end{verbatim}
+\end{lstlisting}
 }
 
 The zero-rate characterization, which is 4-cycle-freeness and not tree-ness.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem loopCorrectionRate_eq_zero_iff_fourCycleFree
   (G : FactorGraph v a) :
   loopCorrectionRate G = 0
     <-> IsFourCycleFreeFactorGraph G
-\end{verbatim}
+\end{lstlisting}
 }
 
 Strict monotonicity, stated across independent index-type pairs.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem loopCorrectionRate_lt_of_loopDensity_lt
   (G1 : FactorGraph v1 a1) (G2 : FactorGraph v2 a2)
   (h : loopDensity G1 < loopDensity G2) :
   loopCorrectionRate G1 < loopCorrectionRate G2
-\end{verbatim}
+\end{lstlisting}
 }
 
 The general threshold form, recovering the zero characterization at zero.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem loopCorrectionRate_le_iff_loopDensity_le
   (G : FactorGraph v a) (t : R) :
   loopCorrectionRate G <= t
     <-> loopDensity G <= 1 - Real.exp (-t)
-\end{verbatim}
+\end{lstlisting}
 }
 
 The exact finite-$n$ identity for the no-loop event.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem no_loop_event_prob_eq_exp_neg_rate
   (G : FactorGraph v a) (n : N) :
   (1 - loopDensity G) ^ n
     = Real.exp (-(n : R) * loopCorrectionRate G)
-\end{verbatim}
+\end{lstlisting}
 }
 
 The kernel-checked worked value.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem loopCorrectionRate_completeBipartite22 :
   loopCorrectionRate
     (<|fun _ _ => true|> : FactorGraph (Fin 2) (Fin 2))
       = Real.log (4 / 3)
-\end{verbatim}
+\end{lstlisting}
 }
 
 The structural biconditional, whose content is the zero-rate characterization.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem fourCycleFree_nonneg_iff_ldp_rate_zero
   (G : FactorGraph v a)
   (factorWeight : a -> (v -> X) -> R) :
   IsFourCycleFreeNonnegWeighted G factorWeight
     <-> (loopCorrectionRate G = 0
          /\ forall a y, 0 <= factorWeight a y)
-\end{verbatim}
+\end{lstlisting}
 }
 
 The combined statement dissected in Sec.~\ref{sec:anatomy}.
 
 {\footnotesize
-\begin{verbatim}
+\begin{lstlisting}[basicstyle=\ttfamily,columns=fullflexible,keepspaces=true,showstringspaces=false,breaklines=true,breakatwhitespace=true,breakindent=1em]
 theorem analog_hawking_fourCycleFree_demarcation
   (G : FactorGraph v a)
   (factorWeight : a -> (v -> X) -> R) (c0 c1 : R) :
@@ -1063,7 +1085,7 @@ theorem analog_hawking_fourCycleFree_demarcation
              (categoricalChernExpansion c0 c1) 1
              = realSpaceChernAt
                  (categoricalChernExpansion c0 c1) (-1)
-\end{verbatim}
+\end{lstlisting}
 }
 
 Universe and instance binders are elided above for readability; the elaborated
