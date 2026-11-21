@@ -129376,6 +129376,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.memoryMarginal_posSemidef",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryErrorBudget",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.memoryXReadout_effects",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
       "atlas_kind": "TRUE",
@@ -129436,7 +129445,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.one_record_equal_preselection_joint_memory_gap",
@@ -129502,13 +129511,22 @@
       "frontier_impact": 6
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_joint_beats_memory_under_traceNorm_error",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryErrorBudget",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_and_joint_optima",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_effect_beats_X",
@@ -129553,7 +129571,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_marginals",
@@ -129563,6 +129581,24 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.traceNorm_memoryMarginal_le",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryErrorBudget",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.trace_memoryMarginal",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryErrorBudget",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.UnitaryErrorBasis.op_orthonormal",
@@ -132334,7 +132370,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.finite_binary_randomized_record_success_le",
@@ -133936,7 +133972,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.negativityBellDiag_eq",
@@ -134620,7 +134656,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 12
+      "frontier_impact": 13
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.posPart_sub_self_eq_negPart",
@@ -135844,7 +135880,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.self_inner_eq",
@@ -137131,7 +137167,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_hermitian_triangle",
@@ -137239,7 +137275,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_nonneg",
@@ -137293,7 +137329,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 19
+      "frontier_impact": 20
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_pt2_bellDiagState",
@@ -137446,7 +137482,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_unitary_conj",
@@ -226163,7 +226199,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24489,
+    "theorem_nodes": 24493,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226174,7 +226210,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24089,
+      "TRUE:PROVED": 24093,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
