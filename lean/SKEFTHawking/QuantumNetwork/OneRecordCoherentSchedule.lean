@@ -344,3 +344,171 @@ theorem selected_memory_marginals (a b c d : ℝ)
       linear_combination (b^2 / 4) * offset
 
 end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+
+namespace SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+
+open Matrix Complex
+
+private theorem observable_mulVec (p : Fin 4 → Fin 4) (ψ : Amplitude) :
+    observable p *ᵥ ψ = fun i => ψ (p i) := by
+  funext i
+  simp [observable, Matrix.mulVec, dotProduct, ite_mul]
+
+private theorem observable_adjoint (p : Fin 4 → Fin 4) (hp : Function.Involutive p) :
+    (observable p)ᴴ = observable p := by
+  ext i j
+  have h : p j = i ↔ p i = j := ⟨fun he => by rw [← he, hp], fun he => by rw [← he, hp]⟩
+  simp [observable, Matrix.conjTranspose_apply, h]
+
+private theorem observable_sq (p : Fin 4 → Fin 4) (hp : Function.Involutive p) :
+    observable p * observable p = 1 := by
+  ext i j
+  rw [Matrix.mul_apply, Finset.sum_eq_single (p i)]
+  · simp [observable, hp i, Matrix.one_apply]
+  · intro x _ hx
+    simp [observable, Ne.symm hx]
+  · simp
+
+private theorem xSystem_involutive : Function.Involutive xSystem := by
+  intro i
+  fin_cases i <;> decide
+
+private theorem copyIndex_involutive : Function.Involutive copyIndex := by
+  intro i
+  fin_cases i <;> decide
+
+/-- The actual system X rotation at the two half-angle coordinates. -/
+private def timingRotation (a b : ℝ) : Matrix (Fin 4) (Fin 4) ℂ :=
+  (a : ℂ) • (1 : Matrix (Fin 4) (Fin 4) ℂ) -
+    (I * (b : ℂ)) • observable xSystem
+
+private theorem timingRotation_mulVec (a b : ℝ) (ψ : Amplitude) :
+    timingRotation a b *ᵥ ψ = rotate a b ψ := by
+  simp [timingRotation, Matrix.sub_mulVec, Matrix.smul_mulVec, Matrix.one_mulVec, observable_mulVec]
+  rfl
+
+private theorem timingRotation_unitary (a b : ℝ) (h : a^2 + b^2 = 1) :
+    timingRotation a b ∈ Matrix.unitaryGroup (Fin 4) ℂ := by
+  rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose]
+  let X := observable xSystem
+  have hX : Xᴴ = X := observable_adjoint _ xSystem_involutive
+  have hX2 : X * X = 1 := observable_sq _ xSystem_involutive
+  have hct : (timingRotation a b)ᴴ = (a : ℂ) • (1 : Matrix (Fin 4) (Fin 4) ℂ) +
+      (I * (b : ℂ)) • X := by
+    change (((a : ℂ) • (1 : Matrix (Fin 4) (Fin 4) ℂ)) - (I * (b : ℂ)) • X)ᴴ = _
+    simp [Matrix.conjTranspose_sub, Matrix.conjTranspose_smul, hX, sub_neg_eq_add]
+  rw [hct]
+  change ((a : ℂ) • 1 - (I * (b : ℂ)) • X) *
+    ((a : ℂ) • 1 + (I * (b : ℂ)) • X) = 1
+  simp only [sub_mul, mul_add, Matrix.smul_mul, Matrix.mul_smul, one_mul, mul_one, smul_smul, hX2]
+  have HI : (I * (b : ℂ)) * (I * (b : ℂ)) = -((b : ℂ)^2) := by
+    calc
+      _ = I^2 * (b : ℂ)^2 := by ring
+      _ = _ := by rw [Complex.I_sq]; ring
+  have hd : (a : ℂ)^2 + (b : ℂ)^2 = 1 := by exact_mod_cast h
+  rw [HI, mul_comm (I * (b : ℂ)) (a : ℂ), neg_smul]
+  simp only [pow_two] at hd ⊢
+  calc
+    _ = ((a : ℂ) * (a : ℂ) + (b : ℂ) * (b : ℂ)) •
+        (1 : Matrix (Fin 4) (Fin 4) ℂ) := by rw [add_smul]; abel
+    _ = 1 := by rw [hd, one_smul]
+
+private theorem copy_unitary : observable copyIndex ∈ Matrix.unitaryGroup (Fin 4) ℂ := by
+  rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,
+    observable_adjoint _ copyIndex_involutive]
+  exact observable_sq _ copyIndex_involutive
+
+/-- The early arm applies offset, training and copy in that order. -/
+def earlyTimingOperator (a b c d : ℝ) : Matrix (Fin 4) (Fin 4) ℂ :=
+  observable copyIndex * timingRotation a b * timingRotation c d
+
+/-- The late arm applies training, copy and offset in that order. -/
+def lateTimingOperator (a b c d : ℝ) : Matrix (Fin 4) (Fin 4) ℂ :=
+  timingRotation c d * observable copyIndex * timingRotation a b
+
+/-- Normalized physical rotations give unitary implementations of both timing arms. -/
+theorem timingOperators_unitary (a b c d : ℝ) (train : a^2 + b^2 = 1) (offset : c^2 + d^2 = 1) :
+    earlyTimingOperator a b c d ∈ Matrix.unitaryGroup (Fin 4) ℂ ∧
+      lateTimingOperator a b c d ∈ Matrix.unitaryGroup (Fin 4) ℂ :=
+  ⟨mul_mem (mul_mem copy_unitary (timingRotation_unitary a b train)) (timingRotation_unitary c d offset),
+    mul_mem (mul_mem (timingRotation_unitary c d offset) copy_unitary) (timingRotation_unitary a b train)⟩
+
+private theorem earlyTimingOperator_mulVec (a b c d : ℝ) :
+    earlyTimingOperator a b c d *ᵥ initial = early a b c d := by
+  simp [earlyTimingOperator, ← Matrix.mulVec_mulVec, observable_mulVec, timingRotation_mulVec]
+  rfl
+
+private theorem lateTimingOperator_mulVec (a b c d : ℝ) :
+    lateTimingOperator a b c d *ᵥ initial = late a b c d := by
+  simp [lateTimingOperator, ← Matrix.mulVec_mulVec, observable_mulVec, timingRotation_mulVec, late]
+
+end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+
+
+namespace SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
+
+open Matrix
+open scoped ComplexOrder
+
+/-- The initial density on the system and memory basis. -/
+def timingInput : Matrix (Fin 4) (Fin 4) ℂ := density initial
+
+/-- The antisymmetric selection combines the two arm operators before
+forming a density. -/
+noncomputable def antisymmetricTimingOperator (earlyOp lateOp : Matrix (Fin 4) (Fin 4) ℂ) :
+    Matrix (Fin 4) (Fin 4) ℂ :=
+  (1 / 2 : ℂ) • (lateOp - earlyOp)
+
+/-- The selected coherent branch for two actual arm operators. -/
+noncomputable def coherentTimingOutput (earlyOp lateOp : Matrix (Fin 4) (Fin 4) ℂ) :
+    Matrix (Fin 4) (Fin 4) ℂ :=
+  let op := antisymmetricTimingOperator earlyOp lateOp
+  op * timingInput * opᴴ
+
+/-- The matched dephased selection applies the same amplitude weight
+to each arm and combines the resulting densities. -/
+noncomputable def dephasedTimingOutput (earlyOp lateOp : Matrix (Fin 4) (Fin 4) ℂ) :
+    Matrix (Fin 4) (Fin 4) ℂ :=
+  (1 / 4 : ℂ) • (earlyOp * timingInput * earlyOpᴴ + lateOp * timingInput * lateOpᴴ)
+
+private theorem density_mulVec (M : Matrix (Fin 4) (Fin 4) ℂ) (ψ : Amplitude) :
+    density (M *ᵥ ψ) = M * density ψ * Mᴴ := by
+  simp [density, Matrix.star_mulVec, Matrix.mul_vecMulVec, Matrix.vecMulVec_mul]
+
+private theorem density_half (ψ : Amplitude) :
+    density (fun i => ψ i / 2) = (1 / 4 : ℂ) • density ψ := by
+  ext i j
+  simp [density, vecMulVec_apply]
+  ring
+
+theorem timingInput_state : timingInput.PosSemidef ∧ timingInput.trace.re = 1 := by
+  refine ⟨posSemidef_vecMulVec_self_star _,?_⟩
+  rw [timingInput,density_trace]
+  have h0 : initial 0 = 1 := rfl
+  have h1 : initial 1 = 0 := rfl
+  have h2 : initial 2 = 0 := rfl
+  have h3 : initial 3 = 0 := rfl
+  norm_num [moment,Fin.sum_univ_four,h0,h1,h2,h3]
+
+/-- The actual gate products reproduce both selected densities on the input state. -/
+theorem timingOperators_reproduce_selected (a b c d : ℝ) :
+    coherentTimingOutput (earlyTimingOperator a b c d) (lateTimingOperator a b c d) =
+      coherentSelected a b c d ∧
+    dephasedTimingOutput (earlyTimingOperator a b c d) (lateTimingOperator a b c d) =
+      dephasedSelected a b c d := by
+  constructor
+  · unfold coherentTimingOutput timingInput coherentSelected
+    dsimp only
+    rw [← density_mulVec]
+    congr 1
+    rw [antisymmetricTimingOperator, Matrix.smul_mulVec, Matrix.sub_mulVec,
+      earlyTimingOperator_mulVec, lateTimingOperator_mulVec]
+    funext i
+    change (1 / 2 : ℂ) * (late a b c d i - early a b c d i) = _
+    rw [minus]
+    ring
+  · unfold dephasedTimingOutput timingInput dephasedSelected
+    rw [← density_mulVec, ← density_mulVec, earlyTimingOperator_mulVec, lateTimingOperator_mulVec,
+      density_half, density_half, smul_add]
+
+end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule

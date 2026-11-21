@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-21T08:48:09.119903",
+  "generated": "2026-11-21T10:00:46.763898",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/periodic-lean-library/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43732,
-    "theorems_total": 24500,
-    "theorems_substantive": 24474,
+    "total_declarations": 43748,
+    "theorems_total": 24506,
+    "theorems_substantive": 24480,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24407,
+    "theorems_kernel_substantive": 24413,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2118,
+    "modules": 2119,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1355,6 +1355,7 @@
       "SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap",
       "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
       "SKEFTHawking.QuantumNetwork.OneRecordSelectionStability",
+      "SKEFTHawking.QuantumNetwork.OneRecordTimingOperatorStability",
       "SKEFTHawking.QuantumNetwork.OpNormHolder",
       "SKEFTHawking.QuantumNetwork.PLOBRateBound",
       "SKEFTHawking.QuantumNetwork.PartialTransposeGeneral",
@@ -2136,7 +2137,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13513,
+    "definitions": 13519,
     "structures": 486,
     "instances": 980,
     "inductives": 104,
