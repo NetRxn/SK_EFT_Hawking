@@ -238,4 +238,78 @@ theorem rational_coherent_mass :
   rw [coherentSelected, density_trace, minus_mass_raw]
   norm_num
 
+private noncomputable def symmetricAmplitude (a b c d : ℝ) : Amplitude := fun i =>
+  (late a b c d i + early a b c d i) / 2
+
+private theorem symmetric_orthogonal (a b c d : ℝ) :
+    star (symmetricAmplitude a b c d) ⬝ᵥ minus a b c d = 0 := by
+  apply Complex.ext <;>
+    simp [dotProduct, symmetricAmplitude, minus, early, late, rotate, xSystem, copyIndex, initial,
+      Fin.sum_univ_succ, Complex.div_ofNat_re, Complex.div_ofNat_im, Complex.mul_re, Complex.mul_im,
+      Complex.sub_re, Complex.sub_im, Complex.add_re, Complex.add_im]
+  ring
+
+/-- The unnormalized branch after the symmetric schedule outcome. -/
+noncomputable def symmetricSelected (a b c d : ℝ) : Matrix (Fin 4) (Fin 4) ℂ :=
+  density (symmetricAmplitude a b c d)
+
+private theorem dephased_split (a b c d : ℝ) :
+    dephasedSelected a b c d = (1/2 : ℂ) •
+      (coherentSelected a b c d + symmetricSelected a b c d) := by
+  ext i j
+  simp [dephasedSelected, coherentSelected, symmetricSelected, symmetricAmplitude, minus, density,
+    Matrix.vecMulVec_apply, Matrix.smul_apply]
+  ring
+
+/-- The two timing amplitudes are orthogonal, and the dephased selected
+branch is the half-sum of their unnormalized densities. -/
+theorem dephasedSelected_split (a b c d : ℝ) :
+    let C := coherentSelected a b c d
+    let A := symmetricSelected a b c d
+    A.PosSemidef ∧ A * C = 0 ∧ dephasedSelected a b c d = (1/2 : ℂ) • (C + A) := by
+  refine ⟨posSemidef_vecMulVec_self_star _, ?_, dephased_split a b c d⟩
+  dsimp only [symmetricSelected, coherentSelected, density]
+  rw [vecMulVec_mul_vecMulVec, symmetric_orthogonal, zero_smul, vecMulVec_zero]
+
+/-- Squaring the selected rank-one density scales it by its selection mass. -/
+theorem coherentSelected_sq (a b c d : ℝ) (train : a^2 + b^2 = 1)
+    (offset : c^2 + d^2 = 1) (hd : d ≠ 0) :
+    let C := coherentSelected a b c d
+    C * C = ((d^2 / 2 : ℝ) : ℂ) • C := by
+  obtain ⟨hC, _, _, hmass, _, _, _⟩ := selected_density_contrast a b c d train offset hd
+  have ht : (coherentSelected a b c d).trace = ((d^2 / 2 : ℝ) : ℂ) := by
+    apply Complex.ext
+    · exact hmass
+    · exact (Complex.le_def.mp hC.trace_nonneg).2.symm
+  dsimp only [coherentSelected, density] at ht ⊢
+  rw [vecMulVec_mul_vecMulVec, vecMulVec_smul, ← dotProduct_comm (minus a b c d),
+    ← Matrix.trace_vecMulVec, ht]
+
+private theorem plus_weight_trace (ρ : Matrix (Fin 4) (Fin 4) ℂ) :
+    memoryXReadout.weight 0 ρ = (ρ * readPlus).trace.re := by
+  change (∑ _ : Fin 1, readPlus * ρ * readPlusᴴ).trace.re = _
+  rw [Fin.sum_univ_one, Matrix.trace_mul_cycle, readPlus_gram, Matrix.trace_mul_comm]
+
+private theorem minus_weight_trace (ρ : Matrix (Fin 4) (Fin 4) ℂ) :
+    memoryXReadout.weight 1 ρ = (ρ * readMinus).trace.re := by
+  change (∑ _ : Fin 1, readMinus * ρ * readMinusᴴ).trace.re = _
+  rw [Fin.sum_univ_one, Matrix.trace_mul_cycle, readMinus_gram, Matrix.trace_mul_comm]
+
+/-- The memory-X minus projector is a binary effect. Its two trace pairings
+are the weights returned by the existing instrument. -/
+theorem memoryXReadout_effects (ρ : Matrix (Fin 4) (Fin 4) ℂ) :
+    let E := memoryXReadout.operators 1 ⟨0, by decide⟩
+    E.PosSemidef ∧ (1 - E).PosSemidef ∧
+      memoryXReadout.weight 0 ρ = (ρ * (1 - E)).trace.re ∧
+      memoryXReadout.weight 1 ρ = (ρ * E).trace.re := by
+  change readMinus.PosSemidef ∧ (1-readMinus).PosSemidef ∧ _
+  have hcomp : (1 : Matrix (Fin 4) (Fin 4) ℂ) - readMinus = readPlus := by
+    rw [← read_add, add_sub_cancel_right]
+  refine ⟨readMinus_gram ▸ posSemidef_conjTranspose_mul_self readMinus,
+    hcomp.symm ▸ (readPlus_gram ▸ posSemidef_conjTranspose_mul_self readPlus), ?_,
+    minus_weight_trace ρ⟩
+  change memoryXReadout.weight 0 ρ = (ρ * (1-readMinus)).trace.re
+  rw [hcomp]
+  exact plus_weight_trace ρ
+
 end SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule
