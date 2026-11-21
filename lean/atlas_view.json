@@ -55891,6 +55891,123 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.toStopping_branch",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.branch_eq_sandwich",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.branch_mem_fixedAlgebra",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.branch_posSemidef",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.brecOn.eq",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.durationInstrument_branch",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.eq_of_path_prefix",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.first_marginal",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.path_length_le_height",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.recordOperator_normalized",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.reportedInstrument_branch",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.reportedInstrument_lift_branch",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.StoppingSchedule.sum_trace",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.adaptive_halfTurn",
       "module": "SKEFTHawking.AdaptiveRetainedClockInstrument",
       "atlas_kind": "TRUE",
@@ -55906,7 +56023,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockInstrument_branch_mem_fixedAlgebra",
@@ -55915,7 +56032,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockInstrument_hand_weight",
@@ -55942,7 +56059,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.clockInstrument_spectator_weight",
@@ -55996,7 +56113,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.evolvedProjector_complete",
@@ -56005,7 +56122,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.evolvedProjector_mem_fixedAlgebra",
@@ -56023,7 +56140,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.hamiltonian_fixed",
@@ -56145,6 +56262,15 @@
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.spectator_mul_self",
       "module": "SKEFTHawking.ProperRetainedClockReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.stoppingClock_two_positive_durations",
+      "module": "SKEFTHawking.StoppingRetainedClockInstrument",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -127528,7 +127654,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.branch_smul",
@@ -127636,7 +127762,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.relabel_lift_branch",
@@ -127645,7 +127771,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.relabel_relabel_branch",
@@ -127681,7 +127807,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.sum_weight",
@@ -225290,7 +225416,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24392,
+    "theorem_nodes": 24406,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -225301,7 +225427,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 23992,
+      "TRUE:PROVED": 24006,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
