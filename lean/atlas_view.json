@@ -129385,6 +129385,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.minus_vs_diagonal_memory_optimum",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.one_record_conditional_binary_optimum",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentDecision",
       "atlas_kind": "TRUE",
@@ -129484,13 +129493,31 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_effect_optimum",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_effect_optimum_with_prior",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_marginals",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.UnitaryErrorBasis.op_orthonormal",
@@ -134071,7 +134098,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.one_sub_signOp_posSemidef",
@@ -135448,7 +135475,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.re_trace_mul_le_opNorm_mul_trace",
@@ -137509,7 +137536,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 14
+      "frontier_impact": 15
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.trace_mul_proj_le",
@@ -226073,7 +226100,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24479,
+    "theorem_nodes": 24482,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226084,7 +226111,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24079,
+      "TRUE:PROVED": 24082,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
