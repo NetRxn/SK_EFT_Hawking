@@ -129385,6 +129385,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.memory_joint_prior_score_comparison",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.minus_vs_diagonal_memory_optimum",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
       "atlas_kind": "TRUE",
@@ -129418,7 +129427,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.one_record_equal_preselection_joint_memory_gap",
@@ -129484,6 +129493,15 @@
       "frontier_impact": 6
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_and_joint_optima",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_effect_beats_X",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
       "atlas_kind": "TRUE",
@@ -129504,6 +129522,15 @@
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_effect_optimum_with_prior",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_imbalance_sq_le",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryJointGap",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -226100,7 +226127,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24482,
+    "theorem_nodes": 24485,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226111,7 +226138,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24082,
+      "TRUE:PROVED": 24085,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
