@@ -123778,6 +123778,51 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.PowerLogTail.integral_log_power",
+      "module": "SKEFTHawking.PowerLogTail",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.PowerLogTail.integral_log_power_one",
+      "module": "SKEFTHawking.PowerLogTail",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.PowerLogTail.log_power_integrable",
+      "module": "SKEFTHawking.PowerLogTail",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.PowerLogTail.primitive_hasDerivAt",
+      "module": "SKEFTHawking.PowerLogTail",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.PowerLogTail.primitive_tendsto",
+      "module": "SKEFTHawking.PowerLogTail",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.PreModularData.hn",
       "module": "SKEFTHawking.RibbonCategory",
       "atlas_kind": "TRUE",
@@ -225677,7 +225722,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24435,
+    "theorem_nodes": 24440,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -225688,7 +225733,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24035,
+      "TRUE:PROVED": 24040,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
