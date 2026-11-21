@@ -4098,6 +4098,7 @@ import SKEFTHawking.FiniteBlockConditionalExpectation
 import SKEFTHawking.FiniteBlockModularCompatibility
 import SKEFTHawking.FiniteBlockGibbsProjection
 import SKEFTHawking.RetainedGibbsModular
+import SKEFTHawking.ContinuousRetainedModular
 -- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
 -- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
 import SKEFTHawking.QuantumNetwork.DistillationRateBound
