@@ -85,11 +85,31 @@ class TestFrontmatter:
 
 
 class TestRenderIsDeterministic:
-    def test_two_renders_of_one_collection_are_identical(self, inv_mod):
-        """The freshness check compares text, so any nondeterminism (a timestamp, a set
-        iteration order) would make it fail at random and get switched off."""
+    def test_two_renders_of_one_collection_are_identical(self, inv_mod, monkeypatch, tmp_path):
+        """A source revision has one inventory across Git-hook installation states."""
         inv = inv_mod.collect()
         assert inv_mod.render(inv) == inv_mod.render(inv)
+
+        scripts = tmp_path / "scripts"
+        scripts.mkdir()
+        helper = scripts / "pre-commit-sync.sh"
+        helper.write_bytes((SK_ROOT / "scripts" / helper.name).read_bytes())
+        monkeypatch.setattr(inv_mod, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(inv_mod, "SCRIPT_DIR", scripts)
+        uninstalled = inv_mod.hooks()
+        git_hooks = tmp_path / ".git" / "hooks"
+        git_hooks.mkdir(parents=True)
+        for name in ("pre-commit", "post-merge"):
+            hook = git_hooks / name
+            hook.write_text("#!/bin/sh\nexit 0\n")
+            hook.chmod(0o755)
+        assert inv_mod.hooks() == uninstalled
+
+        public_command = helper.relative_to(tmp_path).as_posix()
+        assert [row["command"] for row in uninstalled
+                if row["kind"] == "git-implementation"] == [public_command]
+        helper.unlink()
+        assert [row for row in inv_mod.hooks() if row["kind"] == "git-implementation"] == []
 
     def test_the_rendered_doc_carries_no_date(self, inv_mod):
         """A date would dirty the file on every run and turn the gate into noise."""
