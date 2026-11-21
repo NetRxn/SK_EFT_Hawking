@@ -4099,6 +4099,7 @@ import SKEFTHawking.FiniteGibbsDephasing
 import SKEFTHawking.FiniteGibbsDephasingConvergence
 import SKEFTHawking.FiniteDiagonalLindblad
 import SKEFTHawking.FiniteBlockConditionalExpectation
+import SKEFTHawking.FiniteGibbsReset
 import SKEFTHawking.FiniteBlockModularCompatibility
 import SKEFTHawking.FiniteBlockGibbsProjection
 import SKEFTHawking.RetainedGibbsModular

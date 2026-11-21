@@ -78,11 +78,9 @@ entirely unmechanized. **This is the single largest ungated seam in the map.**
 `except Exception: return None`, so an unreadable or absent roadmap is indistinguishable from
 one with nothing to say.
 
-⚠️ **Placement concern.** The graph schema is declared in `docs/KNOWLEDGE_GRAPH.md`, with a
-delta in `temporary/working-docs/sentence_kg_schema_delta.md` and a parallel edge table inside
-`docs/roadmaps/Phase5v_Roadmap.md`. The canonical statement of the graph's shape lives outside
-`docs/architecture/` — in a phase roadmap and a working doc — which is a plausible root cause
-of "we don't know our own system."
+The [graph schema](../KNOWLEDGE_GRAPH.md#graph-schema) defines the sentence, audit and
+claim-cluster nodes and their backing, audit and membership edges. The Phase 5v roadmap records
+the implementation history.
 
 ---
 
@@ -90,7 +88,9 @@ of "we don't know our own system."
 
 Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
 `docs/dev-loops/HARNESS_GUIDE.md`. Implementation in `.claude/plugins/skeft-qa/`. The hook
-roster is in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#hooks).
+roster is in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#hooks), along with the versioned
+Git pre-commit sync implementation. The [sync workflow](../../.claude/plugins/skeft-qa/skills/sync/SKILL.md)
+checks installation and the hook chain for the active checkout.
 
 Every hook fails open except the `PreToolUse(WebSearch|WebFetch)` **egress guard**, which is
 the one unambiguously fail-closed control in the system.

@@ -61,3 +61,16 @@ W1 (generator) → W2 (structure) → W3 (semigroup) → W4 (model). Independent
 
 ## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; D10 §open-systems row staged for first-lift; roadmap status updated.
+
+## Finite Gibbs reset
+
+Weighted matrix-unit jumps realize a finite reset channel. For normalized
+nonnegative weights, a mixture of this channel and the identity gives the
+state propagator of the reset generator at nonnegative time and rate. For
+strictly positive weights, the trace-dual observable action descends to a
+positive self-adjoint evolution in the weighted observable space. Its
+complement to the scalar projection decays by the exponential factor.
+
+For a diagonal Hamiltonian, the normalized Boltzmann weights give the
+actual finite Gibbs density. The three-level example witnesses population
+transfer and strict decay at positive rate and time.

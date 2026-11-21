@@ -84,6 +84,12 @@ same antisymmetric combination of the two calibrated arms. The other
 operator is the positive square root of the missing effect, so the two
 outcome weights sum to the input trace.
 
+The dephased timing output is also the success branch of a normalized
+two-outcome instrument on the same input. Its two half-scaled arm
+operators contribute separate Kraus terms. A general finite-family
+constructor adds the square-root failure operator whenever the selected
+family's total effect is bounded by the identity.
+
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
 - All metrics carry explicit physical units; every numerical bound is `norm_num`-backed and falsifiable.
