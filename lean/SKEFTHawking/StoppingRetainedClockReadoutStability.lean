@@ -10,13 +10,13 @@ open scoped ComplexOrder
 
 namespace SKEFTHawking.QuantumNetwork
 
-/-- The score of a finite family of effects on Hermitian errors of zero total
-trace is bounded by half the sum of the branch trace norms. -/
-theorem finite_effect_score_abs_le_half {ι R : Type*} [Fintype ι] [DecidableEq ι] [Fintype R]
+/-- The centered score of effects on Hermitian errors is bounded by half
+the sum of the branch trace norms. -/
+theorem finite_effect_score_centered_abs_le_half {ι R : Type*} [Fintype ι] [DecidableEq ι] [Fintype R]
     (Z E : R → Matrix ι ι ℂ) (hZ : ∀ r, (Z r).IsHermitian)
-    (hE : ∀ r, (E r).PosSemidef) (hI : ∀ r, (1 - E r).PosSemidef)
-    (htrace : ∑ r, (Z r).trace.re = 0) :
-    |∑ r, (Z r * E r).trace.re| ≤ (∑ r, traceNorm (Z r)) / 2 := by
+    (hE : ∀ r, (E r).PosSemidef) (hI : ∀ r, (1 - E r).PosSemidef) :
+    |(∑ r, (Z r * E r).trace.re) - (∑ r, (Z r).trace.re) / 2| ≤
+      (∑ r, traceNorm (Z r)) / 2 := by
   let C (r : R) := E r + E r - 1
   have hsub (r) : (1 - C r).PosSemidef := by
     have he : (1 : Matrix ι ι ℂ) - C r = (1 - E r) + (1 - E r) := by dsimp [C]; abel
@@ -33,21 +33,23 @@ theorem finite_effect_score_abs_le_half {ι R : Type*} [Fintype ι] [DecidableEq
       (by simpa only [sub_neg_eq_add] using hadd r) (by simpa only [sub_eq_add_neg] using hsub r)
     simp only [Matrix.mul_neg, Matrix.trace_neg, Complex.neg_re] at h
     linarith
-  have hscore : (∑ r, (Z r * C r).trace.re) = 2 * ∑ r, (Z r * E r).trace.re := by
+  have hscore : (∑ r, (Z r * C r).trace.re) =
+      2 * ((∑ r, (Z r * E r).trace.re) - (∑ r, (Z r).trace.re) / 2) := by
     simp only [C, Matrix.mul_sub, Matrix.mul_add, Matrix.mul_one, Matrix.trace_sub,
       Matrix.trace_add, Complex.sub_re, Complex.add_re, Finset.sum_sub_distrib,
-      Finset.sum_add_distrib, htrace, sub_zero, two_mul]
+      Finset.sum_add_distrib]
+    ring
   have h := (Finset.abs_sum_le_sum_abs (fun r => (Z r * C r).trace.re) Finset.univ).trans
     (Finset.sum_le_sum (fun r _ => hpoint r))
   rw [hscore, abs_mul, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)] at h
   linarith
 
-/-- The half trace-norm bound is attained by a record-dependent effect. -/
-theorem finite_effect_score_attains_half {ι R : Type*} [Fintype ι] [DecidableEq ι] [Fintype R]
-    (Z : R → Matrix ι ι ℂ) (hZ : ∀ r, (Z r).IsHermitian)
-    (htrace : ∑ r, (Z r).trace.re = 0) :
+/-- A family of record-dependent effects attains the positive centered bound. -/
+theorem finite_effect_score_attains_centered {ι R : Type*} [Fintype ι] [DecidableEq ι] [Fintype R]
+    (Z : R → Matrix ι ι ℂ) (hZ : ∀ r, (Z r).IsHermitian) :
     ∃ E : R → Matrix ι ι ℂ, (∀ r, (E r).PosSemidef) ∧ (∀ r, (1 - E r).PosSemidef) ∧
-      (∑ r, (Z r * E r).trace.re) = (∑ r, traceNorm (Z r)) / 2 := by
+      (∑ r, (Z r * E r).trace.re) =
+        ((∑ r, (Z r).trace.re) + (∑ r, traceNorm (Z r))) / 2 := by
   let E (r : R) := (((1 / 2 : ℝ) : ℂ)) • (1 + signOp (hZ r))
   have hhalf : (0 : ℂ) ≤ ((1 / 2 : ℝ) : ℂ) := by
     rw [Complex.zero_le_real]
@@ -67,8 +69,27 @@ theorem finite_effect_score_attains_half {ι R : Type*} [Fintype ι] [DecidableE
         Matrix.trace_smul, smul_eq_mul, Matrix.trace_add, Complex.mul_re,
         Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero, Complex.add_re]
       rw [traceNorm_hermitian_eq_pos_add_neg]
-    simp only [hE, ← Finset.mul_sum, Finset.sum_add_distrib, htrace, zero_add]
+    simp only [hE, ← Finset.mul_sum, Finset.sum_add_distrib]
     ring
+
+
+/-- The score of a finite family of effects on Hermitian errors of zero total
+trace is bounded by half the sum of the branch trace norms. -/
+theorem finite_effect_score_abs_le_half {ι R : Type*} [Fintype ι] [DecidableEq ι] [Fintype R]
+    (Z E : R → Matrix ι ι ℂ) (hZ : ∀ r, (Z r).IsHermitian)
+    (hE : ∀ r, (E r).PosSemidef) (hI : ∀ r, (1 - E r).PosSemidef)
+    (htrace : ∑ r, (Z r).trace.re = 0) :
+    |∑ r, (Z r * E r).trace.re| ≤ (∑ r, traceNorm (Z r)) / 2 := by
+  simpa only [htrace, zero_div, sub_zero] using
+    finite_effect_score_centered_abs_le_half Z E hZ hE hI
+
+/-- The half trace-norm bound is attained by a record-dependent effect. -/
+theorem finite_effect_score_attains_half {ι R : Type*} [Fintype ι] [DecidableEq ι] [Fintype R]
+    (Z : R → Matrix ι ι ℂ) (hZ : ∀ r, (Z r).IsHermitian)
+    (htrace : ∑ r, (Z r).trace.re = 0) :
+    ∃ E : R → Matrix ι ι ℂ, (∀ r, (E r).PosSemidef) ∧ (∀ r, (1 - E r).PosSemidef) ∧
+      (∑ r, (Z r * E r).trace.re) = (∑ r, traceNorm (Z r)) / 2 := by
+  simpa only [htrace, zero_add] using finite_effect_score_attains_centered Z hZ
 
 end SKEFTHawking.QuantumNetwork
 
