@@ -128071,6 +128071,24 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.ofContraction_success_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.ofContraction_success_operator",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.prepare_other",
       "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
       "atlas_kind": "TRUE",
@@ -129356,6 +129374,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.coherentTimingInstrument_success",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordTimingOperatorStability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.dephasedSelected_split",
@@ -226361,7 +226388,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24511,
+    "theorem_nodes": 24514,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226372,7 +226399,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24111,
+      "TRUE:PROVED": 24114,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
