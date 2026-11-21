@@ -11,29 +11,48 @@ open QuantumNetwork GibbsObservable FiniteGibbsClock DiagonalLindblad
 open QuantumNetwork.FiniteClockHandReadout (H H_hermitian Q U U_adjoint rhoPlus rho mass born p p_zero
   p_keep p_reflection)
 
-private def clockObservableEquiv (ω ℏ β : ℝ) :
-    QuantumNetwork.FiniteClockHandReadout.Mat ≃ₗ[ℂ] GibbsSpace (H ω ℏ) (H_hermitian ω ℏ) β := by
-  let hρ := gibbs_posDef (H_hermitian ω ℏ) β
+section PreparedGibbsExpectation
+
+variable {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+variable {H₀ : Matrix n n ℂ} (hH₀ : H₀.IsHermitian) (β : ℝ)
+
+private def faithfulObservableEquiv : Matrix n n ℂ ≃ₗ[ℂ] GibbsSpace H₀ hH₀ β := by
+  let hρ := gibbs_posDef hH₀ β
   exact LinearEquiv.ofBijective (observableLinear hρ.posSemidef)
     ⟨observable_injective hρ, observable_surjective hρ.posSemidef⟩
 
-/-- Evaluate a vector in the faithful Gibbs space as the expectation of its
-observable in the independently prepared hand state. -/
+/-- The real expectation of the reconstructed observable in an independently prepared state. -/
+def preparedGibbsExpectation (ρ : Matrix n n ℂ) (z : GibbsSpace H₀ hH₀ β) : ℝ :=
+  (((faithfulObservableEquiv hH₀ β).symm z * ρ).trace).re
+
+theorem preparedGibbsExpectation_observable (ρ X : Matrix n n ℂ) :
+    preparedGibbsExpectation hH₀ β ρ
+      (observable (gibbs_posDef hH₀ β).posSemidef X) = (X * ρ).trace.re := by
+  change (((faithfulObservableEquiv hH₀ β).symm
+    ((faithfulObservableEquiv hH₀ β) X) * ρ).trace).re = _
+  rw [LinearEquiv.symm_apply_apply]
+
+theorem preparedGibbsExpectation_continuous (ρ : Matrix n n ℂ) :
+    Continuous (preparedGibbsExpectation hH₀ β ρ) := by
+  let traceEval := (Matrix.traceLinearMap n ℂ ℂ).comp
+    ((LinearMap.mulRight ℂ ρ).comp (faithfulObservableEquiv hH₀ β).symm.toLinearMap)
+  change Continuous (fun z => (traceEval z).re)
+  exact Complex.continuous_re.comp traceEval.continuous_of_finiteDimensional
+
+end PreparedGibbsExpectation
+
+/-- Evaluate a vector in the faithful two-level Gibbs space in the independently prepared hand. -/
 def preparedClockReadout (ω ℏ β : ℝ) (z : GibbsSpace (H ω ℏ) (H_hermitian ω ℏ) β) : ℝ :=
-  (((clockObservableEquiv ω ℏ β).symm z * rhoPlus).trace).re
+  preparedGibbsExpectation (H_hermitian ω ℏ) β rhoPlus z
 
 theorem preparedClockReadout_observable (ω ℏ β : ℝ) (X : QuantumNetwork.FiniteClockHandReadout.Mat) :
     preparedClockReadout ω ℏ β
-      (observable (gibbs_posDef (H_hermitian ω ℏ) β).posSemidef X) = (X * rhoPlus).trace.re := by
-  change (((clockObservableEquiv ω ℏ β).symm ((clockObservableEquiv ω ℏ β) X) * rhoPlus).trace).re = _
-  rw [LinearEquiv.symm_apply_apply]
+      (observable (gibbs_posDef (H_hermitian ω ℏ) β).posSemidef X) = (X * rhoPlus).trace.re :=
+  preparedGibbsExpectation_observable (H_hermitian ω ℏ) β rhoPlus X
 
 theorem preparedClockReadout_continuous (ω ℏ β : ℝ) :
-    Continuous (preparedClockReadout ω ℏ β) := by
-  let traceEval := (Matrix.traceLinearMap (Fin 2) ℂ ℂ).comp
-    ((LinearMap.mulRight ℂ rhoPlus).comp (clockObservableEquiv ω ℏ β).symm.toLinearMap)
-  change Continuous (fun z => (traceEval z).re)
-  exact Complex.continuous_re.comp traceEval.continuous_of_finiteDimensional
+    Continuous (preparedClockReadout ω ℏ β) :=
+  preparedGibbsExpectation_continuous (H_hermitian ω ℏ) β rhoPlus
 
 /-- Time continuity of the retained group passes to the prepared readout. -/
 theorem retainedModular_clockHand_readout_continuous {κ : Type*} [Fintype κ]
