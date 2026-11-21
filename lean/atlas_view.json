@@ -129367,6 +129367,15 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.memoryMarginal_eq_partialTrace",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.memoryXReadout_effects",
       "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
       "atlas_kind": "TRUE",
@@ -129436,7 +129445,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.one_record_readout_weights",
@@ -129464,6 +129473,24 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 6
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_effect_beats_X",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordMemoryReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule.selected_memory_marginals",
+      "module": "SKEFTHawking.QuantumNetwork.OneRecordCoherentSchedule",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.UnitaryErrorBasis.op_orthonormal",
@@ -226046,7 +226073,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24476,
+    "theorem_nodes": 24479,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -226057,7 +226084,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24076,
+      "TRUE:PROVED": 24079,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
