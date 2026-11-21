@@ -59,9 +59,9 @@ private def inSKNamespace (n : Name) : Bool :=
 private def inSKPackage (env : Environment) (n : Name) : Bool :=
   match env.getModuleIdxFor? n with
   | some idx =>
-    let moduleNames := env.header.moduleNames
-    if h : idx.toNat < moduleNames.size then
-      skPrefix.isPrefixOf moduleNames[idx.toNat]
+    let modules := env.header.modules
+    if h : idx.toNat < modules.size then
+      skPrefix.isPrefixOf modules[idx.toNat].module
     else false
   | none => false
 
@@ -142,9 +142,9 @@ private def classifyDecl (env : Environment) (name : Name) (ci : ConstantInfo) :
 private def getModuleName (env : Environment) (name : Name) : String :=
   match env.getModuleIdxFor? name with
   | some idx =>
-    let moduleNames := env.header.moduleNames
-    if h : idx.toNat < moduleNames.size then
-      toString moduleNames[idx.toNat]
+    let modules := env.header.modules
+    if h : idx.toNat < modules.size then
+      toString modules[idx.toNat].module
     else
       "<unknown>"
   | none => "<current>"
@@ -301,12 +301,13 @@ private def loadImmRefCache : IO (Std.HashMap Name (UInt64 × Array Name)) := do
         return m
   catch _ => return {}
 
-/-- Persist the updated immediate-ref cache (one JSON array of `[name, declHash, [refs…]]`). -/
+/-- Persist the updated immediate-ref cache as compact JSON. The compact
+printer avoids a deep pretty-print format tree for the full array. -/
 private def saveImmRefCache (cache : Std.HashMap Name (UInt64 × Array Name)) : IO Unit := do
   let arr : Array Json := cache.toArray.map (fun (n, (h, refs)) =>
     Json.arr #[Json.str n.toString, Json.str (toString h),
                Json.arr (refs.map (fun r => Json.str r.toString))])
-  IO.FS.writeFile immRefCachePath (toString (Json.arr arr))
+  IO.FS.writeFile immRefCachePath (Json.arr arr).compress
 
 /-- Persistent **Mathlib boundary axiom-closure** cache (ADR-005 D-G.2), relative to `lean/` cwd.
 Gitignored. Stores the transitive axiom closures of the project→Mathlib boundary consts so the
@@ -369,7 +370,7 @@ private def saveMathlibCache (pin : String) (cache : Std.HashMap Name (Array Nam
   let arr : Array Json := cache.toArray.map (fun (n, axs) =>
     Json.arr #[Json.str n.toString, Json.arr (axs.map (fun a => Json.str a.toString))])
   let j := Json.mkObj [("pin", Json.str pin), ("closures", Json.arr arr)]
-  IO.FS.writeFile mathlibCachePath (toString j)
+  IO.FS.writeFile mathlibCachePath j.compress
 
 /-- Persistent pretty-printed-type cache (ADR-005 D-G.2), relative to `lean/` cwd. Gitignored.
 `ppExpr` of ~23k type signatures is a CO-DOMINANT extraction cost (~150 s, benched) recomputed every
@@ -413,7 +414,7 @@ private def saveTypeStrCache (pin : String) (cache : Std.HashMap Name (UInt64 ×
   let arr : Array Json := cache.toArray.map (fun (n, (h, ts)) =>
     Json.arr #[Json.str n.toString, Json.str (toString h), Json.str ts])
   let j := Json.mkObj [("pin", Json.str pin), ("types", Json.arr arr)]
-  IO.FS.writeFile typeStrCachePath (toString j)
+  IO.FS.writeFile typeStrCachePath j.compress
 
 /-- Persistent **per-decl rendered-JSON** cache (ADR-005 D-G.2 Phase 1c), relative to `lean/` cwd.
 Gitignored. The JSON build (`Json.mkObj` + ~244k `toString`-of-`Name`) is the dominant warm cost
@@ -470,7 +471,7 @@ private def saveJsonCache (pin : String) (cache : Std.HashMap Name (UInt64 × St
   let arr : Array Json := cache.toArray.map (fun (n, (k, s)) =>
     Json.arr #[Json.str n.toString, Json.str (toString k), Json.str s])
   let j := Json.mkObj [("pin", Json.str pin), ("decls", Json.arr arr)]
-  IO.FS.writeFile jsonCachePath (toString j)
+  IO.FS.writeFile jsonCachePath j.compress
 
 /-- Main extraction: iterate over all constants, filter, process.
     Filters by module membership in the SKEFTHawking package, not by namespace.

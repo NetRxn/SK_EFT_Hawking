@@ -51,6 +51,33 @@
   - **Bridging preprint** draft in `papers/phase6AA_qnetwork_preprint/` (leak-clean).
 - **Deferred (NOT required for DONE):** Bell-diagonal Klein-4 general swap map; W1′ link-rate / BSM-modeling-constant anchors; fidelity-under-continuous-decay envelope; Horodecki teleportation (W6, needs Haar lemma); D6 §6 `\cite` (ADVISORY-2).
 
+## One-record timing operation certificate
+
+The early and late gate products are unitary when both rotations are
+normalized. Their antisymmetric and dephased selections reproduce the
+two existing branch densities. When each observed timing arm is an
+operator-norm contraction in the same basis and phase convention,
+the sum of the two operator-norm errors bounds the coherent branch
+error in trace norm. Half of that sum bounds the dephased branch error.
+At the fixed input prior, the weighted raw budget implies positive
+observed selection mass and a joint readout advantage over all
+binary memory-only effects.
+
+When both observed arms use the same contracted copy, training and offset
+gates in the common basis and phase convention, each arm error is bounded
+by the sum of the three calibration errors. The fixed-prior raw trace-norm
+budget is then at most `(1 + r)` times that sum. When this bound, amplified
+by `2/m` for nominal selection mass `m`, is strictly below the nominal
+decision margin, the certificate proves positive observed selection and a
+joint readout beating every binary memory-only effect.
+
+The early and late arms can also use independently calibrated copy,
+training and offset gates in the same basis and phase convention. Sum
+the three gate errors within each arm to obtain budgets `eEarly` and
+`eLate`. The bound is then `(1 + r) / 2` times the sum of the two
+budgets before amplification by `2/m`. Taking the three calibrated
+gates to be the same in both arms recovers the shared-gate certificate.
+
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
 - All metrics carry explicit physical units; every numerical bound is `norm_num`-backed and falsifiable.
