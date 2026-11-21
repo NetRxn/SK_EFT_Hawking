@@ -59,9 +59,9 @@ private def inSKNamespace (n : Name) : Bool :=
 private def inSKPackage (env : Environment) (n : Name) : Bool :=
   match env.getModuleIdxFor? n with
   | some idx =>
-    let moduleNames := env.header.moduleNames
-    if h : idx.toNat < moduleNames.size then
-      skPrefix.isPrefixOf moduleNames[idx.toNat]
+    let modules := env.header.modules
+    if h : idx.toNat < modules.size then
+      skPrefix.isPrefixOf modules[idx.toNat].module
     else false
   | none => false
 
@@ -142,9 +142,9 @@ private def classifyDecl (env : Environment) (name : Name) (ci : ConstantInfo) :
 private def getModuleName (env : Environment) (name : Name) : String :=
   match env.getModuleIdxFor? name with
   | some idx =>
-    let moduleNames := env.header.moduleNames
-    if h : idx.toNat < moduleNames.size then
-      toString moduleNames[idx.toNat]
+    let modules := env.header.modules
+    if h : idx.toNat < modules.size then
+      toString modules[idx.toNat].module
     else
       "<unknown>"
   | none => "<current>"

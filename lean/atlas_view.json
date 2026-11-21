@@ -55798,7 +55798,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.branch_posSemidef",
@@ -55825,7 +55825,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.path_law",
@@ -55838,6 +55838,42 @@
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.recordOperator_normalized",
+      "module": "SKEFTHawking.AdaptiveRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.report_first_trace",
+      "module": "SKEFTHawking.AdaptiveRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.reportedInstrument_branch",
+      "module": "SKEFTHawking.AdaptiveRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.reportedInstrument_branch_mem_fixedAlgebra",
+      "module": "SKEFTHawking.AdaptiveRetainedClockInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.BlockConditionalExpectation.ProperClock.Schedule.reportedInstrument_lift_branch",
       "module": "SKEFTHawking.AdaptiveRetainedClockInstrument",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -127586,6 +127622,33 @@
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.prepare_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.relabel_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.relabel_lift_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.relabel_relabel_branch",
       "module": "SKEFTHawking.QuantumNetwork.FiniteInstrument",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -225227,7 +225290,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24385,
+    "theorem_nodes": 24392,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -225238,7 +225301,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 23985,
+      "TRUE:PROVED": 23992,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,

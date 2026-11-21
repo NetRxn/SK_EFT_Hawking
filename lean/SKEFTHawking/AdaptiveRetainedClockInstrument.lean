@@ -168,6 +168,61 @@ theorem Schedule.instrument_lift_branch (ω ℏ E β : ℝ) {n : ℕ} (S : Sched
   rw [Fin.sum_univ_one]
   simp only [W, Equiv.symm_apply_apply]
 
+/-- The reported outcome is a function of the record of the actual adaptive schedule. -/
+def Schedule.reportedInstrument (ω ℏ E β : ℝ) {n q : ℕ} (S : Schedule n)
+    (report : (Fin n → Fin 3) → Fin q) : FiniteInstrument Level q :=
+  (S.instrument ω ℏ E β).relabel (fun a => report ((Schedule.recordEquiv n).symm a))
+
+theorem Schedule.reportedInstrument_branch (ω ℏ E β : ℝ) {n q : ℕ} (S : Schedule n)
+    (report : (Fin n → Fin 3) → Fin q) (b : Fin q) (X : Mat) :
+    (S.reportedInstrument ω ℏ E β report).branch b X =
+      ∑ r ∈ Finset.univ.filter (fun r => report r = b), S.branch ω ℏ E β r X := by
+  rw [Schedule.reportedInstrument, FiniteInstrument.relabel_branch]
+  simp only [Finset.sum_filter]
+  let e := Schedule.recordEquiv n
+  have h := e.sum_comp (fun a =>
+    if report (e.symm a) = b then (S.instrument ω ℏ E β).branch a X else 0)
+  rw [← h]
+  simp only [e, Equiv.symm_apply_apply, Schedule.instrument_branch]
+
+theorem Schedule.reportedInstrument_lift_branch (ω ℏ E β : ℝ) {n q : ℕ} (S : Schedule n)
+    (report : (Fin n → Fin 3) → Fin q) (b : Fin q)
+    (A : Type*) [Fintype A] [DecidableEq A] (X : Matrix (Level × A) (Level × A) ℂ) :
+    ((S.reportedInstrument ω ℏ E β report).lift A).branch b X =
+      ∑ r ∈ Finset.univ.filter (fun r => report r = b),
+        let W := S.recordOperator ω ℏ E β r ⊗ₖ (1 : Matrix A A ℂ)
+        W * X * Wᴴ := by
+  rw [Schedule.reportedInstrument, FiniteInstrument.relabel_lift_branch]
+  simp only [Finset.sum_filter]
+  let e := Schedule.recordEquiv n
+  have h := e.sum_comp (fun a =>
+    if report (e.symm a) = b then ((S.instrument ω ℏ E β).lift A).branch a X else 0)
+  rw [← h]
+  simp only [e, Equiv.symm_apply_apply, Schedule.instrument_lift_branch]
+
+theorem Schedule.reportedInstrument_branch_mem_fixedAlgebra (ω ℏ E β : ℝ)
+    (hℏ : 0 < ℏ) {n q : ℕ} (S : Schedule n)
+    (report : (Fin n → Fin 3) → Fin q) (b : Fin q) {X : Mat}
+    (hX : X ∈ fixedAlgebra signatures) :
+    (S.reportedInstrument ω ℏ E β report).branch b X ∈ fixedAlgebra signatures := by
+  rw [Schedule.reportedInstrument_branch]
+  exact (fixedAlgebra signatures).sum_mem fun r _ =>
+    S.branch_mem_fixedAlgebra ω ℏ E β hℏ r hX
+
+/-- Reporting only the first readout retains its probability after all continuations. -/
+theorem Schedule.report_first_trace (ω ℏ E β s : ℝ) {n : ℕ}
+    (next : Fin 3 → Schedule n) (b : Fin 3) (X : Mat) :
+    (((Schedule.measure s next).reportedInstrument ω ℏ E β (fun r => r 0)).branch b X).trace =
+      ((clockInstrument ω ℏ E (-β * ℏ * s)).branch b X).trace := by
+  let S := Schedule.measure s next
+  let e := Fin.consEquiv (fun _ : Fin (n + 1) => Fin 3)
+  rw [Schedule.reportedInstrument_branch, Matrix.trace_sum, Finset.sum_filter]
+  have h := e.sum_comp (fun r => if r 0 = b then (S.branch ω ℏ E β r X).trace else 0)
+  rw [← h, Fintype.sum_prod_type]
+  simp only [e, Fin.consEquiv_apply, Fin.cons_zero, Finset.sum_ite_irrel, Finset.sum_const_zero]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  exact Schedule.first_marginal ω ℏ E β s next b X
+
 theorem clockInstrument_initialBranch (ω ℏ E : ℝ) (a : Fin 3) :
     (clockInstrument ω ℏ E 0).branch a prepared =
       if a = (1 : Fin 2).castSucc then prepared else 0 := by

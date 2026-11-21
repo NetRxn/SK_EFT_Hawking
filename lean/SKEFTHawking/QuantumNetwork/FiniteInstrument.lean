@@ -75,6 +75,86 @@ theorem lift_branch_posSemidef (I : FiniteInstrument ι o) (ε : Type*) [Fintype
     (a : Fin o) {X : Matrix (ι × ε) (ι × ε) ℂ} (hX : X.PosSemidef) :
     ((I.lift ε).branch a X).PosSemidef := (I.lift ε).branch_posSemidef a hX
 
+variable {q : ℕ}
+
+private noncomputable def relabelOperator (I : FiniteInstrument ι o) (f : Fin o → Fin q)
+    (b : Fin q) (j : Fin o × Fin I.count) : Matrix ι ι ℂ :=
+  if f j.1 = b then I.operators j.1 j.2 else 0
+
+private theorem sum_relabelOperator_gram (I : FiniteInstrument ι o) (f : Fin o → Fin q)
+    (j : Fin o × Fin I.count) :
+    (∑ b, (relabelOperator I f b j)ᴴ * relabelOperator I f b j) =
+      (I.operators j.1 j.2)ᴴ * I.operators j.1 j.2 := by
+  calc
+    _ = ∑ b : Fin q, if f j.1 = b then
+        (I.operators j.1 j.2)ᴴ * I.operators j.1 j.2 else 0 := by
+      apply Finset.sum_congr rfl
+      intro b _
+      by_cases h : f j.1 = b <;> simp [relabelOperator, h]
+    _ = _ := by simp [Finset.sum_ite_eq]
+
+/-- Report a function of the actual outcome while retaining each Kraus alternative. -/
+noncomputable def relabel (I : FiniteInstrument ι o) (f : Fin o → Fin q) : FiniteInstrument ι q where
+  count := o * I.count
+  operators b k := relabelOperator I f b (finProdFinEquiv.symm k)
+  normalized := by
+    change (∑ b : Fin q, ∑ k : Fin (o * I.count),
+      (relabelOperator I f b (finProdFinEquiv.symm k))ᴴ *
+        relabelOperator I f b (finProdFinEquiv.symm k)) = 1
+    have reindex (b : Fin q) :=
+      (finProdFinEquiv (m := o) (n := I.count)).symm.sum_comp
+        (fun j => (relabelOperator I f b j)ᴴ * relabelOperator I f b j)
+    simp_rw [reindex]
+    rw [Finset.sum_comm]
+    simp only [sum_relabelOperator_gram, Fintype.sum_prod_type, I.normalized]
+
+/-- A reported branch is the sum of the original branches in its fiber. -/
+theorem relabel_branch (I : FiniteInstrument ι o) (f : Fin o → Fin q) (b : Fin q)
+    (X : Matrix ι ι ℂ) :
+    (I.relabel f).branch b X = ∑ a ∈ Finset.univ.filter (fun a => f a = b), I.branch a X := by
+  change (∑ k : Fin (o * I.count),
+    relabelOperator I f b (finProdFinEquiv.symm k) * X *
+      (relabelOperator I f b (finProdFinEquiv.symm k))ᴴ) = _
+  rw [(finProdFinEquiv (m := o) (n := I.count)).symm.sum_comp
+    (fun j => relabelOperator I f b j * X * (relabelOperator I f b j)ᴴ),
+      Fintype.sum_prod_type, Finset.sum_filter]
+  apply Finset.sum_congr rfl
+  intro a _
+  by_cases h : f a = b <;> simp [relabelOperator, h, branch, krausMap]
+
+theorem relabel_lift_branch (I : FiniteInstrument ι o) (f : Fin o → Fin q) (b : Fin q)
+    (A : Type*) [Fintype A] [DecidableEq A] (X : Matrix (ι × A) (ι × A) ℂ) :
+    ((I.relabel f).lift A).branch b X =
+      ∑ a ∈ Finset.univ.filter (fun a => f a = b), (I.lift A).branch a X := by
+  rw [← relabel_branch]
+  unfold branch krausMap
+  apply Finset.sum_congr rfl
+  intro k _
+  let j : Fin o × Fin I.count := finProdFinEquiv.symm k
+  have hop : (((I.relabel f).lift A).operators b k) =
+      (((I.lift A).relabel f).operators b k) := by
+    change (relabelOperator I f b j) ⊗ₖ (1 : Matrix A A ℂ) =
+      relabelOperator (I.lift A) f b j
+    by_cases h : f j.1 = b <;> simp [relabelOperator, h, lift]
+  rw [hop]
+
+/-- Two successively reported labels have the same branches as their composition. -/
+theorem relabel_relabel_branch {r : ℕ} (I : FiniteInstrument ι o) (f : Fin o → Fin q)
+    (g : Fin q → Fin r) (c : Fin r) (X : Matrix ι ι ℂ) :
+    ((I.relabel f).relabel g).branch c X = (I.relabel (g ∘ f)).branch c X := by
+  simp only [relabel_branch, Finset.sum_filter, Function.comp_apply]
+  calc
+    _ = ∑ b : Fin q, ∑ a : Fin o, if f a = b then
+        if g b = c then I.branch a X else 0 else 0 := by
+      apply Finset.sum_congr rfl
+      intro b _
+      by_cases hb : g b = c
+      · simp only [hb, if_true]
+      · simp [hb]
+    _ = _ := by
+      rw [Finset.sum_comm]
+      simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+
 /-- A normalized channel is a one-outcome instrument. -/
 noncomputable def singleton {k : ℕ} (K : Fin k → Matrix ι ι ℂ) (hK : IsKrausChannel K) :
     FiniteInstrument ι 1 where
