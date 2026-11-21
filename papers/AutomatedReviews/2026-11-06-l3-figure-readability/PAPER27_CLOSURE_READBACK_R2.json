@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:1",
+      "type": "ReviewFinding",
+      "label": "1 REQUIRED \u2014 Long body tokens visibly overflow and c",
+      "name": "REQUIRED \u2014 Long body tokens visibly overflow and clip the compiled source paper",
+      "verification": "verified",
+      "detail": "- **Severity:** major - **Lane:** prose - **Gate:** ManuscriptLength - **Location:** `papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex`, Lean Formalization, Cross-wave compatibility and Acknowledgments. - **Observed:** The actual seven-page PDF has three overfull boxes: 64.35905pt at source481\u2013492, 21.95757pt at522\u2013539 and211.58597pt at595\u2013605. The module/review paths clip at the page ed",
+      "meta": {
+        "severity": "major",
+        "status": "fixed",
+        "review_file": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/paper27_bh_thermodynamics_four_laws.md",
+        "review_date": "2026-11-06-l3-figure-readability",
+        "review_name": "paper27_bh_thermodynamics_four_laws",
+        "section": "1",
+        "inferred_paper": "paper27_bh_thermodynamics_four_laws",
+        "inferred_bundle": null,
+        "declared_paper": "paper27_bh_thermodynamics_four_laws",
+        "declared_bundle": "L3",
+        "blocks": "ManuscriptLength",
+        "target": "`papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex`, Lean Formalization, Cross-wave compatibility and Acknowledgments.",
+        "lane": "prose",
+        "verify": "`uv run python -c \"from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\"`",
+        "blocked_by": [],
+        "needs_operator": null,
+        "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/PAPER27_VISUAL_R2.md",
+        "supersession_evidence": "Actual single-file Paper27 repair preserves all equations, accepted figure/caption and bibliography; independent R1 REVISE attribution echo was repaired and R2 source review accepts exact composition. Actual canonical compile has7pages/0overfull/0errors/0unresolved; independent fresh all-seven-page visual review accepts all3bodyoverflow repairs and coherent compiled source. Both declared predicates failed before repair and execute successfully through this writer. Full rejected/accepted source/runtime/render custody is in PAPER27_REPAIR_R2_EVIDENCE.zip; source and actual visual reviews are adjacent. Original full physical four-laws BUILD, related WKB/Lean attribution, broader claims and full publication/human acceptance remain OPEN.",
+        "supersession_date": "2026-11-06"
+      }
+    },
+    {
+      "id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:2",
+      "type": "ReviewFinding",
+      "label": "2 REQUIRED \u2014 The source-paper body contradicts the a",
+      "name": "REQUIRED \u2014 The source-paper body contradicts the accepted local-versus-illustrative physics account",
+      "verification": "verified",
+      "detail": "- **Severity:** major - **Lane:** prose - **Gate:** CrossPaperConsistency - **Location:** Same manuscript, abstract/introduction, Acoustic branch, mechanics/third-law/entropy account and conclusion. - **Observed:** The body calls the illustrative exponential the primary leading form/full coupled-ODE implementation, turns a disclosed late-time extrapolation into an infinite-affine-time guarantee, a",
+      "meta": {
+        "severity": "major",
+        "status": "fixed",
+        "review_file": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/paper27_bh_thermodynamics_four_laws.md",
+        "review_date": "2026-11-06-l3-figure-readability",
+        "review_name": "paper27_bh_thermodynamics_four_laws",
+        "section": "2",
+        "inferred_paper": "paper27_bh_thermodynamics_four_laws",
+        "inferred_bundle": null,
+        "declared_paper": "paper27_bh_thermodynamics_four_laws",
+        "declared_bundle": "L3",
+        "blocks": "CrossPaperConsistency",
+        "target": "Same manuscript, abstract/introduction, Acoustic branch, mechanics/third-law/entropy account and conclusion.",
+        "lane": "prose",
+        "verify": "`uv run python -c \"from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\"`",
+        "blocked_by": [],
+        "needs_operator": null,
+        "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/PAPER27_VISUAL_R2.md",
+        "supersession_evidence": "Actual single-file Paper27 repair preserves all equations, accepted figure/caption and bibliography; independent R1 REVISE attribution echo was repaired and R2 source review accepts exact composition. Actual canonical compile has7pages/0overfull/0errors/0unresolved; independent fresh all-seven-page visual review accepts all3bodyoverflow repairs and coherent compiled source. Both declared predicates failed before repair and execute successfully through this writer. Full rejected/accepted source/runtime/render custody is in PAPER27_REPAIR_R2_EVIDENCE.zip; source and actual visual reviews are adjacent. Original full physical four-laws BUILD, related WKB/Lean attribution, broader claims and full publication/human acceptance remain OPEN.",
+        "supersession_date": "2026-11-06"
+      }
+    }
+  ],
+  "all_prior_ledger_records_preserved": true,
+  "new_records": 2,
+  "actual_writer_returncode": 0,
+  "source_anchor": "3034617f",
+  "accepted_preclosure_pdf_sha256": "68de6eeb3a032fd9fd89a63f4824ffb01d293f0cd6cd24fd95eac6fe25430ee9",
+  "post_verify_pdf_sha256": "68de6eeb3a032fd9fd89a63f4824ffb01d293f0cd6cd24fd95eac6fe25430ee9",
+  "pdf_byte_identical": true
+}

@@ -1,0 +1,22 @@
+{
+  "controls": {
+    "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean": {
+      "before": 5,
+      "after": 0
+    },
+    "papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex": {
+      "before": 5,
+      "after": 0
+    },
+    "src/core/citations.py": {
+      "before": 3,
+      "after": 0
+    }
+  },
+  "unchanged_noncomment_lean_lines": 351,
+  "unchanged_citation_identity_and_consumers": true,
+  "only_registry_fields_changed": [
+    "provides",
+    "notes"
+  ]
+}

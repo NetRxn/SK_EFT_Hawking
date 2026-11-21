@@ -1,0 +1,22 @@
+{
+  "source": "db4b41ef2edeeb4114bfe5429e64cce40e962a7f",
+  "actual_baseline": [
+    {
+      "finding_id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:1",
+      "status": "open",
+      "command": "uv run python -c \"from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\"",
+      "returncode": 1,
+      "stdout": "paper27_bh_thermodynamics_four_laws: OK  pages=7 overfull=3 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0\n    artifacts kept: /var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-paper27_bh_thermodynamics_four_laws-wr0vyzoz\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\n                                                                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "finding_id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:2",
+      "status": "open",
+      "command": "uv run python -c \"from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\"",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\n                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    }
+  ],
+  "scope": "Expected failure of two declared consumer predicates before repair; independent semantic/visual acceptance still required"
+}

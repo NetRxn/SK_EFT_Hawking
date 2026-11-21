@@ -1,0 +1,119 @@
+{
+  "task": "l3-existing-cutoff-profile-independent-r2",
+  "verdict": "PASS_SOURCE_COMPOSITION_ONLY",
+  "independent_of": "l3_existing_source_composition",
+  "acceptance_reviewer": "ROOT",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l3-existing-cutoff-profile-independent-r2.json",
+  "base": "a34eb6b08fb85e43f3d5e5071f45db6a8e7ebf57",
+  "checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l3-crossing-main",
+  "donor": "f905a2873a32269c3d21651abb2b64825a212c3d",
+  "complete_four_postimages_read": true,
+  "full_patch_and_report_read": true,
+  "introduced_findings": [],
+  "artifact_hashes": {
+    "/tmp/l3-existing-cutoff-profile-composition-r2.md": "01145c79e52e5eedcdca7520943ff6ad8bf2e276f827aea5f21aa0464e9d64c1",
+    "/tmp/l3-existing-cutoff-profile-composition-r2.patch": "ce68d4ed3b95a30456ca424bba5909e313465f5d22f67a3e2ca56b337e80bb79",
+    "/tmp/l3-existing-cutoff-profile-composition-r2.json": "debf114018f5458bdc31ac94a47cb467e7b6b305c93cbe6e1a2d9fd5f25c3893"
+  },
+  "postimages": [
+    {
+      "path": "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+      "preimage_sha256": "44e8925fab13fb37768cad8bcb980cd4e4e1233209de25d605cc14a1d62d49e7",
+      "proposed_sha256": "3dad53ccf26c7fd5608ae234a51f88e4e50b5196b69f4321d690092e9611d3e2"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md",
+      "preimage_sha256": "6376da15fbff42afeb8a0bf180304ababb8b5d246989638fb14b76390ab1762b",
+      "proposed_sha256": "c0fa78ae7ffbe627636daa68ba1c6d755ab414086c1c8d0e95cfd65b85e0ff64"
+    },
+    {
+      "path": "papers/L3/bundle_metadata.json",
+      "preimage_sha256": "5a2d421686eb87ee05f1d3e1c8318f8cfc80bb3011cdd7257d1b5b6dd9c4e079",
+      "proposed_sha256": "8193d729336e7d73e6757ac09d984f479f7d3873d994c0036b5096a253124f80"
+    },
+    {
+      "path": "papers/L3/paper_draft.tex",
+      "preimage_sha256": "973e2258717b6e0631a787fbf20fc45c580699703c5a65e0b26db32735dcab99",
+      "proposed_sha256": "d5bc7cedcad517f46ea44075d1f675d40645e1baa544b6f75c6867ec62910dae"
+    }
+  ],
+  "static_comparisons": {
+    "all_nine_donor_declarations_exact": true,
+    "old_lean_code_token_sequence_preserved": true,
+    "direct_imports_preserved": true,
+    "pin_files_match_donor": true,
+    "full_focused_3_2_byte_exact": true,
+    "full_focused_3_2_sha256": "15c2b53223b5ff87a91a06f4c90cc88fd962a77c3850c137ce13146975fa2dd5",
+    "all_nonapex_metadata_unchanged": true
+  },
+  "initial_continuity": {
+    "exit_code": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "same_packet": true,
+    "exit_code": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "primary_source": {
+    "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-6a/primary-sources/Balbinot2005PRD.source/acusticpap.tex",
+    "personally_read_sections": [
+      "III dimensional reduction",
+      "IV static nozzle/stress tensor",
+      "V near-horizon backreaction",
+      "VIII fate complete",
+      "IX conclusion complete",
+      "Appendix II coefficients",
+      "Jacobson bibliography entry"
+    ],
+    "sha256": "eaad71dc01d10b713440e0c546554aa26f4997a654051bf07aaab74575f9ed2c"
+  },
+  "figure": {
+    "viewed": true,
+    "sha256": "314d4157e4db7489312eb7d8b4dc8938ed3509f8f90868b091b61f4d7d099974",
+    "right_panel_crossing_retained": true,
+    "current_render_acceptance": false,
+    "open_residuals": [
+      "exponential representative still attributed to Balbinot in legend",
+      "cooling annotation overlaps blue trace",
+      "inherited Schwarzschild time axis labels t/t_evap although raw t plotted with t_evap=5"
+    ]
+  },
+  "verify_semantics": {
+    "2.2": "Meaningful exact-candidate derivative/classifier dependency and type regression route, conditional on later native extraction and scientific negative/restoration evidence; no closure.",
+    "2.3": "Allowed metadata-correction route; standalone positivity distinguished from hypothesis-linked delta equivalence; actual extracted spelling/controls later.",
+    "3.2": "Actual production trace/crossing/shading Verify preserved whole and unexecuted."
+  },
+  "remaining_science": [
+    "physical first, zeroth and third laws",
+    "physical acoustic energy and entropy/current-divergence balances",
+    "microscopic ADW action/exterior/mass and branch matching",
+    "physical cutoff-coefficient selection",
+    "quantitative remainder derivative control",
+    "analytic metric-path/box witnesses and Euler/renormalized cosmological-term obligations for the separately preserved geometry chain"
+  ],
+  "required_later_acceptance": [
+    "ROOT full-read exact source and review",
+    "coordinated normal admission after freeze",
+    "exact-candidate authoritative native build and current extraction/axiom review",
+    "actual original Verify negative/restoration/positive evidence",
+    "canonical closure writer/readback",
+    "full-project and main qualification",
+    "current claims/reader/venue/render/PDF/source audit and propagation",
+    "ordered Stage9/10 then full Stage13",
+    "human and publication acceptance"
+  ],
+  "execution": {
+    "scientific_imports": false,
+    "tests_verifies_validators": false,
+    "lean_lsp_mcp_native_extraction_build_controller_cache_process": false,
+    "source_application": false,
+    "repo_notebook_writes": false,
+    "git_mutations": false,
+    "repository_helper_only": "scripts/codex_continuity.py check"
+  },
+  "report_path": "/tmp/l3-existing-cutoff-profile-independent-r2.md",
+  "report_sha256": "0dc1a80fe12469854b5123fea2d5be4b71c87c10c432679d02448af24f3d479c"
+}

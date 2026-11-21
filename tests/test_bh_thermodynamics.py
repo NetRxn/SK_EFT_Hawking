@@ -1,15 +1,17 @@
 """Phase 6a Wave 5 tests: BH thermodynamics four laws + regime partition.
 
 Cross-validation between Lean theorems in
-`lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` (post-rewrite
-2026-04-26-2230 around the Balbinot 2005 acoustic primary anchor) and
+`lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` and
 Python numerics in `src/bh_thermodynamics/`. Covers:
 
 - Regime classifier: Schwarzschild / Boundary / acoustic
   (`ADW_EXTREMALITY` constructor name retained).
 - M_c default scaling per ADW deep-research §3 dimensional ansatz.
-- Acoustic time-evolution `T_H(t) = T_H,0·exp(-t/τ_cool)`
-  (Balbinot 2005 Eq. Tsonic; mirrored from `wkb/backreaction.py`).
+- Chosen illustrative exponential `T_H(t) = T_H,0·exp(-t/τ_cool)`,
+  mirrored by the named Lean definition. Balbinot 2005 Eq. (Tsonic)
+  instead gives a local affine cooling law in a constant-sound-speed
+  nozzle model. These exponential tests do not validate that local
+  source approximation, its remainder, or a condensate extension.
 - Schwarzschild static `T_H = 1/(8π M)` form (Hawking 1975).
 - Substrate-response coefficient ansatz `δ_ADW = (α_ADW − 1)·Λ_UV`.
 - Four falsifier checks (acoustic-decay, schwarzschild-heating,
@@ -18,8 +20,9 @@ Python numerics in `src/bh_thermodynamics/`. Covers:
 
 Provenance correction: the initial Wave 5 ship (2026-04-26-0830) used a
 Schottky-saturation form attributed to JK 2002 cond-mat/0205174 Eq. (13)
-that did not actually match its primary source. Tests are restructured
-around the corrected Balbinot 2005 anchor; see
+that did not actually match its primary source. The present tests
+check the chosen profiles and supplied-sign bundles; the physical
+four-laws construction and source calibration remain owed. See
 `papers/AutomatedReviews/2026-04-26-2230-wave5-process/deep_research_analog_conflation.md`.
 """
 
@@ -132,7 +135,7 @@ class TestMCriticalScaling:
 
 
 class TestAcousticEvolution:
-    """Acoustic time-evolution T_H(t) = T_H,0·exp(-t/τ_cool) (Balbinot 2005)."""
+    """Chosen exponential T_H(t) = T_H,0·exp(-t/τ_cool), not Eq. (Tsonic)."""
 
     def test_T_H_acoustic_at_zero_time(self):
         """T_H(t=0) = T_H,0 (initial value)."""
@@ -146,14 +149,14 @@ class TestAcousticEvolution:
             assert result > 0
 
     def test_T_H_acoustic_strict_monotone_decay(self):
-        """T_H is strictly decreasing in t (Balbinot 2005 dT/dt < 0)."""
+        """The chosen exponential is strictly decreasing for positive τ_cool."""
         T_H0, tau = 1.0, 2.0
         for t_lo, t_hi in [(0.0, 0.5), (1.0, 2.0), (3.0, 10.0)]:
             assert T_H_acoustic_evolution(T_H0, tau, t_lo) > \
                 T_H_acoustic_evolution(T_H0, tau, t_hi)
 
     def test_T_H_acoustic_asymptotic_zero(self):
-        """T_H → 0 as t → ∞ (Balbinot's t ~ 1/T³ extrapolation)."""
+        """The chosen exponential tends to zero as t → ∞ by definition."""
         # At t = 100·τ_cool, exp(-100) is ~3.7e-44.
         result = T_H_acoustic_evolution(T_H0=1.0, tau_cool=1.0, t=100.0)
         assert result < 1e-40
@@ -259,7 +262,7 @@ class TestFalsifier1AcousticDecayForm:
         assert falsifier_acoustic_decay_form(T_H_increasing, 0.0, 1.0)
 
     def test_constant_profile_falsified(self):
-        """A constant T_H_alt IS falsified (Balbinot wants strict decay)."""
+        """A constant T_H_alt fails the selected strict-cooling criterion."""
         def T_H_const(t: float) -> float:
             return 1.0
         # Constant ⇒ not strictly decreasing ⇒ falsified.

@@ -1,0 +1,19 @@
+# Paper27 independent source composition review R2
+
+**ACCEPT_SOURCE_COMPOSITION_ONLY.** R1-1 and the optional singular-field precision issue are resolved. No further blocking defect was found in the exact two-span R1→R2 change.
+
+The VIII opening now describes four model-conditional mathematical checks on specified profiles, supplied signs, quantitative approach-time predicates and the response ansatz. It requires physical matching to the ADW system. That matches the actual theorem statements reviewed in R1: it neither presents the project-defined exponential as a primary solution nor treats the original response ansatz as a published prediction. The singular critical-mass-positivity sentence matches the actual H_RegimePartition carrier. Neither edit changes a theorem, its assumptions or its physical interpretation beyond the required accurate qualification.
+
+I independently reconstructed all 17 full R2 patch hunks directly against the actual current pinned preimage, checking every context/deletion byte and old/new hunk count. The result exactly equals the R2 JSON postimage. I independently computed the complete R1→R2 difference: exactly two spans, the VIII introduction and the positivity-field sentence. All four falsifier items, their hypotheses, and the original full physical BUILD conclusion remain exact relative to R1. All seven displayed equation/align environments, the complete accepted figure/caption/placement and the entire bibliography remain byte-exact relative to the actual manuscript. No unrelated source change is hidden in R2.
+
+Preimage: `39cddf7586d4828991a27f0b1803b6256af5a65fbdb32efb45ae0a92fbc063ba`. R2 postimage: `9110d98bbe4a348883c2e6d9285ac722b9003fdd621b0c0b663b3e5fffa8dede`. R2 patch: `beb8c65907913b790ec571cf6a3c91fc8aff1d55f15fbe501db959134825a013`. Complete hunk coordinates, exact two-span delta and displayed-block hashes are recorded in the companion JSON.
+
+This is a delta re-review atop my actual R1 full manuscript/postimage, held-primary, Python implementation, Lean theorem/carrier/index and source-history review. Those source inspections are inherited evidence, not a new native result. R2 correctly labels the author's R1 packet/source evidence as inherited; this independent R2 review performed its own original R2 packet checks. The original packet checked fresh/changed[] before inspection and again at report creation, with no refresh. Candidate remains `36129dd19c321035aeb0c649600dc15468072205`, manuscript preimage unchanged.
+
+The original full physical four-laws objective and ROOT ownership remain intact and OPEN. Microscopic action/selected background/state, horizon/generator, thermodynamic variations/charges, physical energy/entropy and transport/cutoff matching, condensate sign, controlled remainders, actual late-time/affine-time evolution and Nernst endpoint remain owed. Acknowledged broader taxonomy/self-narration, universal novelty, other literature/second-law claims and Wave2 matching remain outside this scoped acceptance. No global claims/citation/prose, scientific or publication pass follows.
+
+Only the assigned R2 review Markdown/JSON were written. No repository changes, build, compiler, Lean/LSP, runtime/controller action, Git mutation or finding closure occurred. ROOT may proceed with the exact accepted source composition under its existing authority; the forced canonical compiler and independent fresh complete-page visual review remain required before consumer closure. Font/length/clipping and native/full-tree/publication acceptance are separate.
+
+## CONTRADICTIONS BETWEEN THE BRIEF AND THE SOURCES
+
+None in the exact R2 delta. Both changes match the requested minimal correction and actual previously reviewed carrier/source content. No physical construction discharge, absence claim or scope reduction is inferred.

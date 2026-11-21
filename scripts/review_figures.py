@@ -1382,24 +1382,16 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         name="fig_T_H_evolution_regime_partition",
         function="fig_T_H_evolution_regime_partition",
         caption=(
-            "Phase 6a Wave 5 — BCH four-laws regime-partition profile under "
-            "Hawking-radiation backreaction. Left: T_H(t) under evaporation in "
-            "the Schwarzschild regime (M > M_c, dT_H/dt > 0, heats as "
-            "evaporates, finite t-evap; Hawking 1975) and the acoustic "
-            "regime (M < M_c, dT_H/dt < 0, cools toward asymptotic "
-            "extremality at infinite time; Balbinot, Fagnocchi, Fabbri, "
-            "PRD 71, 064019 (2005), gr-qc/0405098, Eq. Tsonic, a sonic hole "
-            "in a Laval nozzle at constant sound speed). "
-            "The genuine regime partition is the sign-flip of dT_H/dt "
-            "during evaporation; the critical mass M_c = (N_f · Λ_UV) / "
-            "(12π · α_ADW) is project-original ansatz (Wave 5 deep-research "
-            "§3 dimensional analysis). Right: substrate-response coefficient "
-            "ansatz δ_ADW = (α_ADW − 1)·Λ_UV (deep-research §9), vanishing "
-            "at α_ADW = 1 (bare Sakharov-Adler limit) and sign-determined by "
-            "α_ADW ⋛ 1. Lean: BHThermodynamicsFourLaws.regime_partition_criterion; "
-            "BHThermodynamicsFourLaws.delta_ADW_nonzero_iff_alpha_ADW_ne_one."
+            "Panel (a): separately normalized temperature histories for representative "
+            "Schwarzschild evaporation (t/t_evap) and illustrative exponential "
+            "cooling (t/τ_cool). The exponential is a chosen profile, distinct "
+            "from Balbinot et al.'s local affine nozzle result. "
+            "Panel (b): the emergent gravitational length G_N^emerg M and the "
+            "cutoff length 1/Λ_UV, expressed in cutoff-length units. They "
+            "coincide at M = M_c in the stated model. Blue and amber shading "
+            "mark the classified branches on either side."
         ),
-        needs_experiments=False, expected_traces=3,
+        needs_experiments=False, expected_traces=4,
         expected_axes={"xaxis": "Time", "yaxis": "T_H"},
         physics_checks=[], color_keys=["amber", "steel_blue"],
     ),

@@ -1,21 +1,24 @@
-"""acoustic time-evolution Hawking temperature (Balbinot 2005).
+"""Chosen exponential cooling and Schwarzschild temperature profiles.
 
 Mirrors `T_H_acoustic_evolution` and `T_H_schwarzschild` in
-`lean/SKEFTHawking/BHThermodynamicsFourLaws.lean`. The leading-order
-exponential `T_H(t) = T_H,0 · exp(-t/τ_cool)` is the same approximation
-used by `src/wkb/backreaction.py` (line 449), citing
-Balbinot, Fagnocchi, Fabbri, *Quantum Effects in Acoustic
-Black Holes: the Backreaction*, **Phys. Rev. D 71, 064019 (2005)**,
-arXiv:gr-qc/0405098. The full coupled-ODE evolution lives in
-`backreaction.backreaction_evolution`; this module exposes the analytic
-forms used by the four-laws / regime-partition formalization.
+`lean/SKEFTHawking/BHThermodynamicsFourLaws.lean`. The exponential
+`T_H(t) = T_H,0 · exp(-t/τ_cool)` is an illustrative profile chosen by
+this project. Its positivity, strict decrease and asymptotic zero limit
+are properties of that definition, not a source-derived acoustic
+backreaction solution.
 
-Scope of the Balbinot anchor (corrected 2026-08-15): that paper computes a
-*sonic* hole in a Laval nozzle under one-dimensional flow at **constant**
-sound speed. It is not a Bose-Einstein-condensate result — the authors
-explicitly defer the condensate case, where `c ∝ ρ^(1/2)` is not constant,
-to later work. A condensate substrate inherits this branch by the *sign* of
-`dT_H/dt`, not by Eq. (Tsonic) itself.
+Balbinot, Fagnocchi, Fabbri, *Quantum Effects in Acoustic Black Holes:
+the Backreaction*, **Phys. Rev. D 71, 064019 (2005)**,
+arXiv:gr-qc/0405098, Eq. (Tsonic), gives a local affine temperature
+correction with coefficient 563/(720π). The calculation concerns a
+constant-sound-speed sonic hole in a Laval nozzle in a short-time,
+near-horizon approximation. Its `t ~ 1/T³` discussion is an explicit
+extrapolation, not the exponential defined here. The authors defer the
+Bose-Einstein-condensate case, where `c ∝ ρ^(1/2)`. Cooling in that case
+requires a separate derivation; the constant-sound-speed result does
+not establish its sign automatically. Calibration to source parameters,
+control of the local approximation's remainder and a physical evolution
+remain separate construction obligations.
 
 Replaces the (deleted) `schottky_saturation.py` from the initial Wave 5
 ship; that module implemented the Jacobson-Koike Eq. (13) Schottky form
@@ -37,12 +40,14 @@ from src.bh_thermodynamics.regime_classifier import ADWParams
 
 
 def T_H_acoustic_evolution(T_H0: float, tau_cool: float, t: float) -> float:
-    """acoustic Hawking temperature at time t under backreaction.
+    """Illustrative exponential temperature profile at time t.
 
-    `T_H(t) = T_H,0 · exp(-t / τ_cool)` — leading-order exponential
-    decay form per `wkb/backreaction.py` and Balbinot 2005 Eq. Tsonic.
+    `T_H(t) = T_H,0 · exp(-t / τ_cool)` is a chosen cooling profile,
+    distinct from Balbinot 2005 Eq. (Tsonic)'s local affine law.
     Strictly positive and strictly decreasing in t when both T_H,0 and
-    τ_cool are positive.
+    τ_cool are positive. Its zero-temperature limit occurs only as
+    t tends to infinity; this property does not establish a physical
+    acoustic evaporation endpoint.
 
     Mirrors `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean::T_H_acoustic_evolution`.
 
@@ -54,7 +59,7 @@ def T_H_acoustic_evolution(T_H0: float, tau_cool: float, t: float) -> float:
     tau_cool : float
         Cooling timescale (must be > 0).
     t : float
-        Time after horizon formation.
+        Time argument of the illustrative profile.
 
     Returns
     -------
@@ -69,7 +74,7 @@ def T_H_acoustic_evolution(T_H0: float, tau_cool: float, t: float) -> float:
 def T_H_acoustic_evolution_grid(
     T_H0: float, tau_cool: float, t_max: float, N_points: int = 101
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Time grid of acoustic T_H over t ∈ [0, t_max].
+    """Time grid of the illustrative exponential over t ∈ [0, t_max].
 
     Returns (t_grid, T_H_grid) suitable for plotting the cooling
     profile. Verifies T_H is strictly positive and strictly decreasing
