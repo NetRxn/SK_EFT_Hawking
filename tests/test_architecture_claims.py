@@ -562,3 +562,21 @@ def test_the_operator_guide_is_client_neutral_and_carries_the_persistence_recipe
     assert "LEAN_SLOT_SKIP_HOST_LIMITS" in text
     assert not Path("docs/dev-loops/CODEX_LEAN_SLOTS.md").exists(), (
         "promotion must delete the original in the same commit")
+
+
+def test_adr012_logical_repository_prefix_denotes_active_checkout(tmp_path, monkeypatch):
+    sentence = ("A logical `SK_EFT_Hawking/` target prefix denotes the active checkout, "
+                "irrespective of its physical directory name.")
+    text = (ROOT / "docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md").read_text()
+    assert sentence in " ".join(text.split())
+    import orchestrate
+    canonical = tmp_path / "SK_EFT_Hawking"
+    active = tmp_path / ".codex-python-worktrees" / "publication-portability"
+    for root in (canonical, active):
+        (root / "src").mkdir(parents=True)
+        (root / "src/target.py").write_text(str(root))
+    monkeypatch.setattr(orchestrate, "PROJECT_ROOT", active)
+    assert orchestrate.target_files("SK_EFT_Hawking/src/target.py") == ["src/target.py"]
+    files = orchestrate.target_files("SK_EFT_Hawking/src/target.py, src/target.py:1-2")
+    assert files == ["src/target.py"]
+    assert (active / files[0]).read_text() == str(active)

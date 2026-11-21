@@ -17,7 +17,6 @@ from pathlib import Path
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 
@@ -128,7 +127,7 @@ def test_external_cache_paths_resolve_when_set():
     declared but never successfully fetched anywhere).
     """
     import json
-    # State file lives in SK_ROOT/docs/, not workspace-level PROJECT_ROOT/docs/.
+    # Source state belongs to this checkout; cached sources belong to the shared workspace.
     state_path = SK_ROOT / "docs" / "primary_sources_state.json"
     state_entries = {}
     if state_path.is_file():
@@ -137,13 +136,14 @@ def test_external_cache_paths_resolve_when_set():
         except json.JSONDecodeError:
             state_entries = {}
 
+    workspace_root = find_workspace()
     bad = []
     sync_drift = []
     for k, e in CITATION_REGISTRY.items():
         path = e.get("primary_source_path")
         if path is None:
             continue
-        full = PROJECT_ROOT / path
+        full = workspace_root / path
         if full.is_file() and full.stat().st_size > 0:
             continue
         # Distinguish sync drift (state recorded success) from genuine bug.
@@ -209,3 +209,52 @@ def test_extract_missing_bibkeys_emits_no_orphans():
     assert payload["n_orphans"] == 0
     # Tidy up
     (SK_ROOT / "docs" / ".test_missing_stubs.json").unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize("file_kind", ["nonempty", "empty", "missing"])
+@pytest.mark.parametrize("verdict", [None, "no-source", "success"])
+def test_cache_path_contract_retains_real_missing_and_empty_failures(tmp_path, monkeypatch, file_kind, verdict):
+    """Exercise the existing invariant, including a bad entry after a good one."""
+    module = sys.modules[__name__]
+    workspace = tmp_path / "workspace"
+    active = workspace / ".codex-python-worktrees" / "active-publication"
+    (active / "docs").mkdir(parents=True)
+    good = "Lit-Search/Phase-1/primary-sources/good.json"
+    tested = "Lit-Search/Phase-1/primary-sources/tested.json"
+    (workspace / good).parent.mkdir(parents=True)
+    (workspace / good).write_text("held")
+    if file_kind != "missing":
+        (workspace / tested).write_text("held" if file_kind == "nonempty" else "")
+    if verdict is not None:
+        (active / "docs/primary_sources_state.json").write_text(json.dumps({"entries": {"tested": {"verdict": verdict}}}))
+    monkeypatch.setattr(module, "SK_ROOT", active)
+    monkeypatch.setattr(module, "find_workspace", lambda: workspace)
+    monkeypatch.setattr(module, "CITATION_REGISTRY", {
+        "null": {"primary_source_path": None},
+        "good": {"primary_source_path": good},
+        "tested": {"primary_source_path": tested},
+    })
+    if file_kind != "nonempty" and verdict != "success":
+        with pytest.raises(AssertionError, match="tested"):
+            test_external_cache_paths_resolve_when_set()
+    else:
+        test_external_cache_paths_resolve_when_set()
+
+
+@pytest.mark.parametrize("active_verdict", ["no-source", "success"])
+def test_cache_state_is_active_checkout_local(tmp_path, monkeypatch, active_verdict):
+    module = sys.modules[__name__]
+    workspace = tmp_path / "workspace"
+    active = workspace / ".codex-python-worktrees" / "active-publication"
+    canonical = workspace / "SK_EFT_Hawking"
+    for root, verdict in ((active, active_verdict), (canonical, "success" if active_verdict != "success" else "no-source")):
+        (root / "docs").mkdir(parents=True)
+        (root / "docs/primary_sources_state.json").write_text(json.dumps({"entries": {"missing": {"verdict": verdict}}}))
+    monkeypatch.setattr(module, "SK_ROOT", active)
+    monkeypatch.setattr(module, "find_workspace", lambda: workspace)
+    monkeypatch.setattr(module, "CITATION_REGISTRY", {"missing": {"primary_source_path": "Lit-Search/missing.json"}})
+    if active_verdict == "success":
+        test_external_cache_paths_resolve_when_set()
+    else:
+        with pytest.raises(AssertionError, match="missing"):
+            test_external_cache_paths_resolve_when_set()

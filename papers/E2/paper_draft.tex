@@ -302,21 +302,27 @@ monotonically: it does \emph{not} peak at $\omega_H$. The plateau is
 halving at $\omega = 1.6\,\omega_H$ and independent of the detector's
 tuning, which is why the discriminant is shape.
 
-The greybody factor encodes departure from a perfect thermal emitter. For a
-smooth $1{+}1$D acoustic horizon the zero-frequency limit is
-profile-independent, $\Gamma_0 = 4 c_R v/(c_R+v)^2$~\cite{AndersonBFP2013},
-% TODO: this closed form and its profile-independence are attributed to
-% Anderson, Balbinot, Fabbri and Parentani, PRD 87, 124018 (2013), which is
-% NOT held in Lit-Search/Phase-*/primary-sources/ and has not been read at
-% page level. Verify against the primary before submission.
-giving $\Gamma_0 = 0.99995$ at $v = 0.985c_s$, $c_R \approx c_s$, so the
-prefactor of Eq.~\eqref{eq:noise_psd} is effectively $\sigma_Q$. In the
-adiabatic regime
-$\Gamma(\omega) \approx \Gamma_0[1 - (\omega/\omega_{\max})^2]$ with
-$\omega_{\max} = \sqrt{\kappa c_s/l_{\rm ee}} \approx 7.8\,\omega_H$, so
-$\Gamma$ stays within a few percent of $\Gamma_0$ across the band. Its
-frequency dependence is the largest device-specific unknown in the
-spectrum's shape, which is what the discriminant is built on.
+Anderson \emph{et al.}~\cite{AndersonBFP2014Graybody}, Eq.~(36), derive
+$\Gamma_0=4c_Rv/(c_R+v)^2$ in the infrared for a hydrodynamic,
+transversely frozen BEC with stationary constant flow and density and
+smooth sound speed approaching fixed asymptotes. Here $c_R$ is the
+exterior asymptotic sound speed. Profile independence holds within this
+model at $\omega\to0$; it establishes neither graphene transmission nor
+finite-frequency behavior. Adopting $c_R\approx c_s$ and $v/c_R=0.985$
+gives $\Gamma_0=0.99994$, an illustrative matching assumption.
+We also adopt the quadratic roll-off
+$\Gamma(\omega)\approx\Gamma_0[1-(\omega/\omega_{\max})^2]$, with
+$\omega_{\max}=\sqrt{\kappa c_s/l_{\rm ee}}$.
+Since $\omega_H=\kappa/(2\pi)$, this prescription implies
+$(\omega_{\max}/\omega_H)^2=4\pi^2/D$. The literal inputs
+$\kappa=\SI{2e12}{\per\second}$, $c_s=\SI{4.4e5}{\meter/\second}$
+and $l_{\rm ee}=\SI{51}{\nano\meter}$ give $D=51/220$ and
+$\omega_{\max}/\omega_H\approx13$. At $4\omega_H$ relative
+suppression is exactly $4D/\pi^2=51/(55\pi^2)\approx9.4\%$.
+Rounded $D=0.23$ and the numerical platform's separately derived
+$l_{\rm ee}\approx\SI{50.92}{\nano\meter}$ are distinct input conventions;
+no independent $7.8\,\omega_H$ fit is supplied. The
+cited infrared result supplies no finite-band error bound.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Detection and the falsifiable window}
@@ -480,9 +486,10 @@ S.~Finazzi and R.~Parentani, Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
 \bibitem{CallenWelton1951}
 H.~B.~Callen and T.~A.~Welton, Phys.\ Rev.\ \textbf{83}, 34 (1951).
 
-\bibitem{AndersonBFP2013}
-P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani, Phys.\ Rev.\ D
-\textbf{87}, 124018 (2013).
+\bibitem{AndersonBFP2014Graybody}
+P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani,
+``Gray-body factor and infrared divergences in 1D BEC acoustic black holes,''
+Phys.\ Rev.\ D \textbf{90}, 104044 (2014), arXiv:1404.3224v3.
 
 \bibitem{Blanter2000}
 Ya.~M.~Blanter and M.~B\"uttiker, Phys.\ Rep.\ \textbf{336}, 1 (2000).
