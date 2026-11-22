@@ -463,6 +463,9 @@ Single follow-up session shipping the §A 20-item strengthening pass (10 sub-tas
 - Substrate-level closure of the Wave 2a.1 DR §6 cross-bridge architecture; the substantive "under action-correlator link" form (a stricter biconditional pinning a specific `G` to the SK-EFT effective action's spectral function) is deferred to D1 lift-to-Lean (B.4).
 
 **B.3 — Substantive BEC Bogoliubov unbounded-norm proof (~2-3 sessions, SHIPPED in single session)**:
+
+**Physical follow-through:** [Wave 6v.10](Phase6v/Wave_6v.10_Roadmap.md) carries the Hamiltonian-to-growth question and the platform applicability check. The factorial witness below remains the shipped result.
+
 - New module `lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean` (~250 LoC).
 - Concrete substrate-level sequence `becBogoliubovCommutatorNorm κ := (2·κ)!`.
 - Central-binomial identity `(κ!)² ≤ (2κ)!` via Mathlib `Nat.factorial_mul_factorial_dvd_factorial_add` + `Nat.le_of_dvd`.

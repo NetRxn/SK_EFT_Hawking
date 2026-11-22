@@ -2,7 +2,7 @@
 
 **Bundle targets:** D5 §"substrate constraints by platform" + E1 §"polariton platform regime structure" (additive scope paragraphs).
 
-**Status:** ✅ SHIPPED 2026-05-26.
+**Status:** ✅ SHIPPED 2026-05-26 at conditional theorem and normalized-witness scope. The physical platform claim remains open in [Wave 6v.10](Wave_6v.10_Roadmap.md).
 
 **Wave goal.** Resolve the Phase 6q open question: where does the polariton platform fall on the DKM positive-uniqueness ↔ sharpened-NO-GO bimodal outcome? Phase 6q's `PlatformBimodalOutcome` is a disjunction; graphene is the positive-uniqueness witness, BEC Bogoliubov is the sharpened-NO-GO witness. Wave 6v.3 ships the polariton resolution: **polariton, under a finite-pump-energy operating constraint, takes the POSITIVE branch — inheriting the graphene uniqueness result via a finite per-mode occupation bound that keeps the commutator-norm sequence factorially bounded (not super-factorial unbounded).**
 
@@ -65,7 +65,7 @@ Wave 6v.3 added the bibkeys `YinLucas2022LiebRobinsonBosons` and `KuwaharaSaito2
 ## Cross-wave dependencies
 
 - **Predecessors:** Wave 6v.4 (Penn TMD parameter pass already in place; this wave consumes the Wang et al. 2026 4 fJ + 1.736 eV anchor).
-- **Successors:** none in Phase 6v — this is the second of the polariton pair.
+- **Successor:** [Wave 6v.10](Wave_6v.10_Roadmap.md) owns the physical pump-to-growth, BEC and transport follow-through. This wave shipped the conditional result and normalized witnesses.
 - **Phase 6q bridge:** closes the open question in `project_phase6q_complete_2026_05_23.md` memory.
 
 ## No-axiom discipline

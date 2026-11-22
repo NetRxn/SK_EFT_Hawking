@@ -148,7 +148,8 @@ All five sub-waves kernel-only `[propext, Classical.choice, Quot.sound]`. Projec
 | Wave | Title | Status | Bundle absorption | LoE |
 |---|---|---|---|---|
 | **Wave 6v.4** | Penn TMD polariton regime demarcation (E1 lift) | ✅ SHIPPED 2026-05-26 | E1 §2 paragraph + Lean theorem | 0.5–1 sess |
-| **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | ✅ SHIPPED 2026-05-26 | D5 §13 + E1 §2 (Wave 6v.4 cite chain) | 1–2 sess |
+| **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | ✅ SHIPPED 2026-05-26, conditional scope | D5 §13 + E1 §2 (Wave 6v.4 cite chain) | 1–2 sess |
+| **[Wave 6v.10](Phase6v/Wave_6v.10_Roadmap.md)** | Physical DKM operator growth and transport applicability | OPEN | D5 + E1; E2 comparison if retained | Size after 10.A |
 | **Wave 6v.1** | Williamson/Yoder gauging QEC formalization — **CREATES D6 BUNDLE** | ✅ SHIPPED 2026-05-26 | D6 §3 (CREATED) + I1 cross-bridge | 1.5 sess |
 | **Wave 6v.2** | Google ECC-256 T-gate count bound for Shor circuits | ✅ SHIPPED 2026-05-26 | D6 §5 (populated) + D4 + I1 cross-bridges | 2–3 sess |
 | **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ✅ SHIPPED 2026-05-26 | D6 §4 (populated) + I1 | 4 sess |
@@ -181,6 +182,8 @@ Each wave's headline goal + bundle-target + key substrate is summarized below. P
 **Cross-cutting outputs:** new bibkey `UPennTMD2026Polariton` + cached primary source.
 
 ### Wave 6v.3 — DKM F3 polariton occupancy bound (Phase 6q follow-on)
+
+**Physical follow-through:** [Wave 6v.10](Phase6v/Wave_6v.10_Roadmap.md) carries the open physical growth and transport work for E1/D5. The historical shipped status applies to the conditional theorem and normalized witnesses.
 
 **Goal:** Resolve the open Phase 6q question of where polariton platforms fall on the DKM positive/NO-GO bimodal outcome. Compute pump-power → mode-occupation upper bound from UPenn-style femtojoule switching; ship `polariton_dkm_f3_holds_at_pump_below_threshold` Lean theorem; close the polariton case as inheriting the graphene positive uniqueness result.
 
