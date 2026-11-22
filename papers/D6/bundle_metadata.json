@@ -5,7 +5,7 @@
   "target_journal": "PRD or JHEP",
   "phase7_subphase": "7c (TBD)",
   "stage9_status": "not_started",
-  "stage10_status": "redrafted",
+  "stage10_status": "pending-redo",
   "stage13_status": "pending",
   "stage13_redo_required": true,
   "freshness_stale": true,
