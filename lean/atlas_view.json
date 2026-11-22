@@ -24544,6 +24544,96 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_domain_recurrence",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_zero",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_apply",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_covariance_remainder",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_domain_action",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_orbit_derivative",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_quadratic",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMParameters.D_pos",
       "module": "SKEFTHawking.DKMBootstrap.Predicates",
       "atlas_kind": "TRUE",
@@ -24742,6 +24832,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.conjugation_pairing",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.domainLift_action",
       "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
       "atlas_kind": "TRUE",
@@ -24751,16 +24850,7 @@
       "frontier_impact": 0
     },
     {
-      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.domain_of_weak_commutator",
-      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
-      "atlas_kind": "TRUE",
-      "atlas_status": "PROVED",
-      "kernel_pure": true,
-      "native_decide": false,
-      "frontier_impact": 2
-    },
-    {
-      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.strong_commutator_action",
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.domain_of_group_derivatives",
       "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -24769,13 +24859,328 @@
       "frontier_impact": 1
     },
     {
-      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.strong_commutator_bound",
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.domain_of_weak_commutator",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.group_neg_apply",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.group_zero_apply",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.hasDerivAt_group_neg",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.hasDerivAt_of_quadratic_remainder",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.strong_commutator_action",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.strong_commutator_action_of_group_derivatives",
       "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.strong_commutator_bound",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.strong_commutator_bound_of_group_derivatives",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverCommutator.weak_commutator_of_group_derivatives",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.bound_nonneg",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.continuous",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.integral_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_add",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_apply",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_eq_of_constant",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_finsetSum",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_smul",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_sub",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_sub_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.receiver_sub_norm_le_of_l1",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.weighted_aestronglyMeasurable",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.weighted_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.BoundedStrongOrbit.weighted_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.continuous_unitary_variable",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.integrable_weight_translate",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_apply",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_covariance",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_covariance_remainder",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_covariance_taylor",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_eq_of_invariant",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_identity",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.ReceiverIntegral.unitaryReceiver_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverIntegral",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.analytic_iff_vertical_plus_f4f5f6",
@@ -25198,7 +25603,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_eq_pole",
@@ -25216,7 +25621,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_integral",
@@ -25225,10 +25630,19 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_iteratedDeriv",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_iteratedDeriv_hasDerivAt",
       "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -25243,7 +25657,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_iteratedDeriv_integral_abs_le",
@@ -25252,10 +25666,55 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_iteratedDeriv_sub_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_order_zero",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_sub_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_taylor_remainder_abs_le",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_taylor_remainder_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.receiverKernel_taylor_remainder_integral_abs_le",
       "module": "SKEFTHawking.DKMBootstrap.ReceiverKernel",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -25288,7 +25747,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.sharpened_no_go_super_factorial",
@@ -227585,7 +228044,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24647,
+    "theorem_nodes": 24698,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -227596,7 +228055,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24247,
+      "TRUE:PROVED": 24298,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
