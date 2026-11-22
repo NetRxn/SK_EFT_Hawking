@@ -10742,6 +10742,29 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d2-stage10-redraft:D2:1.6",
+      "status": "fixed",
+      "evidence": "Independent source review on a8e229265 checked the D2 abstract, introduction, two-branch table and composition. The completed-spectrum anomaly imposes no generation count; modular divisibility is conditional and the uncompleted branch requires a multiple of sixteen. Both held sources were checked. The declared verification passed. The original claim of two independent derivations of three is explicitly retracted.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "d4bd46befe26a1ee5e495c5ee1ce9f0f088cbd86",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c \"t=open('papers/D2/paper_draft.tex').read();assert 'two independent settings' not in t and 'two completely independent algebraic chains' not in t, 'two-independent-chains overclaim still present'\"",
+        "declared": "cd \"$REPO\" && python3 -c \"t=open('papers/D2/paper_draft.tex').read();assert 'two independent settings' not in t and 'two completely independent algebraic chains' not in t, 'two-independent-chains overclaim still present'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:8",
+      "status": "fixed",
+      "evidence": "Independent comparison on a8e229265 checked Garcia-Etxebarria and Montero section 4.3 and legacy Paper 9 abstract, introduction, anomaly paragraph and conclusion. All give right-handed neutrinos or compensating beyond-SM content, replacing the exclusive hidden-sector conclusion. This original finding has no declared command; acceptance rests on direct source and manuscript comparison. Separate theorem attribution and dimensional-reduction findings remain open.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "d4bd46befe26a1ee5e495c5ee1ce9f0f088cbd86"
     }
   ]
 }
