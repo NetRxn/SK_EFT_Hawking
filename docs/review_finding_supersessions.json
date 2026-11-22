@@ -10780,6 +10780,36 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d2-stage10-redraft:D2:1.7",
+      "status": "fixed",
+      "evidence": "Independent reviews checked D2, the canonical citation registry, legacy Paper 10, held FK arXiv:0904.2197v3 and held Kitaev arXiv:cond-mat/0506438v3. D2 and Paper 10 distinguish the 1D interacting reduction to Z8 from the 2D vortex statistics modulo sixteen. The residue of the edge charge is periodic modulo eight. Its full value is not periodic. The original Verify passed.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "0119aeb607d6412d2cdb1754a06351952365914a",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c \"t=open('papers/D2/paper_draft.tex').read();i=t.find('FidkowskiKitaev2010');assert i<0 or 'mathbb{Z}_{16}' not in t[max(0,i-400):i+400], 'Fidkowski-Kitaev still attributed a Z16 reduction'\"",
+        "declared": "cd \"$REPO\" && python3 -c \"t=open('papers/D2/paper_draft.tex').read();i=t.find('FidkowskiKitaev2010');assert i<0 or 'mathbb{Z}_{16}' not in t[max(0,i-400):i+400], 'Fidkowski-Kitaev still attributed a Z16 reduction'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:2.2",
+      "status": "fixed",
+      "evidence": "Independent source review verified D3 owns its four-condition checklist and uses held arXiv:1108.5086v8 for only the cited Weyl-medium metric and equilibrium vacuum results. The registry cites the correct English JETP DOI, 10.1134/S0021364012160035, and records the D3 consumer. The original Verify passed.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "0119aeb607d6412d2cdb1754a06351952365914a",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'Volovik--Jannes four-condition Sakharov criterion~\\\\cite{JacobsonVolovik1998' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['JannesVolovik2012'].get('primary_source_path'), 'JannesVolovik2012 holds no source'\"",
+        "declared": "cd \"$REPO\" && ! grep -q 'Volovik--Jannes four-condition Sakharov criterion~\\\\cite{JacobsonVolovik1998' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['JannesVolovik2012'].get('primary_source_path'), 'JannesVolovik2012 holds no source'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
