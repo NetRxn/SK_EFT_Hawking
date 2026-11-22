@@ -38,12 +38,11 @@ The critical coupling $G_c$ is NLO-exact ($\alpha_1 = 0$), and an Abelian
 instanton mechanism may bypass the perturbative deficit.
 All structural theorems are formally verified in \texttt{ADWMechanism.lean}
 (21 theorems, zero \texttt{sorry}; 1 proved by Aristotle run \texttt{f8de66d1}).
-Additionally, the explicit NJL-type gap equation is formalized in
-\texttt{TetradGapEquation.lean} (23 theorems, zero \texttt{sorry}; 9 proved
-by Aristotle run \texttt{79e07d55}), including existence, uniqueness, and
-monotonicity of the nontrivial solution, with one claimed property
-disproved by automated counterexample (a documented counterexample,
-commented in \texttt{TetradGapEquation.lean}).
+The separate scalar NJL integral model is formalized in
+\texttt{TetradGapEquation.lean} and its numerical bridge. The bridge proves
+existence and uniqueness of the positive root above the critical coupling,
+classifies the root relative to the cutoff, and gives exact-real
+bisection bounds.
 \end{abstract}
 
 \maketitle
@@ -380,15 +379,13 @@ Aristotle automated prover (run \texttt{79e07d55}); 1 disproved by counterexampl
 
 \section{Conclusions}
 
-We have derived the explicit NJL-type gap equation for tetrad condensation
-in the ADW mechanism.
-The integral formulation~(\ref{eq:gap_integral}) reproduces the
-V$_{\rm eff}$ critical coupling $G_c = 8\pi^2/(N_f \Lambda^2)$ exactly, and
-provides rigorous existence (via IVT), uniqueness (for $G < G_c$), and
-monotonicity of the nontrivial branch. The Aristotle automated theorem prover
-proved 9 of 10 gap equation theorems and disproved one (boundedness by
-$\Lambda$), revealing that the one-loop approximation becomes unreliable when
-$\Delta$ approaches the cutoff.
+The separate scalar NJL integral equation~(\ref{eq:gap_integral}) shares
+the regulated potential's critical coupling but has a different
+nonzero-root equation. There is a unique positive NJL root for
+$G>G_c$ and no positive root at or below $G_c$. The exact-real bracket and
+cutoff classification explain when the NJL root exceeds $\Lambda$.
+Above-cutoff continuation describes the integral model. A microscopic
+derivation and physical validity in that regime require separate evidence.
 
 The ADW mean-field gap equation admits a nontrivial Lorentzian solution
 for $G > G_c$, producing 2 massless spin-2 graviton polarizations as

@@ -5395,12 +5395,13 @@ def fig_tetrad_gap_curve() -> go.Figure:
     # Critical coupling marker
     fig.add_vline(x=1.0, line=dict(color=COLORS['dissipative'], width=1.5, dash='dash'))
     fig.add_annotation(x=1.0, y=0.85, text="G = G<sub>c</sub>",
+        xanchor="left", xshift=8,
         showarrow=False, font=dict(size=13, family=FONT['family'], color=COLORS['dissipative']))
 
     # Phase labels
     fig.add_annotation(x=0.4, y=0.1, text="<b>Trivial scalar output</b><br>Δ = 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
-    fig.add_annotation(x=2.5, y=0.6, text="<b>Nonzero scalar output</b><br>Δ > 0",
+    fig.add_annotation(x=2.7, y=0.52, text="<b>Nonzero scalar output</b><br>Δ > 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
 
     apply_layout(fig, height=450, width=650,
@@ -5410,7 +5411,8 @@ def fig_tetrad_gap_curve() -> go.Figure:
         yaxis=dict(title="Δ / Λ"),
         legend=dict(x=0.02, y=0.98))
 
-    fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
+    fig.update_layout(margin=dict(b=104))
+    fig.add_annotation(x=0.5, y=-0.24, xref='paper', yref='paper',
         text="Separate scalar fixed-point model; numerical continuation is not physical UV validation or an ADW derivation.",
         showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
     return fig
