@@ -10420,6 +10420,70 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:2.1",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:4.1",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:4.2",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:5.1",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:5.3",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:5.4",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:8.1",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:8.2",
+      "status": "fixed",
+      "evidence": "The R2 review records the exact repair for this finding and checks proof dependencies and noncomment Lean source identity. The isolated slot-controller build succeeded and the canonical extraction matched the base declaration map byte for byte. See the adjacent exact_source_qualification.json.",
+      "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "8c4b559e0"
     }
   ]
 }
