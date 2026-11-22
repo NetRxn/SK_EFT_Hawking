@@ -387,13 +387,20 @@ is that coverage is **per-artifact and partial** rather than corpus-wide:
   ignore the ones that can.
 - **Paper-quoted numbers are recomputed, for a few artifacts.** `paper_table` parses the
   *rendered* table the draft actually `\input`s and holds every cell to the canonical evaluator
-  at the cell's own displayed precision; `d1_hierarchy_table` and `f_hierarchy_claims` do the
-  same for their targets. There is no general mechanism that recomputes an arbitrary number
-  quoted in arbitrary prose.
+  at the cell's own displayed precision. `d1_hierarchy_table` reads the single
+  hierarchy float, using its inline tabular or the direct canonical generated
+  input under D1's tables directory. The generated form binds the input as the
+  entire body after the label and constrains the preceding float and caption
+  syntax. Composed qualification checks the PDF for the numerical rows,
+  including effects from outside the float. Its crossover comparisons read
+  the manuscript. `f_hierarchy_claims` compares the inline claims for F. There is
+  no general mechanism that recomputes an arbitrary number quoted in arbitrary
+  prose.
 - **Citation content is verified, for cached PDFs.** `bibitem_title_primary_source` extracts
   page-1 text from the primary-source cache and compares it to the registry title, catching
   word-level drift. Entries with no cached PDF are outside its reach.
 - **A cited theorem's STATEMENT is still unverified.** `prose_theorem_reference_coverage`
+  reads canonical bundle drafts and strict renderer-owned outputs. It
   resolves the *name* against `lean_deps.json`; nothing checks that the theorem's statement
   supports the sentence citing it. This one is a genuine absence, routed to ADR-010.
 
@@ -405,3 +412,14 @@ It does not run in CI. There is deliberately **no scheduled runner** (verified: 
 
 *Decision record: [ADR-009](../adrs/ADR-009-validation-suite-modularization.md) (decision +
 §Deferred + addenda). The audit passes that produced these rules are under `docs/audits/`.*
+
+### Composed table input evidence
+
+A forced compile with retained private artifacts records TeX input opens.
+Compare the recorder's bundle table paths against the strict renderer inventory
+and reject missing receipts, opened orphans and path escapes. The source
+reference check covers the inventory independently of TeX control flow.
+Generated-source diagnostics retain line offsets while masking comments. The
+mask preserves escaped percent signs and inline verbatim spans.
+Confirm required numerical rows in the PDF after byte comparison with the
+canonical regeneration.
