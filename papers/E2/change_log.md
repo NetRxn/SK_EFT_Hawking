@@ -17,3 +17,9 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-05-12 first-claim-removal: paper16_graphene_sk_eft experimental physics first-claims softened ('first measurement of analog Hawking radiation in an electronic system' -> 'a measurement ...'; 'first observation ...' -> 'an observation ...'). No physics claims changed; only the primacy framing dropped.
+
+## 2026-11-22 — Infrared greybody attribution and readout
+
+- Cite the held Anderson et al. 2014 edition for its infrared BEC result. The graphene transmission, finite-frequency roll-off and electrical response remain adopted models.
+- Reconcile the printed cutoff and upper-edge suppression with the current evaluator. Refresh the local noise figure from that producer.
+- Preserve the pending review and calibration obligations.

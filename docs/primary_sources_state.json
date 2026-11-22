@@ -7195,6 +7195,17 @@
       "size_bytes": 222645,
       "url_used": "https://arxiv.org/pdf/hep-lat/0306017",
       "note": null
+    },
+    "AndersonBFP2014Graybody": {
+      "bibkey": "AndersonBFP2014Graybody",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T17:00:05+00:00",
+      "size_bytes": 480011,
+      "url_used": "https://arxiv.org/pdf/1404.3224v3",
+      "note": null
     }
   }
 }
