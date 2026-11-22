@@ -128,6 +128,14 @@ def canonicalize_link(kind: str, target: str, idx: Index) -> Resolution:
                  category="formula-absent")
 
     if kind in ("theorem", "axiom"):
+        if t.startswith("module:"):
+            # Typed IDs terminate at module membership/refusal. Declaration
+            # lookup or suggestions could otherwise retarget a suffix collision.
+            mod_id = idx.module_id_for_ref(t)
+            if mod_id:
+                return R(RESOLVED, target_id=mod_id, category="module-resolved")
+            return R(UNRESOLVABLE, reason="typed module ID is not a known module node",
+                     category="theorem-absent")
         r = idx.resolve_lean_short(t)
         if r:
             return R(RESOLVED, target_id=r, category="theorem-ok")

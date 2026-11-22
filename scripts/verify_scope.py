@@ -167,6 +167,12 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        # substrate checks that move its other input.
                        "--check", "apex_claims_not_vacuous",
                        "--check", "spelled_out_census_figures"]))
+    if touched["papers"] or touched["lean"]:
+        # Claims supply the targets; Lean sources and lean/lean_deps.json supply
+        # their module membership. Mixed changes require one fresh measurement.
+        steps.append(("chain backing targets resolve",
+                      ["uv", "run", "python", "scripts/validate.py",
+                       "--check", "chain_backing_targets_resolve", "--no-memo"]))
     if touched["lean"]:
         # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks
         # graph_integrity + counts_fresh downstream (CLAUDE.md, Build & run).
