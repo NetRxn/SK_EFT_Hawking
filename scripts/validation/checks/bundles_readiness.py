@@ -3391,7 +3391,7 @@ _CLAIM_NUMERAL_RE = re.compile(r"(?<![\w.^])(\d+\.\d+|\d{2,})(?![\w])")
 #: that no machine-readable statement in their chain carries, and that can only be
 #: strengthened. Lower it by restating the claim over what the theorem proves, or by
 #: proving the quantity; never by widening the noise list above.
-APEX_CLAIM_NUMERAL_CEILING = 31
+APEX_CLAIM_NUMERAL_CEILING = 30
 
 #: Down-only floor on how many apex claims this check actually SCORES.
 #:
@@ -3477,7 +3477,7 @@ def check_apex_theorem_claims_grounded() -> CheckResult:
        reader nothing they did not have. Compared on alphanumerics only, so
        `"Critical coupling pos."` is caught too.
     3. **Numerals appear in the statement** (RATCHETED at
-       `APEX_CLAIM_NUMERAL_CEILING`; live population 31). See that constant for what an
+       `APEX_CLAIM_NUMERAL_CEILING`; live population 30). See that constant for what an
        entry does and does not prove.
 
     Legs 1 and 2 are hard rather than ratcheted precisely BECAUSE their live population
