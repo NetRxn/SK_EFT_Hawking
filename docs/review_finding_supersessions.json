@@ -10383,6 +10383,43 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-07-28-1839-internal-adversarial:phase6EA_substrate:2.1",
+      "status": "fixed",
+      "evidence": "The shipped weighted thinning mean calls poisson_thinning, and the distinct same-factor theorem calls this mean proof and the shot-PSD transfer at the same eta. The scope of the probability interpretation is recorded.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/PHASE6EA_REVIEW_RECONCILIATION.md",
+      "date": "2026-11-22",
+      "commit": "3ff08bb4",
+      "verified_by": {
+        "command": "uv run python -B -c 'import json; from pathlib import Path; ds={r['\"'\"'name'\"'\"']: r for r in json.loads(Path('\"'\"'lean/lean_deps.json'\"'\"').read_text())}; d='\"'\"'SKEFTHawking.Detection.'\"'\"'; raise SystemExit(0 if ({d+'\"'\"'poisson_thinning'\"'\"'} <= set(ds[d+'\"'\"'thinnedMean_eq_eta_mul'\"'\"']['\"'\"'value_deps_project'\"'\"']) and {d+'\"'\"'shotPSD_plane_transfer'\"'\"',d+'\"'\"'thinnedMean_eq_eta_mul'\"'\"'} <= set(ds[d+'\"'\"'shotPSD_thinnedMean_same_eta'\"'\"']['\"'\"'value_deps_project'\"'\"']) and all(not ds[d+n]['\"'\"'axiom_deps_project'\"'\"'] for n in ('\"'\"'thinnedMean_eq_eta_mul'\"'\"','\"'\"'shotPSD_thinnedMean_same_eta'\"'\"'))) else '\"'\"'Phase 6EA evidence mismatch for 2.1'\"'\"')'",
+        "declared": "uv run python -B -c 'import json; from pathlib import Path; ds={r['\"'\"'name'\"'\"']: r for r in json.loads(Path('\"'\"'lean/lean_deps.json'\"'\"').read_text())}; d='\"'\"'SKEFTHawking.Detection.'\"'\"'; raise SystemExit(0 if ({d+'\"'\"'poisson_thinning'\"'\"'} <= set(ds[d+'\"'\"'thinnedMean_eq_eta_mul'\"'\"']['\"'\"'value_deps_project'\"'\"']) and {d+'\"'\"'shotPSD_plane_transfer'\"'\"',d+'\"'\"'thinnedMean_eq_eta_mul'\"'\"'} <= set(ds[d+'\"'\"'shotPSD_thinnedMean_same_eta'\"'\"']['\"'\"'value_deps_project'\"'\"']) and all(not ds[d+n]['\"'\"'axiom_deps_project'\"'\"'] for n in ('\"'\"'thinnedMean_eq_eta_mul'\"'\"','\"'\"'shotPSD_thinnedMean_same_eta'\"'\"'))) else '\"'\"'Phase 6EA evidence mismatch for 2.1'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-28-1839-internal-adversarial:phase6EA_substrate:2.3",
+      "status": "fixed",
+      "evidence": "Independent round 2 section 4.5 verifies the chosen project lemma, retraction of the non-pin Mathlib route, and the corrected W3 and frontier entries. The held index is hashed without publishing it.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/PHASE6EA_REVIEW_RECONCILIATION.md",
+      "date": "2026-11-22",
+      "artifact_path": "SK_EFT_Hawking/docs/dev-loops/Phase6EA/LAB_NOTEBOOK_INDEX.md",
+      "artifact_sha256": "a1d85bc5ea44e62ba050735948ad8ef90eb34c0f32041eb98836cc6158b9c301",
+      "artifact_anchors": [
+        {
+          "path": "SK_EFT_Hawking/docs/dev-loops/Phase6EA/LAB_NOTEBOOK_INDEX.md",
+          "sha256": "a1d85bc5ea44e62ba050735948ad8ef90eb34c0f32041eb98836cc6158b9c301"
+        }
+      ],
+      "verified_by": {
+        "command": "uv run python -B -c 'import json; from pathlib import Path; ds={r['\"'\"'name'\"'\"']: r for r in json.loads(Path('\"'\"'lean/lean_deps.json'\"'\"').read_text())}; d='\"'\"'SKEFTHawking.Detection.'\"'\"'; review=Path('\"'\"'papers/AutomatedReviews/2026-07-28-1924-internal-adversarial/phase6EA_substrate_round2.md'\"'\"').read_text().split('\"'\"'### 4.5 —'\"'\"',1)[1].split('\"'\"'---'\"'\"',1)[0]; raise SystemExit(0 if ('\"'\"'SKEFTHawking.QuantumNetwork.posSemidef_eq_of_mul_self_eq'\"'\"' in ds[d+'\"'\"'psdSqrt_diagonal'\"'\"']['\"'\"'value_deps_project'\"'\"'] and '\"'\"'Verified (round-1 2.3)'\"'\"' in review and '\"'\"'RETRACTED'\"'\"' in review and '\"'\"'posSemidef_eq_of_mul_self_eq'\"'\"' in review) else '\"'\"'Phase 6EA evidence mismatch for 2.3'\"'\"')'",
+        "declared": "uv run python -B -c 'import json; from pathlib import Path; ds={r['\"'\"'name'\"'\"']: r for r in json.loads(Path('\"'\"'lean/lean_deps.json'\"'\"').read_text())}; d='\"'\"'SKEFTHawking.Detection.'\"'\"'; review=Path('\"'\"'papers/AutomatedReviews/2026-07-28-1924-internal-adversarial/phase6EA_substrate_round2.md'\"'\"').read_text().split('\"'\"'### 4.5 —'\"'\"',1)[1].split('\"'\"'---'\"'\"',1)[0]; raise SystemExit(0 if ('\"'\"'SKEFTHawking.QuantumNetwork.posSemidef_eq_of_mul_self_eq'\"'\"' in ds[d+'\"'\"'psdSqrt_diagonal'\"'\"']['\"'\"'value_deps_project'\"'\"'] and '\"'\"'Verified (round-1 2.3)'\"'\"' in review and '\"'\"'RETRACTED'\"'\"' in review and '\"'\"'posSemidef_eq_of_mul_self_eq'\"'\"' in review) else '\"'\"'Phase 6EA evidence mismatch for 2.3'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
