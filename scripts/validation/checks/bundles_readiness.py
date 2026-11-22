@@ -487,7 +487,7 @@ def _required_open_ceilings() -> dict[str, int]:
 #: per the ratchet rule; a ceiling left standing above a corpus that improved is
 #: headroom, and headroom makes a ratchet unfireable.
 #: Phase 6EE: tightens after the independently verified source closures.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 43
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 42
 
 
 def _readiness_aggregate():
