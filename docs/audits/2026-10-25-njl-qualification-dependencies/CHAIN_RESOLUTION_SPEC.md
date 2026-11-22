@@ -152,3 +152,17 @@ The actual scientific meaning and stale historical PASS statements in paper17
 remain subject to the existing ADW/KV findings. Resolving a container reference
 does not derive a vacuum magnitude, calibrate a cosmology, accept a theorem
 claim or close those findings. No new green bundle or 231-gate matrix follows.
+
+## November 22 main-based composition
+
+The independent source recheck accepted the shared resolver and graph
+behavior at the current base. The existing focused contract passed 76
+tests. The unchanged corpus measured 2,313 links, with unresolved links
+falling from 111 to 97 and the ceiling tightened from 109 to 97.
+Unknown typed IDs remain unresolved.
+
+The composed public baseline replay at `a23e94081` cleared both
+chain-backing failures, the dangling Blocked-by control and the live
+Verify-format failure. Every remaining failing test identity reproduced
+on the exact base tree. The full run preceded the single canonical
+module-finding closure.

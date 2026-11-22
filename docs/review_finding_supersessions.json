@@ -10308,6 +10308,21 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-10-25-njl-module-reference-resolution:infra:1.1",
+      "status": "fixed",
+      "evidence": "The shared mapper and graph resolve exact typed module IDs across 2,313 preserved links. Fourteen formerly unresolved links now resolve, unknown typed IDs still fail, and the exact independent focused and broader tests corroborate the change.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/CHAIN_RESOLUTION_SPEC.md",
+      "date": "2026-11-22",
+      "commit": "d37056ec0",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest tests/test_chain_canonicalize.py tests/test_d5_reviews.py::TestChainBackingTargetsResolve -q",
+        "declared": ".venv/bin/python -B -m pytest tests/test_chain_canonicalize.py tests/test_d5_reviews.py::TestChainBackingTargetsResolve -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
