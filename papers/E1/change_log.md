@@ -59,3 +59,9 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: single flagged source paper12_polariton carries the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture); E1 counterpart is macro-driven (axiomcount=0 via counts.tex, already post-retirement) and E1's polariton-scope 'no new project-local axioms / no tracked Props' statements are consistent — NO residual divergence. Drifted source tables are byte-identical regen; E1 inputs no source tables. Sweep theme (E1 module-attribution fix Basic.SonicHorizon/AcousticMetric) applied in tandem 5207b72b; Vergeles/Halenka/Geurs not referenced (polariton-only letter). Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived S1: 1 module / 5 theorems; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore).
+
+## 2026-11-22 — Attenuation recovery in Section III
+
+- State the attenuation model in both directions. Recovery multiplies the measured occupation by the exponential factor.
+- Give the zero-decay implication and the zero-distance case. The per-healing-length estimates use the stated group-velocity identification.
+- Stage 13 redo remains required. Device calibration, transmission and the physical detection band remain open.
