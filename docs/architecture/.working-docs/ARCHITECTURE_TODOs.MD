@@ -2526,6 +2526,15 @@ for `KerrSchild` and `SingleCopy` — **its environment is narrower than the ext
 set**. `lean_deps.json` is authoritative for "what is built"; the LSP index is not. Search
 Lean by CONTENT via the lean4 skill, and cross-check module existence against `lean_deps.json`.
 
+**Resolution:** the bookkeeping path now records its explicit module list.
+The canonical writer registered I1's already-cited `KerrSchild` module and
+then retired the four planned names through the append-only deregistration
+route. The writer regenerated the source manifest. The freshness reader
+uses the same ordered net registration list as module coverage and still
+includes the independently derived apex closure.
+This resolves I1's registration gap while the portfolio-wide D50 coverage
+work remains open.
+
 > 🔗 **D45–D49 are re-filed as `ReviewFinding`s under [ADR-012](../../adrs/ADR-012-finding-lifecycle-routing-and-closure.md) §D4**
 > (2026-08-12). Filing them here was drift: this file's charter is architecture-accuracy defects, and
 > these are substrate, Lean and prose defects that needed a queue with teeth. **Lanes are assigned at

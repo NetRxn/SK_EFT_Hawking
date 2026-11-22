@@ -389,3 +389,18 @@ AttributionContentSweep I1 visit).
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: Registration correction, not a content lift. Event 2 (phase6f_w1_w6_substrate_rosters) registered four PLANNED module names that never shipped under those names: AlgebraicRiemann, DeSitterAdSLambdaVacuum, SchwarzschildKerrSchild, TetradMetricEquivalence. bundle_source_freshness flagged them as 'resolve to no file' and warned they are NOT measured by the staleness trigger, so four modules silently left the population they were registered into. The substrate itself was never missing — it shipped under different module names, verified against lean_deps.json (the built set, not the LSP environment, which is narrower): AlgebraicRiemann -> SKEFTHawking.Curvature (LoweredRiemann, FirstBianchi, AntisymPair12/34); SchwarzschildKerrSchild -> SKEFTHawking.KerrSchild (schwarzschild_horizon, ks_inverse_formula, radial_null); DeSitterAdSLambdaVacuum -> SKEFTHawking.ExactSolutions (deSitter_lambda_vacuum_iff, ads_lambda_eq_neg_three_over_ell_sq); TetradMetricEquivalence -> SKEFTHawking.TetradFormalism (tetrad_metric_equivalence_at_alpha_one). This event registers the four real modules so staleness measures them. The four phantom names remain in event 2 as the historical record and will keep warning as unresolved, which is accurate: they never existed. No paper_draft.tex change; no stage9/10/13 redo.
+
+## 2026-11-22 — Lean-registration-correction (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Lean-registration-correction
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: The Phase 6f alias SchwarzschildKerrSchild resolves to the shipped SKEFTHawking.KerrSchild module. I1 cites KerrSchild.lean in its exact-solutions discussion. Register it for source freshness. Curvature, ExactSolutions and TetradFormalism are already registered. This corrects the unrecorded registration noted in architecture item D44.
+
+## 2026-11-22 — Deregister-lean-modules
+
+- Modules deregistered: `AlgebraicRiemann`, `SchwarzschildKerrSchild`, `DeSitterAdSLambdaVacuum`, `TetradMetricEquivalence`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: Retire the unused planned names from the active I1 roster. They correspond to the registered Curvature, KerrSchild, ExactSolutions and TetradFormalism modules respectively. The original Phase 6f record remains in the append log, and the draft cites the shipped sources.

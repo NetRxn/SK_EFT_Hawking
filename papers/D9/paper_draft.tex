@@ -607,9 +607,11 @@ Table~\ref{tab:exact}. Dephasing and depolarizing, both covariant, give
 $\ddist(\Phi_\gamma,\mathrm{id}) = \gamma$ and
 $\ddist(\Delta_p,\mathrm{id}) = p$ from explicit optimal witnesses with
 no twirling machinery. The Pauli channel gives exactly its total error
-weight $1-p_0$, and this generalizes to any unitary error basis, a family
-$\{U_i\}$ with $U_0 = 1$ and Hilbert--Schmidt orthogonality, with the
-two-qubit Pauli and qutrit Weyl--Heisenberg channels as instances. The
+weight $1-p_0$ (\lean{diamondDist\_pauliKraus\_eq}). The same formula holds
+for any unitary error basis, with $U_0 = 1$ and Hilbert--Schmidt
+orthogonality (\lean{diamondDist\_errorBasisKraus\_eq}). This covers
+two-qubit Pauli (\lean{diamondDist\_twoQubitPauliKraus\_eq}) and qutrit
+Weyl--Heisenberg channels (\lean{diamondDist\_weylKraus\_eq}). The
 pattern is worth naming: for a channel whose Kraus operators form a
 unitary error basis, the worst-case channel error is exactly the total
 probability of a non-identity Kraus branch, which is the number a
