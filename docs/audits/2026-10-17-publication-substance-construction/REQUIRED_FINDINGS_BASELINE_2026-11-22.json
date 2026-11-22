@@ -1,0 +1,583 @@
+{
+  "base": "9fe5a93a1cd948150a3401888206534e7ebab77b",
+  "source": "validation.checks.bundles_readiness._readiness_aggregate + build_graph.extract_review_finding_nodes + readiness_gates.BLOCKING_SEVERITIES",
+  "bundles": {
+    "D1": {
+      "previous_ceiling": 2,
+      "measured_ceiling": 10,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:1.2",
+          "severity": "critical",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🔴 BLOCKER — `fdt_consistency` is advertised as certifying that two independent derivations agree; it is `unfold; ring`, and the second derivation has no formal representative anywhere"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.1",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — The four-to-three second-order reduction is attributed to a theorem that does not state it, and is a constraint of the truncation"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.2",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — `secondOrder_uniqueness` is discharged by repackaging its own input and never uses its KMS hypothesis"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.3",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — Two D1-relevant theorems state arithmetic facts about small integers and are documented as physics"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.4",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — The 1.8% quasi-one-dimensional validity figure lives only in a docstring; no numeral occurs in the theorem"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.5",
+          "severity": "major",
+          "gate": "NarrativeGrounding",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — The polariton gain threshold has no formal representative and silently assumes a unit greybody factor"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.6",
+          "severity": "major",
+          "gate": "NarrativeGrounding",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — Seven `claims` strings in the D1 apex list assert physics their theorems do not state"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:1.3",
+          "severity": "critical",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🔴 BLOCKER — The $\\pi/6$ coefficient of the dispersive correction is attributed to a paper that reports no analytic coefficient"
+        },
+        {
+          "id": "review:2026-08-15-d1-stage10-redraft:D1:2.8",
+          "severity": "major",
+          "gate": "ParameterProvenance",
+          "lane": "pyrust",
+          "report": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+          "title": "🟡 REQUIRED — The registered Dean bilayer $v_F$ is inconsistent with the registered $c_s$ under the platform's own conformal relation"
+        },
+        {
+          "id": "review:2026-04-10:CitationReview-01:13",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-10/CitationReview-01.md",
+          "title": "Steinhauer κ = 290 s⁻¹ vs. model κ = 4.8 s⁻¹ 🟡"
+        }
+      ]
+    },
+    "D2": {
+      "previous_ceiling": 3,
+      "measured_ceiling": 7,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-d2-stage10-redraft:D2:1.1",
+          "severity": "critical",
+          "gate": "LeanProofSubstance",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-d2-stage10-redraft/D2.md",
+          "title": "🔴 CRITICAL — `hom_tensor_adjunction_dim` is `rfl`, and both the draft and the bundle metadata say it discharges hypothesis H2"
+        },
+        {
+          "id": "review:2026-08-15-d2-stage10-redraft:D2:1.2",
+          "severity": "critical",
+          "gate": "LeanProofSubstance",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-d2-stage10-redraft/D2.md",
+          "title": "🔴 CRITICAL — `hidden_sector_required` states a fact about ℤ/16 addition and is cited as a statement about Standard-Model field content"
+        },
+        {
+          "id": "review:2026-08-15-d2-stage10-redraft:D2:1.3",
+          "severity": "major",
+          "gate": "CitationIntegrity",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d2-stage10-redraft/D2.md",
+          "title": "🟡 MAJOR — the ℤ₄ generator is written in a normalization that is not the source's, with no reconciliation"
+        },
+        {
+          "id": "review:2026-08-15-d2-stage10-redraft:D2:1.4",
+          "severity": "major",
+          "gate": "CitationIntegrity",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d2-stage10-redraft/D2.md",
+          "title": "🟡 MAJOR — the `lcm(16,3) = 48` tension is asserted against a primary source that resolves it, and against a theorem that does not state it"
+        },
+        {
+          "id": "review:2026-08-15-d2-stage10-redraft:D2:1.5",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-d2-stage10-redraft/D2.md",
+          "title": "🟡 MAJOR — `tpf_outside_gs_scope_main` carries two decidable numerals as conjuncts of a scope claim"
+        },
+        {
+          "id": "review:2026-04-10:CitationReview-01:9",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-10/CitationReview-01.md",
+          "title": "Modular generation derivation implicit assumptions not disclosed 🟡"
+        },
+        {
+          "id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:6.4",
+          "severity": "critical",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-12/Paper 10 Deep Review — Modular Generation Constraint.md",
+          "title": "Wang 2024 is cited once but drives almost everything"
+        }
+      ]
+    },
+    "D3": {
+      "previous_ceiling": 1,
+      "measured_ceiling": 10,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:0.1",
+          "severity": "critical",
+          "gate": "ComputationCorrectness",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🛑 CRITICAL — The substrate's Dirac `a_4` coefficients do not reproduce the published Dirac `a_4`, and two of three signs disagree"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:0.2",
+          "severity": "critical",
+          "gate": "ComputationCorrectness",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🛑 CRITICAL — The `a_2` coefficient that fixes Newton's constant omits the Dirac index trace that `a_0` carries"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:1.1",
+          "severity": "critical",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🔴 BLOCKER — The heat-kernel coefficient that fixes Newton's constant is attributed to the wrong Christensen--Duff paper, at the wrong order"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:1.2",
+          "severity": "critical",
+          "gate": "ComputationCorrectness",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🔴 BLOCKER — Sen's logarithmic coefficient and Kaul--Majumdar's are compared across different logarithms"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:1.3",
+          "severity": "critical",
+          "gate": "CitationIntegrity",
+          "lane": "infra",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🔴 BLOCKER — `citation_primary_sources_present` counts a CrossRef metadata stub as a primary source"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:2.3",
+          "severity": "major",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🟡 REQUIRED — The Frolov--Fursaev quarter coefficient carries no citation apparatus at all"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:3.1",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🟡 REQUIRED — The bundle metadata attributes the regime biconditional to a theorem that does not state it"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:4.1",
+          "severity": "major",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🟡 REQUIRED — The heating/cooling contrast between the two ³He-A systems is frame-dependent; only the end temperature is not"
+        },
+        {
+          "id": "review:2026-08-15-d3-stage10-redraft:D3:5.1",
+          "severity": "major",
+          "gate": "CrossPaperConsistency",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+          "title": "🟡 REQUIRED — Cutting D3's charter-absent sections leaves four source papers with no destination but the flagship"
+        },
+        {
+          "id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION:1.11",
+          "severity": "major",
+          "gate": null,
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-04-25-0135-internal-adversarial/paper20_scalar_rung_REINVOCATION.md",
+          "title": "🟡 REQUIRED — Citation arXiv/DOI verifications still not WebFetched"
+        }
+      ]
+    },
+    "D4": {
+      "previous_ceiling": 4,
+      "measured_ceiling": 9,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-d4-stage10-redraft:D4:1.1",
+          "severity": "critical",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+          "title": "🔴 BLOCKER — D4's declared \"central QEC biconditional\" is `Real.log_pos`, and a sibling bundle forward-references it as load-bearing"
+        },
+        {
+          "id": "review:2026-08-15-d4-stage10-redraft:D4:1.2",
+          "severity": "critical",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+          "title": "🔴 BLOCKER — `hopf_link_matches_S_matrix` is an alias of `hopf_link_zero` and contains no $S$-matrix"
+        },
+        {
+          "id": "review:2026-08-15-d4-stage10-redraft:D4:1.3",
+          "severity": "critical",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+          "title": "🔴 BLOCKER — seventeen declarations reachable from D4's sections are vacuous or trivially true under names describing real results"
+        },
+        {
+          "id": "review:2026-08-15-d4-stage10-redraft:D4:2.1",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+          "title": "🟠 REQUIRED — \"zero project-local axioms\" is false for 18 of 62 declared apexes"
+        },
+        {
+          "id": "review:2026-08-15-d4-stage10-redraft:D4:2.3",
+          "severity": "major",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+          "title": "🟠 REQUIRED — Aharonov–Arad \"Lemma 6.1\" is attributed from an abstract-only cache"
+        },
+        {
+          "id": "review:2026-08-15-d4-stage10-redraft:D4:2.5",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "substrate",
+          "report": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+          "title": "🟠 REQUIRED — the Fibonacci pentagon equation is proved for a different $F$-matrix than the density theorem uses, with no bridge"
+        },
+        {
+          "id": "review:2026-04-28-2200-internal-adversarial:note_rt_ch_bounds:5.1",
+          "severity": "major",
+          "gate": "NarrativeGrounding (Gate 7) / CitationIntegrity (Gate 1)",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-28-2200-internal-adversarial/note_rt_ch_bounds.md",
+          "title": "🟡 REQUIRED — Sen's 4D log coefficient $77/45$ is referenced but no primary-source citation"
+        },
+        {
+          "id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:1.1",
+          "severity": "critical",
+          "gate": "CitationIntegrity (also borders NarrativeGrounding)",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-29-0200-notebook-adversarial/note_rt_ch_bounds.md",
+          "title": "🔴 BLOCKER — Casini-Huerta 2009 cited as the source of the universal `(c/3) log(L/eps)` 2D-CFT bound; that paper is restricted to free QFTs"
+        },
+        {
+          "id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:4.2",
+          "severity": "major",
+          "gate": "AssumptionDisclosure / LeanProofSubstance (drift between",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-04-29-0200-notebook-adversarial/note_rt_ch_bounds.md",
+          "title": "🟡 REQUIRED — Lean module docstring header references `kaulMajumdar_not_H_RT_in_Sen4D_branch` as a \"concrete falsifier\", but no such theorem exists in the module"
+        }
+      ]
+    },
+    "D8": {
+      "previous_ceiling": 0,
+      "measured_ceiling": 5,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-d8-stage10-redraft:D8:1.1",
+          "severity": "major",
+          "gate": "NarrativeGrounding",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+          "title": "`PAPER_STRATEGY.md` §D8 contradicts itself inside one paragraph"
+        },
+        {
+          "id": "review:2026-08-15-d8-stage10-redraft:D8:1.2",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+          "title": "Read–Rezayi compilation headlines are claimed by no bundle's apex set"
+        },
+        {
+          "id": "review:2026-08-15-d8-stage10-redraft:D8:1.3",
+          "severity": "major",
+          "gate": "NarrativeGrounding",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+          "title": "`l2_opNorm_kronecker_one_le` is claimed as an upstream contribution by two bundles"
+        },
+        {
+          "id": "review:2026-08-15-d8-stage10-redraft:D8:1.5",
+          "severity": "major",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+          "title": "Three load-bearing primary sources are not held, and nine \"abstract\" caches are project paraphrases"
+        },
+        {
+          "id": "review:2026-08-15-d8-stage10-redraft:D8:1.7",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "infra",
+          "report": "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md",
+          "title": "Nine of D8's fourteen \"open findings\" are parser artifacts, and both blocked P1 gates rest on them"
+        }
+      ]
+    },
+    "F": {
+      "previous_ceiling": 10,
+      "measured_ceiling": 9,
+      "open_findings": [
+        {
+          "id": "review:2026-04-10:CitationReview-01:9",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-10/CitationReview-01.md",
+          "section": "9",
+          "title": "Modular generation derivation implicit assumptions not disclosed 🟡"
+        },
+        {
+          "id": "review:2026-04-10:CitationReview-01:13",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-10/CitationReview-01.md",
+          "section": "13",
+          "title": "Steinhauer κ = 290 s⁻¹ vs. model κ = 4.8 s⁻¹ 🟡"
+        },
+        {
+          "id": "review:2026-04-10:CitationReview-01:15",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-10/CitationReview-01.md",
+          "section": "15",
+          "title": "Self-referential metric inconsistency 🟡"
+        },
+        {
+          "id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:6.4",
+          "severity": "critical",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-12/Paper 10 Deep Review — Modular Generation Constraint.md",
+          "section": "6.4",
+          "title": "Wang 2024 is cited once but drives almost everything"
+        },
+        {
+          "id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION:1.11",
+          "severity": "major",
+          "gate": null,
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-04-25-0135-internal-adversarial/paper20_scalar_rung_REINVOCATION.md",
+          "section": "1.11",
+          "title": "🟡 REQUIRED — Citation arXiv/DOI verifications still not WebFetched"
+        },
+        {
+          "id": "review:2026-04-28-2200-internal-adversarial:note_rt_ch_bounds:5.1",
+          "severity": "major",
+          "gate": "NarrativeGrounding (Gate 7) / CitationIntegrity (Gate 1)",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-28-2200-internal-adversarial/note_rt_ch_bounds.md",
+          "section": "5.1",
+          "title": "🟡 REQUIRED — Sen's 4D log coefficient $77/45$ is referenced but no primary-source citation"
+        },
+        {
+          "id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:1.1",
+          "severity": "critical",
+          "gate": "CitationIntegrity (also borders NarrativeGrounding)",
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-29-0200-notebook-adversarial/note_rt_ch_bounds.md",
+          "section": "1.1",
+          "title": "🔴 BLOCKER — Casini-Huerta 2009 cited as the source of the universal `(c/3) log(L/eps)` 2D-CFT bound; that paper is restricted to free QFTs"
+        },
+        {
+          "id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:4.2",
+          "severity": "major",
+          "gate": "AssumptionDisclosure / LeanProofSubstance (drift between",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-04-29-0200-notebook-adversarial/note_rt_ch_bounds.md",
+          "section": "4.2",
+          "title": "🟡 REQUIRED — Lean module docstring header references `kaulMajumdar_not_H_RT_in_Sen4D_branch` as a \"concrete falsifier\", but no such theorem exists in the module"
+        },
+        {
+          "id": "review:2026-08-15-kv-oscillating-vacuum-wrong-target:paper17_dark_sector:1.1",
+          "severity": "critical",
+          "gate": "CitationIntegrity",
+          "lane": "research",
+          "report": "papers/AutomatedReviews/2026-08-15-kv-oscillating-vacuum-wrong-target/paper17_dark_sector.md",
+          "section": "1.1",
+          "title": "🔴 BLOCKER — paper17 cites the self-tuning paper for the oscillating-vacuum mechanism"
+        }
+      ]
+    },
+    "L2": {
+      "previous_ceiling": 2,
+      "measured_ceiling": 12,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:1.1",
+          "severity": "critical",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "The right-handed-neutrino conclusion is refuted by both cited primary sources"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:1.2",
+          "severity": "critical",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "The `lcm(16,3) = 48` without-$\\nu_R$ constraint is arithmetically wrong"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.1",
+          "severity": "major",
+          "gate": null,
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "`sixteen_convergence_unconditional` has a tautology where a bordism group should be"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.2",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "`wang_sixteen_convergence`, a declared apex theorem, is half vacuous"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.3",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "The manuscript cited the arithmetic proxies for the Ext dimensions, not the module that computes them"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.4",
+          "severity": "major",
+          "gate": null,
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "`d4_rank_9` and `d5_rank_15` state rank bounds, not rank equalities"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.5",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "The Kitaev / Fidkowski-Kitaev attribution is wrong on three counts"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.6",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "The $E_8$ manifold is spin, and the manuscript said it is not"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.7",
+          "severity": "major",
+          "gate": null,
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "Exactness of the free complex is not proved anywhere in tree"
+        },
+        {
+          "id": "review:2026-08-15-l2-stage10-redraft:L2:2.8",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md",
+          "title": "The apex list and the charter still declare a contribution the Letter no longer makes"
+        },
+        {
+          "id": "review:2026-04-10:CitationReview-01:9",
+          "severity": "major",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-10/CitationReview-01.md",
+          "title": "Modular generation derivation implicit assumptions not disclosed 🟡"
+        },
+        {
+          "id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:6.4",
+          "severity": "critical",
+          "gate": null,
+          "lane": "prose",
+          "report": "papers/AutomatedReviews/2026-04-12/Paper 10 Deep Review — Modular Generation Constraint.md",
+          "title": "Wang 2024 is cited once but drives almost everything"
+        }
+      ]
+    },
+    "L3": {
+      "previous_ceiling": 0,
+      "measured_ceiling": 3,
+      "open_findings": [
+        {
+          "id": "review:2026-08-15-l3-stage10-redraft:L3:2.1",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md",
+          "title": "🟡 REQUIRED — `FourLaws_*` is named for four laws and encodes two, one of them only as a side condition"
+        },
+        {
+          "id": "review:2026-08-15-l3-stage10-redraft:L3:2.2",
+          "severity": "major",
+          "gate": "LeanProofSubstance",
+          "lane": "lean",
+          "report": "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md",
+          "title": "🟡 REQUIRED — The partition criterion transports its branch signs rather than deriving them, while the theorems that would derive them sit beside it unused"
+        },
+        {
+          "id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+          "severity": "major",
+          "gate": "NarrativeGrounding",
+          "lane": "pyrust",
+          "report": "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md",
+          "title": "🟡 REQUIRED — The shipped figure prints internal taxonomy into the published PDF and its legend mislabels the right panel"
+        }
+      ]
+    }
+  }
+}
