@@ -665,7 +665,8 @@ theorem integral_counterRotating_norm_le (ω Ω φ a b c d T : ℝ) (hω : 0 < �
 /-! ### 4.1 Witnesses: where the reduction is controlled, and where it honestly is not
 
 Both witnesses use a unit transverse drive (`b = 1`, others zero) and differ only in `ω/Ω`.
-They are stated at every `t` and every `T`, so neither is an artefact of a lucky time. -/
+The validity bound holds for every `T`. The resonance witness computes the integrated remainder
+exactly at `T = π/2`; it establishes failure at that time, not a lower bound at every time. -/
 
 /-- **Validity witness.** Far off resonance (`ω = 1000 Ω`) the integrated counter-rotating drive is
 bounded by `2×10⁻³` for ALL `T` — the rotating-wave reduction is quantitatively controlled. -/
@@ -702,7 +703,10 @@ theorem integral_counterRotating_witness_resonance :
 
 CONVENTION (stated, not assumed): `θ` is the *exponent* parameter, i.e. the co-rotating propagator
 is `exp(-i·θ·(n̂·σ))`. The Bloch-sphere rotation angle is `2θ`. With this convention the calibration
-identity is `θ = (m/2)·Ω·T`, where `m = |⟨0|O_drive|1⟩|` is the projected drive element. -/
+identity at zero detuning and nonnegative amplitude `0 ≤ Ω` is `θ = (m/2)·Ω·T`, where
+`m = |⟨0|O_drive|1⟩|` is the projected drive element. At general detuning `Δ`, the angle is
+`(T/2)√(Δ² + Ω²m²)`, as stated by
+`generalRotationAngle`; the two formulas need not agree off resonance. -/
 
 /-- The SIGNED projected drive element `⟨0|O_drive|1⟩ = b - i·c`. That this really is the `(0,1)`
 entry of `driveOp a b c d` — rather than a formula named after one — is
@@ -806,8 +810,10 @@ leaving a theorem that is true but about `ℓ^∞`-contractive propagators rathe
 module exists to bound.
 
 SCOPE. This bounds the CONJUGATED integrated remainder `‖∫₀ᵀ L·V·U‖`. The literal
-`‖U-exact(T) − U_rwa(T)‖` form is `rwa_propagator_difference_bound` below, which composes this with
-the discrepancy identity and the unitarity transfer from `BanachAveraging`.
+`‖U-exact(T) − U_rwa(T)‖` form is `rwa_propagator_difference_bound_physical` below. It identifies
+the physical pair in the abstract `rwa_propagator_difference_bound`, which calls
+`BanachAveraging.norm_propagator_sub_le` at the scaled antiderivative. This section's conjugated-
+integral theorem is a parallel application of the averaging bound, not a step in that proof chain.
 
 The antiderivative's properties (its derivative, continuity, vanishing at `0`, and its bound) are
 DISCHARGED here from `hω`/`hΩ` rather than assumed, so the conclusion carries the explicit
@@ -1044,7 +1050,9 @@ theorem schrodingerAntiderivative_norm_le (ω Ω φ a b c d t : ℝ) (hω : 0 < 
 
 /-- **The propagator difference bound for the RWA system, at Bloch–Siegert scale.**
 
-This is the literal `‖U-exact(T) − U_rwa(T)‖` statement. The Bloch–Siegert constant originates in
+This theorem bounds `‖U T − Ur‖` for an abstract propagator pair satisfying the displayed
+ODE, inverse and norm hypotheses. The identification with the exact and co-rotating propagators
+is performed by `rwa_propagator_difference_bound_physical`. The Bloch–Siegert constant originates in
 `bsAntiderivative_norm_le` and reaches this proof through the `−i`-scaled
 `schrodingerAntiderivative_norm_le` (§4.1), which is the theorem actually called; the scaling is by
 a unit phase, so the constant is unchanged. Hence the bound carries an explicit `Ω/ω`:
@@ -1710,7 +1718,9 @@ hypothesis of `diagonal_drive_propagator_bound`, which is where observability is
 Contrast `rwa_propagator_difference_bound_inhabited`, whose difference is pure global phase.
 
 ⚠️ This theorem collects the *nondegeneracy facts*; it does **not** itself apply the bound (and its
-binders `ω ≠ 0`, `Ω ≠ 0` are deliberately weaker than the bound's `0 < ω`, `0 ≤ Ω`). The bound is
+binder `ω ≠ 0` is weaker than the bound's `0 < ω`, whereas `Ω ≠ 0` and `0 ≤ Ω` are
+incomparable: negative `Ω` satisfies only the former and zero `Ω` only the latter. Here `Ω ≠ 0`
+is needed for the nonvanishing-remainder conjunct). The bound is
 actually applied in `diagonal_drive_propagator_bound` above, which discharges every constant. An
 earlier version of this docstring claimed "every precondition of
 `rwa_propagator_difference_bound_physical` is met" while calling nothing — corrected 2026-07-30; a

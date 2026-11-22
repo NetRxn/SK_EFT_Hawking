@@ -66,7 +66,8 @@ directional) and a duration computed from this identity UNDER-rotates. Use
 
 ⚠️ **CO-ROTATING MODEL ONLY — this identity is exact in the REDUCED dynamics, not the exact ones.**
 The exact propagator differs from the co-rotating one by the counter-rotating remainder that
-`rwa_propagator_difference_bound` bounds at Bloch–Siegert scale. That remainder is not zero: at
+`rwa_propagator_difference_bound_physical` bounds at Bloch–Siegert scale under its stated
+ODE and norm hypotheses. That remainder is not zero: at
 `ω = Ω` the integrated counter-rotating drive reaches exactly `1/2`
 (`integral_counterRotating_witness_resonance`). Any device claim lifted from this identity inherits
 that `O(Ω/ω)` error bar. `calibrated_duration_transverse_propagator` states the identity on the
@@ -615,9 +616,11 @@ three — a commuting `H`, a real eigenvalue, a nonzero eigenvector — are supp
 `kramers_degeneracy` is then run on the complete bundle. The final conjunct is its conclusion at a
 concrete system, so the degeneracy theorem is exhibited rather than merely satisfiable-looking.
 
-Scope, stated rather than implied: this exhibits ONE admissible system (`H = id`, `lam = 1`). It
-certifies that `kramers_degeneracy` is not vacuous; it does not claim to characterise which `H`
-are admissible on `ℂ²`, and nothing below rests on such a characterisation. -/
+Scope: this exhibits one admissible system, `H = id`, `lam = 1`. The Hamiltonian is scalar,
+and its eigenspace at `lam = 1` is the whole `ℂ²`. This establishes that the hypothesis bundle
+is satisfiable and applies `kramers_degeneracy` to it; it does not exhibit a non-scalar
+Hamiltonian or characterise all admissible `H` on `ℂ²`. The stronger classification and an
+informative non-scalar witness remain separate obligations. -/
 theorem kramers_degeneracy_instantiated :
     ∃ (Θ : EuclideanSpace ℂ (Fin 2) → EuclideanSpace ℂ (Fin 2))
       (H : EuclideanSpace ℂ (Fin 2) →ₗ[ℂ] EuclideanSpace ℂ (Fin 2))

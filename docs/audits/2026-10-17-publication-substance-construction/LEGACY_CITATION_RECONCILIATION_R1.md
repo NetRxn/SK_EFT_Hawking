@@ -36,3 +36,21 @@ validator measured six high-confidence flags against the old ceiling of
 seven. The refreshed ceiling is six. The citation suite passed 55 tests.
 All four changed manuscripts compiled with no TeX errors or unresolved
 references.
+
+## Paper 12 polariton spectra
+
+Citation Review 01 finding 14 requested source verification for the LKB
+horizon demonstration. The held Falque paper (abstract, Sections IV–V
+and the discussion of the emission spectrum) reports all-optical
+control of curvature and measured negative-energy collective modes
+in the supersonic region. Its Hawking emission spectrum is calculated.
+Giacobino and Jacquet discuss the control methods in Section 4.1.
+
+Paper 12 now attributes the measured excitation modes to Falque and
+the control exposition to the lecture notes. The introduction and
+conclusion describe a model to be tested after readout, transmission
+and background calibration. The historical priority assertion and the
+claim that the device establishes every detection prerequisite have
+been withdrawn. The tracked PDF was regenerated and read back. The
+E1 physical calibration and error-controlled detection obligations
+remain open.

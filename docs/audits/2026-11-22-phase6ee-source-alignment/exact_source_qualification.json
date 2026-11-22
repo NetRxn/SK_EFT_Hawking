@@ -1,0 +1,35 @@
+{
+  "source": "8c4b559e0aca088fd1af5e43605dfee0cd62d016",
+  "source_tree": "ac8863d70e0fbc544031ebbafde22f5c037ac790",
+  "base": "a8710da851d31096aed681421949698a2b023b7b",
+  "build": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "df0713021e1b48d0f73bf1a51450d662cfebf4834fd9a5926ba84601d4263733",
+    "fingerprint": {
+      "commit_sha": "8c4b559e0aca088fd1af5e43605dfee0cd62d016",
+      "digest": "96b75782890ea94fa625a48cbdb2b57b3cfa953a2257785d565cba7d947075d1",
+      "files": {
+        "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+        "lean/lakefile.toml": "cd8e65d624e3cfeab7f7f02b1f27877984030718cc5c3d8889400fec1850489c",
+        "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e"
+      },
+      "repo_role": "public",
+      "schema_version": 1
+    },
+    "published_at": "2026-11-22T14:23:49Z",
+    "repo_role": "public",
+    "schema_version": 1
+  },
+  "namespace": "isolated publication qualification, separate from shared slot state",
+  "canonical_extraction": {
+    "base_map_sha256": "3ffe8c90d5bb5d4b5e39eca33a6ae0f56bdbc7ec87d95b5989583f98302cde5a",
+    "candidate_map_sha256": "3ffe8c90d5bb5d4b5e39eca33a6ae0f56bdbc7ec87d95b5989583f98302cde5a",
+    "declarations": 43861,
+    "source_stamp": "42341df5317e6d63",
+    "map_matches_base_bytes": true
+  }
+}
