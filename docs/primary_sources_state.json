@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-11-07T00:52:53+00:00",
+  "generated_at": "2026-11-07T05:36:03+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -3360,13 +3360,13 @@
     "KMM2013": {
       "bibkey": "KMM2013",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 795,
+      "fetched_at": "2026-11-07T05:36:03+00:00",
+      "size_bytes": 547800,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing on disk; recorded without re-fetch. arXiv:1206.5236v4; SHA256 0946f767e7120ce6526b5e235b00a5cc8d5ded827920cdf5589422458c3d55c5."
     },
     "KMM2013ancilla": {
       "bibkey": "KMM2013ancilla",
@@ -4339,13 +4339,13 @@
     "Mukhopadhyay2024": {
       "bibkey": "Mukhopadhyay2024",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 900,
+      "fetched_at": "2026-11-07T05:36:03+00:00",
+      "size_bytes": 961497,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing on disk; recorded without re-fetch. arXiv:2401.08950v1; SHA256 16b5c2c30086a872f9584f7a7f324c84d7e01c4936f16be172eb5d665c5ebdbd."
     },
     "NJL61": {
       "bibkey": "NJL61",
@@ -5241,13 +5241,13 @@
     "RossSelinger2016": {
       "bibkey": "RossSelinger2016",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 752,
+      "fetched_at": "2026-11-07T05:36:03+00:00",
+      "size_bytes": 597099,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing on disk; recorded without re-fetch. arXiv:1403.2975v3; SHA256 4792f897a1326cb5e039e167d13620d5d7d8c0ef82a3de6ce891a9ab4ed74a70."
     },
     "Roy2016": {
       "bibkey": "Roy2016",
