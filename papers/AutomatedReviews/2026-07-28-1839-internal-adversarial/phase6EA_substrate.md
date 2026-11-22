@@ -95,6 +95,7 @@ reference backed by a call" claims verified against `lean/lean_deps.json` `value
 
 ### 2.1 — 🟡 MAJOR — `poissonMean_thinning`: the advertised bridge is not in the theorem
 
+- **Verify:** `uv run python -B -c 'import json; from pathlib import Path; ds={r['"'"'name'"'"']: r for r in json.loads(Path('"'"'lean/lean_deps.json'"'"').read_text())}; d='"'"'SKEFTHawking.Detection.'"'"'; raise SystemExit(0 if ({d+'"'"'poisson_thinning'"'"'} <= set(ds[d+'"'"'thinnedMean_eq_eta_mul'"'"']['"'"'value_deps_project'"'"']) and {d+'"'"'shotPSD_plane_transfer'"'"',d+'"'"'thinnedMean_eq_eta_mul'"'"'} <= set(ds[d+'"'"'shotPSD_thinnedMean_same_eta'"'"']['"'"'value_deps_project'"'"']) and all(not ds[d+n]['"'"'axiom_deps_project'"'"'] for n in ('"'"'thinnedMean_eq_eta_mul'"'"','"'"'shotPSD_thinnedMean_same_eta'"'"'))) else '"'"'Phase 6EA evidence mismatch for 2.1'"'"')'`
 - **Gate:** LeanProofSubstance / bridge integrity (Stage-3a checklist #3)
 - **Location:** `lean/SKEFTHawking/Detection/ShotNoise.lean:388-395` (and the Main-results
   bullet at `:38`)
@@ -155,6 +156,7 @@ reference backed by a call" claims verified against `lean/lean_deps.json` `value
 
 ### 2.3 — 🟡 MAJOR — Notebook INDEX records a retracted, non-existent Mathlib route as CHOSEN
 
+- **Verify:** `uv run python -B -c 'import json; from pathlib import Path; ds={r['"'"'name'"'"']: r for r in json.loads(Path('"'"'lean/lean_deps.json'"'"').read_text())}; d='"'"'SKEFTHawking.Detection.'"'"'; review=Path('"'"'papers/AutomatedReviews/2026-07-28-1924-internal-adversarial/phase6EA_substrate_round2.md'"'"').read_text().split('"'"'### 4.5 —'"'"',1)[1].split('"'"'---'"'"',1)[0]; raise SystemExit(0 if ('"'"'SKEFTHawking.QuantumNetwork.posSemidef_eq_of_mul_self_eq'"'"' in ds[d+'"'"'psdSqrt_diagonal'"'"']['"'"'value_deps_project'"'"'] and '"'"'Verified (round-1 2.3)'"'"' in review and '"'"'RETRACTED'"'"' in review and '"'"'posSemidef_eq_of_mul_self_eq'"'"' in review) else '"'"'Phase 6EA evidence mismatch for 2.3'"'"')'`
 - **Gate:** ProcessIntegrity / settled-fork hygiene
 - **Location:** `docs/dev-loops/Phase6EA/LAB_NOTEBOOK_INDEX.md`, "⚖ Decisions & dead-ends"
 - **Observed:** "2026-07-28 — W3 `psdSqrt_diagonal` via `Matrix.PosSemidef.sq_eq_sq_iff` →
