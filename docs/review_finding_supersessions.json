@@ -10480,6 +10480,14 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:14",
+      "status": "fixed",
+      "evidence": "Independent review checked both held sources and the regenerated Paper 12 PDF. The text distinguishes measured negative-energy excitations from calculated Hawking emission and separates the demonstrated horizons from prospective detection calibration.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
+      "date": "2026-11-22",
+      "commit": "f1b9147f7"
     }
   ]
 }
