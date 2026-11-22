@@ -10484,6 +10484,74 @@
       "superseded_by": "docs/audits/2026-11-22-phase6ee-source-alignment/INDEPENDENT_REVIEW_R2.md",
       "date": "2026-11-22",
       "commit": "8c4b559e0"
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:2.1",
+      "status": "fixed",
+      "evidence": "The current D3 manuscript cites the held Glorioso–Liu source for the slow-mode EFT from integrating out fast modes. It no longer attributes a pointwise NEC or horizon-area argument to that work.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D3_D4_REVIEWED_FINDINGS.md",
+      "date": "2026-11-22",
+      "commit": "dc8ad3493",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -qi 'without invoking a pointwise' papers/D3/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -qi 'without invoking a pointwise' papers/D3/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:3.2",
+      "status": "fixed",
+      "evidence": "The draft and apex record attribute homogeneity to a0_dirac_linear and use the separately identified definition for the spinor-trace normalization. The exact Lean type matches the current text.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D3_D4_REVIEWED_FINDINGS.md",
+      "date": "2026-11-22",
+      "commit": "154ad49cb",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; m=json.load(open('papers/D3/bundle_metadata.json')); a=[x for x in m['apex_theorems'] if x['name'].endswith('a0_dirac_linear')][0]; assert 'a0 = N_f' not in a['claims'], 'claims string still asserts a value the statement does not fix'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; m=json.load(open('papers/D3/bundle_metadata.json')); a=[x for x in m['apex_theorems'] if x['name'].endswith('a0_dirac_linear')][0]; assert 'a0 = N_f' not in a['claims'], 'claims string still asserts a value the statement does not fix'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d4-stage10-redraft:D4:2.4",
+      "status": "fixed",
+      "evidence": "The redraft reports the Ising total dimension as two and its square as four. The square root of two belongs to the sigma object. The original independent review and current declaration and manuscript evidence agree.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D3_D4_REVIEWED_FINDINGS.md",
+      "date": "2026-11-22",
+      "commit": "2268fb0e1",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -rn 'is the Ising global quantum dimension' papers/*/paper_draft.tex | grep -q 'sqrt{2}'",
+        "declared": "cd \"$REPO\" && ! grep -rn 'is the Ising global quantum dimension' papers/*/paper_draft.tex | grep -q 'sqrt{2}'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d4-stage10-redraft:D4:2.6",
+      "status": "fixed",
+      "evidence": "The unsupported calibration estimate and margin are withdrawn throughout D4. The manuscript and the revised apex describe the explicit inequality bounding the valid-branch expression by the defined composition constant.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D3_D4_REVIEWED_FINDINGS.md",
+      "date": "2026-11-22",
+      "commit": "d0c92e1af",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json\\nm=json.load(open('\"'\"'papers/D4/bundle_metadata.json'\"'\"'))\\nassert '\"'\"'K_proof'\"'\"' not in m['\"'\"'notes'\"'\"'] or '\"'\"'K_proof'\"'\"' in {e['\"'\"'name'\"'\"'].split('\"'\"'.'\"'\"')[-1] for e in json.load(open('\"'\"'lean/lean_deps.json'\"'\"'))}, '\"'\"'metadata reports K_proof but no such declaration exists'\"'\"'\")'",
+        "declared": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json\\nm=json.load(open('\"'\"'papers/D4/bundle_metadata.json'\"'\"'))\\nassert '\"'\"'K_proof'\"'\"' not in m['\"'\"'notes'\"'\"'] or '\"'\"'K_proof'\"'\"' in {e['\"'\"'name'\"'\"'].split('\"'\"'.'\"'\"')[-1] for e in json.load(open('\"'\"'lean/lean_deps.json'\"'\"'))}, '\"'\"'metadata reports K_proof but no such declaration exists'\"'\"'\")'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:14",
+      "status": "fixed",
+      "evidence": "Independent review checked both held sources and the regenerated Paper 12 PDF. The text distinguishes measured negative-energy excitations from calculated Hawking emission and separates the demonstrated horizons from prospective detection calibration.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
+      "date": "2026-11-22",
+      "commit": "f1b9147f7"
     }
   ]
 }
