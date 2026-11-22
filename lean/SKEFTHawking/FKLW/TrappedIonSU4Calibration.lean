@@ -55,8 +55,9 @@ theorem trappedIonSU4_skLength_const_pos : 0 < trappedIonSU4_skLength_const := b
 
 /-- **The SU(4) trapped-ion SK polylog exponent** — an alias of the canonical
 `skLengthExponent_sud = log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006,
-arXiv:quant-ph/0505030 §3.3: 5× word-length growth per level + ε^(3/2) error
-contraction). Alphabet-independent; single source of truth lives at
+arXiv:quant-ph/0505030v2, §3 (Analysis), Eq. (8), p. 7 and §5.1, p. 11).
+The exponent comes from 5× word-length growth per level and order-3/2 error
+contraction. The alphabet-independent definition lives at
 `SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud`. -/
 noncomputable def trappedIonSU4_skLength_exponent : ℝ :=
   SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud

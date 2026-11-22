@@ -5,25 +5,29 @@ Authors: John Roehm
 
 # Phase 6y Track S — Canonical SU(d) Solovay-Kitaev word-length exponent
 
-Single source of truth for the SU(d) Solovay-Kitaev word-length polylog
-exponent, so the value cannot drift across the (many) headline / cascade /
-calibration modules that reference it.
+Defines the SU(d) Solovay-Kitaev word-length exponent used by the
+length-bound discharge and by the trapped-ion and Clifford+CCZ calibration
+aliases. Some headline statements spell out the same logarithm ratio.
 
 ## The value
 
 `skLengthExponent_sud := Real.log 5 / Real.log (3 / 2) ≈ 3.97` — the canonical
 Dawson-Nielsen exponent (Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006),
-81–95; arXiv:quant-ph/0505030, §3.3). It arises from solving the joint SK
-recursion:
-  * length recurrence `L(n+1) = 5 · L(n)` (5× word-length growth per level), and
-  * error recurrence `ε(n+1) = ε(n)^(3/2)` (the super-quadratic contraction the
-    project's `SkApproxCSuperQuadraticBound_generic_sud_concrete_holds` proves),
-giving `n(ε) = log_{3/2} log(1/ε)` and `L(ε) = 5^{n(ε)} = (log(1/ε))^{log 5 / log(3/2)}`.
+81–95). The author preprint arXiv:quant-ph/0505030v2 gives the length bound
+in §3 (Analysis), Eq. (8), p. 7, and extends it to fixed dimension in §5.1,
+p. 11, with dimension-dependent constants and base lookup construction cost.
+It arises from 5× word-length growth per level and superlinear error contraction
+of order 3/2. The project's `SkApproxCSuperQuadraticBound_generic_sud_concrete_holds`
+proves the error bound. Up to the base constants and integer rounding of the
+depth, `n(ε) = log_{3/2} log(1/ε)` and `L(ε) = 5^{n(ε)} = (log(1/ε))^{log 5 / log(3/2)}`.
+Equation (9) gives the separate classical runtime exponent `log 3 / log(3/2) ≈ 2.71`
+when pointers are used to reuse subsequences, excluding finite-precision costs.
 
-This is **definitionally equal** to the SU(2) substrate's
-`SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLengthExponent` (same literal),
-to the base used by the level chooser `skLevel_polylog_sud` (`Real.log (3 / 2)`),
-and to the value stated in the public README and the Phase 6u roadmap.
+This exponent is definitionally equal to the SU(2) substrate's
+`SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLengthExponent` because the two
+definitions use the same real logarithm ratio. The level chooser
+`skLevel_polylog_sud` uses the denominator `Real.log (3 / 2)` to set the
+recursion depth.
 
 ## Provenance note (2026-05-28)
 
@@ -31,8 +35,8 @@ A 2026-05-27 first-pass ship (commit 866396e) hardcoded this exponent as
 `Real.log 5 / Real.log 2 ≈ 2.32` in the SU(d) headline forms, mis-attributing it
 to Dawson-Nielsen. That value is unachievable for the project's ε^(3/2)
 recursion (it would require quadratic ε² contraction, which is not proven). The
-value was corrected project-wide and this module was introduced so every SU(d)
-SK length-exponent reference resolves to one definition.
+value was corrected project-wide and this module was introduced to provide
+a named exponent for the SU(d) length bounds.
 
 ## Pipeline invariants
 
@@ -47,11 +51,11 @@ set_option autoImplicit false
 namespace SKEFTHawking.FKLW.GenericSUd
 
 /-- **The canonical SU(d) Solovay-Kitaev word-length polylog exponent**
-`log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006, arXiv:quant-ph/0505030 §3.3):
-5× word-length growth per level + ε^(3/2) error contraction. Single source of
-truth — all SU(d) headline / cascade / calibration modules reference this
-definition so the value cannot drift. Definitionally equal to the SU(2)
-`SolovayKitaevLengthBound.skLengthExponent`. -/
+`log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen, arXiv:quant-ph/0505030v2,
+§3 (Analysis), Eq. (8), p. 7 and §5.1, p. 11). It comes from 5× word-length
+growth per level and order-3/2 error contraction. The trapped-ion and
+Clifford+CCZ calibration aliases use this definition. It is definitionally
+equal to the SU(2) `SolovayKitaevLengthBound.skLengthExponent`. -/
 noncomputable def skLengthExponent_sud : ℝ := Real.log 5 / Real.log (3 / 2)
 
 /-- The canonical SU(d) SK length exponent is positive (`log 5 > 0`, `log (3/2) > 0`). -/
