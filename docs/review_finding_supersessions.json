@@ -10946,6 +10946,21 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1",
+      "status": "fixed",
+      "evidence": "Fresh isolated build qualifies the exact numerical bridge and old canonical rows remain identical. The solver now brackets and verifies nonzero roots above the cutoff. Declared root controls and render passed for the scoped scalar model.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-19-njl-root-bracket-repair/NJL_CURRENT_MAIN_QUALIFICATION.json",
+      "date": "2026-11-22",
+      "commit": "bd1e8a22adfdb3c886312155a19ef3874dec9275",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "declared": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
