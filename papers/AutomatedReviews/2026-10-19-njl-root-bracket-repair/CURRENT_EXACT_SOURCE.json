@@ -1,0 +1,39 @@
+{
+  "base": "484583f2c74bf03a749306b34a6378e770f3bbd2",
+  "tested_source": "dc0db019fc1bad9410243e490a492792053875d8",
+  "reviewed_donor": "b92e8db5c326262a5259e7a51be6bb9f8752e75a",
+  "build": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "1d6fe767d25aa35bb4b94c6705595793a9216989cd2df4536913b89fde6e9ada",
+    "fingerprint": {
+      "commit_sha": "dc0db019fc1bad9410243e490a492792053875d8",
+      "digest": "adbb8cb21f94cc0389ac76a9444917f65a0959efb648d852c49e3d2a0441f3cf",
+      "files": {
+        "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+        "lean/lakefile.toml": "cd8e65d624e3cfeab7f7f02b1f27877984030718cc5c3d8889400fec1850489c",
+        "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e"
+      },
+      "repo_role": "public",
+      "schema_version": 1
+    },
+    "published_at": "2026-11-22T14:41:53Z",
+    "repo_role": "public",
+    "schema_version": 1
+  },
+  "declaration_map": {
+    "base_sha256": "3ffe8c90d5bb5d4b5e39eca33a6ae0f56bdbc7ec87d95b5989583f98302cde5a",
+    "candidate_sha256": "7f5c5d3c82e1040a5e4d0d7f0dc2dca2b50d1f3dc4889c9b473dfb1cec84e52a",
+    "base_count": 43861,
+    "candidate_count": 43892,
+    "added": 31,
+    "removed": 0,
+    "modified_existing": 0,
+    "new_bridge_catalog_rows_match_reviewed_donor_statements_and_dependencies": true,
+    "new_bridge_rows_with_project_axioms": 0,
+    "source_stamp": "71ce2c389ad06cb9"
+  }
+}
