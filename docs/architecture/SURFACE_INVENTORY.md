@@ -225,7 +225,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
 | `F` | 0 | 31 | Fluid-Based Approaches to Fundamental Physics — A Formally V |
-| `D1` | 1 | 35 | Analog Hawking across three platforms |
+| `D1` | 1 | 36 | Analog Hawking across three platforms |
 | `D2` | 1 | 46 | Anomaly constraints on SM particle content |
 | `D3` | 1 | 92 | Emergent gravity through BH thermodynamics |
 | `D4` | 1 | 62 | Topological quantum computation foundations |
