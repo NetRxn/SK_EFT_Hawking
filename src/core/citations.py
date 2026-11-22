@@ -6128,7 +6128,7 @@ CITATION_REGISTRY = {
         'provides': ['Interactions reduce the free classification of the one-dimensional '
                      'time-reversal-symmetric Majorana chains from Z to Z_8. '
                      'A quartic interaction can gap eight boundary Majorana modes.'],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Held preprint arXiv:0904.2197v3, corresponding to PRB 81, 134509.',
     },
 
     'FractonDarkMatterLean': {
@@ -10075,12 +10075,8 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper45_phase6m_review/paper_draft.tex',
                     'papers/D3/paper_draft.tex'],
         'provides': [],
-        'notes': 'Phase 6e cross-bridge anchor reference. Sole substrate where '
-                 'Lambda_J = Lambda_HK rigorously demonstrated (Volovik 2009 §VII; '
-                 'Jannes-Volovik 2012). Delta_0^4 / (6 pi^2 hbar^3) on '
-                 '4-Weyl-fermion bundle, tr(I) = 4. Atiyah-Bott-Shapiro topological '
-                 'universality + IR Lorentz-invariance recovery. '
-                 'M9 Volovik-Jannes anchor (Phase 6m TC-R1 §3, TC-R2, TC-R3 §8).',
+        'notes': 'Held preprint arXiv:1108.5086v8. The shared low-energy metric and '
+                 'equilibrium vacuum readjustment results concern the bi-metric ³He-A example.',
     },
     'KhourySaksteinSolomon2018KSS': {
         'authors': 'Khoury, J., Sakstein, J., Solomon, A. R.',
