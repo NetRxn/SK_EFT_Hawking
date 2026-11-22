@@ -53,7 +53,8 @@ Solovay-Kitaev compilation provides a quantitative density predicate:
 
 The "polylog" bound has the standard form
 `c · (log (1/ε)) ^ (log 5 / log (3/2))` with the canonical Dawson-Nielsen
-exponent `log 5 / log (3/2) ≈ 3.97` (arXiv:quant-ph/0505030 §3.3).
+exponent `log 5 / log (3/2) ≈ 3.97` (arXiv:quant-ph/0505030v2, §3 (Analysis),
+Eq. (8), p. 7 and §5.1, p. 11).
 
 This module ships the **predicate** `SolovayKitaevHeadline_SUd` capturing
 this shape; the substantive discharge ships via composition with S.2g

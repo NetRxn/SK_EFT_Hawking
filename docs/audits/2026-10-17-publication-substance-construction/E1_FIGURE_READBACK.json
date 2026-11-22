@@ -1,0 +1,13 @@
+{
+  "regime_ratios": {
+    "Paris_long": 0.14285714285714285,
+    "Paris_ultralong": 0.04757142857142857,
+    "Paris_standard": 1.7857142857142858
+  },
+  "regime_points": 3,
+  "gain_samples": 300,
+  "png_sha256": {
+    "fig_polariton_regime_map": "9b1ae88221a0c7d09c113902fbc5b392a0179bcf8c47a34e418c47fbd9668487",
+    "fig_stimulated_hawking_spectrum": "7d82284b35a937cbe6ee3c2a1935eb7dcb583693ab263046ea1819b91ce4883f"
+  }
+}

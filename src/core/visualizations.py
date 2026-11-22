@@ -3116,8 +3116,8 @@ def fig_polariton_regime_map():
 
     Shows the three cavity quality regimes (intractable, borderline,
     perturbative/excellent) as colored regions, with the three Paris
-    polariton configurations marked. Includes the BEC platforms for
-    comparison (all deep in the perturbative regime).
+    polariton configurations marked. This plot uses the fixed Paris
+    horizon gradient, so it only displays Paris devices.
     """
     from src.experimental.polariton_predictions import polariton_regime_map
     from src.core.constants import POLARITON_PLATFORMS
@@ -3130,7 +3130,7 @@ def fig_polariton_regime_map():
     # All three Paris_* entries share the same Falque-smooth-horizon κ = 7e10
     # s⁻¹ post Phase 5u Wave 4. Previously hardcoded 5e10 here — that value
     # was stale relative to constants.py after 2026-04-13.
-    kappa = POLARITON_PLATFORMS['Paris_long']['kappa']  # s^-1
+    kappa = POLARITON_PLATFORMS['Paris_standard']['kappa']  # s^-1
     gamma_over_kappa = 1.0 / (tau_range * kappa)
 
     fig = go.Figure()
@@ -3170,16 +3170,20 @@ def fig_polariton_regime_map():
     }
 
     for name, data in regime.items():
+        if not name.startswith("Paris_"):
+            continue
+        qualification = "measured" if name == "Paris_standard" else "projected"
         color = regime_colors.get(data['tier1_regime'], 'grey')
         fig.add_trace(go.Scatter(
             x=[data['tau_cav_ps']],
             y=[data['Gamma_pol_over_kappa']],
             mode="markers+text",
-            name=name.replace('_', ' '),
+            name=f"{name.replace('_', ' ')} ({qualification})",
             marker=dict(size=12, color=color, symbol="diamond"),
-            text=[f"  {name.split('_')[1]}"],
-            textposition="middle right",
+            text=[f"{name.split('_')[1]} ({qualification})"],
+            textposition="bottom left" if name == "Paris_ultralong" else "top right",
             textfont=dict(size=11),
+            showlegend=False,
         ))
 
     # Reference line: Gamma_pol/kappa = 1/tau*kappa
@@ -5452,7 +5456,7 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
     """Stimulated Hawking gain G(ω) vs frequency: amplification peaks at low ω.
 
     Shows the exponential suppression G(ω) = 1/(exp(2πω/κ) - 1) with
-    annotations for the optimal probe window and 5σ detection threshold.
+    annotations for an illustrative scan region and a shot-noise threshold.
     """
     from src.core.formulas import stimulated_hawking_spectrum
     from src.core.constants import POLARITON_PLATFORMS
@@ -5474,13 +5478,14 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
     # prior G = 0.01 / 10⁴-photons drift — at G(ω)=1/(exp(2πω/κ)−1), ω/κ=0.175
     # gives G=0.5 not 0.01; G=0.01 is at ω/κ≈0.734.
     fig.add_hline(y=0.5, line=dict(color=COLORS['dissipative'], width=1, dash='dot'))
-    fig.add_annotation(x=1.0, y=0.7, text="G = 0.5 (5σ with 100 probe photons / mode)",
+    fig.add_annotation(x=1.0, y=np.log10(0.5), yshift=10,
+        text="G = 0.5 (shot-noise model, 100 probe photons/mode)",
         showarrow=False, font=dict(size=10, family=FONT['family'], color=COLORS['dissipative']))
 
-    # Optimal probe window
-    fig.add_vrect(x0=0, x1=0.3, fillcolor=COLORS['dispersive'], opacity=0.08,
-        annotation_text="optimal probe window", annotation_position="top left",
-        annotation_font=dict(size=10))
+    # Illustrative scan range in the bare-gradient normalization
+    fig.add_vrect(x0=0, x1=0.3, fillcolor=COLORS['dispersive'], opacity=0.08)
+    fig.add_annotation(x=0.34, xanchor="left", y=0.92, yref="paper",
+        text="illustrative scan range", showarrow=False, font=dict(size=10))
 
     # Stage 9 round 2: tighten x-range to [0, 1.6] (data ends near 1.5; round 1
     # flagged ~50% blank whitespace beyond) and add bottom margin so the
@@ -5494,8 +5499,7 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
         legend=dict(x=0.55, y=0.95))
 
     fig.add_annotation(x=0.5, y=-0.22, xref='paper', yref='paper',
-        text=f"T_H = {data['T_H_K']*1e3:.1f} mK | κ = {kappa:.0e} s⁻¹ | "
-             "Grisins PRB 94, 144518 (2016); Burkhard arXiv:2511.12339 (2025)",
+        text=f"Bare model scale T_H = {data['T_H_K']*1e3:.1f} mK | κ = {kappa:.0e} s⁻¹",
         showarrow=False, font=dict(size=9, family=FONT['family'], color='gray'))
     return fig
 
