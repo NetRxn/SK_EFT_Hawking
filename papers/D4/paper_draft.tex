@@ -308,10 +308,12 @@ finite branch is excluded by a cardinality argument: the group generated
 contains elements of unbounded order, so it cannot be finite. Only the
 first alternative survives, and density follows.
 
-The formalisation's project-side dependencies for this theorem touch the
-braid-group construction, the explicit representation of
-\eqref{eq:fibgens}, the one-parameter-subgroup analysis of
-$\mathrm{SU}(2)$, and the bracket-closure argument. It consumes nothing
+The Lean entry point for density is
+\texttt{fibonacci\_density\_F21\_unconditional} in
+\texttt{SU2BCHBracketClosure}. Its proof uses the Cartan argument in
+\texttt{OneParameterSubgroupSU2}. The project dependencies include the
+explicit braid matrices in \texttt{FibSU2LieBundle} and the traceless
+skew-Hermitian subspace from \texttt{SU2LieAlgebra}. It consumes nothing
 from the quantum-group presentation of Sec.~\ref{sec:qgroups}, the
 modular data of Sec.~\ref{sec:modular}, or the Ising category of
 Sec.~\ref{sec:ising}. As stated in Sec.~\ref{sec:intro}, these layers
@@ -425,6 +427,12 @@ certified inequality is
 + \sqrt2 \cdot 320 \cdot \bigl(\tfrac{\pi\sqrt2}{4}\bigr)^{3/2}
 \;\le\; K .
 \]
+The corresponding Lean components are the cubic estimate in
+\texttt{MatrixBCHCubic}, the commutator operations in
+\texttt{GroupCommutator} and \texttt{SU2BalancedCommutator}, and the
+Fibonacci braid words in \texttt{FibonacciEpsilonNet}. The error proof in
+\texttt{SolovayKitaevPathA} uses these commutator constructions.
+
 The margin is comfortable, which matters for a different reason than
 tightness: it means the bound does not depend on the exact value of any
 one of the contributing estimates, so improving any of them individually
@@ -439,6 +447,13 @@ would most directly improve the bound.
 % numerically gives approximately 568 (natural-number exponents) or 599
 % (real exponents), not 788. The figures 788 and 236 are therefore NOT
 % reproduced here and are not asserted. Filed as a finding.
+
+The strict same-word error and length result is in
+\texttt{SolovayKitaevPathA}. The abstract result at the selected recursion
+level is in \texttt{SolovayKitaevQuantitative}. It uses the
+\texttt{skLength\_at\_skLevel\_polylog\_le} estimate from
+\texttt{SolovayKitaevLengthBound}, with the precision threshold and level
+selection from \texttt{SolovayKitaevRecursion}.
 
 \subsection{Scope: this paper owns the Fibonacci alphabet}
 
