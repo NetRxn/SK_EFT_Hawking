@@ -8,9 +8,10 @@ The carrier is L² of the physical circle of positive period L, with normalized 
 measure. Finite Fourier synthesis identifies a dense subspace of this actual L².
 The spectral kinetic action and cosine multiplication are linear endomorphisms of
 that common domain. Their bracket has no bounded extension to ambient L² when the
-kinetic scale is positive. The derivative eigenvalue is checked, but identification
-of the kinetic action with a second-derivative operator, its closure and maximal
-domain remain separate. No wall, Fock, or higher-order result is asserted.
+kinetic scale is positive. Each domain vector has a canonical continuous trigonometric
+representative, and the kinetic action agrees a.e. with minus a times its actual
+second derivative in the real periodic coordinate. Closure and maximal domain remain
+separate. No wall, Fock, or higher-order commutator result is asserted.
 Physical Lebesgue normalization would multiply the characters by L⁻¹/²; no
 change-of-measure equivalence is constructed here.
 -/
@@ -200,6 +201,70 @@ theorem trigEquiv_linearCombination :
   simp only [map_smul, Finsupp.linearCombination_single, one_smul]
   rfl
 
+/-- Canonical continuous trigonometric polynomial with the unique domain coefficients. -/
+def trigPolynomial (v : ℤ →₀ ℂ) : C(AddCircle L, ℂ) :=
+  v.sum (fun n b ↦ b • fourier n)
+
+/-- The continuous polynomial maps to the existing L² synthesis by linearity. -/
+theorem trigPolynomial_toLp (v : ℤ →₀ ℂ) :
+    ContinuousMap.toLp 2 AddCircle.haarAddCircle ℂ (trigPolynomial L v) =
+      synthesis L v := by
+  simp only [trigPolynomial, Finsupp.sum, map_sum, map_smul, synthesis,
+    Finsupp.linearCombination_apply, Finsupp.sum, fourierLp, mode]
+
+/-- The canonical continuous polynomial represents the constructed domain vector a.e. -/
+theorem trigPolynomial_ae (v : ℤ →₀ ℂ) :
+    (synthesis L v : AddCircle L → ℂ) =ᵐ[AddCircle.haarAddCircle]
+      trigPolynomial L v := by
+  rw [← trigPolynomial_toLp]
+  exact ContinuousMap.coeFn_toLp _ _
+
+/-- Pullback of the continuous circle polynomial to the real coordinate. -/
+def trigLift (v : ℤ →₀ ℂ) (x : ℝ) : ℂ := trigPolynomial L v (x : AddCircle L)
+
+omit [Fact (0 < L)] in
+/-- Actual first derivative of the finite polynomial, using the character derivative. -/
+theorem trigLift_hasDerivAt (v : ℤ →₀ ℂ) (x : ℝ) :
+    HasDerivAt (trigLift L v)
+      (v.sum (fun n b ↦ b *
+        (2 * Real.pi * Complex.I * n / L * fourier n (x : AddCircle L)))) x := by
+  have hp : trigLift L v =
+      fun y : ℝ ↦ ∑ n ∈ v.support, v n * fourier n (y : AddCircle L) := by
+    funext y
+    simp [trigLift, trigPolynomial, Finsupp.sum]
+  rw [hp]
+  exact HasDerivAt.fun_sum (fun n _ ↦ (mode_derivative L n x).const_mul (v n))
+
+omit [Fact (0 < L)] in
+/-- The first derivative is the finite sum of the genuine differentiated characters. -/
+theorem trigLift_deriv (v : ℤ →₀ ℂ) (x : ℝ) :
+    deriv (trigLift L v) x = v.sum (fun n b ↦ b *
+      (2 * Real.pi * Complex.I * n / L * fourier n (x : AddCircle L))) :=
+  (trigLift_hasDerivAt L v x).deriv
+
+omit [Fact (0 < L)] in
+/-- Differentiate the actual first derivative a second time, still on the same support. -/
+theorem trigLift_deriv_hasDerivAt (v : ℤ →₀ ℂ) (x : ℝ) :
+    HasDerivAt (deriv (trigLift L v))
+      (v.sum (fun n b ↦ b * (2 * Real.pi * Complex.I * n / L)^2 *
+        fourier n (x : AddCircle L))) x := by
+  have hd : deriv (trigLift L v) = fun y : ℝ ↦ v.sum (fun n b ↦ b *
+      (2 * Real.pi * Complex.I * n / L * fourier n (y : AddCircle L))) :=
+    funext (trigLift_deriv L v)
+  rw [hd]
+  have h := HasDerivAt.fun_sum (u := v.support) (fun n _ ↦
+    ((mode_derivative L n x).const_mul (2 * Real.pi * Complex.I * n / L)).const_mul
+      (v n))
+  simpa only [Finsupp.sum, pow_two, mul_assoc] using h
+
+omit [Fact (0 < L)] in
+/-- Formula for the actual second real derivative, rather than a spectral definition. -/
+theorem trigLift_second_deriv (v : ℤ →₀ ℂ) (x : ℝ) :
+    deriv (deriv (trigLift L v)) x =
+      v.sum (fun n b ↦ b * (2 * Real.pi * Complex.I * n / L)^2 *
+        fourier n (x : AddCircle L)) :=
+  (trigLift_deriv_hasDerivAt L v x).deriv
+
 /-- Finite diagonal action, to be transported to the declared L² domain. -/
 def kineticCoeffs (c : ℝ) : (ℤ →₀ ℂ) →ₗ[ℂ] (ℤ →₀ ℂ) :=
   Finsupp.linearCombination ℂ
@@ -240,6 +305,66 @@ theorem kinetic_finite_sum (c : ℝ) (v : ℤ →₀ ℂ) :
     Finsupp.apply_linearCombination, Finsupp.linearCombination_apply]
   simp only [Function.comp_apply, LinearMap.comp_apply, kinetic_domainMode,
     Submodule.subtype_apply, Submodule.coe_smul, coe_domainMode, kineticMode]
+
+/-- The continuous kinetic polynomial maps to the already constructed domain action. -/
+theorem kinetic_polynomial_toLp (c : ℝ) (v : ℤ →₀ ℂ) :
+    ContinuousMap.toLp 2 AddCircle.haarAddCircle ℂ
+      (v.sum (fun n b ↦ b • (((c : ℂ) * (n : ℂ)^2) • fourier n))) =
+      (kinetic L c (trigEquiv L v) : ModeSpace L) := by
+  rw [kinetic_finite_sum]
+  simp only [Finsupp.sum, map_sum, map_smul, kineticMode, mode, fourierLp]
+
+/-- The spectral kinetic action has the claimed finite continuous representative a.e. -/
+theorem kinetic_polynomial_ae (c : ℝ) (v : ℤ →₀ ℂ) :
+    ((kinetic L c (trigEquiv L v) : ModeSpace L) : AddCircle L → ℂ)
+      =ᵐ[AddCircle.haarAddCircle]
+        (v.sum (fun n b ↦ b • (((c : ℂ) * (n : ℂ)^2) • fourier n)) :
+          C(AddCircle L, ℂ)) := by
+  rw [← kinetic_polynomial_toLp]
+  exact ContinuousMap.coeFn_toLp _ _
+
+omit [Fact (0 < L)] in
+/-- Pointwise differential identification of the continuous kinetic representative. -/
+theorem kinetic_polynomial_eq_neg_second_deriv (a : ℝ) (v : ℤ →₀ ℂ) (x : ℝ) :
+    (v.sum (fun n b ↦ b • (((scale L a : ℂ) * (n : ℂ)^2) • fourier n)) :
+        C(AddCircle L, ℂ)) (x : AddCircle L) =
+      -(a : ℂ) * deriv (deriv (trigLift L v)) x := by
+  rw [trigLift_second_deriv]
+  simp only [Finsupp.sum, ContinuousMap.sum_apply, ContinuousMap.smul_apply,
+    smul_eq_mul, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro n _
+  rw [← kinetic_eigenvalue]
+  ring
+
+/-- Canonical continuous representative of every vector in the constructed domain. -/
+def representative (u : trigDomain L) : C(AddCircle L, ℂ) :=
+  trigPolynomial L ((trigEquiv L).symm u)
+
+/-- This representative agrees with the given L² domain vector almost everywhere. -/
+theorem representative_ae (u : trigDomain L) :
+    (u : ModeSpace L) =ᵐ[AddCircle.haarAddCircle] representative L u := by
+  have h := trigPolynomial_ae L ((trigEquiv L).symm u)
+  simpa only [← coe_trigEquiv, LinearEquiv.apply_symm_apply, representative] using h
+
+/-- The domain representative pulled back to the real coordinate. -/
+def representativeLift (u : trigDomain L) (x : ℝ) : ℂ :=
+  representative L u (x : AddCircle L)
+
+/-- The existing kinetic action is minus a times the actual second derivative of its
+continuous representative. The a.e. circle statement holds for every real lift of that
+circle point, so no measurable choice of coordinate is needed. This is a comparison on
+the finite common domain only. -/
+theorem kinetic_eq_neg_second_deriv_ae (a : ℝ) (u : trigDomain L) :
+    ∀ᵐ z : AddCircle L ∂AddCircle.haarAddCircle, ∀ x : ℝ, (x : AddCircle L) = z →
+      (kinetic L (scale L a) u : ModeSpace L) z =
+        -(a : ℂ) * deriv (deriv (representativeLift L u)) x := by
+  have h := kinetic_polynomial_ae L (scale L a) ((trigEquiv L).symm u)
+  simp only [LinearEquiv.apply_symm_apply] at h
+  filter_upwards [h] with z hz
+  intro x hx
+  rw [hz, ← hx]
+  exact kinetic_polynomial_eq_neg_second_deriv L a ((trigEquiv L).symm u) x
 
 theorem cosineOp_finite_sum (v : ℤ →₀ ℂ) :
     (cosineOp L (trigEquiv L v) : ModeSpace L) =
