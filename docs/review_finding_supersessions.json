@@ -10552,6 +10552,21 @@
       "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
       "date": "2026-11-22",
       "commit": "f1b9147f7"
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1",
+      "status": "fixed",
+      "evidence": "The numerical root solver now brackets and verifies nonzero roots above the cutoff. The original required test modules passed on this candidate. The independently reviewed exact-real bridge compiles, its canonical records match the reviewed donor, and both consumers show the corrected curve. This closure addresses the scalar integral-model root defect.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-19-njl-root-bracket-repair/COMPOSED_QUALIFICATION.json",
+      "date": "2026-11-22",
+      "commit": "7c5921fd6",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "declared": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
