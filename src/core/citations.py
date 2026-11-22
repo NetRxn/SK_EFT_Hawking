@@ -6121,9 +6121,10 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5e/primary-sources/FidkowskiKitaev2010.pdf',
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex',
-                    'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
-        'provides': ['Interacting reduction of the 2D class-D free-fermion Z to Z_16 (the sixteenfold way under interactions); load-bearing for the Z_16 anomaly chain in L2/D2.'],
+        'provides': ['Interactions reduce the free classification of the one-dimensional '
+                     'time-reversal-symmetric Majorana chains from Z to Z_8. '
+                     'A quartic interaction can gap eight boundary Majorana modes.'],
         'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
     },
 
@@ -10063,12 +10064,13 @@ CITATION_REGISTRY = {
         'volume': 96,
         'page': '215',
         'year': 2012,
-        'doi': '10.1134/S0021364012160059',
+        'doi': '10.1134/S0021364012160035',
         'arxiv': '1108.5086',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/JannesVolovik2012.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
+        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex',
+                    'papers/D3/paper_draft.tex'],
         'provides': [],
         'notes': 'Phase 6e cross-bridge anchor reference. Sole substrate where '
                  'Lambda_J = Lambda_HK rigorously demonstrated (Volovik 2009 §VII; '
@@ -12908,7 +12910,8 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf',
-        'used_in': ['papers/D2/paper_draft.tex'],
+        'used_in': ['papers/D2/paper_draft.tex',
+                    'papers/paper10_modular_generation/paper_draft.tex'],
         'provides': [],
         'notes': 'Existing citing-key alias of KitaevHonest2006; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:cond-mat/0506438v3, 1 January 2008, distinct from the 2006 publication metadata.',
     },
