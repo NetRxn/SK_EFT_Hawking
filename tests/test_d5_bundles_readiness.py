@@ -1032,6 +1032,27 @@ class TestBundleManuscriptLength:
         value, _unit, note = bru._measure_manuscript("D1")
         assert value is None and "older" in note
 
+    def test_word_equivalents_include_single_and_double_column_figures(
+            self, tmp_path, monkeypatch):
+        import shutil
+        import subprocess
+
+        papers = self._setup(tmp_path, monkeypatch,
+                            {"L3": self._blob(unit="word_equivalents")})
+        draft = papers / "L3"
+        (draft / "paper_draft.tex").write_text(
+            "\n".join((r"\begin{figure}a\end{figure}",
+                       r"\begin{figure*}b\end{figure*}",
+                       r"% \begin{figure*}c\end{figure*}")))
+        (draft / "paper_draft.pdf").write_bytes(b"%PDF-1.4")
+        monkeypatch.setattr(shutil, "which", lambda _: "/fixture/pdftotext")
+        monkeypatch.setattr(subprocess, "run",
+                            lambda *a, **kw: subprocess.CompletedProcess(
+                                a[0], 0, stdout="rendered words"))
+
+        assert bru._measure_manuscript("L3") == (
+            602, "word_equivalents", "2 figure(s) at 300 words each")
+
     def test_a_missing_pdf_names_the_command_that_fixes_it(self, tmp_path, monkeypatch):
         papers = self._setup(tmp_path, monkeypatch, {"D1": self._blob()})
         (papers / "D1" / "paper_draft.tex").write_text("x")
