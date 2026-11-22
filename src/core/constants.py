@@ -179,7 +179,7 @@ POLARITON_PLATFORMS = {
         'gamma_UP_meV': 2.3,      # upper-polariton linewidth (Wang et al. 2026)
         'gamma_cav_meV': 1.9,     # cavity linewidth (γ_rad ≈ 0.7 + γ_nonrad ≈ 1.2)
         'Q_factor': 914,          # E_cav (1.736 eV) / γ_cav (1.9 meV)
-        'switching_energy_fJ': 4.0,  # all-optical switching threshold (Wang et al. 2026)
+        'switching_energy_fJ': 4.0,  # bandwidth-matched switching-energy estimate (Wang arXiv:2411.16635v1), not a modal hard cutoff
         # Γ_pol computed from γ_LP_meV at post-dict step below (use canonical eV→s⁻¹
         # conversion to keep the source-of-truth purely in g/γ_LP/γ_UP/γ_cav in meV).
     },

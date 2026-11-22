@@ -1,17 +1,8 @@
-"""
-Regression tests for Wave 6v.3 — DKM F3 polariton occupancy bound.
+"""Regression source for photon-equivalent arithmetic and scalar comparisons.
 
-These tests pin the Python numerical computations to the canonical
-formula in `src/core/formulas.py:polariton_mode_occupation_per_pulse`,
-verify the Penn TMD and Paris-LKB per-mode occupations sit well below
-the DKM-F3 breaking threshold (10⁶), and exercise the Lean substrate
-constants that the cross-bridge theorems consume.
-
-Companion Lean theorems live in
-`lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean`:
-- `polariton_dkm_f3_holds_at_pump_below_threshold`
-- `polariton_inherits_graphene_uniqueness_result`
-- `horizon_transport_uniqueness_polariton_witness_one_half`
+Legacy F3/occupation/uniqueness names and diagnostics are retained for
+compatibility. Assertions verify unchanged arithmetic and refusal behavior;
+they are not physical F3, mode-support or platform-branch certificates.
 """
 
 import math
@@ -64,7 +55,7 @@ def test_canonical_formula_rejects_nonpositive_photon_energy():
 
 
 def test_penn_tmd_per_pulse_occupation_in_expected_range():
-    """Penn TMD 4 fJ at 1.736 eV → ≈ 1.438 × 10⁴ photons/pulse/mode."""
+    """Adopted4fJ/1.736eV conversion gives about1.44e4 incident photon equivalents."""
     n_penn = penn_tmd_occupation_at_switching_threshold()
     assert 1.40e4 < n_penn < 1.50e4, f"n_penn = {n_penn}"
     # Sanity: matches the strategy-synthesis "≈ 1.5 × 10⁴" headline.
@@ -72,10 +63,10 @@ def test_penn_tmd_per_pulse_occupation_in_expected_range():
 
 
 def test_penn_tmd_below_f3_threshold():
-    """Penn TMD occupation is well below the DKM-F3 breaking threshold."""
+    """The stored conversion is below the adopted legacy scalar proxy."""
     n_penn = penn_tmd_occupation_at_switching_threshold()
     assert is_below_dkm_f3_threshold(n_penn)
-    # And by at least 2 orders of magnitude (Phase 6v.3 claim is ~70× margin).
+    # About70-fold scalar headroom; no two-orders or physical-F3 inference.
     headroom = DKM_F3_THRESHOLD_OCCUPATION / n_penn
     assert headroom > 50.0, f"Penn TMD margin only {headroom:.1f}x"
 
@@ -84,13 +75,13 @@ def test_penn_tmd_below_f3_threshold():
 
 
 def test_paris_lkb_per_coherence_occupation_negligible():
-    """Paris-LKB at 1 nW × 8 ps → ≈ 3.36 × 10⁻² photons/coherence-time."""
+    """Illustrative1nW*8ps conversion gives about0.0336 photon equivalents."""
     n_paris = paris_lkb_occupation_at_typical_pump()
     assert 0.01 < n_paris < 0.10, f"n_paris = {n_paris}"
 
 
 def test_paris_lkb_below_f3_threshold():
-    """Paris-LKB occupation is utterly negligible vs the F3 threshold."""
+    """Compare illustrative photon equivalents with the adopted scalar proxy."""
     n_paris = paris_lkb_occupation_at_typical_pump()
     assert is_below_dkm_f3_threshold(n_paris)
     headroom = DKM_F3_THRESHOLD_OCCUPATION / n_paris
@@ -119,17 +110,15 @@ def test_is_below_dkm_f3_threshold_with_custom_threshold():
     assert not is_below_dkm_f3_threshold(15.0, threshold=10.0)
 
 
-# ─── Cross-platform bimodal-branch resolution ──────────────────────────
+# Legacy branch-test label; only scalar comparisons occur below.
 
 
 def test_both_polariton_platforms_take_positive_uniqueness_branch():
-    """The Wave 6v.3 closing positioning: both polariton platforms sit on
-    the LEFT (positive-uniqueness) branch of the Phase 6q
-    PlatformBimodalOutcome, joining graphene; only BEC Bogoliubov
-    continuum-bosonic substrates fall under the sharpened-NO-GO branch.
+    """Legacy test name retained: the body compares two counts with a scalar proxy.
 
-    This is the contrapositive of `IsSuperFactorialUnbounded` on the
-    Lean side — encoded as `polariton_dkm_f3_holds_at_pump_below_threshold`.
+    The unchanged failure text uses the legacy F3 threshold label only;
+    it is no physical certificate. Neither actual platform classification
+    nor exclusive graphene/BEC/polariton partition is proved by this test.
     """
     for name, n in [
         ("Penn TMD",   penn_tmd_occupation_at_switching_threshold()),

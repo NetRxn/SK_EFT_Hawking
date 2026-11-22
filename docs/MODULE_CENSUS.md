@@ -75,10 +75,10 @@ Nothing else belongs here.
 | `src/diff_invariance/__init__.py` | Phase 6e Wave 3: Nonlinear diffeomorphism invariance (path-b). |
 | `src/diff_invariance/anomaly_hunt.py` | Parameter-grid anomaly hunt for path-b diff invariance at order ``a_4``. |
 | `src/diff_invariance/variational_check.py` | Order-by-order path-b diff-invariance anomaly evaluators. |
-| `src/dkm_bootstrap/__init__.py` | Phase 6q DKM transport bootstrap — graphene MIR numerical companion. |
-| `src/dkm_bootstrap/graphene_mir.py` | Graphene MIR bound numerical confrontation with Crossno 2016 data. |
-| `src/dkm_polariton/__init__.py` | Phase 6v Wave 6v.3: DKM F3 polariton occupancy bound. |
-| `src/dkm_polariton/polariton_occupation_bound.py` | Polariton per-mode occupation bound for the DKM F3 axiom check. |
+| `src/dkm_bootstrap/__init__.py` | Adopted DKM scalar and fitted-length comparison exports. |
+| `src/dkm_bootstrap/graphene_mir.py` | Adopted MIR scalar arithmetic and estimated-length comparisons. |
+| `src/dkm_polariton/__init__.py` | Legacy photon-equivalent arithmetic exports. |
+| `src/dkm_polariton/polariton_occupation_bound.py` | Incident photon-equivalent counts and a legacy scalar threshold comparison. |
 | `src/einstein_cartan/__init__.py` | Phase 6e Wave 6: Einstein-Cartan Extension (torsion from spin current). |
 | `src/einstein_cartan/ec_residual_assessment.py` | Wave 6 expression of Decision Gate E.2: EC residual = 0 ↔ α_EC = 1. |
 | `src/einstein_cartan/observational_bounds.py` | Wave 6 observational-bound assessment vs Kostelecky / Hughes-Drever. |

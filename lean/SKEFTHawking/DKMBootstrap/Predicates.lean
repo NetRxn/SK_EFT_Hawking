@@ -30,7 +30,7 @@ content, not labelled in the paper itself):**
 |---|---|---|
 | F1 DKM transport-correlator structure | eq. (15) Im G^R/Ω form | `hasLocalEquilibrium` (strictly stronger) |
 | F2 Static-limit lattice f-sum rule | eq. (8) integrated bound | `hasLocalEquilibrium` (orthogonal microscopic data) |
-| F3 High-frequency operator-growth bound | eq. (12) nested-commutator | `hasLargestTime` (orthogonal microscopic) |
+| F3 High-frequency operator-growth bound | arXiv:2509.18255v2 Eq. (31) | `hasLargestTime` (orthogonal microscopic) |
 | F4 Positivity of Im G^R | eq. (5) Im G^R ≥ 0 | `hasReflectionPositivity` (cleanly equivalent) |
 | F5 Kramers–Kronig analyticity (UHP) | implicit; eq. (34) | `hasLargestTime` + `hasHermiticity` (weaker) |
 | F6 Parity / time-reversal symmetry | Im G^R(Ω,k) = -Im G^R(-Ω,k) | `hasHermiticity` (cleanly equivalent) |
@@ -175,20 +175,14 @@ def HasFSumRule (G : Correlator) (boundData : ℝ) : Prop :=
     ∀ Ω k : ℝ, ω ≤ Ω → Ω ≤ Λ → 0 < Ω →
       G Ω k / Ω ≤ boundData
 
-/-- **F3 — High-frequency operator-growth bound (CHHK eq. 12).** The
-`κ`-fold nested commutator `[H, [H, …, [H, n₀]]]_κ` has operator norm at
-most `κ! · ε^κ · ‖n₀‖`. Substantive content: an Abanin–De Roeck–
-Huveneers-type inequality with the CHHK improvement of factor `e` in the
-constant. (See `Lit-Search/Phase-6q/.../wave_1a_*.md` §F3 + CHHK refs
-to Abanin–De Roeck–Huveneers PRL 115, 256803 and Parker et al. PRX 9,
-041017 for the universal operator-growth hypothesis.)
-
-For Wave 1a.2 we capture the predicate shape — the bound itself
-operates on an abstract `commutatorNorm κ` sequence representing
-`‖[H,…,n₀]_κ‖`. The substantive analytic content (the bound
-`commutatorNorm κ ≤ κ! · ε^κ · n0Norm` together with the Stirling
-estimate `⌊x⌋!/x^⌊x⌋ ≤ √x·e^(1−x)`) ships in Wave 1b.2
-(`OperatorGrowthBound.lean`). -/
+/-- **F3 — High-frequency operator-growth bound.** This predicate encodes
+the factorial-times-exponential bound from CHHK arXiv:2509.18255v2 Eq. (31)
+for a supplied real sequence. In CHHK, bounded local Hamiltonian terms and
+a local observable yield that estimate; Eq. (32) then optimizes the
+spectral bound in Eq. (33). The factor of e concerns the exponential
+falloff of the spectral bound relative to the earlier heating estimate.
+A physical use of this predicate must identify and bound the actual
+nested commutator norms on its chosen carrier. -/
 def HasOperatorGrowthBound
     (commutatorNorm : ℕ → ℝ) (ε n0Norm : ℝ) : Prop :=
   ∀ κ : ℕ, commutatorNorm κ ≤ (Nat.factorial κ : ℝ) * ε^κ * n0Norm
@@ -309,13 +303,17 @@ degenerate type structure.
 API non-vacuity witnesses, not substantive physics theorems**. They
 are LOAD-BEARING (consumed across 3 downstream DKMBootstrap modules
 — AxiomSet.lean, LDPBridge.lean, SKEFTSpecialization.lean — at 10+
-sites total). The substantive physics witnesses live in:
-- `drudeCorrelator` (§5 above) — closed-form Drude metal correlator,
-  the textbook CHHK §4 benchmark (non-trivial spectral function).
-- `becBogoliubovCommutatorNorm` (`BECBogoliubovBosonicGrowth.lean`) —
-  concrete (2κ)! sequence, the Wave 2b.4 sharpened-NO-GO witness.
-- `grapheneDKMParameters` (`E1E2CrossBridge.lean`) + the substantive
-  `(2·β_2/(4π))^(1/3) ≈ 0.0756` from `src/dkm_bootstrap/graphene_mir.py`.
+sites total). Other examples have different scopes:
+- `drudeCorrelator` (§5 above) is the closed-form Drude benchmark with a
+  nontrivial spectral function.
+- `becBogoliubovCommutatorNorm` (`BECBogoliubovBosonicGrowth.lean`) is the
+  prescribed sequence (2κ)!, used to test the abstract sharpened no-go.
+  It does not compute a commutator norm of a BEC Hamiltonian.
+- `grapheneDKMParameters` (`E1E2CrossBridge.lean`) gives a normalized
+  parameter record. The calculation in `src/dkm_bootstrap/graphene_mir.py`
+  separately evaluates the scalar (2·β_2/(4π))^(1/3) ≈ 0.0756. Neither
+  identifies an actual graphene transport tuple or establishes DKM
+  applicability for a measured sample.
 
 A partial F4/F5/F6 bundle `trivial_link_witness` (AxiomSet.lean) ties
 these into the CGL six-axiom skeleton via the spectral-function link. -/

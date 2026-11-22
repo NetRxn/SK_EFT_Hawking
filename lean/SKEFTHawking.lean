@@ -3876,39 +3876,41 @@ import SKEFTHawking.DKMBootstrap.LDPBridge
 -- IsGaussianFluctuationRegime DR §6 condition; IsLDPCompatibleCorrelator
 -- bundled predicate + forward-direction chhk_positivity_yields_LDP_compatible.
 import SKEFTHawking.DKMBootstrap.SKEFTSpecialization
--- Phase 6q Wave 2a.3 (2026-05-23): E1/E2 platform cross-bridge.
--- PlatformKMSQuality 3-way classifier (Strong/Approximate/EffectiveOnly);
--- per-platform DKMParameters witnesses (graphene/BEC/polariton);
--- LDP-compatibility + MIR-bound per-platform theorems;
--- platform_kms_qualities_pairwise_distinct substantive structural finding.
+-- Legacy platform String labels are defined by matching their names.
+-- All three positive parameter records contain only normalized ones.
+-- Constructor distinctness proves a label fact.
+-- No physical KMS state, transport or growth is derived here.
+-- Full platform matching and physical construction remain BUILD.
 import SKEFTHawking.DKMBootstrap.E1E2CrossBridge
--- Phase 6q Wave 2b (2026-05-23): horizon-transport bootstrap, BIMODAL OUTCOME.
--- POSITIVE-UNIQUENESS HALF: HorizonTransportUniquenessBound predicate +
--- horizon_transport_uniqueness_thm substantive theorem + graphene witnesses
--- at mirConst=0 (trivial) and mirConst=1/2 (substantively-nontrivial).
--- SHARPENED-NO-GO HALF: IsSuperFactorialUnbounded predicate + sharpened_no_go
--- _super_factorial substantive theorem (Yin-Lucas/Kuwahara-Saito Lieb-Robinson
--- -for-bosons substrate). PlatformBimodalOutcome explicit disjunction + graphene
--- witness for the positive-uniqueness half. Both halves shipped substantively.
+-- HorizonTransportUniquenessBound is a scalar MIR alias.
+-- Its legacy name does not establish coefficient uniqueness.
+-- The all-one witness reduces to1/2 <= 1.
+-- IsSuperFactorialUnbounded is an abstract sequence hypothesis.
+-- It contradicts a supplied positive factorial-power growth bound.
+-- No physical commutator sequence is identified by that implication.
+-- PlatformBimodalOutcome is inclusive OR, not an exclusive classification.
+-- Actual material/horizon transport and physical growth remain BUILD.
 import SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap
--- Phase 6q Wave 2b.4 (2026-05-25): substantive BEC Bogoliubov-bosonic
--- unbounded-norm lift. becBogoliubovCommutatorNorm := (2κ)! concrete
--- substrate-level stand-in for the bosonic ‖[H,[H,…,[H,n_x]]]_κ‖ sequence;
--- becBogoliubovCommutatorNorm_isSuperFactorialUnbounded substantively
--- instantiates the predicate; bec_falls_under_sharpened_no_go closes the
--- second-NO-GO half at concrete-substrate-instance level via Mathlib's
--- FloorSemiring.tendsto_pow_div_factorial_atTop + central-binomial
--- (κ!)² ≤ (2κ)!.
+-- Prescribed becBogoliubovCommutatorNorm benchmark equals(2*kappa)!.
+-- The name is retained; it is not a derived BEC Hamiltonian norm.
+-- The factorial-square inequality and factorial domination are proved.
+-- They instantiate the declared abstract superfactorial predicate.
+-- The resulting contradiction concerns that prescribed sequence.
+-- The zero-sequence contrast does not compare physical platforms.
+-- Actual BEC Hamiltonian/domain/state/regulator growth remains BUILD.
+-- The mathematical benchmark does not close the original physical task.
 import SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth
--- Phase 6v Wave 6v.3 (2026-05-26): polariton DKM F3 bound + bimodal-branch
--- resolution. Closes the Phase 6q open question: polariton, under a finite
--- pump-energy operating constraint (Penn TMD 4 fJ → 1.44×10⁴ photons/mode
--- ≪ n_threshold ≈ 10⁶), takes the POSITIVE-uniqueness branch of
--- PlatformBimodalOutcome — inheriting the graphene witness at substrate
--- normalized mirConst = 1/2. polariton_dkm_f3_holds_at_pump_below_threshold
--- is the substantive contrapositive of sharpened_no_go_super_factorial.
+-- Conditional implication assumes the complete supplied growth bound.
+-- The scalar pump comparison does not derive that hypothesis.
+-- Incident photon equivalents do not determine per-mode support.
+-- The adopted proxy supplies no physical F3 onset certificate.
+-- Inheritance selects the normalized MIR witness independently of growth.
+-- No physical transport or uniqueness classification follows.
+-- Full pump/state/material and distinct BEC construction remain BUILD.
 import SKEFTHawking.DKMBootstrap.PolaritonF3Bound
 import SKEFTHawking.DKMBootstrap.ReceiverKernel
+import SKEFTHawking.DKMBootstrap.ReceiverCommutator
+import SKEFTHawking.DKMBootstrap.BECPeriodicCommutator
 -- Phase 6v Wave 6v.1 (2026-05-26): Williamson-Yoder gauging-QEC overhead
 -- bound (arXiv:2410.02213). Substrate-level encoding of the "qubit overhead
 -- linear in the weight of the operator being measured up to a polylogarithmic

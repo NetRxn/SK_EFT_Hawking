@@ -7,9 +7,9 @@ NO-GO writeup (`temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`
 crossing as the second structural obstruction. The DR Wave 1a.1 §1 row
 (2) re-reads CHHK 2509.18255 and finds: **CHHK never invokes crossing.**
 The bootstrap is "vertical" — it operates on low-ω vs high-ω data:
-low-ω from DKM functional form (CHHK eq. 15), high-ω from the
-Abanin–De Roeck–Huveneers nested-commutator operator-growth bound (CHHK
-eq. 12), with the Stirling estimate (eq. 13) interpolating.
+low-ω from the DKM functional form (CHHK arXiv:2509.18255v2 Eq. (4)),
+high-ω from the bounded-local nested-commutator estimate (Eq. (31)).
+The Stirling estimate (Eq. (32)) yields the spectral bound in Eq. (33).
 
 **Structural resolution of Obstruction (II):** the absence of crossing
 in the CHHK bootstrap is not a *gap* to be filled but a *design choice*
@@ -29,11 +29,10 @@ constraints in place of (s, t, u)-channel crossing constraints.
    bootstrap-style axiomatic content can be assembled without crossing.
 3. **`dkm_axiom_set_is_vertical`** — reverse direction: every `IsDKMAxiomSet`
    witness gives a vertical-bootstrap witness for free, by projection.
-   Substantive non-vacuity for `IsVerticalBootstrap` is conditional on
-   the substantive non-vacuity of `IsDKMAxiomSet`, which ships in
-   Wave 2a (graphene + BEC + polariton platform witnesses) — at the
-   substrate level here, the structural decomposition + identity is
-   the load-bearing content.
+   This transfers supplied `IsDKMAxiomSet` witnesses by projection.
+   The normalized algebraic examples check the predicate interfaces.
+   Physical platform witnesses require matching the actual correlator
+   and microscopic hypotheses.
 
 References:
 - Phase 6o Wave 1c NO-GO §2.2: no doubled-contour crossing
@@ -167,8 +166,8 @@ absence of a doubled-contour crossing identity is not a *gap* in the
 CHHK bootstrap but a *design feature* — the bootstrap is vertical, not
 horizontal.
 
-Substantive non-vacuity of `IsVerticalBootstrap` lifts conditionally
-from substantive non-vacuity of `IsDKMAxiomSet`, which ships in Wave 2a
-(graphene + BEC platform witnesses). -/
+An `IsDKMAxiomSet` witness supplies a vertical-bootstrap witness by
+projection. The normalized examples do not establish the hypotheses for
+a physical graphene, BEC or polariton model. -/
 
 end SKEFTHawking.DKMBootstrap
