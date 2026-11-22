@@ -10697,6 +10697,51 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:2.2",
+      "status": "fixed",
+      "evidence": "Independent figure review at 99625d421 checked the clear measured Paris point and two separately labeled projections. Exact E1 and Paper12 captions, identical distributed PNGs and ratios are recorded in E1_FIGURE_READBACK.json. The measured point remains outside the criterion.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "a028f2009dddce1d7da5a6cac353c5c9c155abf1",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'lkb_ratio_standard' papers/E1/paper_draft.tex && python3 -c \"import re,sys; c=open('papers/E1/paper_draft.tex').read(); m=re.search(r'\\\\\\\\caption\\[The weak-dissipation criterion.*?\\\\\\\\label\\{fig:regime\\}', c, re.S); sys.exit(0 if m and 'lkb_ratio_standard' in m.group(0) else 1)\"",
+        "declared": "cd \"$REPO\" && grep -q 'lkb_ratio_standard' papers/E1/paper_draft.tex && python3 -c \"import re,sys; c=open('papers/E1/paper_draft.tex').read(); m=re.search(r'\\\\\\\\caption\\[The weak-dissipation criterion.*?\\\\\\\\label\\{fig:regime\\}', c, re.S); sys.exit(0 if m and 'lkb_ratio_standard' in m.group(0) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:2.4",
+      "status": "fixed",
+      "evidence": "Independent figure review at 99625d421 confirmed the unsupported annotation was removed, shown gain and threshold are conditional on the displayed shot-noise model, and all three copies agree. The subsequent layout-only label change is rendered and recorded in E1_FIGURE_READBACK.json.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "a028f2009dddce1d7da5a6cac353c5c9c155abf1",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'Burkhard' src/core/visualizations.py && ! grep -q 'Burkhard' papers/E1/paper_draft.tex && exit 1 || exit 0",
+        "declared": "cd \"$REPO\" && grep -q 'Burkhard' src/core/visualizations.py && ! grep -q 'Burkhard' papers/E1/paper_draft.tex && exit 1 || exit 0",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:2.7",
+      "status": "fixed",
+      "evidence": "Independent caption and figure review at 99625d421 confirmed the measured Paris ratio exceeds one and the projected ratios are separately labeled. E1 and legacy Paper12 both disclose the measured classification. E1_FIGURE_READBACK.json records the precise producer outputs.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "a028f2009dddce1d7da5a6cac353c5c9c155abf1",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport re\\ns = open('\"'\"'papers/paper12_polariton/paper_draft.tex'\"'\"').read()\\nassert '\"'\"'0.143'\"'\"' not in s or '\"'\"'remain borderline'\"'\"' not in s, '\"'\"'paper12 still calls the long and ultralong cavities borderline at the 0.143 classifier'\"'\"'\\nfrom src.core.constants import POLARITON_PLATFORMS as P\\nr = {k: v['\"'\"'Gamma_pol'\"'\"']/v['\"'\"'kappa'\"'\"'] for k,v in P.items() if '\"'\"'Gamma_pol'\"'\"' in v and '\"'\"'kappa'\"'\"' in v}\\nprint(r)\\nassert any(x > 1 for x in r.values()), '\"'\"'no measured-cavity ratio above 1 is registered'\"'\"'\\n\")'",
+        "declared": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport re\\ns = open('\"'\"'papers/paper12_polariton/paper_draft.tex'\"'\"').read()\\nassert '\"'\"'0.143'\"'\"' not in s or '\"'\"'remain borderline'\"'\"' not in s, '\"'\"'paper12 still calls the long and ultralong cavities borderline at the 0.143 classifier'\"'\"'\\nfrom src.core.constants import POLARITON_PLATFORMS as P\\nr = {k: v['\"'\"'Gamma_pol'\"'\"']/v['\"'\"'kappa'\"'\"'] for k,v in P.items() if '\"'\"'Gamma_pol'\"'\"' in v and '\"'\"'kappa'\"'\"' in v}\\nprint(r)\\nassert any(x > 1 for x in r.values()), '\"'\"'no measured-cavity ratio above 1 is registered'\"'\"'\\n\")'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
