@@ -3005,7 +3005,7 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # `2026-06-08-2240-internal-adversarial:D2:9.1` predicted. Note that finding
 # asserted these literals "slip past count_literals"; measured against the
 # check they did not — all twelve matched, and removing them is the -12 here.
-COUNT_LITERAL_CEILING = 91       # hardcoded "N theorems/modules/sorry" in paper prose
+COUNT_LITERAL_CEILING = 90       # hardcoded "N theorems/modules/sorry" in paper prose
 
 #: Census figures written in WORDS ("fourteen stages") rather than digits. **MAY ONLY
 #: FALL.** Measured 2026-08-15 over every `papers/*/paper_draft.tex`: 72 across 23 drafts,
