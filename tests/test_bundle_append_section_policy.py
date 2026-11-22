@@ -238,3 +238,33 @@ class TestTheAnchorStaysMeaningful:
                 assert str(e.get("bundle_section_inserted", "")).strip(), \
                     f"{log.parent.name}: script-written event with no anchor"
         assert checked >= 127, f"population shrank to {checked}; re-measure"
+
+
+def test_bookkeeping_cli_registers_existing_module_without_editing_draft(tmp_path, monkeypatch):
+    import bundle_append
+
+    bundle = tmp_path / "I1"
+    bundle.mkdir()
+    draft = bundle / "paper_draft.tex"
+    draft.write_text(DRAFT)
+    metadata = bundle / "bundle_metadata.json"
+    metadata.write_text(json.dumps({"stage9_status": "green", "stage10_status": "green",
+                                    "stage13_status": "pending"}))
+    log = bundle / "append_log.json"
+    prior = {"lean_modules_referenced": ["Curvature"]}
+    log.write_text(json.dumps({"bundle_target": "I1", "events": [prior]}))
+    monkeypatch.setattr(bundle_append, "_bundle_dir", lambda name: tmp_path / name)
+    monkeypatch.setattr(bundle_append, "_refresh_source_manifest", lambda _: None)
+    monkeypatch.setattr(sys, "argv", [
+        "bundle_append.py", "--bundle", "I1", "--bookkeeping-only",
+        "--lift-action", "Registration-correction", "--lean-modules", " KerrSchild ",
+        "--notes", "Record the real module already cited in the existing draft.",
+    ])
+
+    assert bundle_append.main() == 0
+    events = json.loads(log.read_text())["events"]
+    assert events[0] == prior
+    assert bundle_append.net_registered_modules(events) == ({"Curvature", "KerrSchild"}, set())
+    assert not events[-1]["stage13_redo_required"]
+    assert draft.read_text() == DRAFT
+    assert json.loads(metadata.read_text())["stage13_status"] == "pending"
