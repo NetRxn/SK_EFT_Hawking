@@ -10765,6 +10765,21 @@
       "superseded_by": null,
       "date": "2026-11-22",
       "commit": "d4bd46befe26a1ee5e495c5ee1ce9f0f088cbd86"
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:2.4",
+      "status": "fixed",
+      "evidence": "Independent review of c32b22468 verified both held Sen files byte-for-byte and confirmed live D3/F citations use the canonical version. It read the distinct Balbinot PRL and PRD, and the two Kehle-Unger preprints, verifying their separate matter models and the matching manuscript consumers. Paths and uses agree. The original Verify passed. D3 1.2 and the underlying ADW/L3 mathematical obligations remain open.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "c32b22468",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'cite{Sen2013}' papers/D3/paper_draft.tex && ! grep -q 'cite{Balbinot2005}' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['KehleUnger2024'].get('primary_source_path'), 'KehleUnger2024 path still unrecorded while the PDF is on disk'\"",
+        "declared": "cd \"$REPO\" && ! grep -q 'cite{Sen2013}' papers/D3/paper_draft.tex && ! grep -q 'cite{Balbinot2005}' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['KehleUnger2024'].get('primary_source_path'), 'KehleUnger2024 path still unrecorded while the PDF is on disk'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
