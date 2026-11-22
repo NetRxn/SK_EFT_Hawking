@@ -416,3 +416,16 @@ class TestPerPhaseAbsorptionRows:
         """6CC is PARKED, gated on 5q.G. A row for a phase with no substrate would
         register an absorption unit that can never be absorbed."""
         assert "_phase6CC_lean_only" not in self._mapping()
+
+
+def test_freshness_uses_the_active_registration_log(tmp_path, monkeypatch):
+    bundle = tmp_path / "I1"
+    bundle.mkdir()
+    (bundle / "append_log.json").write_text(json.dumps({"events": [
+        {"lean_modules_referenced": ["RetiredAlias", "ReusedSource"]},
+        {"lean_modules_deregistered": ["RetiredAlias", "ReusedSource"]},
+        {"lean_modules_referenced": ["KerrSchild", "ReusedSource"]},
+    ]}))
+    monkeypatch.setattr(cf, "PAPERS_DIR", tmp_path)
+
+    assert cf._registered_lean_modules("I1") == ["KerrSchild", "ReusedSource"]
