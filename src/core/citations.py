@@ -929,12 +929,12 @@ CITATION_REGISTRY = {
     # ════════════════════════════════════════════════════════════════
 
     'Berti2025': {
-        'authors': 'Berti, A., Fernandes, J., Butera, S., Recati, A., Wouters, M., Carusotto, I.',
-        'title': 'Analog Hawking radiation from a spin-sonic horizon in a two-component BEC',
+        'authors': 'Berti, A., Fernandes, L., Butera, S., Recati, A., Wouters, M., Carusotto, I.',
+        'title': 'Analog Hawking radiation from a spin-sonic horizon in a two-component Bose–Einstein condensate',
         'journal': 'Comptes Rendus Physique',
         'volume': 25,
-        'page': '1--36',
-        'year': 2025,
+        'page': '181--216',
+        'year': 2024,
         'doi': '10.5802/crphys.226',
         'arxiv': '2408.17292',
         'doi_verified': True,
@@ -944,7 +944,7 @@ CITATION_REGISTRY = {
             'src/core/transonic_background.py',
         ],
         'provides': [],
-        'notes': 'THEORETICAL PROPOSAL only. No experimental parameters published. '
+        'notes': 'Volume 25, special issue S2 (2024), pp. 181–216, online 20 January 2025; issue dated 27 October 2026. Journal PDF held as Berti2024CRPhys25S2.pdf alongside the arXiv preprint. THEORETICAL PROPOSAL only. No experimental parameters published. '
                  'Trento Na-23 spin-sonic experiment has not been realized.',
     },
 
@@ -5541,14 +5541,14 @@ CITATION_REGISTRY = {
         'volume': 636,
         'page': 80,
         'year': 2024,
-        'doi': None,
+        'doi': '10.1038/s41586-024-08188-0',
         'arxiv': '2404.14896',
-        'doi_verified': False,
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
+        'primary_source_path': 'Lit-Search/Phase-3/primary-sources/Adler2024.pdf',
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title and full author list verified via arXiv:2404.14896 (Session-4 cleanup).',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title and authors describe the held preprint arXiv:2404.14896. The Nature version has a revised title, Observation of Hilbert space fragmentation and fractonic excitations in 2D, and runs from pages 80 to 85.',
     },
 
     'AlvarezGaumeWitten1984': {
@@ -7311,20 +7311,20 @@ CITATION_REGISTRY = {
     },
 
     'Tong2022': {
-        'authors': 'D.~Tong, JHEP , 001 (2022); arXiv:2104.03997',
-        'title': '',
+        'authors': 'Tong, D.',
+        'title': 'Comments on symmetric mass generation in 2d and 4d',
         'journal': 'JHEP',
         'volume': 7,
-        'page': None,
+        'page': '001',
         'year': 2022,
-        'doi': None,
+        'doi': '10.1007/JHEP07(2022)001',
         'arxiv': '2104.03997',
-        'doi_verified': False,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5e/primary-sources/Tong2022.pdf',
         'used_in': ['papers/paper7_chirality_formal/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Journal publication July 2022. The held preprint is v3 (May 2022), following the original April 2021 arXiv deposit.',
     },
 
     'Torrieri2020': {

@@ -62,6 +62,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **Good news:** The arXiv ID and journal citation point to the correct paper (the vestigial gravity paper), and that paper does support the claim made in Papers 5 and 6. The title alone is wrong.
 - **Risk:** Copy-editors and automated reference checkers will flag the title mismatch.
 - **Lane:** `prose`
+- **Verify:** `uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('"'"'papers'"'"') / p / '"'"'paper_draft.tex'"'"').read_text(); raise SystemExit(0 if (r['"'"'Volovik2024'"'"']['"'"'arxiv'"'"'] == '"'"'2312.09435'"'"' and all(r['"'"'Volovik2024'"'"']['"'"'title'"'"'] in draft(p).split(r'"'"'\bibitem{Volovik2024}'"'"', 1)[1].split(r'"'"'\bibitem'"'"', 1)[0] for p in ('"'"'paper5_adw_gap'"'"', '"'"'paper6_vestigial'"'"', '"'"'paper20_scalar_rung'"'"'))) else '"'"'Citation evidence mismatch for finding 5'"'"')'`
 
 ***
 
@@ -73,6 +74,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **Actual paper:** *"Observation of Hilbert space fragmentation and fractonic excitations in two-dimensional magnets"*, *Nature* **636**, 80–85 (2024), DOI: 10.1038/s41586-024-08188-0[9]
 - **Correction:** First page is **80**, not 87. The "87" may be an internal page number within the article, not the first page of the article.
 - **Lane:** `prose`
+- **Verify:** `uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('"'"'papers'"'"') / p / '"'"'paper_draft.tex'"'"').read_text(); raise SystemExit(0 if (str(r['"'"'Adler2024'"'"']['"'"'page'"'"']) == '"'"'80'"'"' and r['"'"'Adler2024'"'"']['"'"'doi'"'"'] == '"'"'10.1038/s41586-024-08188-0'"'"' and r'"'"'\textbf{636}, 80 (2024)'"'"' in draft('"'"'paper3_gauge_erasure'"'"').split(r'"'"'\bibitem{Adler2024}'"'"', 1)[1].split(r'"'"'\bibitem'"'"', 1)[0]) else '"'"'Citation evidence mismatch for finding 6'"'"')'`
 
 ***
 
@@ -114,6 +116,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **Cited as:** D. Tong, arXiv:2104.03997 (2021) — year in bibitem is listed as 2021 but key says "Tong2022"
 - **Actual:** arXiv:2104.03997 was submitted April 2021, published in *JHEP* **2022**(07), 001 — so "Tong2022" refers to the journal year but the arXiv year is 2021. This ambiguity should be resolved by citing journal publication year consistently or adding the arXiv submission date explicitly.
 - **Lane:** `prose`
+- **Verify:** `uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('"'"'papers'"'"') / p / '"'"'paper_draft.tex'"'"').read_text(); raise SystemExit(0 if (r['"'"'Tong2022'"'"']['"'"'year'"'"'] == 2022 and r['"'"'Tong2022'"'"']['"'"'arxiv'"'"'] == '"'"'2104.03997'"'"' and r['"'"'Tong2022'"'"']['"'"'doi'"'"'] == '"'"'10.1007/JHEP07(2022)001'"'"' and all('"'"'001 (2022)'"'"' in draft(p).split(r'"'"'\bibitem{Tong2022}'"'"', 1)[1].split(r'"'"'\bibitem'"'"', 1)[0] for p in ('"'"'paper7_chirality_formal'"'"', '"'"'paper8_chirality_master'"'"'))) else '"'"'Citation evidence mismatch for finding 10'"'"')'`
 
 ### 11. Papers 1, 2, 12 — `[Berti:2025]` journal volume needs verification 🟡
 
@@ -122,6 +125,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - *Comptes Rendus Physique* typically publishes one volume per year; volume 25 would correspond to 2024, not 2025. Volume 26 would be 2025.
 - **Action:** Verify actual published volume via the CRP website before submission. The arXiv preprint reference is safe; the journal citation may have an off-by-one volume error.
 - **Lane:** `research`
+- **Verify:** `uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('"'"'papers'"'"') / p / '"'"'paper_draft.tex'"'"').read_text(); raise SystemExit(0 if (r['"'"'Berti2025'"'"']['"'"'volume'"'"'] == 25 and r['"'"'Berti2025'"'"']['"'"'year'"'"'] == 2024 and r['"'"'Berti2025'"'"']['"'"'page'"'"'] == '"'"'181--216'"'"' and '"'"'Fernandes, L.'"'"' in r['"'"'Berti2025'"'"']['"'"'authors'"'"'] and r['"'"'Berti2025'"'"']['"'"'doi'"'"'] == '"'"'10.5802/crphys.226'"'"' and all(all(t in next(line for line in draft(p).splitlines() if line.startswith(ref)) for t in ('"'"'L.~Fernandes'"'"', r'"'"'\textbf{25} (S2), 181--216'"'"', '"'"'2024 volume; online 2025'"'"', '"'"'10.5802/crphys.226'"'"')) for p, ref in (('"'"'paper1_first_order'"'"', r'"'"'\bibitem{Berti2025}'"'"'), ('"'"'paper2_second_order'"'"', r'"'"'\bibitem{Berti:2025}'"'"')))) else '"'"'Citation evidence mismatch for finding 11'"'"')'`
 
 ***
 
