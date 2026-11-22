@@ -3005,7 +3005,7 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # `2026-06-08-2240-internal-adversarial:D2:9.1` predicted. Note that finding
 # asserted these literals "slip past count_literals"; measured against the
 # check they did not — all twelve matched, and removing them is the -12 here.
-COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper prose
+COUNT_LITERAL_CEILING = 91       # hardcoded "N theorems/modules/sorry" in paper prose
 
 #: Census figures written in WORDS ("fourteen stages") rather than digits. **MAY ONLY
 #: FALL.** Measured 2026-08-15 over every `papers/*/paper_draft.tex`: 72 across 23 drafts,
@@ -3017,7 +3017,7 @@ COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper
 #: ratchet would push it far past 95 and force a re-baseline of a shared constant across
 #: drafts nobody is remediating, which is how a ceiling ends up raised to whatever a
 #: widened pattern produced. Two kinds, two constants, neither absorbing the other's debt.
-SPELLED_CENSUS_CEILING = 71
+SPELLED_CENSUS_CEILING = 67
                                  # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
                                  # count literal from prose. Lowered in the same commit, per
                                  # the rule above — a ratchet that keeps headroom stops being one.
