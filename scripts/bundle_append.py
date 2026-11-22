@@ -24,8 +24,8 @@ already-drafted bundle, or for recording bookkeeping-only events
     drifted but bundle content was already correct (verified case:
     auto-regenerated tables; or per-paper prose revisions that didn't
     have a counterpart in the bundle draft). Required: `--lift-action`
-    and `--notes`. Optional: `--source-paper` (use a sentinel like
-    `none` or omit).
+    and `--notes`. Optional: `--source-paper` and `--lean-modules`
+    for modules already used by the unchanged draft.
 
 **A source registration does not create a section (F-02, TODO-D26).** A lift
 must name the existing top-level section it belongs under
@@ -538,10 +538,9 @@ def _append_to_change_log_bookkeeping(
 
 def _append_to_append_log_bookkeeping(
     bundle: str, lift_action: str, notes: str, source: str,
+    lean_modules: list[str] | None = None,
 ) -> None:
-    """Bookkeeping-only variant of `_append_to_append_log`: empty
-    lean_modules, `stage13_redo_required = false`, source marker
-    indicates bookkeeping."""
+    """Record a bookkeeping event with any module registrations."""
     log_path = _bundle_dir(bundle) / "append_log.json"
     if log_path.exists():
         data = json.loads(log_path.read_text())
@@ -552,7 +551,7 @@ def _append_to_append_log_bookkeeping(
         "source_paper": source or "(none — bookkeeping)",
         "lift_action": lift_action,
         "bundle_section_inserted": "(n/a — bookkeeping)",
-        "lean_modules_referenced": [],
+        "lean_modules_referenced": lean_modules or [],
         "citation_count_added": 0,
         "stage13_redo_required": False,
         "agent_run_id": f"bundle_append-bookkeeping-{_now_iso()}",
@@ -873,6 +872,7 @@ def bookkeeping_only(
     lift_action: str,
     notes: str,
     source: str = "",
+    lean_modules: list[str] | None = None,
 ) -> int:
     """Record a bookkeeping-only event (no content change). Bumps
     `last_lift`, clears `freshness_stale`, appends event rows to
@@ -898,7 +898,7 @@ def bookkeeping_only(
         return 2
 
     _append_to_change_log_bookkeeping(bundle, lift_action, notes, source)
-    _append_to_append_log_bookkeeping(bundle, lift_action, notes, source)
+    _append_to_append_log_bookkeeping(bundle, lift_action, notes, source, lean_modules)
     _update_metadata_post_bookkeeping(bundle)
     _refresh_source_manifest(bundle)
 
@@ -930,7 +930,7 @@ def main() -> int:
     parser.add_argument("--lean-modules", default="",
                         help="comma-separated Lean module names referenced (e.g., "
                              "'CausalSetDarkEnergy,EntropicGravityDarkEnergy'); "
-                             "lift-mode only")
+                             "bookkeeping mode registers modules already used by the draft")
     parser.add_argument("--target-section", default="",
                         help="EXISTING top-level section title to append into; the "
                              "lift lands as a \\subsection inside it (F-02). "
@@ -991,6 +991,7 @@ def main() -> int:
             rationale=args.deregistration_rationale,
         )
 
+    lean_modules = [m.strip() for m in args.lean_modules.split(",") if m.strip()]
     if args.bookkeeping_only:
         if not args.lift_action:
             print("FATAL: --lift-action is required when --bookkeeping-only "
@@ -1001,6 +1002,7 @@ def main() -> int:
             lift_action=args.lift_action,
             notes=args.notes,
             source=args.source_paper,
+            lean_modules=lean_modules,
         )
 
     if not args.source_paper:
@@ -1034,7 +1036,6 @@ def main() -> int:
               file=sys.stderr)
         return 2
 
-    lean_modules = [m.strip() for m in args.lean_modules.split(",") if m.strip()]
     return append(
         bundle=args.bundle,
         source=args.source_paper,

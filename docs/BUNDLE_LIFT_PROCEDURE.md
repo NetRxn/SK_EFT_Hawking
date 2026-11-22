@@ -160,6 +160,8 @@ Where `<Action>` is one of:
 
 Effects (vs `§3a`/`§3b` full lifts):
 - Appends `lift_action: "<Action>"`, `stage13_redo_required: false`, `bundle_section_inserted: "(n/a — bookkeeping)"` to `append_log.json`
+- Records optional `--lean-modules` in the same append event for modules
+  already used by the unchanged draft. Explain the registration in `--notes`.
 - Appends a dated H2 to `change_log.md` flagged `(bookkeeping)`
 - Bumps `bundle_metadata.json.last_lift` and clears `freshness_stale`
 - **Does NOT** touch `paper_draft.tex`
