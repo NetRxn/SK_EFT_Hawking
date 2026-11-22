@@ -3910,6 +3910,7 @@ import SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth
 import SKEFTHawking.DKMBootstrap.PolaritonF3Bound
 import SKEFTHawking.DKMBootstrap.ReceiverKernel
 import SKEFTHawking.DKMBootstrap.ReceiverCommutator
+import SKEFTHawking.DKMBootstrap.ReceiverIntegral
 import SKEFTHawking.DKMBootstrap.BECPeriodicCommutator
 -- Phase 6v Wave 6v.1 (2026-05-26): Williamson-Yoder gauging-QEC overhead
 -- bound (arXiv:2410.02213). Substrate-level encoding of the "qubit overhead
