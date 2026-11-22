@@ -74,8 +74,9 @@ theorem integral_averaging [CompleteSpace A] (hS : ∀ s, HasDerivAt S (G s) s)
 /-! ## 3. The averaging bound
 
 The payoff. `∫₀ᵀ L·G·U` is bounded using only a bound `B` on the ANTIDERIVATIVE `S`, never on `G`
-itself. A pointwise bound on `G` would give `O(‖G‖·T)`; this gives `B·(1 + T(Kp+Kq))`, and when `G`
-oscillates fast `B` is small even though `‖G‖` is not. That is the mechanism behind the
+itself. The averaging bound is `KL·KU·B·(1 + T(Kp+Kq))`, with the factor bounds on `L` and `U`
+retained. A direct bound on `G` instead scales with `KL·KU·‖G‖·T`. When `G` oscillates fast,
+`B` can be small even though `‖G‖` is not. That is the mechanism behind the
 Bloch–Siegert scale.
 
 Both halves of that contrast are shipped downstream rather than left as motivation — at the

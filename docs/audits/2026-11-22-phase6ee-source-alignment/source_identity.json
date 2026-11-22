@@ -1,0 +1,37 @@
+{
+  "base": "83dac57c6936bded796624bd34069e7366f25f03",
+  "scope": [
+    "docs/roadmaps/Phase6EE_Roadmap.md",
+    "lean/SKEFTHawking/Control/BanachAveraging.lean",
+    "lean/SKEFTHawking/Control/DriveCalibration.lean",
+    "lean/SKEFTHawking/Control/RotatingWave.lean"
+  ],
+  "lean_noncomment_source_identity": [
+    {
+      "path": "lean/SKEFTHawking/Control/BanachAveraging.lean",
+      "code_bytes": 5441,
+      "unchanged_code_sha256": "b5001a6eba2668ba0c19806affd80e0ceb48a4ab1b5b4faa4093c2992ab74ab0",
+      "candidate_file_sha256": "56d44953197aa51047c84f25e93de9090c2d8f9121638131dd134b7c04575113"
+    },
+    {
+      "path": "lean/SKEFTHawking/Control/DriveCalibration.lean",
+      "code_bytes": 13601,
+      "unchanged_code_sha256": "20f0191bf0f000d1df0b1e606787aca38e37fa890983b21e600d90dbc4c4e369",
+      "candidate_file_sha256": "82087be5817d7ad2c1cd0b20b5fc0663e0ef2024673e9bed966c68bfdb4e92ec"
+    },
+    {
+      "path": "lean/SKEFTHawking/Control/RotatingWave.lean",
+      "code_bytes": 47525,
+      "unchanged_code_sha256": "04875c0b0ecf9af6f25d05245c7bba940c6c18e91e0b1589c580132f6a69b631",
+      "candidate_file_sha256": "5316d93d6a786d1b94a6b26e9d53490064d506ef575caa7b29d649e75ab54491"
+    }
+  ],
+  "canonical_module_entries": {
+    "RotatingWave": 117,
+    "BanachAveraging": 8,
+    "DriveCalibration": 45,
+    "CompositeReadoutCeilings": 44
+  },
+  "fresh_build": false,
+  "catalog_regenerated": false
+}
