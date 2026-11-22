@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T11:49:34.388036",
-  "lean_deps_source": "/private/tmp/skeft-d8-donor-main.4RcpGz/SK_EFT_Hawking/lean/lean_deps.json",
+  "generated": "2026-11-22T16:19:05.923395",
+  "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 43892,
-    "theorems_total": 24599,
-    "theorems_substantive": 24573,
+    "total_declarations": 43904,
+    "theorems_total": 24610,
+    "theorems_substantive": 24584,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24506,
+    "theorems_kernel_substantive": 24517,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2122,
+    "modules": 2123,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -177,6 +177,7 @@
       "SKEFTHawking.DKMBootstrap.NoCrossing",
       "SKEFTHawking.DKMBootstrap.PolaritonF3Bound",
       "SKEFTHawking.DKMBootstrap.Predicates",
+      "SKEFTHawking.DKMBootstrap.ReceiverKernel",
       "SKEFTHawking.DKMBootstrap.SDPStructure",
       "SKEFTHawking.DKMBootstrap.SKEFTSpecialization",
       "SKEFTHawking.DampedTwoLevel",
@@ -2140,7 +2141,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13545,
+    "definitions": 13546,
     "structures": 486,
     "instances": 980,
     "inductives": 104,
@@ -2155,7 +2156,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 205,
-    "pytest_cases": 7102,
+    "pytest_cases": 7112,
     "notebooks": 91,
     "papers": 42,
     "figures": 171
