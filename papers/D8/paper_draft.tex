@@ -1216,15 +1216,23 @@ Theorem~\ref{thm:substrate} is \lean{GenericSU2} and \lean{GenericSUd}
 Theorem~\ref{thm:mercator} is \lean{exp\_matrixMercatorLog};
 Theorem~\ref{thm:sud} is
 \lean{solovayKitaev\_dawson\_nielsen\_quantitative\_generic\_sud\_strict\_constructive\_tight};
-Theorem~\ref{thm:literal} is \lean{cliffordCCZLiteral\_dense};
+Theorem~\ref{thm:literal} is \lean{cliffordCCZLiteral\_dense}. Its literal
+alphabet is \lean{cliffordCCZLiteralGeneratingSetSU8} in
+\lean{CliffordCCZSU8LiteralGeneratingSet}.
 Theorem~\ref{thm:notdense} is \lean{cliffordOnly\_not\_dense};
-Theorem~\ref{thm:toffoli} is \lean{channelSde2\_le\_toffoliCost}, with entry
-rationality \lean{channelRep\_interp\_isRat}; Theorem~\ref{thm:compile} is
+Theorem~\ref{thm:toffoli} is \lean{channelSde2\_le\_toffoliCost}. The
+formal valuation is \lean{channelSde2} in \lean{MukhopadhyayMatrixSde2};
+\lean{MukhopadhyayToffoliBound} defines the count and cost. Entry rationality
+is \lean{channelRep\_interp\_isRat}, using the multiplication law
+\lean{channelRep\_mul} from \lean{MukhopadhyayChannelRep}.
+Theorem~\ref{thm:compile} is
 \lean{cliffordTCompile\_correct}, with Lemmas~\ref{lem:compile-term},
 \ref{lem:compile-base} and~\ref{lem:compile-inv} being
 \lean{cliffordTCompile\_eq\_recursion},
 \lean{cliffordTCompile\_recursion\_base} and
-\lean{cliffordTCompile\_loop\_invariant};
+\lean{cliffordTCompile\_loop\_invariant}. The correctness statement uses
+the alphabet in \lean{CliffordTGeneratingSet} and the length functions
+\lean{skLength} and \lean{skLengthConst} in \lean{SolovayKitaevLengthBound}.
 Theorem~\ref{thm:rslength} is \lean{rossSelinger\_log\_length\_explicit};
 Hypothesis~\ref{hyp:residual} enters through
 \lean{gridFindT\_isSome\_of\_residual} and Theorem~\ref{thm:rssynth} is
@@ -1237,8 +1245,10 @@ Hypothesis~\ref{hyp:residual} enters through
 \lean{daggerDecomposable\_pow\_iff\_seven};
 Lemma~\ref{lem:grid} is \lean{oneDim\_grid\_exists\_product};
 Theorem~\ref{thm:kmm} is \lean{kmm\_universal\_headline};
-Theorem~\ref{thm:akn} is \lean{diamondDist\_unitaryKraus\_le};
-Theorem~\ref{thm:capstone} is \lean{diamondDist\_cliffordTCompile\_le}; and
+Theorem~\ref{thm:akn} is \lean{diamondDist\_unitaryKraus\_le}, using the
+tensor-with-identity operator norm bound in \lean{QuantumNetwork/KroneckerOpNorm}.
+Theorem~\ref{thm:capstone} is \lean{diamondDist\_cliffordTCompile\_le}, using
+the row-sum to operator norm estimate in \lean{QuantumNetwork/MatrixNormBridge}; and
 Lemma~\ref{lem:somekills} is \lean{someKills\_of\_orthogonal}.
 
 \section{Reusable components}
