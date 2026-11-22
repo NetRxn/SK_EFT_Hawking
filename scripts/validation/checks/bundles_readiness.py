@@ -1669,6 +1669,13 @@ def check_bundle_sentence_length() -> CheckResult:
         for src in srcs:
             body = _strip_tex_comments(src.read_text(encoding="utf-8", errors="ignore"))
             body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
+            # Scalar census definitions in an input file are never printed as
+            # prose. Remove the whole definition before stripping macro calls.
+            body = re.sub(
+                r"(?m)^[ \t]*\\newcommand\{\\[A-Za-z]+\}"
+                r"\{(?:[+-]?\d+(?:\.\d+)*|[0-9a-f]{8})\}[ \t]*$",
+                "", body,
+            )
             body = _rows_as_sentences(body)
             body = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?", " ", body)
             for sent in re.split(r"(?<=[.!?])\s+", body):
@@ -3637,7 +3644,9 @@ _APEX_VACUITY_DISCLOSURE_RE = re.compile(
 #: re-derived and PRINTED BY NAME on every run, disclosed and undisclosed alike, and no
 #: per-declaration exemption key exists to grant. Lower it by strengthening the theorem or
 #: by withdrawing the apex; never by adding a name anywhere.
-APEX_VACUITY_CEILING = 20
+#: 20 -> 19 on 2026-11-21. The E2 redraft (327e33bb3) withdrew its disclosed
+#: definitional temperature apex. Current measurement retains 15 undisclosed rows.
+APEX_VACUITY_CEILING = 19
 
 #: …of which the bundle's own `claims` string does not SAY the declaration is thin.
 #: **A RATCHET — it may only fall.**

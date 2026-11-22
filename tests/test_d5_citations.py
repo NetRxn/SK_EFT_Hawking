@@ -904,7 +904,7 @@ class TestExemptionIsClaimedNotInferred:
 
     def test_the_undeclared_ceiling_has_ZERO_headroom(self):
         """Guide §2.3 — a ceiling above the live population cannot fire. The ratchet's job
-        is to red the check the moment a 79th undeclared entry appears, which it cannot do
+        is to red the check the moment one new undeclared entry appears, which it cannot do
         with slack."""
         from src.core.constants import CITATION_UNDECLARED_CLASS_CEILING as CEIL
         res = ck.check_citation_primary_sources_present()

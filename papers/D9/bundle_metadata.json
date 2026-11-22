@@ -99,7 +99,7 @@
     },
     {
       "name": "SKEFTHawking.QuantumNetwork.diamondDist_genAmpDamp_bracket",
-      "claims": "§2 — the LOWER bound (1-N)γ on the diamond distance for the non-covariant thermal amplitude-damping family, achievable and recovering γ at N=0. The upper endpoint proven alongside it is the universal range bound ≤ 1, which carries no information about this family, so this is not a two-sided bracket. Corrected 2026-08-17; see the redraft findings F5.",
+      "claims": "§2 — the LOWER bound (1-N)γ on the diamond distance for the non-covariant thermal amplitude-damping family, achievable and recovering γ at N=0. The upper endpoint proven alongside it is the universal range bound ≤ 1, which carries no information about this family, so this is not a two-sided bracket. See redraft finding F5.",
       "declared": "2026-08-06"
     },
     {
