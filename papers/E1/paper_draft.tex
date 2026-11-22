@@ -64,38 +64,21 @@ close it.
 %% ══════════════════════════════════════════════════════════════════
 \section{Introduction}
 
-Analog Hawking radiation has been observed in atomic Bose-Einstein
-condensates at $T_H \approx \SI{0.35}{\nano\kelvin}$
-\cite{Steinhauer2016,deNova2019}, so far below every systematic in
-the apparatus that the signal must be recovered from
-density-density correlations accumulated over thousands of
-realizations. Exciton-polariton fluids remove that constraint
-rather than fighting it: their sound speed exceeds a dilute atomic
-gas's by some eight orders of magnitude, and their horizons are
-written optically, so the velocity gradient setting the surface
-gravity is both large and adjustable, and predicted temperatures
-lie in the \SI{0.1}{\kelvin} to \SI{1}{\kelvin} range
-\cite{Gerace2012,Nguyen2015}.
+Atomic Bose-Einstein condensates yield analog Hawking radiation at
+$T_H \approx \SI{0.35}{\nano\kelvin}$, recovered through density-density
+correlations over thousands of realizations~\cite{Steinhauer2016,deNova2019}.
+Polariton sound speeds exceed those of dilute atomic gases by some eight
+orders of magnitude. Optically written horizons permit large, adjustable
+velocity gradients and predicted temperatures of
+\SI{0.1}{\kelvin} to \SI{1}{\kelvin}~\cite{Gerace2012,Nguyen2015}.
 
-Falque \emph{et al.}~\cite{Falque2025} have now built the horizon.
-Their microcavity polariton fluid crosses from sub- to supersonic
-flow along an optically imprinted velocity profile, the horizon
-steepness is tuned all-optically between two measured values, and
-negative-energy Bogoliubov modes are resolved in the supersonic
-region, which is the kinematic signature that a horizon has formed
-and that pair emission across it is possible. What the platform does
-not yet have is a prediction sharp enough to falsify, and a
-statement of the device conditions under which that prediction is
-entitled to be believed.
-
-This Letter supplies both. We evaluate the Schwinger-Keldysh
-effective-field-theory (SK-EFT) analog-Hawking spectrum at the
-published Paris-LKB parameters, and ask in the same expansion
-whether the cavity is quiet enough for that spectrum to be the
-leading behavior. The answer is that the horizon is already
-good enough and the cavity is not. Cavity loss, not surface gravity,
-is the gating parameter, and the gate closes at a lifetime we can
-name.
+Falque \emph{et al.}~\cite{Falque2025} optically shaped a subsonic-to-supersonic
+microcavity flow, measured two horizon steepnesses, and resolved
+negative-energy Bogoliubov modes on the supersonic side. These modes
+indicate a horizon permits pair emission. We evaluate the
+Schwinger-Keldysh effective-field-theory (SK-EFT) spectrum at the published
+Paris-LKB parameters and determine the cavity lifetime needed for the
+leading-order expansion.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Device parameters and the predicted Hawking temperature}
@@ -366,14 +349,11 @@ prediction of what it will return.
 %% and :: stimulated_hawking_snr via papers/E1/tables.py. The argument is
 %% omega/kappa_eff, which is what the exponent contains.
 
-Waiting for spontaneous emission is what makes the atomic-BEC
-measurements slow, and driving the horizon removes that cost. A
-coherent probe injected at frequency $\omega$ scatters anomalously
-at the horizon, and the amplitude returned in the partner channel is
-set by the same Bogoliubov mixing that produces the spontaneous
-pairs, so a classical mean-field measurement reads out a
-quantum-gravitational analog coefficient~\cite{Grisins2016}. The
-gain is
+A coherent probe at $\omega$ scatters anomalously at the horizon.
+The same Bogoliubov mixing that produces spontaneous pairs sets the
+partner amplitude, accessed here by a classical mean-field
+measurement~\cite{Grisins2016}. The gain is
+
 \begin{equation}
 G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\rm eff}} - 1},
 \label{eq:gain}
@@ -463,22 +443,14 @@ an order of magnitude above $T_H$: in a spontaneous measurement the
 Hawking occupation would have to be dug out of a background ten
 times larger.
 
-The stimulated measurement does not face that ratio, and the reason
-is spectral and phase structure rather than magnitude. The
-driven-dissipative background is broadband and phase-incoherent
-with the probe, whereas Eq.~\eqref{eq:gain} describes a response at
-the probe frequency, phase-locked to it. A narrowband
-phase-referenced readout therefore rejects the background by the
-ratio of its bandwidth to the detection bandwidth, and this is not
-a modification of the Paris-LKB apparatus but a description of it:
-the existing coherent probe spectroscopy already modulates the
-probe at \SI{5}{\mega\hertz} and detects in a \SI{300}{\hertz}
-bandwidth around that modulation~\cite{Falque2025}. What survives
-in that band is the probe's own shot noise, which is what the SNR
-above assumes; the background enters only through condensate
-amplitude fluctuations, spectrally flat across the
-window~\cite{Amelio2020} and so unable to mimic the Planckian shape
-of Eq.~\eqref{eq:gain}.
+The broadband background is phase-incoherent with the probe. The
+phase-locked response of Eq.~\eqref{eq:gain} allows narrowband rejection
+by the ratio of background to detection bandwidth. Paris-LKB already
+modulates the probe at \SI{5}{\mega\hertz} and detects in a
+\SI{300}{\hertz} bandwidth~\cite{Falque2025}. The SNR assumes probe shot
+noise. Condensate amplitude fluctuations enter as a spectrally flat
+background across this window~\cite{Amelio2020}, distinguishable from
+the Planckian gain.
 
 That shape is what makes the prediction falsifiable. We give the
 window
@@ -512,34 +484,22 @@ falsifies the framework.
 %% ══════════════════════════════════════════════════════════════════
 \section{What would settle it}
 
-The horizon is built and its steepness is measured, so the analog
-Hawking temperature at the Paris-LKB platform is not an open
-theoretical question: Eq.~\eqref{eq:T_H} fixes it at
-$\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ from a
-quantity already in print. What is open is whether the leading-order
-spectrum is what the device emits, and that is decided by the
-mirror stack rather than by the optics that write the horizon. At
-$\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$ the
-as-built cavity is outside the expansion; at
+The measured steepness fixes
+$T_H = \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$
+through Eq.~\eqref{eq:T_H}. The as-built cavity
+($\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$)
+lies outside the expansion. At
 $\tau_{\rm cav} \gtrsim \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$
-it is inside, and the same horizon then emits a spectrum whose
-half-gain frequency, Eq.~\eqref{eq:threshold}, is a pure number that
-no device parameter can move.
+it lies inside, where Eq.~\eqref{eq:threshold} gives the
+device-independent normalized half-gain frequency under greybody saturation.
 
-Two measurements would convert this from a prediction into a test,
-and both are within the existing apparatus. The first is the
-in-situ polariton decay rate $\Gamma_{\rm pol}$ and cavity lifetime
-$\tau_{\rm cav}$ at the tailored-profile configuration rather than
-at the homogeneous fluid, since Eq.~\eqref{eq:weak_dissipation} is
-evaluated there and the published
-$\hbar\gamma \approx \SI{80}{\micro\electronvolt}$ is not. The
-second is the probe-scan frequency resolution and the fluid's usable
-extent at that configuration, which is what would let the lower edge
-of Eq.~\eqref{eq:window} be fixed by the experiment instead of left
-open. Given a longer-lifetime cavity generation and its $\kappa$,
-the band edges follow from the same expressions used here, and we
-would recompute and circulate them before rather than after a
-measurement.
+The existing apparatus can measure $\Gamma_{\rm pol}$ and
+$\tau_{\rm cav}$ in the tailored profile for Eq.~\eqref{eq:weak_dissipation};
+the published $\hbar\gamma \approx \SI{80}{\micro\electronvolt}$ is for
+the homogeneous fluid. Measuring probe-scan resolution and usable fluid
+extent in the tailored profile fixes the lower edge of Eq.~\eqref{eq:window}.
+For a longer-lifetime cavity, we would use its $\kappa$ to recompute and
+circulate the band edges before measurement.
 
 \begin{acknowledgments}
 Formal-verification layer built on Lean~4 (v\leantoolchain) with
