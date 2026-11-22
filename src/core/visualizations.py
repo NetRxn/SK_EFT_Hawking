@@ -14461,55 +14461,83 @@ def fig_fibonacci_braid_word_t_gate_example() -> "go.Figure":
 
 
 def fig_d8_alphabet_dimension_map() -> go.Figure:
-    """D8 Fig. 1 — coverage map of the verified-compilation corpus.
-
-    Schematic: which gate alphabets are kernel-verified at which dimension
-    SU(d), color-coded by the mechanism that supplies density. Blue =
-    sub-alphabet / per-qubit route; amber = essential non-Clifford resource
-    (the Phase 6z T-free CCZ-essential route). All entries kernel-pure.
-    """
-    blue = COLORS["steel_blue"]
-    amber = COLORS["amber"]
-    # (alphabet label, dimension d, mechanism color, note)
-    rows = [
-        ("Fibonacci anyons",          2, blue,  "golden-ratio trace"),
-        ("Clifford+T",                2, blue,  "Niven: √2·sin(π/8)"),
-        ("Read–Rezayi SU(2)₅",        2, blue,  "Chebyshev T₇"),
-        ("Read–Rezayi SU(2)₇",        2, blue,  "triple-angle"),
-        ("Trapped-ion (MS)",          4, blue,  "Brylinski–Brylinski"),
-        ("Clifford+T (3-qubit)",      8, blue,  "Aaronson–Gottesman (CCZ over-complete)"),
-        ("Clifford+CCZ (literal)",    8, amber, "T-free — CCZ essential"),
-    ]
-    dims = [2, 4, 8]
-    dim_x = {2: 0, 4: 1, 8: 2}
+    """D8 alphabet coverage corresponding to Table alphabets."""
+    rows = (
+        ("Clifford+T", 2, "√2 sin(π/8) fails algebraic integrality"),
+        ("Read–Rezayi k=5", 2, "Chebyshev factorization"),
+        ("Read–Rezayi k=7", 2, "Triple-angle identity"),
+        ("Trapped-ion (MS)", 4, "Brylinski entangling criterion"),
+        ("Clifford+CCZ (with T)", 8, "Density of the H, T, CNOT subalphabet"),
+        ("Clifford+CCZ (T-free)", 8, "Trace fails algebraic integrality"),
+    )
     fig = go.Figure()
-    for i, (label, d, color, note) in enumerate(rows):
-        y = len(rows) - 1 - i
+    for y, (name, dimension, note) in enumerate(rows):
         fig.add_trace(go.Scatter(
-            x=[dim_x[d]], y=[y], mode="markers+text",
-            marker=dict(size=26, color=color, line=dict(width=1.5, color="#333")),
-            text=[f"  {note}"], textposition="middle right",
-            textfont=dict(size=11, color="#333"),
-            cliponaxis=False,  # let row notes extend into the right margin without truncation
-            hovertext=[f"{label} — SU({d}) — {note}"], hoverinfo="text",
-            showlegend=False,
+            x=[{2: 0, 4: 1, 8: 2}[dimension]], y=[y], name=name,
+            mode="markers", showlegend=False,
+            marker=dict(size=16, color=COLORS["amber" if y == 5 else "steel_blue"]),
+            hovertemplate=f"{name} · SU({dimension})<br>{note}<extra></extra>",
         ))
-        fig.add_annotation(x=-0.55, y=y, text=label, showarrow=False,
-                           xanchor="right", font=dict(size=12, color="#222"))
-    fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
-        marker=dict(size=14, color=blue), name="density from sub-alphabet / per-qubit route"))
-    fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
-        marker=dict(size=14, color=amber), name="non-Clifford resource essential (T-free CCZ)"))
-    fig.update_xaxes(tickvals=[0, 1, 2], ticktext=["SU(2)", "SU(4)", "SU(8)"],
-                     range=[-2.4, 2.7], title="target group dimension",
-                     showgrid=True, gridcolor="#eee", zeroline=False)
-    fig.update_yaxes(range=[-0.7, len(rows) - 0.3], showticklabels=False,
-                     showgrid=False, zeroline=False)
+        fig.add_annotation(x=2.58, y=y, text=note, showarrow=False,
+                           xanchor="left", font=dict(size=19))
+    fig.update_xaxes(
+        tickvals=[0, 1, 2], ticktext=["SU(2)", "SU(4)", "SU(8)"],
+        range=[-0.35, 6.2], zeroline=False,
+    )
+    fig.add_annotation(x=1, y=-0.20, yref="paper", text="Target group", showarrow=False)
+    fig.add_annotation(x=2.58, y=1.07, yref="paper", text="Alphabet-specific density input",
+                       xanchor="left", showarrow=False)
+    fig.update_yaxes(
+        tickvals=list(range(len(rows))), ticktext=[row[0] for row in rows],
+        range=[len(rows) - 0.5, -0.5], showgrid=False, zeroline=False,
+    )
     fig.update_layout(
-        title="D8 Fig. 1 — Kernel-verified universal compilation: alphabet × dimension coverage",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
-        height=520, width=1060, margin=dict(l=210, r=300, t=110, b=60),
-        plot_bgcolor="white",
+        template="plotly_white", font=dict(family=FONT["family"], size=21),
+        width=1080, height=410, margin=dict(l=242, r=25, t=57, b=78),
+    )
+    return fig
+
+
+def fig_d8_length_comparison() -> go.Figure:
+    """D8's three theorem bounds on separate native axes."""
+    from src.core.formulas import d8_compilation_length_bounds
+
+    eps = np.geomspace(1e-12, np.exp2(-23), 100)
+    k = np.arange(4, 41)
+    data = d8_compilation_length_bounds(eps, k)
+    fig = make_subplots(
+        rows=1, cols=3, horizontal_spacing=0.14,
+        subplot_titles=("Balanced commutator", "Ross–Selinger (conditional)", "KMM with two ancillas"),
+    )
+    for col, (x, key, color, dash, other, hover) in enumerate((
+        (eps, "sk_length", "steel_blue", "solid", None, "ε=%{x:.2e}<br>Bound=%{y:.3g}"),
+        (k, "grid_increment", "amber", "dash", data["grid_delta"],
+         "k=%{x}<br>Increment=%{y}<br>First-column δ=%{customdata:.2e}"),
+        (k, "kmm_length", "steel_blue", "solid", data["kmm_squared_error"],
+         "k=%{x}<br>Bound=%{y:,.0f}<br>Squared state error bound=%{customdata:.2e}"),
+    ), 1):
+        fig.add_trace(go.Scatter(
+            x=x.tolist(), y=data[key].tolist(), mode="lines", name=key,
+            customdata=other.tolist() if other is not None else None,
+            line=dict(color=COLORS[color], width=4, dash=dash),
+            hovertemplate=hover + "<extra></extra>",
+        ), row=1, col=col)
+    fig.update_xaxes(title="Target ε (ℓ∞ operator norm)", type="log",
+                     tickvals=[1e-12, 1e-10, 1e-8], ticktext=["10⁻¹²", "10⁻¹⁰", "10⁻⁸"],
+                     row=1, col=1)
+    fig.update_yaxes(title="Recurrence length bound", type="log",
+                     tickvals=[6e7, 1e8, 2e8, 4e8],
+                     ticktext=["6×10⁷", "10⁸", "2×10⁸", "4×10⁸"], row=1, col=1)
+    fig.update_xaxes(title="Grid parameter k", row=1, col=2)
+    fig.update_yaxes(title="Increment above N₃", row=1, col=2)
+    fig.update_xaxes(title="Synthesis parameter k", row=1, col=3)
+    fig.update_yaxes(title="Three-qubit word bound", row=1, col=3)
+    for label in fig.layout.annotations:
+        label.font.size = 22
+    fig.update_layout(
+        template="plotly_white", font=dict(family=FONT["family"], size=19),
+        showlegend=False, width=1140, height=410,
+        margin=dict(l=99, r=35, t=70, b=80),
     )
     return fig
 

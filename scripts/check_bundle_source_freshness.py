@@ -49,6 +49,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 # this script re-escaped the whole corpus and reintroduced exactly the encoding
 # oscillation D25 closed. The AST guard in `tests/test_bundle_json_serializer.py`
 # is the right mechanism; its roster simply did not name this file.
+from bundle_append import net_registered_modules  # noqa: E402
 from bundle_json import write_bundle_json  # noqa: E402
 
 
@@ -198,7 +199,7 @@ def _dirty_lean_paths() -> set[str] | None:
 
 
 def _registered_lean_modules(bundle: str) -> list[str] | None:
-    """Module names this bundle's append log declares, de-duplicated.
+    """Active module registrations from this bundle's append log.
 
     Hand-typed at lift time, so this is the weaker of the two populations — but
     not a subset of the derived one: a module can be registered as contributing
@@ -221,11 +222,8 @@ def _registered_lean_modules(bundle: str) -> list[str] | None:
         print(f"  WARN: {bundle} append_log.json unreadable ({exc}); "
               f"registered Lean modules UNMEASURED", file=sys.stderr)
         return None
-    seen: dict[str, None] = {}
-    for e in data.get("events", []):
-        for m in e.get("lean_modules_referenced") or []:
-            seen.setdefault(str(m), None)
-    return sorted(seen)
+    registered, _ = net_registered_modules(data.get("events", []))
+    return sorted(registered)
 
 
 def _derived_lean_modules() -> dict[str, set[str]] | None:
