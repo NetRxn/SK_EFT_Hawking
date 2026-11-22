@@ -9,3 +9,19 @@ F now uses the dressed thermal scale in its Planck law and crossover and disting
 Current execution from MAIN: the exact declared command `uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider` ran with offline/no-cache uv settings and returned exit 0, **43 passed**. The current canonical `d1_hierarchy_table`, `f_hierarchy_claims` and `review_verify_is_one_command` gates returned **3/3 passed**, including **274 Verify declarations, zero malformed**. No checkout, source, finding, ledger or Lean changes were made in this review. ROOT owns adoption and canonical closure.
 
 Final continuity returned `fresh=true` and `changed=[]` on the same frozen nine-path candidate.
+
+## November 22 main-based composition
+
+Source commit `f91e7d0da` integrates the D1/F repair over the generated
+D1 hierarchy table. The independent reviewer accepted the adapted D1
+verifier. It checks the three platform floors through the existing
+manuscript-bound table validator, the three ordered crossover coefficients
+and bare cutoffs in the comparison, and the projected potassium pair in
+the crossover discussion. It retains the independent occupation bisection
+and the distinction between dressed and bare temperature scales.
+The D4 and D8 review records were excluded from this composition.
+
+The declared Verify command passed all 63 tests. Canonical D1 hierarchy,
+F hierarchy and numerical literal checks passed. D1 and F compiled
+with zero TeX errors and unresolved references. The broader review-command
+format gate and the physical BUILD obligations remain open.
