@@ -10810,6 +10810,81 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:1.2",
+      "status": "fixed",
+      "evidence": "Fresh independent replay confirmed the precise apex wording and actual bound theorem types. D1 source review: papers/AutomatedReviews/2026-10-16-publication-d1-claim-scope/SCOPED_REVIEW.md. Unit-greybody and truncation scope are explicit. Separate independent physical derivations remain owed.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "24ade6253821059ad74e48b555f1d7220e4663e3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json, re, pathlib\\nmd = json.load(open('\"'\"'papers/D1/bundle_metadata.json'\"'\"'))\\nc = {a['\"'\"'name'\"'\"']: a['\"'\"'claims'\"'\"'] for a in md['\"'\"'apex_theorems'\"'\"']}\\nk = '\"'\"'SKEFTHawking.GrapheneNoiseFormula.fdt_consistency'\"'\"'\\nassert k in c, '\"'\"'apex missing'\"'\"'\\ns = c[k]\\nassert '\"'\"'Landauer'\"'\"' not in s and '\"'\"'Buttiker'\"'\"' not in s and '\"'\"'Landauer-Buttiker'\"'\"' not in s, '\"'\"'claims still asserts the Landauer-Buttiker agreement'\"'\"'\\nassert '\"'\"'certified at the Lean level'\"'\"' not in s, '\"'\"'claims still asserts Lean-level certification of the agreement'\"'\"'\\nlean = pathlib.Path('\"'\"'lean/SKEFTHawking'\"'\"').rglob('\"'\"'*.lean'\"'\"')\\nhits = [str(p) for p in lean if re.search(r'\"'\"'\\\\b(Landauer|B[uü]ttiker)\\\\b'\"'\"', p.read_text()) and '\"'\"'theorem'\"'\"' in p.read_text()]\\nprint('\"'\"'modules mentioning Landauer/Buttiker at all:'\"'\"', hits)\\n\")'",
+        "declared": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json, re, pathlib\\nmd = json.load(open('\"'\"'papers/D1/bundle_metadata.json'\"'\"'))\\nc = {a['\"'\"'name'\"'\"']: a['\"'\"'claims'\"'\"'] for a in md['\"'\"'apex_theorems'\"'\"']}\\nk = '\"'\"'SKEFTHawking.GrapheneNoiseFormula.fdt_consistency'\"'\"'\\nassert k in c, '\"'\"'apex missing'\"'\"'\\ns = c[k]\\nassert '\"'\"'Landauer'\"'\"' not in s and '\"'\"'Buttiker'\"'\"' not in s and '\"'\"'Landauer-Buttiker'\"'\"' not in s, '\"'\"'claims still asserts the Landauer-Buttiker agreement'\"'\"'\\nassert '\"'\"'certified at the Lean level'\"'\"' not in s, '\"'\"'claims still asserts Lean-level certification of the agreement'\"'\"'\\nlean = pathlib.Path('\"'\"'lean/SKEFTHawking'\"'\"').rglob('\"'\"'*.lean'\"'\"')\\nhits = [str(p) for p in lean if re.search(r'\"'\"'\\\\b(Landauer|B[uü]ttiker)\\\\b'\"'\"', p.read_text()) and '\"'\"'theorem'\"'\"' in p.read_text()]\\nprint('\"'\"'modules mentioning Landauer/Buttiker at all:'\"'\"', hits)\\n\")'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:2.1",
+      "status": "fixed",
+      "evidence": "Fresh independent replay confirmed the precise apex wording and actual bound theorem types. D1 source review: papers/AutomatedReviews/2026-10-16-publication-d1-claim-scope/SCOPED_REVIEW.md. Unit-greybody and truncation scope are explicit. Separate independent physical derivations remain owed.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "24ade6253821059ad74e48b555f1d7220e4663e3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json\\nc = {a['\"'\"'name'\"'\"']: a['\"'\"'claims'\"'\"'] for a in json.load(open('\"'\"'papers/D1/bundle_metadata.json'\"'\"'))['\"'\"'apex_theorems'\"'\"']}\\nu = c['\"'\"'SKEFTHawking.SecondOrderSK.fullSecondOrder_uniqueness'\"'\"']\\nassert '\"'\"'gamma_{2,1} + gamma_{2,2} = 0'\"'\"' not in u and '\"'\"'reducing four free second-order parameters to three'\"'\"' not in u, '\"'\"'uniqueness claims still assert the positivity relation it does not state'\"'\"'\\nassert '\"'\"'SKEFTHawking.SecondOrderSK.combined_positivity_constraint'\"'\"' in c, '\"'\"'the theorem that DOES state the relation is not an apex'\"'\"'\\nassert '\"'\"'truncation'\"'\"' in c['\"'\"'SKEFTHawking.SecondOrderSK.combined_positivity_constraint'\"'\"'], '\"'\"'the truncation scope is not recorded'\"'\"'\\n\")'",
+        "declared": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json\\nc = {a['\"'\"'name'\"'\"']: a['\"'\"'claims'\"'\"'] for a in json.load(open('\"'\"'papers/D1/bundle_metadata.json'\"'\"'))['\"'\"'apex_theorems'\"'\"']}\\nu = c['\"'\"'SKEFTHawking.SecondOrderSK.fullSecondOrder_uniqueness'\"'\"']\\nassert '\"'\"'gamma_{2,1} + gamma_{2,2} = 0'\"'\"' not in u and '\"'\"'reducing four free second-order parameters to three'\"'\"' not in u, '\"'\"'uniqueness claims still assert the positivity relation it does not state'\"'\"'\\nassert '\"'\"'SKEFTHawking.SecondOrderSK.combined_positivity_constraint'\"'\"' in c, '\"'\"'the theorem that DOES state the relation is not an apex'\"'\"'\\nassert '\"'\"'truncation'\"'\"' in c['\"'\"'SKEFTHawking.SecondOrderSK.combined_positivity_constraint'\"'\"'], '\"'\"'the truncation scope is not recorded'\"'\"'\\n\")'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:2.6",
+      "status": "fixed",
+      "evidence": "Fresh independent replay confirmed the precise apex wording and actual bound theorem types. D1 source review: papers/AutomatedReviews/2026-10-16-publication-d1-claim-scope/SCOPED_REVIEW.md. Unit-greybody and truncation scope are explicit. Separate independent physical derivations remain owed.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "24ade6253821059ad74e48b555f1d7220e4663e3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json\\nc = {a['\"'\"'name'\"'\"']: a['\"'\"'claims'\"'\"'] for a in json.load(open('\"'\"'papers/D1/bundle_metadata.json'\"'\"'))['\"'\"'apex_theorems'\"'\"']}\\nbad = []\\nif '\"'\"'NON-PERTURBATIVE EFFECT'\"'\"' in c['\"'\"'SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence'\"'\"']: bad.append('\"'\"'unitarity'\"'\"')\\nif '\"'\"'NON-PERTURBATIVE EFFECT'\"'\"' in c['\"'\"'SKEFTHawking.WKBConnection.noise_floor_nonneg'\"'\"']: bad.append('\"'\"'floor'\"'\"')\\nif '\"'\"'NON-PERTURBATIVE EFFECT'\"'\"' in c['\"'\"'SKEFTHawking.WKBConnection.noise_dominates_when_beta_small'\"'\"']: bad.append('\"'\"'spectral'\"'\"')\\nif '\"'\"'THEOREM rather than an assumption'\"'\"' in c['\"'\"'SKEFTHawking.CGLTransform.cgl_fdr_general'\"'\"']: bad.append('\"'\"'cgl'\"'\"')\\nif '\"'\"'Lorenz-cancellation'\"'\"' in c['\"'\"'SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q'\"'\"']: bad.append('\"'\"'lorenz'\"'\"')\\nassert not bad, f'\"'\"'claims still overstate: {bad}'\"'\"'\\n\")'",
+        "declared": "cd \"$REPO\" && uv run python -c 'exec(\"\\nimport json\\nc = {a['\"'\"'name'\"'\"']: a['\"'\"'claims'\"'\"'] for a in json.load(open('\"'\"'papers/D1/bundle_metadata.json'\"'\"'))['\"'\"'apex_theorems'\"'\"']}\\nbad = []\\nif '\"'\"'NON-PERTURBATIVE EFFECT'\"'\"' in c['\"'\"'SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence'\"'\"']: bad.append('\"'\"'unitarity'\"'\"')\\nif '\"'\"'NON-PERTURBATIVE EFFECT'\"'\"' in c['\"'\"'SKEFTHawking.WKBConnection.noise_floor_nonneg'\"'\"']: bad.append('\"'\"'floor'\"'\"')\\nif '\"'\"'NON-PERTURBATIVE EFFECT'\"'\"' in c['\"'\"'SKEFTHawking.WKBConnection.noise_dominates_when_beta_small'\"'\"']: bad.append('\"'\"'spectral'\"'\"')\\nif '\"'\"'THEOREM rather than an assumption'\"'\"' in c['\"'\"'SKEFTHawking.CGLTransform.cgl_fdr_general'\"'\"']: bad.append('\"'\"'cgl'\"'\"')\\nif '\"'\"'Lorenz-cancellation'\"'\"' in c['\"'\"'SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q'\"'\"']: bad.append('\"'\"'lorenz'\"'\"')\\nassert not bad, f'\"'\"'claims still overstate: {bad}'\"'\"'\\n\")'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+      "status": "fixed",
+      "evidence": "Replay of independently reviewed honest figure, matching the archived R2 source and all three current PDF embeddings. Fresh review checked all 343 computed samples, cutoff crossing, legend, caption assumptions, and compiled consumers. See docs/audits/2026-10-17-publication-substance-construction/L3_REGIME_FIGURE_INDEPENDENT_REVIEW_R2.md. The physical four-law and partition proofs remain open.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "24ade6253821059ad74e48b555f1d7220e4663e3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.2",
+      "status": "fixed",
+      "evidence": "Replay of independently reviewed honest figure, matching the archived R2 source and all three current PDF embeddings. Fresh review checked all 343 computed samples, cutoff crossing, legend, caption assumptions, and compiled consumers. See docs/audits/2026-10-17-publication-substance-construction/L3_REGIME_FIGURE_INDEPENDENT_REVIEW_R2.md. The physical four-law and partition proofs remain open.",
+      "superseded_by": null,
+      "date": "2026-11-22",
+      "commit": "24ade6253821059ad74e48b555f1d7220e4663e3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'M_c' in s, 'right panel does not show the critical-mass crossing'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'M_c' in s, 'right panel does not show the critical-mass crossing'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
