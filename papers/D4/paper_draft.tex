@@ -143,18 +143,7 @@ which delegates a decidable computation to compiled code and adds a
 per-theorem axiom (Sec.~\ref{sec:ising}, Sec.~\ref{sec:trust}).}
 \label{tab:grades}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Grade & Meaning \\
-\colrule
-Theorem & A substantive statement, kernel-checked, no assumed hypothesis. \\
-Theorem (evaluated) & Substantive and correct, but discharged by
-  \texttt{native\_decide}; the trust base is the Lean compiler, not the kernel. \\
-Conditional & Substantive, kernel-checked, but consumes a hypothesis
-  the project has not discharged. \\
-Instance & Verified for named finite cases, not for a general object. \\
-Encoding & The statement unfolds to the definition it names; it fixes a
-  convention and proves nothing about it. \\
-\end{tabular}
+\input{tables/grades.tex}
 \end{ruledtabular}
 \end{table}
 

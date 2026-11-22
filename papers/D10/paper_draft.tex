@@ -193,30 +193,7 @@ central claim in one view, and a reader can check it against the tree without re
 axiom profile, so that property separates nothing. The inhabitance column does.}
 \label{tab:inhabitance}
 \begin{ruledtabular}
-\begin{tabular}{lll}
-Layer / apex statement & Hypotheses in signature & Witness constructed \\
-\colrule
-Molecular Hamiltonian (\S\ref{sec:molecular})
-  & none --- all three discharged
-  & n/a: about the operator itself \\
-\quad \thm{molecularHamiltonian\_essSelfAdjoint} & & \\[2pt]
-DFT variational (\S\ref{sec:dft-scope})
-  & carried as structure fields
-  & \textbf{none in the tree} \\
-\quad \thm{hohenberg\_kohn\_variational} & & \\[2pt]
-DFT constrained search (\S\ref{sec:dft-scope})
-  & carried as structure fields
-  & \textbf{none in the tree} \\
-\quad \thm{levyLieb\_functional} & & \\[2pt]
-NEGF transport (\S\ref{sec:negf})
-  & $\tau_{i}\le1$, $G_{0}\ge0$
-  & \thm{two\_channel\_no\_three\_quanta} \\
-\quad \thm{conductance\_quantization\_falsifier} & & \\[2pt]
-Open systems (\S\ref{sec:lindblad})
-  & Hermiticity, $t\ge0$; CPTP discharged
-  & \thm{dampedTwoLevel\_decay\_envelope} \\
-\quad \thm{traceDist\_lindblad\_monotone} & & \\
-\end{tabular}
+\input{tables/inhabitance.tex}
 \end{ruledtabular}
 \end{table*}
 

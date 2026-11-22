@@ -417,12 +417,43 @@ def _parse_latex_number(cell: str):
         return None
 
 
+def _d1_hierarchy_caption_is_direct(prologue: str) -> bool:
+    """Recognize the supported D1 float prologue and its caption commands."""
+    import re
+
+    # TeX expands this notation before it reads control sequences.
+    if "^^" in prologue:
+        return False
+
+    caption = re.match(r"\s*(?:\[[!htbpH]+\]\s*)?\\centering\s*\\caption\s*\{",
+                       prologue)
+    if caption is None:
+        return False
+
+    # The caption permits D1's math and reference markup. Commands that
+    # redefine or defer an input are outside the local binding grammar.
+    commands = {r"\delta", r"\rm", r"\pi", r"\eqref", r"\Gamma", r"\kappa",
+                r"\omega", r"\%", r"\{", r"\}", r"\_", r"\#", r"\$", r"\&"}
+    depth = 1
+    content = prologue[caption.end():]
+    for token in re.finditer(r"\\(?:[A-Za-z@]+|.)|[{}]", content, re.DOTALL):
+        if token[0] == "{":
+            depth += 1
+        elif token[0] == "}":
+            depth -= 1
+            if depth == 0:
+                return not content[token.end():].strip()
+        elif token[0] not in commands:
+            return False
+    return False
+
+
 @register_check("d1_hierarchy_table",
                 "D1 BEC hierarchy table + crossover match the canonical evaluator")
 def check_d1_hierarchy_table() -> CheckResult:
-    """Parse D1's rendered hierarchy table (three BEC rows) and the
-    spectral-floor crossover sentences from ``papers/D1/paper_draft.tex``
-    and compare every numeric against the SINGLE canonical evaluator
+    """Parse the inline or generated tabular in D1's labelled hierarchy float.
+    Read spectral-floor crossover sentences from the manuscript and compare
+    the table and prose values against the SINGLE canonical evaluator
     ``scripts/gen_d1_hierarchy_table.compute_bec_hierarchy()`` within a
     declared 0.5 % relative tolerance (the table cells carry 3 significant
     figures, so 3-sig-fig rounding is < 0.5 %).
@@ -435,7 +466,7 @@ def check_d1_hierarchy_table() -> CheckResult:
     the rows are regenerated from the pipeline.
     """
     import re as _re
-    import math as _math
+    from validation._tex import _strip_tex_comments
 
     paper_path = _H.PAPERS_DIR / "D1" / "paper_draft.tex"
     if not paper_path.exists():
@@ -447,7 +478,10 @@ def check_d1_hierarchy_table() -> CheckResult:
         return CheckResult(passed=False, error=f"cannot import evaluator: {e}")
 
     hier = compute_bec_hierarchy()
-    text = paper_path.read_text(encoding="utf-8")
+    try:
+        text = paper_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as e:
+        return CheckResult(passed=False, error=f"cannot read D1 draft: {e}")
     TOL = 0.005  # 0.5 % relative
 
     details: List[Detail] = []
@@ -462,13 +496,45 @@ def check_d1_hierarchy_table() -> CheckResult:
         return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
 
     # --- (1) The three BEC table rows -----------------------------------
-    tbl = _re.search(
-        r"\\label\{tab:hierarchy\}.*?\\begin\{tabular\}(.*?)\\end\{tabular\}",
-        text, _re.DOTALL)
-    if not tbl:
-        return CheckResult(passed=False,
-                           error="tab:hierarchy tabular block not found in D1 draft")
-    body = tbl.group(1)
+    source = _strip_tex_comments(text)
+    label = r"\label{tab:hierarchy}"
+    floats = _re.finditer(
+        r"\\begin\{(table\*?)\}((?:(?!\\(?:begin|end)\{table\*?\}).)*)\\end\{\1\}",
+        source, _re.DOTALL)
+    hierarchy = [m[2] for m in floats if label in m[2]]
+    if source.count(label) != 1 or len(hierarchy) != 1:
+        return CheckResult(passed=False, error="expected one complete tab:hierarchy float")
+
+    float_body = hierarchy[0]
+    tabular_re = _re.compile(
+        r"\\begin\{tabular\}((?:(?!\\(?:begin|end)\{tabular\}).)*)\\end\{tabular\}",
+        _re.DOTALL)
+    starts = float_body.count(r"\begin{tabular}")
+    ends = float_body.count(r"\end{tabular}")
+    input_command = _re.compile(r"\\(?:input|include)\b")
+    if input_command.search(float_body):
+        prologue, _, tail = float_body.partition(label)
+        if (not _d1_hierarchy_caption_is_direct(prologue)
+                or _re.fullmatch(r"\s*\\input\s*\{tables/platform_hierarchy(?:\.tex)?\}\s*",
+                                 tail) is None):
+            return CheckResult(passed=False, error="expected one direct canonical tab:hierarchy input")
+        try:
+            expected = paper_path.parent.resolve() / "tables/platform_hierarchy.tex"
+            if expected.resolve(strict=True) != expected:
+                return CheckResult(passed=False, error="tab:hierarchy input resolves outside its canonical path")
+            if not expected.is_file():
+                return CheckResult(passed=False, error="canonical tab:hierarchy input is not a file")
+            rendered = _strip_tex_comments(expected.read_text(encoding="utf-8")).strip()
+        except (OSError, UnicodeError, RuntimeError) as e:
+            return CheckResult(passed=False, error=f"cannot read canonical tab:hierarchy input: {e}")
+        table = tabular_re.fullmatch(rendered)
+        if table is None or input_command.search(rendered):
+            return CheckResult(passed=False, error="expected one standalone tab:hierarchy tabular")
+    else:
+        table = tabular_re.search(float_body)
+        if table is None or starts != 1 or ends != 1:
+            return CheckResult(passed=False, error="expected one inline tab:hierarchy tabular")
+    body = table[1]
     rows = [r for r in body.split(r"\\") if "&" in r]
 
     for plat in ("Steinhauer", "Heidelberg", "Trento"):
