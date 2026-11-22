@@ -1,0 +1,30 @@
+{
+  "source_commit": "bd1e8a22adfdb3c886312155a19ef3874dec9275",
+  "isolated_build_epoch": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "d176c849e25a5d117ea75155bc3c82543327b30c676881ddb2c612a484c987d2",
+    "fingerprint": {
+      "commit_sha": "bd1e8a22adfdb3c886312155a19ef3874dec9275",
+      "digest": "f23688d7f147b585b42f01e40f7d1e9bc664929940c07e6ce25bfb937a9d1bfc",
+      "files": {
+        "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+        "lean/lakefile.toml": "cd8e65d624e3cfeab7f7f02b1f27877984030718cc5c3d8889400fec1850489c",
+        "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e"
+      },
+      "repo_role": "public",
+      "schema_version": 1
+    },
+    "published_at": "2026-11-22T17:45:44Z",
+    "repo_role": "public",
+    "schema_version": 1
+  },
+  "canonical_declaration_map_sha256": "7f5c5d3c82e1040a5e4d0d7f0dc2dca2b50d1f3dc4889c9b473dfb1cec84e52a",
+  "before_after_map_and_additions": "43861 43892 31 only the numerical bridge contributed rows",
+  "focused_tests": "200 passed in 3.38s",
+  "paper_compile": "paper5_adw_gap: OK  pages=5 overfull=1 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0",
+  "scope": "Bounded scalar NJL integral-model root and bracket repair. Microscopic correspondence and full cosmological claims remain open."
+}

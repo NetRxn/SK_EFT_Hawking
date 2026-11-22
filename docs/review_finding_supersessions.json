@@ -10885,6 +10885,82 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.5",
+      "status": "fixed",
+      "evidence": "The three primary-source snapshots match their independently reviewed hashes. Replayed the reviewed source registry and D8 attribution changes on the current tree, preserving the distinct compiler and citation obligations.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_PRIMARY_SOURCE_PROPAGATION_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-22",
+      "commit": "79594322769732285be741ad41336170092b92d9",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf",
+      "artifact_sha256": "4792f897a1326cb5e039e167d13620d5d7d8c0ef82a3de6ce891a9ab4ed74a70",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf",
+          "sha256": "4792f897a1326cb5e039e167d13620d5d7d8c0ef82a3de6ce891a9ab4ed74a70"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf",
+          "sha256": "0946f767e7120ce6526b5e235b00a5cc8d5ded827920cdf5589422458c3d55c5"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+          "sha256": "16b5c2c30086a872f9584f7a7f324c84d7e01c4936f16be172eb5d665c5ebdbd"
+        }
+      ],
+      "verified_by": {
+        "command": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "declared": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-recursion-arithmetic:D8:1.1",
+      "status": "fixed",
+      "evidence": "Replayed the independently reviewed recurrence and compiler depth corrections against the current, unchanged backing. The declared controls pass and the current manuscript compiles.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_RECURSION_ARITHMETIC_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "79594322769732285be741ad41336170092b92d9",
+      "verified_by": {
+        "command": "grep -Fq '\\varepsilon_{n+1} = K\\varepsilon_n^{3/2}' papers/D8/paper_draft.tex && grep -Fq 'K^2 \\cdot 2\\varepsilon_0 = 1/4' papers/D8/paper_draft.tex",
+        "declared": "grep -Fq '\\varepsilon_{n+1} = K\\varepsilon_n^{3/2}' papers/D8/paper_draft.tex && grep -Fq 'K^2 \\cdot 2\\varepsilon_0 = 1/4' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-recursion-arithmetic:D8:1.2",
+      "status": "fixed",
+      "evidence": "Replayed the independently reviewed recurrence and compiler depth corrections against the current, unchanged backing. The declared controls pass and the current manuscript compiles.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_RECURSION_ARITHMETIC_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "79594322769732285be741ad41336170092b92d9",
+      "verified_by": {
+        "command": "grep -Fq '\\log_4(1/(K^2\\varepsilon_0)) = 3/2' papers/D8/paper_draft.tex && test \"$(grep -Fc 'recursion depth $1$.' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'recursion depth $0$' papers/D8/paper_draft.tex",
+        "declared": "grep -Fq '\\log_4(1/(K^2\\varepsilon_0)) = 3/2' papers/D8/paper_draft.tex && test \"$(grep -Fc 'recursion depth $1$.' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'recursion depth $0$' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1",
+      "status": "fixed",
+      "evidence": "Fresh isolated build qualifies the exact numerical bridge and old canonical rows remain identical. The solver now brackets and verifies nonzero roots above the cutoff. Declared root controls and render passed for the scoped scalar model.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-19-njl-root-bracket-repair/NJL_CURRENT_MAIN_QUALIFICATION.json",
+      "date": "2026-11-22",
+      "commit": "bd1e8a22adfdb3c886312155a19ef3874dec9275",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "declared": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }

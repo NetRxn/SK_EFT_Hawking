@@ -1,0 +1,38 @@
+{
+  "qualifying_base_candidate": "da93e932f1ccd219a189370c484c94a8c0d42bcb",
+  "build": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "1e5c13e32b94f4481a2d5d66eab5605d7241160c915595e753d74717fc9ee8df",
+    "fingerprint": {
+      "commit_sha": "22512d933ec977687824421e6e14bbd27726359c",
+      "digest": "501debc99fd5fba91b263f577588df33d7bdeb6b3272049e0686d26d0310b068",
+      "files": {
+        "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+        "lean/lakefile.toml": "cd8e65d624e3cfeab7f7f02b1f27877984030718cc5c3d8889400fec1850489c",
+        "lean/lean-toolchain": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e"
+      },
+      "repo_role": "public",
+      "schema_version": 1
+    },
+    "published_at": "2026-11-22T14:49:30Z",
+    "repo_role": "public",
+    "schema_version": 1
+  },
+  "canonical_map_sha256": "7f5c5d3c82e1040a5e4d0d7f0dc2dca2b50d1f3dc4889c9b473dfb1cec84e52a",
+  "map_source_stamp": "46d2734647cb767d",
+  "entries_before": 43861,
+  "entries_after": 43892,
+  "added_bridge_entries": 31,
+  "mutated_existing_entries": 0,
+  "focused_tests_passing": 200,
+  "figure": {
+    "figure_sha256": "8221a1e12abcd602646c58ba397370ae2e7d5ac4b9e9e0c07a3eb778e0f5df1a",
+    "samples": 400,
+    "largest_observed_coupling_ratio": 4.0,
+    "largest_observed_gap_ratio": 1.1675353693282826
+  }
+}
