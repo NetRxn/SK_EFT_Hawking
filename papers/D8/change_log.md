@@ -66,8 +66,10 @@ _Initial bookkeeping created 2026-05-31T14:04:05Z by `scripts/bundle_source_mani
   - **§8 "Optimal-length synthesis: the Ross–Selinger grid route and an honest number-theoretic
     wall"** (`_phase6AM_W5_lean_only`): `rossSelinger_log_length_explicit` (≤ N₃ + 8k; O(log 1/ε)
     exponent 1), `gridFindT_isSome_of_residual` + `rossSelinger_synth_of_residual` (the §6
-    relative-norm gate made explicit), prime-density wall documented (RS Hyp 8.3 = Selinger Hyp 29);
-    explicit-hypothesis-never-axiom posture stated.
+    relative-norm gate from Ross thesis Problem 3.2.4, cited in the
+    [Lean source](../../lean/SKEFTHawking/FKLW/RossSelinger/LogLengthHeadline.lean)).
+    The section states the prime-density requirement as an explicit hypothesis
+    (RS Hyp 8.3 = Selinger Hyp 29).
   - **§9 "Completing the Ross–Selinger substrate, and a fully constructive third mechanism"**
     (`_phase6AO_lean_only`): §9.1 Appendix-C chain (C.2/C.16/C.19/obstruction/C.20-engine/C.21-iff)
     + Euclidean ℤ[ζ₈] (Mathlib-absent) + ℤ[√2][i]-impossibility catch + primary-source
