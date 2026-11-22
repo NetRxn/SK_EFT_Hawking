@@ -5484,7 +5484,7 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
 
     # Illustrative scan range in the bare-gradient normalization
     fig.add_vrect(x0=0, x1=0.3, fillcolor=COLORS['dispersive'], opacity=0.08)
-    fig.add_annotation(x=0.19, y=0.92, yref="paper",
+    fig.add_annotation(x=0.34, xanchor="left", y=0.92, yref="paper",
         text="illustrative scan range", showarrow=False, font=dict(size=10))
 
     # Stage 9 round 2: tighten x-range to [0, 1.6] (data ends near 1.5; round 1
