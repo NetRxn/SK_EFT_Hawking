@@ -3851,7 +3851,8 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Sen2013Schwarzschild.pdf',
-        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex',
+                    'papers/D3/paper_draft.tex', 'papers/F/paper_draft.tex'],
         'provides': ['Heat-kernel result for 4D Schwarzschild: c_log = +(212/45 − 3) ≈ +1.71',
                      'Explicit disagreement with the Cardy-saddle/Kaul-Majumdar −3/2'],
         'notes': 'Falsifiability anchor — establishes that −3/2 is NOT universal. '
@@ -3927,7 +3928,8 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/KitaevHonest2006.pdf',
-        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex',
+                    'papers/paper10_modular_generation/paper_draft.tex'],
         'provides': ['Anyon-cell counting κ ∝ log d_max; Ising MTC chiral c_-'],
         'notes': 'Used in Wave 3 area-law leading coefficient ansatz.',
     },
@@ -4182,7 +4184,8 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/KehleUnger2022ThirdLaw.pdf',
-        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex',
+                    'papers/F/paper_draft.tex'],
         'provides': ['Definitive disproof of Israel strong-form third law: '
                      'one-ended Cauchy data forming exactly extremal Reissner-Nordström '
                      'BH in finite advanced time, arbitrarily high regularity'],
@@ -6121,10 +6124,11 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5e/primary-sources/FidkowskiKitaev2010.pdf',
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex',
-                    'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
-        'provides': ['Interacting reduction of the 2D class-D free-fermion Z to Z_16 (the sixteenfold way under interactions); load-bearing for the Z_16 anomaly chain in L2/D2.'],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'provides': ['Interactions reduce the free classification of the one-dimensional '
+                     'time-reversal-symmetric Majorana chains from Z to Z_8. '
+                     'A quartic interaction can gap eight boundary Majorana modes.'],
+        'notes': 'Held preprint arXiv:0904.2197v3, corresponding to PRB 81, 134509.',
     },
 
     'FractonDarkMatterLean': {
@@ -10063,19 +10067,16 @@ CITATION_REGISTRY = {
         'volume': 96,
         'page': '215',
         'year': 2012,
-        'doi': '10.1134/S0021364012160059',
+        'doi': '10.1134/S0021364012160035',
         'arxiv': '1108.5086',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/JannesVolovik2012.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
+        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex',
+                    'papers/D3/paper_draft.tex'],
         'provides': [],
-        'notes': 'Phase 6e cross-bridge anchor reference. Sole substrate where '
-                 'Lambda_J = Lambda_HK rigorously demonstrated (Volovik 2009 §VII; '
-                 'Jannes-Volovik 2012). Delta_0^4 / (6 pi^2 hbar^3) on '
-                 '4-Weyl-fermion bundle, tr(I) = 4. Atiyah-Bott-Shapiro topological '
-                 'universality + IR Lorentz-invariance recovery. '
-                 'M9 Volovik-Jannes anchor (Phase 6m TC-R1 §3, TC-R2, TC-R3 §8).',
+        'notes': 'Held preprint arXiv:1108.5086v8. The shared low-energy metric and '
+                 'equilibrium vacuum readjustment results concern the bi-metric ³He-A example.',
     },
     'KhourySaksteinSolomon2018KSS': {
         'authors': 'Khoury, J., Sakstein, J., Solomon, A. R.',
@@ -10547,8 +10548,8 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0405096',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Balbinot2005.pdf',
+        'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Letter companion to Balbinot2005PRD on backreaction in acoustic '
                      '(sonic) black holes: the emission temperature DECREASES as the '
                      'hole radiates, unlike Schwarzschild.'],
@@ -10560,11 +10561,9 @@ CITATION_REGISTRY = {
                  'group\'s companion PRD (Balbinot2005PRD, gr-qc/0405098) computes a '
                  'constant-sound-speed Laval-nozzle sonic hole whose cooling law is '
                  'linear in t (Eq. Tsonic), explicitly deferring the '
-                 'Bose-Einstein-condensate case. ⚠️ NO PRIMARY SOURCE IS HELD for '
-                 'this PRL (primary_source_path is None, doi_verified is None), so no '
-                 'equation-level claim may be attached to it until gr-qc/0405096 is '
-                 'acquired; cite Balbinot2005PRD for equation content. Used by D3 §6 '
-                 'and F.',
+                 'Bose-Einstein-condensate case. The held PRL is arXiv:gr-qc/0405096v2. '
+                 'F uses its near-horizon cooling result; D3 uses the companion PRD '
+                 'for the specific Laval-nozzle calculation.',
     },
     'BardeenCarterHawking1973': {
         'authors': 'Bardeen, J. M., Carter, B., Hawking, S. W.',
@@ -10833,10 +10832,10 @@ CITATION_REGISTRY = {
         'arxiv': '2402.10190',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KehleUnger2024.pdf',
+        'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Smooth one-parameter families of solutions to Einstein-Maxwell-Vlasov interpolating between dispersion and collapse; critical solution = extremal black hole'],
-        'notes': 'arXiv:2402.10190 (Feb 2024). Companion 2022 paper (arXiv:2211.15742) gives the explicit third-law disproof; D3 cites the 2024 critical-phenomenon paper.',
+        'notes': 'arXiv:2402.10190 (Feb 2024). The held preprint is v1. The companion paper arXiv:2211.15742 treats the third law directly in a different matter model.',
     },
     'KlinkhamerManton1984': {
         'authors': 'Klinkhamer, F. R., Manton, N. S.',
@@ -10991,12 +10990,12 @@ CITATION_REGISTRY = {
         'year': 2013,
         'doi': '10.1007/JHEP04(2013)156',
         'arxiv': '1205.0971',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
-        'provides': ['Logarithmic correction coefficient -45/2 for non-extremal Schwarzschild BH entropy; disagrees with Kaul-Majumdar -3/2'],
-        'notes': 'JHEP issue 04 (April 2013).',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Sen2013.pdf',
+        'used_in': [],
+        'provides': [],
+        'notes': 'Historical alias of Sen2013Schwarzschild. Live citations use that entry.',
     },
     'Weinberg1989': {
         'authors': 'Weinberg, S.',
