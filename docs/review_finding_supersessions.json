@@ -10976,6 +10976,36 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:1",
+      "status": "fixed",
+      "evidence": "Independent current-source and whole-PDF review accepted the bounded Paper 27 body and attribution corrections. The original forced compile and source Verifies passed. The main figure and displayed mathematics are preserved. Physical L3 findings remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/CURRENT_MAIN_CONSUMER_REVIEW.md",
+      "date": "2026-11-22",
+      "commit": "8b73d638e685ff0059ca1c1772cce95f6db27637",
+      "verified_by": {
+        "command": "uv run python -c \"from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\"",
+        "declared": "uv run python -c \"from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:2",
+      "status": "fixed",
+      "evidence": "Independent current-source and whole-PDF review accepted the bounded Paper 27 body and attribution corrections. The original forced compile and source Verifies passed. The main figure and displayed mathematics are preserved. Physical L3 findings remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/CURRENT_MAIN_CONSUMER_REVIEW.md",
+      "date": "2026-11-22",
+      "commit": "8b73d638e685ff0059ca1c1772cce95f6db27637",
+      "verified_by": {
+        "command": "uv run python -c \"from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\"",
+        "declared": "uv run python -c \"from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }

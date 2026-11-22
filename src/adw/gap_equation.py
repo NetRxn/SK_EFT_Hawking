@@ -130,27 +130,18 @@ def effective_potential(C: float, G: float, Lambda: float, N_f: int) -> float:
 
 def effective_potential_derivative(C: float, G: float, Lambda: float,
                                    N_f: int) -> float:
-    """Derivative dV_eff/dC — utility for verification and visualization.
+    """Signed derivative utility for the written scalar ansatz outside its guard.
 
-    NOTE: The solver (solve_gap_equation) uses minimize_scalar on V_eff
-    directly, not brentq on this derivative. This function is provided
-    for tests and analytical checks but is not in the solver path.
+    Returns zero on |C|<1e-15, matching the flat numerical interval.
+    Outside it, the analytic expression differentiates V_exact; do not infer
+    differentiability across the guard boundary or full floating-point accuracy.
+    Evenness of the potential requires an odd signed derivative. The bounded
+    minimizer uses V_num directly and does not call this utility.
 
-    dV_eff/dC = C/G - (N_f/16pi^2)[2 Lambda^2 C - 4C^3 ln(Lambda^2/C^2+1)
-                                      + 2C^3 Lambda^2/(Lambda^2 + C^2)]
-
-    The gap equation is dV_eff/dC = 0.
-
-    Args:
-        C: Tetrad magnitude
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        dV_eff/dC
+    dV/dC = C/G - (N_f/16pi²)[2Lambda²C-4C³log(1+Lambda²/C²)
+                              +2C³Lambda²/(Lambda²+C²)].
     """
-    if C < 1e-15:
+    if abs(C) < 1e-15:
         return 0.0
 
     dV_tree = C / G

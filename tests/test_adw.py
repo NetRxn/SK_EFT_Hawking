@@ -684,3 +684,36 @@ class TestNJLContinuationConsumer:
         expected = [tetrad_gap_integral(x * Lambda, Lambda) for x in trace.x]
         np.testing.assert_allclose(trace.y, expected)
         assert trace.y[0] == pytest.approx(1 / 8)
+
+
+class TestRegulatedScalarCorrespondence:
+    """Conditional scalar/producer controls; no microscopic ADW derivation."""
+
+    @pytest.mark.parametrize("Lambda,N_f,ratio", [(1.0, 4, 0.5), (2.0, 6, 2.0)])
+    @pytest.mark.parametrize("x", [0.05, 0.3, 0.8])
+    def test_signed_derivative_matches_finite_difference_outside_guard(self, Lambda, N_f, ratio, x):
+        G = ratio * critical_coupling(Lambda, N_f)
+        h = 1e-6 * Lambda
+        for C in (x * Lambda, -x * Lambda):
+            slope = (effective_potential(C + h, G, Lambda, N_f)
+                     - effective_potential(C - h, G, Lambda, N_f)) / (2 * h)
+            assert effective_potential_derivative(C, G, Lambda, N_f) == pytest.approx(
+                slope, rel=2e-5, abs=1e-9 * Lambda**3,
+            )
+        positive = effective_potential_derivative(x * Lambda, G, Lambda, N_f)
+        negative = effective_potential_derivative(-x * Lambda, G, Lambda, N_f)
+        assert negative == pytest.approx(-positive, rel=1e-12, abs=1e-12)
+
+    def test_negative_derivative_branch_is_not_a_flat_sentinel(self):
+        G = 0.5 * critical_coupling(1.0, 4)
+        assert effective_potential_derivative(-0.3, G, 1.0, 4) < 0
+        assert effective_potential_derivative(0.3, G, 1.0, 4) > 0
+
+    @pytest.mark.parametrize("ratio", [0.5, 1.0, 2.0])
+    def test_origin_guard_is_distinct_from_theoretical_curvature(self, ratio):
+        G = ratio * critical_coupling(1.0, 4)
+        for C in (-5e-16, 0.0, 5e-16):
+            assert effective_potential(C, G, 1.0, 4) == 0.0
+            assert effective_potential_derivative(C, G, 1.0, 4) == 0.0
+        if ratio != 1.0:
+            assert curvature_at_origin(G, 1.0, 4) != 0.0
