@@ -407,17 +407,14 @@ distinguishes the platform is that the dispersive and dissipative channels
 are comparable, opposite, and both small, so their ratio is a quantitative
 prediction rather than an extrapolation.
 
-That prediction is gated on three inputs the experiment has not supplied.
-The velocity gradient at the sonic point fixes the entire frequency scale,
-and is why our temperature differs from Ref.~\cite{Geurs2025}'s own
-estimate by a factor of five. The electron-electron length fixes the sign
-of the net shift. The machine-checked chain
-(\texttt{DiracFluidMetric}, \texttt{DiracFluidWKB},
-\texttt{GrapheneHawking}, \texttt{GrapheneNoiseFormula},
+Three experimental inputs remain outstanding. The sonic gradient sets
+the frequency scale and explains the factor-of-five difference from
+Ref.~\cite{Geurs2025}; the electron-electron length sets the net shift's
+sign. The machine-checked chain (\texttt{DiracFluidMetric},
+\texttt{DiracFluidWKB}, \texttt{GrapheneHawking}, \texttt{GrapheneNoiseFormula},
 \texttt{QuasiOneDReduction}; \texttt{lake build} clean, v\leantoolchain,
-Mathlib \texttt{\mathlibrev}) supplies the algebraic backbone and none of
-the physical inputs, which is why every statement it establishes is quoted
-above in full.
+Mathlib \texttt{\mathlibrev}) verifies the algebra quoted above.
+The physical inputs require measurement.
 
 \begin{acknowledgments}
 Five of the six graphene Dirac-fluid modules are named where their bounds
