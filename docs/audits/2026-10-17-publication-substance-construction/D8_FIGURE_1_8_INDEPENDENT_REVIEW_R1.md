@@ -46,3 +46,13 @@ The exact replacement is `/tmp/publication-d8-figure-1-8-verify-r2.command.txt`,
 For authorized adoption, put that exact line in section 1.8's sole active `- **Verify:**` field. Add the former grep verbatim in a separate historical field that does not match the active label, with its exit-semantic defect. Keep original finding ID, expectation and source history. Once the actual candidate and declared Verify are present, run the canonical writer from the accepted checkout, using `uv run python scripts/close_finding.py --doc papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md --section 1.8 --status fixed --commit <actual-fix-commit> --evidence <independent-pins-and-review-rationale>`. The writer executes its declared Verify when `--verify` is omitted. Candidate acceptance establishes the scope of this finding. No ledger closure, Stage-9 transition, full gates, rebuild or publication acceptance was performed in this review. Other D8 findings and the earlier schematic remain separate.
 
 Final canonical continuity check returned `fresh=true` and `changed=[]` for the same packet and frozen candidate.
+
+## November 22 main-based composition
+
+At `6b60377ec`, the independent reviewer confirmed both PNGs, the figure
+blocks and captions, the formulas, renderer, manifest and checker match
+the reviewed donor. The four current generated tables and the Brylinski
+criterion are preserved. The current draft compiled with zero TeX errors
+and zero unresolved references. The focused compiler suite passed 15
+tests with one deselected. The exact declared figure check verified
+asset hashes, manifest membership and placement. Full Stage 9 remains open.
