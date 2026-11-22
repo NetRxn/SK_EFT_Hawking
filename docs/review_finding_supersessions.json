@@ -10293,6 +10293,66 @@
         "enforced": true,
         "run_at": "2026-11-22"
       }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:5",
+      "status": "fixed",
+      "evidence": "The verified 2312.09435 title matches the held source and all three affected bibliography entries; Papers 5 and 20 now use the full title.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
+      "date": "2026-11-22",
+      "commit": "f986a8225",
+      "verified_by": {
+        "command": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (r['\"'\"'Volovik2024'\"'\"']['\"'\"'arxiv'\"'\"'] == '\"'\"'2312.09435'\"'\"' and all(r['\"'\"'Volovik2024'\"'\"']['\"'\"'title'\"'\"'] in draft(p).split(r'\"'\"'\\bibitem{Volovik2024}'\"'\"', 1)[1].split(r'\"'\"'\\bibitem'\"'\"', 1)[0] for p in ('\"'\"'paper5_adw_gap'\"'\"', '\"'\"'paper6_vestigial'\"'\"', '\"'\"'paper20_scalar_rung'\"'\"'))) else '\"'\"'Citation evidence mismatch for finding 5'\"'\"')'",
+        "declared": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (r['\"'\"'Volovik2024'\"'\"']['\"'\"'arxiv'\"'\"'] == '\"'\"'2312.09435'\"'\"' and all(r['\"'\"'Volovik2024'\"'\"']['\"'\"'title'\"'\"'] in draft(p).split(r'\"'\"'\\bibitem{Volovik2024}'\"'\"', 1)[1].split(r'\"'\"'\\bibitem'\"'\"', 1)[0] for p in ('\"'\"'paper5_adw_gap'\"'\"', '\"'\"'paper6_vestigial'\"'\"', '\"'\"'paper20_scalar_rung'\"'\"'))) else '\"'\"'Citation evidence mismatch for finding 5'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:6",
+      "status": "fixed",
+      "evidence": "The authoritative Nature record begins on page 80, which the current Paper 3 bibliography already cites. The registry now connects its DOI and held preprint.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
+      "date": "2026-11-22",
+      "commit": "f986a8225",
+      "verified_by": {
+        "command": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (str(r['\"'\"'Adler2024'\"'\"']['\"'\"'page'\"'\"']) == '\"'\"'80'\"'\"' and r['\"'\"'Adler2024'\"'\"']['\"'\"'doi'\"'\"'] == '\"'\"'10.1038/s41586-024-08188-0'\"'\"' and r'\"'\"'\\textbf{636}, 80 (2024)'\"'\"' in draft('\"'\"'paper3_gauge_erasure'\"'\"').split(r'\"'\"'\\bibitem{Adler2024}'\"'\"', 1)[1].split(r'\"'\"'\\bibitem'\"'\"', 1)[0]) else '\"'\"'Citation evidence mismatch for finding 6'\"'\"')'",
+        "declared": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (str(r['\"'\"'Adler2024'\"'\"']['\"'\"'page'\"'\"']) == '\"'\"'80'\"'\"' and r['\"'\"'Adler2024'\"'\"']['\"'\"'doi'\"'\"'] == '\"'\"'10.1038/s41586-024-08188-0'\"'\"' and r'\"'\"'\\textbf{636}, 80 (2024)'\"'\"' in draft('\"'\"'paper3_gauge_erasure'\"'\"').split(r'\"'\"'\\bibitem{Adler2024}'\"'\"', 1)[1].split(r'\"'\"'\\bibitem'\"'\"', 1)[0]) else '\"'\"'Citation evidence mismatch for finding 6'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:10",
+      "status": "fixed",
+      "evidence": "The journal identifies the 2022 publication and article 001, consistently used in Papers 7 and 8. The registry now records the author, title and DOI of that record.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
+      "date": "2026-11-22",
+      "commit": "f986a8225",
+      "verified_by": {
+        "command": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (r['\"'\"'Tong2022'\"'\"']['\"'\"'year'\"'\"'] == 2022 and r['\"'\"'Tong2022'\"'\"']['\"'\"'arxiv'\"'\"'] == '\"'\"'2104.03997'\"'\"' and r['\"'\"'Tong2022'\"'\"']['\"'\"'doi'\"'\"'] == '\"'\"'10.1007/JHEP07(2022)001'\"'\"' and all('\"'\"'001 (2022)'\"'\"' in draft(p).split(r'\"'\"'\\bibitem{Tong2022}'\"'\"', 1)[1].split(r'\"'\"'\\bibitem'\"'\"', 1)[0] for p in ('\"'\"'paper7_chirality_formal'\"'\"', '\"'\"'paper8_chirality_master'\"'\"'))) else '\"'\"'Citation evidence mismatch for finding 10'\"'\"')'",
+        "declared": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (r['\"'\"'Tong2022'\"'\"']['\"'\"'year'\"'\"'] == 2022 and r['\"'\"'Tong2022'\"'\"']['\"'\"'arxiv'\"'\"'] == '\"'\"'2104.03997'\"'\"' and r['\"'\"'Tong2022'\"'\"']['\"'\"'doi'\"'\"'] == '\"'\"'10.1007/JHEP07(2022)001'\"'\"' and all('\"'\"'001 (2022)'\"'\"' in draft(p).split(r'\"'\"'\\bibitem{Tong2022}'\"'\"', 1)[1].split(r'\"'\"'\\bibitem'\"'\"', 1)[0] for p in ('\"'\"'paper7_chirality_formal'\"'\"', '\"'\"'paper8_chirality_master'\"'\"'))) else '\"'\"'Citation evidence mismatch for finding 10'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:11",
+      "status": "fixed",
+      "evidence": "The held publisher PDF verifies volume 25 special issue S2, the issue-year distinction and pages 181–216. Both current bibliographies and the registry have the verified values.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/LEGACY_CITATION_RECONCILIATION_R1.md",
+      "date": "2026-11-22",
+      "commit": "f986a8225",
+      "verified_by": {
+        "command": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (r['\"'\"'Berti2025'\"'\"']['\"'\"'volume'\"'\"'] == 25 and r['\"'\"'Berti2025'\"'\"']['\"'\"'year'\"'\"'] == 2024 and r['\"'\"'Berti2025'\"'\"']['\"'\"'page'\"'\"'] == '\"'\"'181--216'\"'\"' and '\"'\"'Fernandes, L.'\"'\"' in r['\"'\"'Berti2025'\"'\"']['\"'\"'authors'\"'\"'] and r['\"'\"'Berti2025'\"'\"']['\"'\"'doi'\"'\"'] == '\"'\"'10.5802/crphys.226'\"'\"' and all(all(t in next(line for line in draft(p).splitlines() if line.startswith(ref)) for t in ('\"'\"'L.~Fernandes'\"'\"', r'\"'\"'\\textbf{25} (S2), 181--216'\"'\"', '\"'\"'2024 volume; online 2025'\"'\"', '\"'\"'10.5802/crphys.226'\"'\"')) for p, ref in (('\"'\"'paper1_first_order'\"'\"', r'\"'\"'\\bibitem{Berti2025}'\"'\"'), ('\"'\"'paper2_second_order'\"'\"', r'\"'\"'\\bibitem{Berti:2025}'\"'\"')))) else '\"'\"'Citation evidence mismatch for finding 11'\"'\"')'",
+        "declared": "uv run python -B -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; draft = lambda p: (Path('\"'\"'papers'\"'\"') / p / '\"'\"'paper_draft.tex'\"'\"').read_text(); raise SystemExit(0 if (r['\"'\"'Berti2025'\"'\"']['\"'\"'volume'\"'\"'] == 25 and r['\"'\"'Berti2025'\"'\"']['\"'\"'year'\"'\"'] == 2024 and r['\"'\"'Berti2025'\"'\"']['\"'\"'page'\"'\"'] == '\"'\"'181--216'\"'\"' and '\"'\"'Fernandes, L.'\"'\"' in r['\"'\"'Berti2025'\"'\"']['\"'\"'authors'\"'\"'] and r['\"'\"'Berti2025'\"'\"']['\"'\"'doi'\"'\"'] == '\"'\"'10.5802/crphys.226'\"'\"' and all(all(t in next(line for line in draft(p).splitlines() if line.startswith(ref)) for t in ('\"'\"'L.~Fernandes'\"'\"', r'\"'\"'\\textbf{25} (S2), 181--216'\"'\"', '\"'\"'2024 volume; online 2025'\"'\"', '\"'\"'10.5802/crphys.226'\"'\"')) for p, ref in (('\"'\"'paper1_first_order'\"'\"', r'\"'\"'\\bibitem{Berti2025}'\"'\"'), ('\"'\"'paper2_second_order'\"'\"', r'\"'\"'\\bibitem{Berti:2025}'\"'\"')))) else '\"'\"'Citation evidence mismatch for finding 11'\"'\"')'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
