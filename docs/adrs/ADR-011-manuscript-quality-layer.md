@@ -508,6 +508,10 @@ survived each pass — the correction-landed-at-one-site pattern, applied to a d
 record. A reader planning the prose agent's scope from this list would have built it
 twice.
 
+The sentence gate scans the manuscript and its resolved inputs. It excludes standalone
+scalar macro definitions, including numeric census definitions from the shared counts
+file. Included prose still contributes to the ratchet.
+
 ### Phase 4 — Charter §2/§3 (section plan + figure plan), Gates 13/14, F-02/F-03
 
 **Why fourth.** The genuinely expensive authoring — 21 planned outlines and figure plans — and the

@@ -218,19 +218,17 @@ def target_files(raw: str) -> list[str]:
     """
     out, seen = [], set()
     for m in _TARGET_RE.finditer(raw or ""):
-        cand = m.group(1).strip("`.,;")
-        for base in (PROJECT_ROOT, PROJECT_ROOT.parent):   # tolerate a `SK_EFT_Hawking/` prefix
+        # The repository name is a logical prefix, independent of the checkout basename.
+        cand = m.group(1).strip("`.,;").removeprefix("SK_EFT_Hawking/")
+        # Retain parent-relative spellings only when canonical containment succeeds.
+        for base in (PROJECT_ROOT, PROJECT_ROOT.parent):
             try:
                 p = (base / cand).resolve()
                 rel = p.relative_to(PROJECT_ROOT).as_posix()
             except (ValueError, OSError):
                 continue
             if not p.is_file():
-                continue          # ⚠️ NOT `break` — the first draft of this very fix broke
-                                  # out of the base loop unconditionally, so the
-                                  # `SK_EFT_Hawking/…` spelling never reached the second
-                                  # base and stayed a separate group key: the defect being
-                                  # repaired, surviving inside its own repair.
+                continue
             if rel not in seen:
                 seen.add(rel)
                 out.append(rel)

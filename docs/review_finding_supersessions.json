@@ -10263,6 +10263,36 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-11-07-citation-held-source-reconciliation:infra:1.1",
+      "status": "fixed",
+      "evidence": "The exact reviewed citation patch was replayed onto public main 7abaa68dc, with current custody hashes verified and all thirteen citation identities resolved. Canonical source coverage passes at 76/76, with no required cache or registry omissions. The independent R2 review and original Verify apply. This closes citation registry and source custody only.",
+      "superseded_by": null,
+      "date": "2026-11-21",
+      "commit": "6a0c07f4f",
+      "verified_by": {
+        "command": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+        "declared": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-21"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:1.1",
+      "status": "fixed",
+      "evidence": "The three BEC occupation crossings use the full noise floor and dressed thermal units. The independent bisection, bound generated hierarchy, current D1 and F manuscripts and charter agree. Device calibration and the wider physical BUILD remain open.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D1_CROSSOVER_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-22",
+      "commit": "f91e7d0da",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-22"
+      }
     }
   ]
 }
