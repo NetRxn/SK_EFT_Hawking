@@ -1,0 +1,84 @@
+{
+  "base": "83dac57c6936bded796624bd34069e7366f25f03",
+  "candidate": "frozen R2 source hashes in source_identity.json",
+  "command": "python scripts/validate.py --check lean_zero_sorry --check native_decide_regression --check vacuous_statement_audit --check existential_witness_disclosure --check lean_docstring_refs_resolve --no-memo --ci --json",
+  "base_exit_code": 1,
+  "candidate_exit_code": 1,
+  "base_seconds": 81.34,
+  "candidate_seconds": 79.32,
+  "checks": [
+    {
+      "check": "lean_zero_sorry",
+      "base_passed": true,
+      "candidate_passed": true,
+      "base_measured": true,
+      "candidate_measured": true,
+      "base_failed_detail_ids": [],
+      "candidate_failed_detail_ids": [],
+      "new_failed_detail_ids": []
+    },
+    {
+      "check": "vacuous_statement_audit",
+      "base_passed": true,
+      "candidate_passed": true,
+      "base_measured": true,
+      "candidate_measured": true,
+      "base_failed_detail_ids": [],
+      "candidate_failed_detail_ids": [],
+      "new_failed_detail_ids": []
+    },
+    {
+      "check": "existential_witness_disclosure",
+      "base_passed": true,
+      "candidate_passed": true,
+      "base_measured": true,
+      "candidate_measured": true,
+      "base_failed_detail_ids": [],
+      "candidate_failed_detail_ids": [],
+      "new_failed_detail_ids": []
+    },
+    {
+      "check": "native_decide_regression",
+      "base_passed": true,
+      "candidate_passed": true,
+      "base_measured": true,
+      "candidate_measured": true,
+      "base_failed_detail_ids": [],
+      "candidate_failed_detail_ids": [],
+      "new_failed_detail_ids": []
+    },
+    {
+      "check": "lean_docstring_refs_resolve",
+      "base_passed": false,
+      "candidate_passed": false,
+      "base_measured": true,
+      "candidate_measured": true,
+      "base_failed_detail_ids": [
+        "drift:SKEFTHawking.Control.CompositeReadoutCeilings:le_trans",
+        "drift:SKEFTHawking.Detection.FilterFloors:norm_inner_le_norm",
+        "drift:SKEFTHawking.Detection.FilterFloors:sq_sum_le_card_mul_sum_sq",
+        "drift:SKEFTHawking.Detection.GaussianThreshold:gaussianReal_map_add_const",
+        "drift:SKEFTHawking.Detection.GaussianThreshold:gaussianReal_map_const_mul",
+        "drift:SKEFTHawking.Detection.PoissonDiscrimination:hasSum_one_poissonMeasure",
+        "drift:SKEFTHawking.Detection.PoissonDiscrimination:poissonMeasure_real_singleton",
+        "drift:SKEFTHawking.Electrothermal.ETFModel:div_div",
+        "drift:SKEFTHawking.GrapheneBand.BernalBilayer:det_fin_one",
+        "drift:SKEFTHawking.GrapheneBand.BernalBilayer:det_fin_three"
+      ],
+      "candidate_failed_detail_ids": [
+        "drift:SKEFTHawking.Control.CompositeReadoutCeilings:le_trans",
+        "drift:SKEFTHawking.Detection.FilterFloors:norm_inner_le_norm",
+        "drift:SKEFTHawking.Detection.FilterFloors:sq_sum_le_card_mul_sum_sq",
+        "drift:SKEFTHawking.Detection.GaussianThreshold:gaussianReal_map_add_const",
+        "drift:SKEFTHawking.Detection.GaussianThreshold:gaussianReal_map_const_mul",
+        "drift:SKEFTHawking.Detection.PoissonDiscrimination:hasSum_one_poissonMeasure",
+        "drift:SKEFTHawking.Detection.PoissonDiscrimination:poissonMeasure_real_singleton",
+        "drift:SKEFTHawking.Electrothermal.ETFModel:div_div",
+        "drift:SKEFTHawking.GrapheneBand.BernalBilayer:det_fin_one",
+        "drift:SKEFTHawking.GrapheneBand.BernalBilayer:det_fin_three"
+      ],
+      "new_failed_detail_ids": []
+    }
+  ],
+  "limits": "Both runs see zero Mathlib names in these scratch clones. Results read the existing declaration map; no native build or extraction occurred."
+}
