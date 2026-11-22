@@ -2,6 +2,7 @@ import Mathlib.Probability.Distributions.Cauchy
 import Mathlib.Analysis.Calculus.Deriv.ZPow
 import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 import Mathlib.Analysis.Complex.RealDeriv
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-! Scalar Cauchy receiver analysis for Wave 6v.10, equation (29).
 This module makes no claim about transfer to a physical correlator. -/
@@ -173,5 +174,134 @@ theorem receiverKernel_iteratedDeriv_integral_abs_le (τ : ℝ≥0) (hτ : 0 < �
         ((receiverKernel_integrable τ).const_mul _) (fun x =>
           receiverKernel_deriv_domination τ hτ (n + 1) (by omega) x)
       _ = _ := by rw [integral_const_mul, receiverKernel_integral τ hτ, mul_one]
+
+/-- The pole formula supplies differentiability of every actual receiver derivative. -/
+theorem receiverKernel_iteratedDeriv_hasDerivAt (τ : ℝ≥0) (hτ : 0 < τ)
+    (j : ℕ) (t : ℝ) :
+    HasDerivAt (iteratedDeriv j (receiverKernel τ))
+      (iteratedDeriv (j + 1) (receiverKernel τ) t) t := by
+  have hd : DifferentiableAt ℝ (iteratedDeriv j (receiverKernel τ)) t := by
+    rw [receiverKernel_iteratedDeriv τ hτ]
+    exact ((receiverPole_real_hasDerivAt (τ : ℝ) hτ (j + 1) t).const_mul
+      ((-1 : ℝ) ^ j * (j.factorial : ℝ) * Real.pi⁻¹)).differentiableAt
+  simpa only [iteratedDeriv_succ] using hd.hasDerivAt
+
+/-- A translation by at most the scale preserves a common integrable Cauchy tail. -/
+theorem receiverKernel_sub_le (τ : ℝ≥0) (hτ : 0 < τ) (t u : ℝ)
+    (hu : |u| ≤ (τ : ℝ)) :
+    receiverKernel τ (t - u) ≤ 3 * receiverKernel τ t := by
+  have ht : 0 < (τ : ℝ) := hτ
+  have hu2 : u ^ 2 ≤ (τ : ℝ) ^ 2 := by
+    simpa only [sq_abs] using pow_le_pow_left₀ (abs_nonneg u) hu 2
+  have hden : t ^ 2 + (τ : ℝ) ^ 2 ≤ 3 * ((t - u) ^ 2 + (τ : ℝ) ^ 2) := by
+    nlinarith [sq_nonneg (t - 2 * u), sq_nonneg (t - u)]
+  simp only [receiverKernel, ProbabilityTheory.cauchyPDFReal, sub_zero]
+  have hd0 : 0 < (t - u) ^ 2 + (τ : ℝ) ^ 2 := by positivity
+  have hd1 : 0 < t ^ 2 + (τ : ℝ) ^ 2 := by positivity
+  field_simp
+  nlinarith [Real.pi_pos]
+
+/-- A first translation estimate obtained on the fixed unit interval. -/
+theorem receiverKernel_iteratedDeriv_sub_le (τ : ℝ≥0) (hτ : 0 < τ)
+    (j : ℕ) (t s : ℝ) (hs : |s| ≤ (τ : ℝ)) :
+    |iteratedDeriv j (receiverKernel τ) (t - s) -
+      iteratedDeriv j (receiverKernel τ) t| ≤
+      |s| * (3 * (((j + 1).factorial : ℝ) / (τ : ℝ) ^ (j + 1)) *
+        receiverKernel τ t) := by
+  have hd (a : ℝ) : HasDerivAt
+      (fun a : ℝ ↦ iteratedDeriv j (receiverKernel τ) (t - a * s))
+      (iteratedDeriv (j + 1) (receiverKernel τ) (t - a * s) * (-s)) a := by
+    simpa only [one_mul, Function.comp_def, id_eq] using
+      (receiverKernel_iteratedDeriv_hasDerivAt τ hτ j (t - a * s)).comp a
+        (((hasDerivAt_id a).mul_const s).const_sub t)
+  have hb (a : ℝ) (ha : a ∈ Set.Ico (0 : ℝ) 1) :
+      ‖iteratedDeriv (j + 1) (receiverKernel τ) (t - a * s) * (-s)‖ ≤
+        |s| * (3 * (((j + 1).factorial : ℝ) / (τ : ℝ) ^ (j + 1)) *
+          receiverKernel τ t) := by
+    have has : |a * s| ≤ |s| := by
+      rw [abs_mul, abs_of_nonneg ha.1]
+      exact mul_le_of_le_one_left (abs_nonneg s) ha.2.le
+    have hm := (receiverKernel_deriv_domination τ hτ (j + 1) (by omega)
+      (t - a * s)).trans (mul_le_mul_of_nonneg_left
+        (receiverKernel_sub_le τ hτ t (a * s) (has.trans hs)) (by positivity))
+    rw [Real.norm_eq_abs, abs_mul, abs_neg]
+    nlinarith [mul_le_mul_of_nonneg_right hm (abs_nonneg s)]
+  simpa only [one_mul, zero_mul, sub_zero, Real.norm_eq_abs] using
+    norm_image_sub_le_of_norm_deriv_le_segment_01'
+      (fun a _ ↦ (hd a).hasDerivWithinAt) hb
+
+/-- A quadratic pointwise remainder for either sign of the translation, including zero. -/
+theorem receiverKernel_taylor_remainder_abs_le (τ : ℝ≥0) (hτ : 0 < τ)
+    (j : ℕ) (t s : ℝ) (hs : |s| ≤ (τ : ℝ)) :
+    |iteratedDeriv j (receiverKernel τ) (t - s) -
+      iteratedDeriv j (receiverKernel τ) t +
+      s * iteratedDeriv (j + 1) (receiverKernel τ) t| ≤
+      |s| ^ 2 * (3 * (((j + 2).factorial : ℝ) / (τ : ℝ) ^ (j + 2)) *
+        receiverKernel τ t) := by
+  let M := 3 * (((j + 2).factorial : ℝ) / (τ : ℝ) ^ (j + 2)) * receiverKernel τ t
+  have hM : 0 ≤ M := by
+    dsimp [M]
+    exact mul_nonneg (by positivity)
+      (le_of_lt (ProbabilityTheory.cauchyPDF_pos 0 (ne_of_gt hτ) t))
+  have hfirst (a : ℝ) (ha : a ∈ Set.Icc (0 : ℝ) 1) :
+      |iteratedDeriv (j + 1) (receiverKernel τ) (t - a * s) -
+        iteratedDeriv (j + 1) (receiverKernel τ) t| ≤ |s| * M := by
+    have has : |a * s| ≤ |s| := by
+      rw [abs_mul, abs_of_nonneg ha.1]
+      exact mul_le_of_le_one_left (abs_nonneg s) ha.2
+    have he := receiverKernel_iteratedDeriv_sub_le τ hτ (j + 1) t (a * s)
+      (has.trans hs)
+    exact he.trans (mul_le_mul_of_nonneg_right has hM)
+  have hd (a : ℝ) : HasDerivAt
+      (fun a : ℝ ↦ iteratedDeriv j (receiverKernel τ) (t - a * s) -
+        iteratedDeriv j (receiverKernel τ) t +
+        a * s * iteratedDeriv (j + 1) (receiverKernel τ) t)
+      (s * (iteratedDeriv (j + 1) (receiverKernel τ) t -
+        iteratedDeriv (j + 1) (receiverKernel τ) (t - a * s))) a := by
+    have hc := (receiverKernel_iteratedDeriv_hasDerivAt τ hτ j (t - a * s)).comp a
+      (((hasDerivAt_id a).mul_const s).const_sub t)
+    convert (hc.sub_const (iteratedDeriv j (receiverKernel τ) t)).add
+      (((hasDerivAt_id a).mul_const s).mul_const
+        (iteratedDeriv (j + 1) (receiverKernel τ) t)) using 1 <;>
+      first | rfl | ring
+  have hb (a : ℝ) (ha : a ∈ Set.Ico (0 : ℝ) 1) :
+      ‖s * (iteratedDeriv (j + 1) (receiverKernel τ) t -
+        iteratedDeriv (j + 1) (receiverKernel τ) (t - a * s))‖ ≤ |s| ^ 2 * M := by
+    rw [Real.norm_eq_abs, abs_mul, abs_sub_comm]
+    calc
+      _ ≤ |s| * (|s| * M) :=
+        mul_le_mul_of_nonneg_left (hfirst a ⟨ha.1, ha.2.le⟩) (abs_nonneg s)
+      _ = _ := by ring
+  simpa only [one_mul, zero_mul, sub_zero, sub_self, zero_add, Real.norm_eq_abs] using
+    norm_image_sub_le_of_norm_deriv_le_segment_01'
+      (fun a _ ↦ (hd a).hasDerivWithinAt) hb
+
+/-- The actual Taylor remainder is integrable, for every real shift. -/
+theorem receiverKernel_taylor_remainder_integrable (τ : ℝ≥0) (hτ : 0 < τ)
+    (j : ℕ) (s : ℝ) :
+    Integrable (fun t ↦ iteratedDeriv j (receiverKernel τ) (t - s) -
+      iteratedDeriv j (receiverKernel τ) t +
+      s * iteratedDeriv (j + 1) (receiverKernel τ) t) := by
+  exact (((receiverKernel_iteratedDeriv_integrable τ hτ j).comp_sub_right s).sub
+    (receiverKernel_iteratedDeriv_integrable τ hτ j)).add
+      ((receiverKernel_iteratedDeriv_integrable τ hτ (j + 1)).const_mul s)
+
+/-- Local quantitative L¹ Taylor control of the actual Cauchy derivatives.
+The two unit-interval estimates apply to all real shifts with `|s| ≤ τ`. -/
+theorem receiverKernel_taylor_remainder_integral_abs_le (τ : ℝ≥0) (hτ : 0 < τ)
+    (j : ℕ) (s : ℝ) (hs : |s| ≤ (τ : ℝ)) :
+    (∫ t, |iteratedDeriv j (receiverKernel τ) (t - s) -
+      iteratedDeriv j (receiverKernel τ) t +
+      s * iteratedDeriv (j + 1) (receiverKernel τ) t|) ≤
+      3 * |s| ^ 2 * (((j + 2).factorial : ℝ) / (τ : ℝ) ^ (j + 2)) := by
+  have hi := (receiverKernel_taylor_remainder_integrable τ hτ j s).abs
+  calc
+    _ ≤ ∫ t, (|s| ^ 2 * (3 * (((j + 2).factorial : ℝ) /
+        (τ : ℝ) ^ (j + 2)))) * receiverKernel τ t :=
+      integral_mono hi ((receiverKernel_integrable τ).const_mul _) (fun t ↦ by
+        simpa only [mul_assoc] using receiverKernel_taylor_remainder_abs_le τ hτ j t s hs)
+    _ = _ := by
+      rw [integral_const_mul, receiverKernel_integral τ hτ, mul_one]
+      ring
 
 end SKEFTHawking.DKMBootstrap
