@@ -100,6 +100,48 @@ class TestExtractParameterNodes:
             assert 'human_verified' in meta
 
 
+    def test_parameter_verification_dates_reach_graph_consumers(self, monkeypatch):
+        """G3 and link freshness consume the source dates on actual graph nodes."""
+        from scripts.last_modified import compute_link_state
+        from scripts.readiness_gates import GraphIndex, _eval_parameter_provenance
+        from src.core import provenance
+
+        llm_date = '2026-04-25'
+        human_date = '2026-04-28'
+        monkeypatch.setattr(provenance, 'PARAMETER_PROVENANCE', {
+            'TEST.verified': {
+                'value': 1, 'llm_verified_date': llm_date,
+                'human_verified_date': human_date,
+            },
+            'TEST.pending': {
+                'value': 2, 'llm_verified_date': llm_date,
+                'human_verified_date': None,
+            },
+        })
+        verified, pending = extract_parameter_nodes()
+        paper = {'id': 'paper:example', 'type': 'Paper'}
+        links = [
+            {
+                'source': paper['id'], 'target': node['id'],
+                'type': 'DEPENDS_ON', 'meta': {'link_kind': 'parameter'},
+            }
+            for node in (verified, pending)
+        ]
+
+        index = GraphIndex({'nodes': [paper, verified, pending], 'links': links})
+        gate = _eval_parameter_provenance(paper, index)
+        assert gate.state == 'blocked'
+        assert gate.blockers == ['TEST.pending']
+        assert gate.evidence == ['2 parameters depended on; 1 human-verified']
+
+        assert verified['meta']['human_verified_date'] == human_date
+        assert pending['meta']['human_verified_date'] is None
+        assert all(node['meta']['llm_verified_date'] == llm_date
+                   for node in (verified, pending))
+        assert compute_link_state(links[0], verified) == 'human_verified'
+        assert compute_link_state(links[1], pending) == 'llm_verified_only'
+
+
 class TestExtractFormulaNodes:
     """Tests for extract_formula_nodes()."""
 
