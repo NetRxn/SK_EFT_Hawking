@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-22T08:08:59.454351",
-  "lean_deps_source": "/private/tmp/skeft-table-delivery.GWnNCN/SK_EFT_Hawking/lean/lean_deps.json",
+  "generated": "2026-11-22T10:58:44.800849",
+  "lean_deps_source": "/private/tmp/skeft-final-qa.r9nDyE/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
     "total_declarations": 43861,
     "theorems_total": 24576,
@@ -2154,7 +2154,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 205,
-    "pytest_cases": 7022,
+    "pytest_cases": 7023,
     "notebooks": 91,
     "papers": 42,
     "figures": 171
