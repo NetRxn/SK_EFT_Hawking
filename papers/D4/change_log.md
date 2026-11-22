@@ -115,3 +115,24 @@ All four recorded in `docs/review_finding_supersessions.json`. Post-remediation:
 - Substantive prose: UNCHANGED — no claims, counts, citations, or Lean references touched; stage13_redo_required remains false.
 - Compile gate: pdflatex ×2 clean, zero errors (31pp / 394440B).
 - Metadata note: the Prose-revision-bookkeeping event above auto-bumped `last_lift` and cleared `freshness_stale`; both fields were deliberately restored (`last_lift=2026-05-31T15:37:22Z`, `freshness_stale=true`) per the reconciliation-task constraint that the staleness signal must persist.
+
+## 2026-11-22 — Deregister-lean-modules
+
+- Modules deregistered: `SymTFTAudit.WittClass`, `SymTFTAudit.DeligneTensor`, `SymTFTAudit.FreeKLinearMonoidal`, `SymTFTAudit.FreeKLinearCategory`, `SymTFTAudit.PseudoUnitary`, `SymTFTAudit.CrossBridges`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The Phase 6n W1b empty lift inserted no rendered text. These categorical constructions do not support the current draft’s finite algebra, explicit modular data, or anyon enumerations. The original event and upstream research remain recorded.
+
+## 2026-11-22 — Deregister-lean-modules
+
+- Modules deregistered: `SoftTheorems.DissipativeNoGo`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The Phase 6o W1a empty lift inserted no rendered text. The draft does not establish a Lindbladian S-matrix no-go result. The original event and upstream research remain recorded.
+
+## 2026-11-22 — Deregister-lean-modules
+
+- Modules deregistered: `ETH.Predicates`, `ETH.ConcreteWitness`, `ETH.RefutationTableau`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The Phase 6o W3a empty lift inserted no rendered text. The current draft neither states nor relies on a result about eigenstate thermalization. The original event and upstream research remain recorded.
