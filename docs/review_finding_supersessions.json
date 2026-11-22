@@ -10263,6 +10263,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-11-07-citation-held-source-reconciliation:infra:1.1",
+      "status": "fixed",
+      "evidence": "The exact reviewed citation patch was replayed onto public main 7abaa68dc, with current custody hashes verified and all thirteen citation identities resolved. Canonical source coverage passes at 76/76, with no required cache or registry omissions. The independent R2 review and original Verify apply. This closes citation registry and source custody only.",
+      "superseded_by": null,
+      "date": "2026-11-21",
+      "commit": "6a0c07f4f",
+      "verified_by": {
+        "command": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+        "declared": "uv run --no-sync python -m pytest -m '' tests/test_d5_citations.py tests/test_phase6i_wave1.py tests/test_workspace_resolver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-21"
+      }
     }
   ]
 }
