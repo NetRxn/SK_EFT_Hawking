@@ -1,0 +1,517 @@
+{
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "base": "211c211c18132bdc70e74fd927ad545ed801f251",
+  "donor": "be0b4fa476a571fa415625a88243f60ec8f0dad3",
+  "files": [
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "changes": 15,
+      "sha256": "3445c3f2b7a08a92d33bc9804c6e42d8f6b2b2b56d401f9c13be54ca29056619",
+      "exact_donor_transform_replay": true
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "changes": 2,
+      "sha256": "3b133f68c85ec72123221629e050f5c4b8cc5f3b5b023c90b42643ee34d14ac1",
+      "exact_donor_transform_replay": true
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "changes": 14,
+      "sha256": "d0ff376913dfbb4838da15765083c650463c0643c6401258c3f85b7cf876dda9",
+      "exact_donor_transform_replay": true
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "changes": 9,
+      "sha256": "c41e49d0efb7e30b12f38a5cf6879c8648352ebede29415fb0cbce9cee5e9ff7",
+      "exact_donor_transform_replay": true
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "changes": 13,
+      "sha256": "5fd44b06d081a4a32cda912d8d140d7c63ba018719851d96fe4402ae182bdefc",
+      "exact_donor_transform_replay": true
+    }
+  ],
+  "commands": [
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 133,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "13f592f20b9b2244c45419613e761bf5a7c63f2dfc58a22fd287aa35f455436b"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 188,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "f0dc32a46c245216a1441b519371b2e9866bdab86397650ddacb19c725da6284"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 237,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "2495ce65b438449e6808e512e30996c3c2427a15f891627e64a20c903a131bbe"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 275,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "afc29d50b50480e6b896c3791d5186f116f2281173d46384dfa87f583343b6c3"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 312,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "cb9ffbfcc0027191190e5c83aca9fbb506bff34da1efae72718063adb9493388"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 353,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "cb6b538f2cf71bde7021877c642715b13b4b8a81d04643dd3099f285133f98ec"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 396,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "a0a5af41d6a2d97456b02c47d1543bcc62530036b4e67be0d9e1704d8e8b709c"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 442,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "bd2d3f1e13927451964b36ef364f6507e1edd45f141953e9b1f47ac743387f00"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 478,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "57e52d14ffd38e98f53f39186d48f94dc147d675202d46de6d124c58f6291f03"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 515,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "9723f84694d3c31cbecb7fd618e72763b6e50cc09efff06ecf78f3b3c92c05ce"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 546,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "fae4eff5adc7005ed0229a2e0f11a8dcfcbac2bddaed4e4b482a695f73ad6b12"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 591,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "ad6f2057ab4ccb60169da1ee2b96b87447b4bc4e9a6509391f90527efa51efa2"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 630,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "5c6a9b4486e2f81fe4f5d6d870e4b427372c1b111919bdb6b83a728e2bf3d0b3"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 665,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "6cb41baa4e2fa5d62c5d0510d85ef666c32edaa2688f0e215adb483d3bec5458"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+      "donor_oldline": 701,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "04922897377d312bdf8d6e2c63773e6a7a0d250d16043504501ba0fcc861457d"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "donor_oldline": 53,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "07511c18f4e08f5dd22f6e2fe17e9b5fb149481b7d65799e97b6918fd815cbe8"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+      "donor_oldline": 76,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "b2e3a5c33cfeb5228d245e1f7e135d4f132b2d07414123c52416cedd6724526e"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 94,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "d6a5fb22c0176b65b92c7aee89699076c2a6e8b0f92f84ff7149e226863da704"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 133,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "3f7d017757361d9674c2e93451db077a44fa322a0007ea52816a37243a6afb18"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 188,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "7f6782e176d4bf1e531d8f48ac41f32789d4a65390ab232fdad8d9bf19c8a056"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 224,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "b719b4b74c0794e39c680aa94e16d3321a63e51fb9a9d49ecfcd9bb35ebecb69"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 259,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "01a634da014ca3dec64097c6518831c43c3732438402aa408e07c639f74777bc"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 282,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "cda8843ac181c8b9bc380283dae1f751cfdf893d071ed3d2a85e945f5ac52229"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 308,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "cea5dcd6580f066de00be70fb5e03eed2fc4d3f681396cdd9b8c85c87e3ae60a"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 343,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "1f458733841b856847533126942704444e833dd7ef416cabba55337c38deb08d"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 373,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "41daee3433bdf2ddf000db36467b86a769ae8b9ba7433c5fc40b0fadcc676701"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 396,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "397130a79f49ac2152f63220c0714a48d32858eaef7b514166b6b7f47fc23058"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 417,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "99a7b16eb1f7d9665112a5ff38a28a9fde2694a74805a8e2416c2c2c4bacf131"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 445,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "294b5e524416b2bb2920a76189d17e85654775bb9ce94634ae67d8a6f91c0bc8"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 466,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "92843d3df90d347b2ec7f068e48207c62fe9d5a0be1fc9766f95cba2b9cb8155"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+      "donor_oldline": 495,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "217b4c4df2bbd0efd4f9bcf095edbf5c368901e444599cd1153ddfce37337afc"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 46,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "17a282d5a357354d27b94c25a73ade7ff2ada6467a7c2be27b18ce9ff82765af"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 69,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "daceb7773161f62c6fda27f047eaa2351fcfa09770a44aa4a9ebde6dd377ed68"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 103,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "d31d5f243727b1e2de5bf7b15e47c82c4d0e590bb24cad593ec2b32b9dcc1bd4"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 132,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "56a4c2d5954916a696e9654e3061e98fbc16ef2395b196e772358744bd00093f"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 166,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "9c358827df2b7c16cacd275e3c1e7ba0711ce91bbb7bbaa79bc7cc4bd9eed885"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 198,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "4c6dff553fdbbf6b6077fe45999173f0e0a05a42db7dedc6a56573dff997a2b1"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 228,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "f10021a8ba343336203f6ff7c82a261149f91d52b8ae37c755cfee08aa44aeb9"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 265,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "4a10359cc1cddb648b280ffca7494f3152f6af994e00dfb2314e3b26cfaa4c19"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+      "donor_oldline": 291,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "a46e9283b18b28146811c40f05edcbc96ff83f990754d0ddd6d91462e3f3ad72"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 51,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "b462b17d91579b6172d3e7eab64876ae36abcf55128236a323d509d510525667"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 97,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "e4bf7cbb0fe7197f0ea5f0d9d4a8142e4939d3c0eaf1d59110df1aa1aef6bc3a"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 141,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "957ac2fdac88809b979edd6f4fbef83c4e3859bc7a1ef3dcf5122e7774565934"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 172,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "44b8983a3811ae9bfca4af9f7afe93a8dc87590bf10be4e4da1e1fad00b8bbc7"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 212,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "60d6cf109f2b508dd95111b1d4f3170b52fcc12a1d14bc80259cbce6bf22f0bf"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 246,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "920c65926996c782d88ee8f3161a541df090f1ffac8b84a9d8c62b716cedb7ce"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 279,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "88e48a1ec7738c7484e1a36e3fc1499c5d798116a18dd336f7bfc31646e9e6f1"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 308,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "9fae0edb9521114042ae771d4da746a1bc6ca9a5bb7022e99dd2e916c3c08bf6"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 341,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "f3cb3e7618d706c889f7625e5c9731d67dfc2b2e4cbd001e9ef894fd57f41de7"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 369,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "153226fb6f0de6378d3455d611f6bdce6b9d37334f5928ab97aa39c78024cc09"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 397,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "84dccd6565724361be2e6625affc3b328c2e1103dca957a4c0b982ddd6145917"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 433,
+      "kind": "shell_tokens_exact",
+      "shell_syntax": true,
+      "sha256": "fd47332a3f45eef0d9066904185739a04fe9a83ff28d647e4ad9935277c3a559"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+      "donor_oldline": 475,
+      "kind": "python_ast_exact",
+      "shell_syntax": true,
+      "sha256": "9e2f23a8751baf571e2c42ff2f3f0308d7ddfb1e0faa20c1536242e3a6ac0b30"
+    }
+  ],
+  "python_count": 45,
+  "shell_count": 8,
+  "finding_conservation": {
+    "before": 1852,
+    "after": 1852,
+    "all_ids_equal": true,
+    "all_statuses_and_metadata_except_verify_equal": true,
+    "changed_verify_ids": [
+      "review:2026-08-15-d1-stage10-redraft:D1:1.2",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.1",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.2",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.3",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.4",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.5",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.6",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.1",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.2",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.3",
+      "review:2026-08-15-d1-stage10-redraft:D1:1.3",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.7",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.8",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.4",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.5",
+      "review:2026-08-15-d3-stage10-redraft:D3:0.1",
+      "review:2026-08-15-d3-stage10-redraft:D3:0.2",
+      "review:2026-08-15-d4-stage10-redraft:D4:1.1",
+      "review:2026-08-15-d4-stage10-redraft:D4:1.2",
+      "review:2026-08-15-d4-stage10-redraft:D4:1.3",
+      "review:2026-08-15-d4-stage10-redraft:D4:2.1",
+      "review:2026-08-15-d4-stage10-redraft:D4:2.5",
+      "review:2026-08-15-d4-stage10-redraft:D4:2.6",
+      "review:2026-08-15-d4-stage10-redraft:D4:3.1",
+      "review:2026-08-15-d4-stage10-redraft:D4:3.2"
+    ],
+    "changed_detail_ids": [
+      "review:2026-08-15-d1-stage10-redraft:D1:1.2",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.1",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.2",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.3",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.4",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.5",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.6",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.1",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.2",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.3",
+      "review:2026-08-15-d1-stage10-redraft:D1:1.3",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.7",
+      "review:2026-08-15-d1-stage10-redraft:D1:2.8",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.4",
+      "review:2026-08-15-d1-stage10-redraft:D1:3.5"
+    ],
+    "detail_is_first400chars_of_body": true
+  },
+  "e2_d7_ingestion": "zero nodes both sides; unchanged historical heading limitation",
+  "changed_files": [
+    "docs/counts.json",
+    "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md",
+    "papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md",
+    "papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md",
+    "papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md",
+    "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md",
+    "papers/paper15_methodology/tables/table2_checks.tex"
+  ],
+  "decision": "ACCEPT_EXACT_FORMATTING_SCOPE",
+  "scientific_commands_executed": false,
+  "project_tests_validators_native_graphindex_executed": false,
+  "review_only_extractor_executed": true,
+  "review_harness_corrections": "First attempts halted on original indentation and alternative Verify marker forms before semantic comparison completed; corrected markdown decoding/dedent without executing commands",
+  "final_continuity": {
+    "fresh": false,
+    "changed": [
+      "source"
+    ]
+  },
+  "drift_reconciliation": {
+    "head_unchanged": true,
+    "index_unchanged": true,
+    "all_seven_packet_changed_file_hashes_unchanged": true,
+    "new_untracked_file": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/VERIFY_FORMAT_REUSE_R1.md",
+    "new_untracked_sha256": "e6731e689bd2a0e4a79057ae7ae1350baf6064fe527aeb068873af3c3d4681db",
+    "lead_reissue_required_by_packet_check": true
+  },
+  "root_focused_receipt": {
+    "stdout": "/tmp/l1-verify-reuse-focused-r1.stdout",
+    "passed": 5,
+    "failed": 1,
+    "failed_node": "TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+    "reviewer_executed": false
+  },
+  "r2_reconciliation": {
+    "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-verify-reuse-composition-r2.json",
+    "initial_check": {
+      "fresh": true,
+      "changed": []
+    },
+    "five_owned_states_exact_to_r1": true,
+    "explanatory_doc_read_complete_and_claims_accepted": true,
+    "prior_r1_drift_preserved": true,
+    "final_check": {
+      "fresh": true,
+      "changed": []
+    },
+    "reconciliation_complete": true
+  }
+}

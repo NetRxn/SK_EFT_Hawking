@@ -26,6 +26,7 @@ fingerprint that nothing consumes.
 from __future__ import annotations
 
 import sys
+from importlib.util import cache_from_source
 from pathlib import Path
 
 import pytest
@@ -108,8 +109,35 @@ class TestTheCacheStillCaches:
     """Non-vacuity in the other direction: a key that never matches would pass
     every test above and make the cache useless."""
 
-    def test_an_unchanged_tree_keeps_the_key_stable(self, warmed):
+    def test_an_unchanged_tree_keeps_the_key_stable(self, warmed, tmp_path, monkeypatch):
         assert pd._graph_fingerprint() == pd._graph_fingerprint()
+
+        source = tmp_path / "module.py"
+        source.write_text("VALUE = 1\n")
+        bytecode = Path(cache_from_source(str(source)))
+        monkeypatch.setattr(pd, "_READ_SET", {"paths": None, "dirs": None})
+        # A cold import probes for bytecode, reads source, then caches the bytecode.
+        with pd._record_build_reads():
+            with pytest.raises(FileNotFoundError):
+                bytecode.read_bytes()
+            source.read_bytes()
+        before = pd._graph_fingerprint()
+        assert pd._graph_fingerprint() == before
+        with pd._record_build_reads():
+            with pytest.raises(FileNotFoundError):
+                bytecode.read_bytes()
+            source.read_bytes()
+            bytecode.parent.mkdir(parents=True)
+            scratch = bytecode.with_suffix(".pyc.123")
+            scratch.write_bytes(b"")
+            scratch.replace(bytecode)
+        assert str(source.resolve()) in pd._READ_SET["paths"]
+        assert str(bytecode.resolve()) not in pd._READ_SET["paths"]
+        assert str(scratch.resolve()) not in pd._READ_SET["paths"]
+        after = pd._graph_fingerprint()
+        assert pd._graph_fingerprint() == after
+        source.write_text("VALUE = 100\n")
+        assert pd._graph_fingerprint() != after
 
     def test_an_unchanged_tree_serves_the_cached_object(self, warmed):
         first = pd.get_cached_graph(sync_pg=False)

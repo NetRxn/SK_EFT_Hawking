@@ -1,0 +1,49 @@
+{
+  "archive": "VERIFY_FORMAT_REUSE_R1_EVIDENCE.zip",
+  "sha256": "409d5c420f393548403f4e423ff99f383a658c113f7728a01adac13cd95a2299",
+  "members": {
+    "receipts/l1-verify-reuse-before-r1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-verify-reuse-before-r1.stderr": "49616503e5a177e421add0f7a4a2e16d4cff1a551280149fbbf8839dfab8e037",
+    "receipts/l1-verify-reuse-before-r2.stdout": "583435e5659eed2d8eaab76b4e1b98c86b5d237229b623292f0e8eb668921617",
+    "receipts/l1-verify-reuse-before-r2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-verify-reuse-after-r1.stdout": "297254d830f636ec87e5bcb74d4712ffc4c1cb257405ac20e3b051a680241e26",
+    "receipts/l1-verify-reuse-after-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-verify-reuse-focused-r1.stdout": "4903ef025b7314eaf2fdd2982c0bd8d3fc6509d11503d7f11665bf5f4d1a3c99",
+    "receipts/l1-verify-reuse-focused-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipts/l1-verify-reuse-proposal-r1.json": "e429b0ba2944bd85554be78cafc01d92ea7032b146462e13067ab8fb5fedddd5",
+    "receipts/l1-verify-reuse-conservation-r1.json": "36ae4bfb31d4d1800e56031727a1ad4fe61245f8b0febf82b59a45fe578e2ebb",
+    "receipts/l1-verify-reuse-composition-review-r1.md": "ca5e24d528ad2bf060f2b951f40a15b7faa72951975a7d57bc7ac8159c5ed454",
+    "receipts/l1-verify-reuse-composition-review-r1.json": "66509478d6268f7b8d909f28151f786fcd57909e92d3932f656e6bc295279cb4",
+    "before/papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md": "e8c78162957c8a137145c600fa5fcc85044a27797ddf72f958f66785898bd8b8",
+    "after/papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md": "3445c3f2b7a08a92d33bc9804c6e42d8f6b2b2b56d401f9c13be54ca29056619",
+    "before/papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md": "f2224eae26be70cf2aa4394c8287068e870263741dd88e09bd9f0d5e6181840b",
+    "after/papers/AutomatedReviews/2026-08-15-d3-stage10-redraft/D3.md": "3b133f68c85ec72123221629e050f5c4b8cc5f3b5b023c90b42643ee34d14ac1",
+    "before/papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md": "d4501cc645dc5059781fcbc2a8ea18af632362d95254b4618a811ffadfcb5bd1",
+    "after/papers/AutomatedReviews/2026-08-15-d4-stage10-redraft/D4.md": "d0ff376913dfbb4838da15765083c650463c0643c6401258c3f85b7cf876dda9",
+    "before/papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md": "bfc6901a05cae6aa4cff8658b4392661c6ec82fc0f27ecad4034eebd06c47c8a",
+    "after/papers/AutomatedReviews/2026-08-15-e2-stage10-redraft/E2.md": "c41e49d0efb7e30b12f38a5cf6879c8648352ebede29415fb0cbce9cee5e9ff7",
+    "before/papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md": "cac443dab4dd085b93b07f6c268561a2f41e3fe7cbdc31255a3e44225ab5930a",
+    "after/papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md": "5fd44b06d081a4a32cda912d8d140d7c63ba018719851d96fe4402ae182bdefc"
+  },
+  "independent_review": "ACCEPT exact53-format-transformations only",
+  "review_sha256": "ca5e24d528ad2bf060f2b951f40a15b7faa72951975a7d57bc7ac8159c5ed454",
+  "markers_before_after": [
+    282,
+    282
+  ],
+  "malformed_before_after": [
+    56,
+    3
+  ],
+  "focused_tests": {
+    "passed": 5,
+    "failed": 1
+  },
+  "finding_count_before_after": [
+    1852,
+    1852
+  ],
+  "changed_verify_fields": 25,
+  "scientific_closures": 0,
+  "no_predicate_or_ceiling_changes": true
+}

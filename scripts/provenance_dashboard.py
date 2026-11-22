@@ -25,6 +25,7 @@ import threading
 import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from importlib.util import source_from_cache
 from pathlib import Path
 
 from flask import Flask, render_template, request, jsonify
@@ -306,7 +307,19 @@ def _finalise_read_set(captured: set | None, started_ns: int) -> None:
     changed_mid_build = False
     for raw in captured:
         try:
-            p = Path(raw).resolve()
+            watched = Path(raw)
+            # CPython writes cached bytecode through a temporary .pyc.<id> path.
+            # Watch the source for both forms, even when the cache probe failed.
+            cache = watched.with_suffix('') if watched.suffix[1:].isdecimal() else watched
+            if cache.suffix == '.pyc':
+                try:
+                    source = Path(source_from_cache(str(cache)))
+                except ValueError:
+                    pass  # An ordinary .pyc file has no import-cache source.
+                else:
+                    if source.is_file():
+                        watched = source
+            p = watched.resolve()
             st = p.stat()
         except (OSError, ValueError):
             # ⚠️ `open`'s audit event fires BEFORE the syscall, so a file the
