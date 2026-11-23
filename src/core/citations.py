@@ -487,7 +487,7 @@ CITATION_REGISTRY = {
         'arxiv': None,
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Jacquet2022.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Jacquet2022-epjd-152.pdf',
         'used_in': ['src/core/constants.py',
                     'papers/paper12_polariton/paper_draft.tex'],
         'provides': ['Paris_long.c_s', 'Paris_long.xi'],
