@@ -3914,6 +3914,7 @@ import SKEFTHawking.DKMBootstrap.ReceiverIntegral
 import SKEFTHawking.DKMBootstrap.CauchyReceiver
 import SKEFTHawking.DKMBootstrap.BECPeriodicCommutator
 import SKEFTHawking.DKMBootstrap.BECInteriorCommutator
+import SKEFTHawking.DKMBootstrap.BECWallParity
 -- Phase 6v Wave 6v.1 (2026-05-26): Williamson-Yoder gauging-QEC overhead
 -- bound (arXiv:2410.02213). Substrate-level encoding of the "qubit overhead
 -- linear in the weight of the operator being measured up to a polylogarithmic
