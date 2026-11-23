@@ -45,3 +45,43 @@ with fixed other comparison inputs, D_*≠0 and δ the target fractional suscept
 Sections 5.1.2 and 5.2.4 demonstrate phase-sensitive optical reconstruction at the driven probe frequency. The reference at that frequency filters out the conjugate sideband. Section 5.2.3 supplies its distinct intensity-spectrum evidence. Sections 5.2.4 and 5.3 identify residual-field effects and leave the quantitative scattering matrix open. Chapter 6’s balanced-detection correlations are on a static homogeneous fluid at a different working point. The ballistic optical data can constrain field amplitudes and phase at the probe frequency. Applying the rate specification above also requires the calibrated physical forcing and the associated complex **density** response on the chosen stationary branch. This could use jointly calibrated field sidebands, or a separately validated reconstruction from the accessible channels with propagated error. Report the resulting error on the complex response before applying the rate interval and band test.
 
 The independent source review verified these locators and the pinned PDF. The journal article’s verified citation is [Phys. Rev. Lett. 135, 023401](https://doi.org/10.1103/t5dh-rx6w).
+
+## Rate identification from one calibrated complex optical sideband
+
+Independent adversarial review accepted this conditional inverse. The reviewed note has SHA256 `a274fd15eccc09f9ce318e0eb651b84eae55d08bd4d60cef9aa1a0a0cc327e2f`.
+
+Falque thesis tel-05238306v1 §§5.1.2 and 5.2.4 describes complex optical field reconstruction at the injected frequency. Use the accepted homogeneous B1/B2 inverse (E1_DYNAMIC_DARK_RESERVOIR.md, Eq.6) to test what such a channel can identify. This is an optical-forcing inverse problem, distinct from applying the potential-probe density formula directly to an optical signal.
+
+At a nonzero real laboratory angular frequency ω, suppose the complex energy-equation source (f_s,f_t,0) is known after optical input calibration, material coefficients Z,E,S are known, and the measured complex intracavity particle-sideband amplitude u is calibrated after accounting for direct optical background and output transfer. Use the source-defined rotating frame, mean-field phase, and s=u+v_h, t=u−v_h. The two reduced stationary equations are
+
+    Z s − E t = f_s,
+    −(S+2α)s + Z t = f_t,
+    α=α0 g/(g−iω), α0>0, g>0.
+
+Assume the model is valid on this branch and the relevant response is finite. There is no forced reservoir source in this setup. With P=Z+E, an actual positive damping η and real E ensure P≠0. More generally require P≠0 explicitly. Reconstruction is
+
+    s=(f_s+2E u)/P,   t=2u−s,
+    α=(2Z u−f_t)/(2s) − (Z+S)/2,
+
+provided s≠0. Thus one complex sideband plus the calibrated forward coefficients can recover the hole component within this model, despite its absence from that interferogram. For a real chosen mean field, δn=√n0 s. The exact rate is g=ω Re α/Im α, at ω≠0 with the model's nonzero α0 and g. No separate fit of α0 is required to identify g from this ratio.
+
+This is a local homogeneous-response identification. The ballistic horizon reconstruction contains inhomogeneous and residual-field terms that must be bounded or excluded. The same symbol u must not refer to raw transmitted optical field before removing direct reflection/input mixing and identifying the intracavity amplitude. Both complex source components and their relative phase must be specified. A drive with only a particle-sideband source in the original two Nambu equations has f_s=f_t, but actual optics must show that coupling before using the simplification. A source that drives the reservoir directly requires using the full three-component inverse with that source, rather than the formulas here. Optical intensity alone supplies no complex u. Sections 5.2.4 and 5.3 report residual and incomplete scattering normalization, so the thesis does not already populate this uncertainty budget.
+
+### Exact measurement error for fixed forward coefficients
+
+Let û be the measured intracavity estimate with |u−û|≤ε_u, let ŝ=(f_s+2E û)/P, and set e_s=|2E/P| ε_u. With e_s<|ŝ|, define X̂=2Z û−f_t. Exact subtraction gives
+
+    α(u)−α(û)=(2Z ŝ−X̂ (2E/P))(u−û)/(2 s ŝ)
+             =(Z f_s+E f_t)(u−û)/(P s ŝ).
+
+Hence a rigorous coefficient error is
+
+    |α(u)−α(û)| ≤ |(Z f_s+E f_t)/P| ε_u / [|ŝ| (|ŝ|−e_s)].
+
+At fixed f_s=f_t, the numerator prefactor becomes |f_s|. If Z f_s+E f_t=0 and the reduced inverse is nonsingular, then s=0 and the method supplies no identification. That zero-overlap control must be checked. Errors in the source phase, transfer, pump branch, Z,E,S and model reduction require a jointly propagated budget; the fixed-input bound does not cover them.
+
+For ω>0 use the positive Re/Im interval rule in the existing reservoir measurement specification with ε_α from this calculation or a verified total budget. Negative laboratory frequencies give the reflected imaginary sign as a diagnostic control. A nonempty band still needs independent calibration, stability, finite-window/noise error and model validity. This identification supplies neither a horizon-run rate estimate nor a microscopic DKM transport or receiver certificate on its own.
+
+In the compensated case `E=0` with `f_s≠0`, the density component is `s=f_s/Z` and the fixed-input error becomes `|Z|² ε_u/|f_s|`. This optical source can still identify the rate on the admitted branch.
+
+An independent matrix solve reproduced the feedback and rate in 1,200 synthetic one-sideband cases, with 1,200 fixed-input error checks and 600 zero-overlap controls. The maximum scaled feedback and rate residuals were 1.44e-14 and 2.28e-13. A separate 7,776-case source-model comparison checked the full three-component adjugate, density-probe response and flowing poles. These calculations used controlled synthetic inputs.
