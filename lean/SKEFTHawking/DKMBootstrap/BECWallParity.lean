@@ -14,9 +14,14 @@ Fourier cores on which the kinetic is essentially self-adjoint. Parity refers to
 periodic Hilbert space. The physical half-interval unitary transports these closures to
 self-adjoint wall kinetics on interval Lebesgue L². Actual compact interior tests enter
 both wall domains, with action minus a times the ordinary second derivative, through
-smooth reflected lifts and an adjoint argument. The operator cores used here are the
-finite Fourier parity cores. Bounded potentials and interacting Fock Hamiltonians remain
-separate constructions.
+smooth reflected lifts and an adjoint argument. The kinetic operator cores used here are
+the finite Fourier parity cores. Actual bounded multiplication by smooth real potentials
+gives self-adjoint wall Hamiltonians on the same domains by Kato–Rellich at relative bound
+zero. On compact interior tests their common-domain brackets agree with the differential
+brackets. For positive kinetic coefficient and smooth observables nonconstant on the
+physical interval, the bracket has no bounded extension. Constants commute on the full
+Hamiltonian domain. Maximal trace-domain characterizations and interacting Fock
+Hamiltonians remain separate.
 -/
 
 noncomputable section
@@ -1465,5 +1470,242 @@ theorem compact_mem_both_wall_domains (a : ℝ) (ψ : Domain 0 (T / 2)) :
     compact_mem_halfKinetic T a (-1) (by norm_num) ψ⟩
 
 end CompactInterior
+
+section BoundedPotential
+
+open BECInteriorCommutator
+open scoped ContDiff ComplexConjugate
+
+variable (T : ℝ)
+
+/-- Smooth coefficients are essentially bounded on the physical finite interval. -/
+theorem interval_memLp_top (f : ℝ → ℂ) (hf : ContDiff ℝ ∞ f) :
+    MemLp f ⊤ (volume.restrict (Set.Ioo 0 (T / 2))) := by
+  obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn hf.continuous.continuousOn
+    (s := Set.Icc 0 (T / 2))
+  apply memLp_top_of_bound hf.continuous.aestronglyMeasurable C
+  filter_upwards [ae_restrict_mem measurableSet_Ioo] with x hx
+  exact hC x ⟨hx.1.le, hx.2.le⟩
+
+/-- Actual multiplication on interval Lebesgue L², constructed by L∞–L² Hölder. -/
+def intervalMultiplier (f : ℝ → ℂ) (hf : ContDiff ℝ ∞ f) :
+    HalfSpace T →L[ℂ] HalfSpace T :=
+  (ContinuousLinearMap.mul ℂ ℂ).holderL (volume.restrict (Set.Ioo 0 (T / 2))) ⊤ 2 2
+    ((interval_memLp_top T f hf).toLp f)
+
+theorem intervalMultiplier_ae (f : ℝ → ℂ) (hf : ContDiff ℝ ∞ f) (u : HalfSpace T) :
+    (intervalMultiplier T f hf u : ℝ → ℂ) =ᵐ[volume.restrict (Set.Ioo 0 (T / 2))]
+      (fun x ↦ f x * u x) := by
+  have h := (ContinuousLinearMap.mul ℂ ℂ).coeFn_holder
+    ((interval_memLp_top T f hf).toLp f) u (r := 2)
+  filter_upwards [h, (interval_memLp_top T f hf).coeFn_toLp] with x hx hc
+  exact hx.trans (congrArg (fun b : ℂ ↦ b * u x) hc)
+
+/-- The ambient multiplication is the original compact-test multiplication. -/
+theorem intervalMultiplier_compact (f : ℝ → ℂ) (hf : ContDiff ℝ ∞ f)
+    (ψ : Domain 0 (T / 2)) :
+    intervalMultiplier T f hf (toIntervalL2 ψ) = toIntervalL2 (mulOp f hf ψ) := by
+  apply Lp.ext
+  filter_upwards [intervalMultiplier_ae T f hf (toIntervalL2 ψ),
+    toIntervalL2_ae ψ, toIntervalL2_ae (mulOp f hf ψ)] with x hx hψ hm
+  exact hx.trans ((congrArg (fun z : ℂ ↦ f x * z) hψ).trans hm.symm)
+
+/-- Actual constant multiplication is scalar multiplication on all of interval L². -/
+theorem intervalMultiplier_const_apply (b : ℂ) (u : HalfSpace T) :
+    intervalMultiplier T (fun _ ↦ b) contDiff_const u = b • u := by
+  apply Lp.ext
+  exact (intervalMultiplier_ae T (fun _ ↦ b) contDiff_const u).trans
+    (Lp.coeFn_smul b u).symm
+
+/-- Real-valued multiplication is symmetric in the conjugate-first L² inner product. -/
+theorem intervalMultiplier_symmetric (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V)
+    (hreal : ∀ x, conj (V x) = V x) (u v : HalfSpace T) :
+    inner ℂ (intervalMultiplier T V hV u) v =
+      inner ℂ u (intervalMultiplier T V hV v) := by
+  rw [L2.inner_def, L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [intervalMultiplier_ae T V hV u, intervalMultiplier_ae T V hV v]
+    with x hu hv
+  rw [hu, hv]
+  simp only [RCLike.inner_apply, map_mul, hreal]
+  ring
+
+/-- The actual bounded multiplier, regarded as a partial map with full domain. -/
+def potentialPMap (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) :
+    HalfSpace T →ₗ.[ℂ] HalfSpace T :=
+  (intervalMultiplier T V hV).toLinearMap.toPMap ⊤
+
+theorem potentialPMap_symmetric (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V)
+    (hreal : ∀ x, conj (V x) = V x) : DFT.IsSymmetricPMap (potentialPMap T V hV) := by
+  intro u v
+  exact intervalMultiplier_symmetric T V hV hreal u v
+
+/-- Bounded multiplication has relative kinetic bound zero, on either actual wall domain. -/
+theorem potentialPMap_relBounded (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V)
+    (A : HalfSpace T →ₗ.[ℂ] HalfSpace T) :
+    DFT.IsRelBounded A (potentialPMap T V hV) 0 ‖intervalMultiplier T V hV‖ := by
+  refine ⟨le_top, fun u ↦ ?_⟩
+  simpa [potentialPMap] using (intervalMultiplier T V hV).le_opNorm u
+
+variable [Fact (0 < T)]
+
+/-- The wall Hamiltonian is the sum of the existing kinetic and actual multiplication. -/
+def wallHamiltonian (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) : HalfSpace T →ₗ.[ℂ] HalfSpace T :=
+  halfKinetic T (scale T a) σ hσ + potentialPMap T V hV
+
+theorem wallHamiltonian_domain (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) :
+    (wallHamiltonian T a σ hσ V hV).domain = (halfKinetic T (scale T a) σ hσ).domain := by
+  simp [wallHamiltonian, LinearPMap.add_domain, potentialPMap]
+
+/-- Kato–Rellich at relative bound zero supplies both real-potential wall Hamiltonians. -/
+theorem wallHamiltonian_selfAdjoint (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (hreal : ∀ x, conj (V x) = V x) :
+    IsSelfAdjoint (wallHamiltonian T a σ hσ V hV) :=
+  DFT.katoRellich (halfKinetic_selfAdjoint T (scale T a) σ hσ)
+    (potentialPMap_symmetric T V hV hreal) (by norm_num) (by norm_num) (norm_nonneg _)
+    (potentialPMap_relBounded T V hV _)
+
+/-- In particular every smooth real potential gives the actual self-adjoint wall operator. -/
+theorem real_wallHamiltonian_selfAdjoint (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℝ) (hV : ContDiff ℝ ∞ V) :
+    IsSelfAdjoint (wallHamiltonian T a σ hσ (fun x ↦ (V x : ℂ))
+      (Complex.ofRealCLM.contDiff.comp hV)) :=
+  wallHamiltonian_selfAdjoint T a σ hσ _ _ (fun x ↦ Complex.conj_ofReal (V x))
+
+/-- The potential does not change either wall domain; every compact test still belongs. -/
+theorem compact_mem_wallHamiltonian (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (ψ : Domain 0 (T / 2)) :
+    toIntervalL2 ψ ∈ (wallHamiltonian T a σ hσ V hV).domain := by
+  rw [wallHamiltonian_domain]
+  exact compact_mem_halfKinetic T a σ hσ ψ
+
+/-- An original compact test in the actual perturbed wall domain. -/
+def compactHamiltonianDomain (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (ψ : Domain 0 (T / 2)) :
+    (wallHamiltonian T a σ hσ V hV).domain :=
+  ⟨toIntervalL2 ψ, compact_mem_wallHamiltonian T a σ hσ V hV ψ⟩
+
+/-- The actual wall-plus-potential action agrees with the compact differential Hamiltonian. -/
+theorem wallHamiltonian_compact_apply (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (ψ : Domain 0 (T / 2)) :
+    wallHamiltonian T a σ hσ V hV (compactHamiltonianDomain T a σ hσ V hV ψ) =
+      toIntervalL2 (kinetic a V hV ψ) := by
+  change halfKinetic T (scale T a) σ hσ (compactWallDomain T a σ hσ ψ) +
+    intervalMultiplier T V hV (toIntervalL2 ψ) = _
+  rw [halfKinetic_compact_apply, intervalMultiplier_compact, ← map_add]
+  rfl
+
+/-- Smooth multiplication sends compact tests into the actual common wall domain. -/
+theorem multiplier_compact_mem_wallHamiltonian (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V f : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (hf : ContDiff ℝ ∞ f)
+    (ψ : Domain 0 (T / 2)) :
+    intervalMultiplier T f hf (toIntervalL2 ψ) ∈
+      (wallHamiltonian T a σ hσ V hV).domain := by
+  rw [intervalMultiplier_compact]
+  exact compact_mem_wallHamiltonian T a σ hσ V hV (mulOp f hf ψ)
+
+/-- The two actual common-domain compositions give the original differential bracket. -/
+theorem wallHamiltonian_bracket_compact (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V f : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (hf : ContDiff ℝ ∞ f)
+    (ψ : Domain 0 (T / 2)) :
+    wallHamiltonian T a σ hσ V hV
+        ⟨intervalMultiplier T f hf (toIntervalL2 ψ),
+          multiplier_compact_mem_wallHamiltonian T a σ hσ V f hV hf ψ⟩ -
+      intervalMultiplier T f hf
+        (wallHamiltonian T a σ hσ V hV (compactHamiltonianDomain T a σ hσ V hV ψ)) =
+      toIntervalL2 (BECInteriorCommutator.commutator a V f hV hf ψ) := by
+  have he : (⟨intervalMultiplier T f hf (toIntervalL2 ψ),
+      multiplier_compact_mem_wallHamiltonian T a σ hσ V f hV hf ψ⟩ :
+        (wallHamiltonian T a σ hσ V hV).domain) =
+      compactHamiltonianDomain T a σ hσ V hV (mulOp f hf ψ) := by
+    apply Subtype.ext
+    exact intervalMultiplier_compact T f hf ψ
+  rw [he, wallHamiltonian_compact_apply, wallHamiltonian_compact_apply,
+    intervalMultiplier_compact, ← map_sub]
+  rfl
+
+/-- No bounded operator agrees with the bracket on its entire actual common domain.
+The compact packets are explicitly included; no graph-core claim is used. -/
+theorem no_bounded_wallHamiltonian_bracket_extension {a : ℝ} (ha : 0 < a)
+    (σ : ℂ) (hσ : σ ^ 2 = 1) (V f : ℝ → ℂ) (hV : ContDiff ℝ ∞ V)
+    (hf : ContDiff ℝ ∞ f)
+    (hn : ∃ x ∈ Set.Ioo 0 (T / 2), ∃ y ∈ Set.Ioo 0 (T / 2), f x ≠ f y) :
+    ¬ ∃ A : HalfSpace T →L[ℂ] HalfSpace T,
+      ∀ u : (wallHamiltonian T a σ hσ V hV).domain,
+      ∀ hu : intervalMultiplier T f hf (u : HalfSpace T) ∈
+          (wallHamiltonian T a σ hσ V hV).domain,
+        A (u : HalfSpace T) = wallHamiltonian T a σ hσ V hV
+          ⟨intervalMultiplier T f hf (u : HalfSpace T), hu⟩ -
+            intervalMultiplier T f hf (wallHamiltonian T a σ hσ V hV u) := by
+  rintro ⟨A, hA⟩
+  apply no_bounded_interval_extension_of_nonconstant ha V f hV hf hn
+  refine ⟨A, fun ψ ↦ ?_⟩
+  exact (hA (compactHamiltonianDomain T a σ hσ V hV ψ)
+    (multiplier_compact_mem_wallHamiltonian T a σ hσ V f hV hf ψ)).trans
+      (wallHamiltonian_bracket_compact T a σ hσ V f hV hf ψ)
+
+/-- A real compact observable realizes the obstruction on every positive physical interval,
+for every smooth real potential and for both wall signs. -/
+theorem exists_real_wall_bracket_obstruction {a : ℝ} (ha : 0 < a)
+    (V : ℝ → ℝ) (hV : ContDiff ℝ ∞ V) :
+    ∃ f : ℝ → ℝ, ∃ hf : ContDiff ℝ ∞ f,
+      HasCompactSupport f ∧ tsupport f ⊆ Set.Ioo 0 (T / 2) ∧
+      ∀ (σ : ℂ) (hσ : σ ^ 2 = 1),
+        ¬ ∃ A : HalfSpace T →L[ℂ] HalfSpace T,
+          ∀ u : (wallHamiltonian T a σ hσ (fun x ↦ (V x : ℂ))
+            (Complex.ofRealCLM.contDiff.comp hV)).domain,
+          ∀ hu : intervalMultiplier T (fun x ↦ (f x : ℂ))
+              (Complex.ofRealCLM.contDiff.comp hf) (u : HalfSpace T) ∈
+            (wallHamiltonian T a σ hσ (fun x ↦ (V x : ℂ))
+              (Complex.ofRealCLM.contDiff.comp hV)).domain,
+            A (u : HalfSpace T) =
+              wallHamiltonian T a σ hσ (fun x ↦ (V x : ℂ))
+                (Complex.ofRealCLM.contDiff.comp hV)
+                ⟨intervalMultiplier T (fun x ↦ (f x : ℂ))
+                  (Complex.ofRealCLM.contDiff.comp hf) (u : HalfSpace T), hu⟩ -
+              intervalMultiplier T (fun x ↦ (f x : ℂ))
+                (Complex.ofRealCLM.contDiff.comp hf)
+                (wallHamiltonian T a σ hσ (fun x ↦ (V x : ℂ))
+                  (Complex.ofRealCLM.contDiff.comp hV) u) := by
+  obtain ⟨f, hf, hc, hs, x, hx, hd⟩ :=
+    exists_compact_real_profile (show 0 < T / 2 by linarith [(Fact.out : 0 < T)])
+  refine ⟨f, hf, hc, hs, fun σ hσ ↦ ?_⟩
+  rintro ⟨A, hA⟩
+  apply no_bounded_interval_extension_of_deriv_ne_zero ha (fun x ↦ (V x : ℂ))
+    (fun x ↦ (f x : ℂ)) (Complex.ofRealCLM.contDiff.comp hV)
+    (Complex.ofRealCLM.contDiff.comp hf) hx (by simp [hd])
+  refine ⟨A, fun ψ ↦ ?_⟩
+  exact (hA (compactHamiltonianDomain T a σ hσ _ _ ψ)
+    (multiplier_compact_mem_wallHamiltonian T a σ hσ _ _ _ _ ψ)).trans
+      (wallHamiltonian_bracket_compact T a σ hσ _ _ _ _ ψ)
+
+/-- Constant multiplication preserves the full perturbed wall domain. -/
+theorem constant_mem_wallHamiltonian (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (b : ℂ)
+    (u : (wallHamiltonian T a σ hσ V hV).domain) :
+    intervalMultiplier T (fun _ ↦ b) contDiff_const (u : HalfSpace T) ∈
+      (wallHamiltonian T a σ hσ V hV).domain := by
+  rw [intervalMultiplier_const_apply]
+  exact (wallHamiltonian T a σ hσ V hV).domain.smul_mem b u.2
+
+/-- The actual constant-observable bracket vanishes on the entire Hamiltonian domain. -/
+theorem wallHamiltonian_constant_control (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) (b : ℂ)
+    (u : (wallHamiltonian T a σ hσ V hV).domain) :
+    wallHamiltonian T a σ hσ V hV
+        ⟨intervalMultiplier T (fun _ ↦ b) contDiff_const (u : HalfSpace T),
+          constant_mem_wallHamiltonian T a σ hσ V hV b u⟩ -
+      intervalMultiplier T (fun _ ↦ b) contDiff_const
+        (wallHamiltonian T a σ hσ V hV u) = 0 := by
+  have he : (⟨intervalMultiplier T (fun _ ↦ b) contDiff_const (u : HalfSpace T),
+      constant_mem_wallHamiltonian T a σ hσ V hV b u⟩ :
+        (wallHamiltonian T a σ hσ V hV).domain) = b • u := by
+    apply Subtype.ext
+    exact intervalMultiplier_const_apply T b u
+  rw [he, LinearPMap.map_smul, intervalMultiplier_const_apply, sub_self]
+
+end BoundedPotential
 
 end SKEFTHawking.DKMBootstrap.BECWallParity
