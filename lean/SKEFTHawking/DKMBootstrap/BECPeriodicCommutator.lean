@@ -1,4 +1,6 @@
 import Mathlib.Analysis.Fourier.AddCircle
+import Mathlib.MeasureTheory.Function.Holder
+import SKEFTHawking.KineticEssentialSelfAdjoint
 import Mathlib.Tactic
 
 /-!
@@ -10,8 +12,10 @@ The spectral kinetic action and cosine multiplication are linear endomorphisms o
 that common domain. Their bracket has no bounded extension to ambient L² when the
 kinetic scale is positive. Each domain vector has a canonical continuous trigonometric
 representative, and the kinetic action agrees a.e. with minus a times its actual
-second derivative in the real periodic coordinate. Closure and maximal domain remain
-separate. No wall, Fock, or higher-order commutator result is asserted.
+second derivative in the real periodic coordinate. Its self-adjoint closure has the
+finite Fourier domain as an operator core and has an unbounded cosine bracket.
+The maximal domain, wall realizations, Fock dynamics, and higher-order commutators
+remain outside this construction.
 Physical Lebesgue normalization would multiply the characters by L⁻¹/²; no
 change-of-measure equivalence is constructed here.
 -/
@@ -477,5 +481,199 @@ theorem constant_ae (b : ℂ) (v : trigDomain L) :
     ((b • v : trigDomain L) : ModeSpace L) =ᵐ[AddCircle.haarAddCircle]
       (fun x ↦ b * (v : ModeSpace L) x) :=
   Lp.coeFn_smul b (v : ModeSpace L)
+
+/-! ## Self-adjoint closure of the actual differential kinetic on the Fourier core
+
+The partial operator below uses the existing kinetic action, whose differential
+identification is `kinetic_eq_neg_second_deriv_ae`. Only its finite Fourier core is
+identified here; no characterization of the full closure domain is needed.
+-/
+
+/-- The existing differential kinetic, as a partial linear operator in ambient Haar L². -/
+def kineticPMap (c : ℝ) : ModeSpace L →ₗ.[ℂ] ModeSpace L where
+  domain := trigDomain L
+  toFun := (trigDomain L).subtype.comp (kinetic L c)
+
+@[simp] theorem kineticPMap_apply (c : ℝ) (u : trigDomain L) :
+    kineticPMap L c u = (kinetic L c u : ModeSpace L) := rfl
+
+theorem kineticPMap_dense (c : ℝ) : Dense ((kineticPMap L c).domain : Set (ModeSpace L)) :=
+  Submodule.dense_iff_topologicalClosure_eq_top.mpr (trigDomain_dense L)
+
+/-- Symmetry follows from orthonormal Fourier modes and their real kinetic eigenvalues. -/
+theorem kineticPMap_symmetric (c : ℝ) : DFT.IsSymmetricPMap (kineticPMap L c) := by
+  intro u w
+  obtain ⟨v, rfl⟩ := (trigEquiv L).surjective u
+  obtain ⟨z, rfl⟩ := (trigEquiv L).surjective w
+  change inner ℂ (kinetic L c (trigEquiv L v) : ModeSpace L) (trigEquiv L z) =
+    inner ℂ (trigEquiv L v : ModeSpace L) (kinetic L c (trigEquiv L z))
+  induction v using Finsupp.induction_linear with
+  | zero => simp
+  | add v₁ v₂ h₁ h₂ => simp only [map_add, Submodule.coe_add, inner_add_left, h₁, h₂]
+  | single n b =>
+    induction z using Finsupp.induction_linear with
+    | zero => simp
+    | add z₁ z₂ h₁ h₂ => simp only [map_add, Submodule.coe_add, inner_add_right, h₁, h₂]
+    | single m d =>
+      have hs (k : ℤ) (a : ℂ) :
+          trigEquiv L (Finsupp.single k a) = a • domainMode L k := by
+        rw [domainMode, ← map_smul]
+        simp
+      simp only [hs, map_smul, kinetic_domainMode, Submodule.coe_smul, coe_domainMode,
+        inner_smul_left, inner_smul_right, map_mul, map_pow,
+        Complex.conj_ofReal, map_intCast]
+      rw [orthonormal_iff_ite.mp (modes_orthonormal L)]
+      split_ifs with h
+      · subst m; ring
+      · simp
+
+/-- The imaginary shift of the differential kinetic, with the same finite domain. -/
+def shiftedKinetic (c μ : ℝ) : trigDomain L →ₗ[ℂ] ModeSpace L :=
+  (trigDomain L).subtype.comp (kinetic L c) -
+    (Complex.I * (μ : ℂ)) • (trigDomain L).subtype
+
+theorem kinetic_shift_ne_zero (c μ : ℝ) (hμ : μ ≠ 0) (n : ℤ) :
+    (c : ℂ) * (n : ℂ)^2 - Complex.I * (μ : ℂ) ≠ 0 := by
+  intro h
+  have hi := congrArg Complex.im h
+  simp [pow_two, Complex.mul_im] at hi
+  exact hμ hi
+
+/-- A shifted mode has a finite Fourier preimage, obtained by dividing its coefficient. -/
+theorem shiftedKinetic_mode_preimage (c μ : ℝ) (hμ : μ ≠ 0) (n : ℤ) :
+    shiftedKinetic L c μ
+      (((c : ℂ) * (n : ℂ)^2 - Complex.I * (μ : ℂ))⁻¹ • domainMode L n) = mode L n := by
+  have hn := kinetic_shift_ne_zero c μ hμ n
+  simp only [shiftedKinetic, LinearMap.sub_apply, LinearMap.comp_apply,
+    LinearMap.smul_apply, map_smul, kinetic_domainMode, Submodule.subtype_apply,
+    coe_domainMode]
+  rw [← sub_smul]
+  simp [smul_smul, hn]
+
+/-- Each nonzero imaginary shifted range contains the entire dense Fourier domain. -/
+theorem trigDomain_le_shiftedKinetic_range (c μ : ℝ) (hμ : μ ≠ 0) :
+    trigDomain L ≤ (shiftedKinetic L c μ).range := by
+  apply (trigDomain_eq_span L).le.trans
+  apply Submodule.span_le.mpr
+  rintro _ ⟨n, rfl⟩
+  exact ⟨_, shiftedKinetic_mode_preimage L c μ hμ n⟩
+
+theorem kineticPMap_dense_shifted_range (c μ : ℝ) (hμ : μ ≠ 0) :
+    Dense {w : ModeSpace L | ∃ x : (kineticPMap L c).domain,
+      kineticPMap L c x - (Complex.I * (μ : ℂ)) • (x : ModeSpace L) = w} := by
+  apply (kineticPMap_dense L c).mono
+  intro w hw
+  exact trigDomain_le_shiftedKinetic_range L c μ hμ hw
+
+/-- The actual periodic differential kinetic is essentially self-adjoint on its Fourier core. -/
+theorem kineticPMap_closure_selfAdjoint (c : ℝ) :
+    IsSelfAdjoint (kineticPMap L c).closure :=
+  DFT.isSelfAdjoint_closure_of_dense_range (kineticPMap_symmetric L c)
+    (kineticPMap_dense L c) one_ne_zero
+    (kineticPMap_dense_shifted_range L c 1 one_ne_zero)
+    (kineticPMap_dense_shifted_range L c (-1) (by norm_num))
+
+/-- The finite Fourier domain is an operator core of the self-adjoint closure. -/
+theorem kineticPMap_closure_hasCore (c : ℝ) :
+    (kineticPMap L c).closure.HasCore (trigDomain L) :=
+  (kineticPMap L c).closureHasCore
+
+/-- Canonical inclusion of the finite Fourier core in the closure domain. -/
+def closureCore (c : ℝ) (u : trigDomain L) : (kineticPMap L c).closure.domain :=
+  ⟨u, (kineticPMap L c).le_closure.1 u.2⟩
+
+@[simp] theorem coe_closureCore (c : ℝ) (u : trigDomain L) :
+    (closureCore L c u : ModeSpace L) = (u : ModeSpace L) := rfl
+
+/-- Closing the operator preserves exactly the previously proved finite-domain action. -/
+@[simp] theorem kineticPMap_closure_apply_core (c : ℝ) (u : trigDomain L) :
+    (kineticPMap L c).closure (closureCore L c u) = (kinetic L c u : ModeSpace L) :=
+  ((kineticPMap L c).le_closure.2 (x := u) (y := closureCore L c u) rfl).symm
+
+/-- On the core the self-adjoint closure remains the actual negative second derivative. -/
+theorem kineticPMap_closure_eq_neg_second_deriv_ae (a : ℝ) (u : trigDomain L) :
+    ∀ᵐ z : AddCircle L ∂AddCircle.haarAddCircle, ∀ x : ℝ, (x : AddCircle L) = z →
+      ((kineticPMap L (scale L a)).closure (closureCore L (scale L a) u) :
+        AddCircle L → ℂ) z = -(a : ℂ) * deriv (deriv (representativeLift L u)) x := by
+  rw [kineticPMap_closure_apply_core]
+  exact kinetic_eq_neg_second_deriv_ae L a u
+
+/-- Continuous representative of the same cosine used by the finite-domain action. -/
+def cosineContinuous : C(AddCircle L, ℂ) :=
+  ⟨cosine L, by unfold cosine; fun_prop⟩
+
+/-- Actual bounded multiplication by cosine on ambient Haar L², via L∞ times L². -/
+def cosineMultiplier : ModeSpace L →L[ℂ] ModeSpace L :=
+  (ContinuousLinearMap.mul ℂ ℂ).holderL AddCircle.haarAddCircle ⊤ 2 2
+    (ContinuousMap.toLp ⊤ AddCircle.haarAddCircle ℂ (cosineContinuous L))
+
+theorem cosineMultiplier_ae (u : ModeSpace L) :
+    (cosineMultiplier L u : AddCircle L → ℂ) =ᵐ[AddCircle.haarAddCircle]
+      (fun x ↦ cosine L x * u x) := by
+  have h := (ContinuousLinearMap.mul ℂ ℂ).coeFn_holder
+    (ContinuousMap.toLp ⊤ AddCircle.haarAddCircle ℂ (cosineContinuous L)) u (r := 2)
+  filter_upwards [h, ContinuousMap.coeFn_toLp (p := ⊤) (𝕜 := ℂ)
+    AddCircle.haarAddCircle (cosineContinuous L)] with x hx hc
+  change _ = cosine L x at hc
+  change _ = _ * u x at hx
+  exact hx.trans (congrArg (fun b : ℂ ↦ b * u x) hc)
+
+/-- The ambient multiplier restricts to the accepted invariant finite-domain cosine action. -/
+@[simp] theorem cosineMultiplier_core (u : trigDomain L) :
+    cosineMultiplier L (u : ModeSpace L) = (cosineOp L u : ModeSpace L) := by
+  apply Lp.ext
+  exact (cosineMultiplier_ae L u).trans (cosineOp_ae L u).symm
+
+/-- Every core vector belongs to the actual common domain of the closure bracket. -/
+theorem cosineMultiplier_core_mem_closure (c : ℝ) (u : trigDomain L) :
+    cosineMultiplier L (u : ModeSpace L) ∈ (kineticPMap L c).closure.domain := by
+  rw [cosineMultiplier_core]
+  exact (closureCore L c (cosineOp L u)).2
+
+/-- The actual closure bracket agrees with the accepted differential bracket on the core. -/
+theorem closure_bracket_core (c : ℝ) (u : trigDomain L) :
+    (kineticPMap L c).closure
+        ⟨cosineMultiplier L (u : ModeSpace L), cosineMultiplier_core_mem_closure L c u⟩ -
+      cosineMultiplier L ((kineticPMap L c).closure (closureCore L c u)) =
+        (commutator L c u : ModeSpace L) := by
+  have he : (⟨cosineMultiplier L (u : ModeSpace L),
+      cosineMultiplier_core_mem_closure L c u⟩ : (kineticPMap L c).closure.domain) =
+      closureCore L c (cosineOp L u) := by
+    apply Subtype.ext
+    exact cosineMultiplier_core L u
+  rw [he, kineticPMap_closure_apply_core, kineticPMap_closure_apply_core,
+    cosineMultiplier_core]
+  rfl
+
+/-- No bounded ambient operator extends the closure bracket on its actual common domain.
+Only the inclusion of the finite Fourier core is used; the full domain is not characterized. -/
+theorem no_bounded_closure_bracket_extension {c : ℝ} (hc : 0 < c) :
+    ¬ ∃ A : ModeSpace L →L[ℂ] ModeSpace L,
+      ∀ u : (kineticPMap L c).closure.domain,
+      ∀ hu : cosineMultiplier L (u : ModeSpace L) ∈ (kineticPMap L c).closure.domain,
+        A (u : ModeSpace L) = (kineticPMap L c).closure
+          ⟨cosineMultiplier L (u : ModeSpace L), hu⟩ -
+            cosineMultiplier L ((kineticPMap L c).closure u) := by
+  rintro ⟨A, hA⟩
+  apply no_bounded_extension L hc
+  refine ⟨A, fun u ↦ ?_⟩
+  exact (hA (closureCore L c u) (cosineMultiplier_core_mem_closure L c u)).trans
+    (closure_bracket_core L c u)
+
+theorem physical_no_bounded_closure_bracket_extension {a : ℝ} (ha : 0 < a) :
+    ¬ ∃ A : ModeSpace L →L[ℂ] ModeSpace L,
+      ∀ u : (kineticPMap L (scale L a)).closure.domain,
+      ∀ hu : cosineMultiplier L (u : ModeSpace L) ∈
+          (kineticPMap L (scale L a)).closure.domain,
+        A (u : ModeSpace L) = (kineticPMap L (scale L a)).closure
+          ⟨cosineMultiplier L (u : ModeSpace L), hu⟩ -
+            cosineMultiplier L ((kineticPMap L (scale L a)).closure u) :=
+  no_bounded_closure_bracket_extension L (scale_pos L ha)
+
+/-- Constant multiplication commutes on the entire closure domain. -/
+theorem kineticPMap_closure_constant_control (c : ℝ) (b : ℂ)
+    (u : (kineticPMap L c).closure.domain) :
+    (kineticPMap L c).closure (b • u) - b • (kineticPMap L c).closure u = 0 := by
+  rw [LinearPMap.map_smul, sub_self]
 
 end SKEFTHawking.DKMBootstrap.BECPeriodicCommutator
