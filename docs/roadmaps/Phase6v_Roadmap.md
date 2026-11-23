@@ -185,7 +185,7 @@ Each wave's headline goal + bundle-target + key substrate is summarized below. P
 
 **Physical follow-through:** [Wave 6v.10](Phase6v/Wave_6v.10_Roadmap.md) carries the open physical growth and transport work for E1/D5. The historical shipped status applies to the conditional theorem and normalized witnesses.
 
-**Goal:** Resolve the open Phase 6q question of where polariton platforms fall on the DKM positive/NO-GO bimodal outcome. Compute pump-power → mode-occupation upper bound from UPenn-style femtojoule switching; ship `polariton_dkm_f3_holds_at_pump_below_threshold` Lean theorem; close the polariton case as inheriting the graphene positive uniqueness result.
+**Shipped scope:** The incident pulse-energy conversion supplies a photon-equivalent estimate. `polariton_dkm_f3_holds_at_pump_below_threshold` consumes a supplied growth bound, and the normalized witnesses compare algebraic examples. Wave 6v.10 carries physical classification.
 
 **Bundle target:** D5 + E1 (per Phase 6q absorption protocol Branch D.2 if already drafted).
 **Key substrate:** `DKMBootstrap/SKEFTSpecialization.lean`, `DKMBootstrap/HorizonTransportBootstrap.lean`, `PolaritonTier1.lean`.
@@ -242,7 +242,7 @@ Each wave's headline goal + bundle-target + key substrate is summarized below. P
 Phase 6v wave order (per strategy synthesis §6):
 
 1. **6v.4** Penn TMD — warmup
-2. **6v.3** DKM F3 polariton — resolves Phase 6q open question
+2. **6v.3** DKM F3 polariton — supplies conditional theorem and normalized witnesses
 3. **6v.1** Williamson/Yoder gauging QEC — **creates D6 bundle**
 4. **6v.2** T-gate counts for Shor — D6 §5
 5. **6v.5** APM-LDPC + hashing-bound — D6 §4

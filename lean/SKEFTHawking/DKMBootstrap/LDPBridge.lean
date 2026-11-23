@@ -1,30 +1,22 @@
 /-
 # Phase 6q Wave 1c.3 — DKM Transport Bootstrap: LDP cross-bridge
 
-**The load-bearing LDP cross-bridge of Phase 6q** (Wave 2a.1 DR §6 names
-this as the phase's highest-leverage cross-bridge; the framing is
-interpretive, not a formal-theorem metric).
+Wave 2a.1 DR §6 motivates relating the DKM response to fluctuations.
 Connects three substantive pieces of the program's substrate:
 1. The Phase 6q DKM transport-bootstrap framework (`DKMBootstrap.*`).
 2. The Phase 6n Wave 2c+ `IsLDPRateFunction` class (`CrooksAnalogHawking.LDPLinearResponse`).
-3. The DKMParameters fluctuation-dissipation content (`χ·D` = FDT-pinned
-   Gaussian variance for the linear-response regime; see Wave 2a.1 DR §6).
+3. The modeled variance parameter `χ·D` for the centered
+   linear-response rate function.
 
-**Substantive substrate-level finding:** any DKM correlator carrying
-F4 positivity can be naturally associated with a centered linear-
-response rate function — and that rate function is *automatically* an
-`IsLDPRateFunction` witness at the corresponding inverse temperature
-β. This realizes the substantive cross-bridge from Wave 2a.1 DR §6 at
-the substrate (Wave 1c.3) level, with the platform-specific Gaussian-
-fluctuation-regime hypothesis lifted to Wave 2a graphene witness.
+The class witness follows from positivity of the DKM parameters and the
+existing W-form Gallavotti–Cohen result. The forward compatibility
+statement carries an unused F4 premise. The reverse existential uses
+the zero correlator. The microscopic identification remains open.
 
 **Wave 1c.3 deliverables:**
 1. **`DKMToLDPData`** — substantive construction: given a DKM parameter
    capsule + a positive inverse temperature β, build an
-   `LDPLinearResponseData` with `σ² := p.χ · p.D` (the FDT-pinned
-   Gaussian variance — substantive Drude-model content, per CHHK eq. 15
-   ω→0 limit `Im G^R/Ω → χ·D·k² / (D·k²)² = χ / (D·k²)` and the
-   resulting Drude weight `D_w = π·χ·D`).
+   `LDPLinearResponseData` with variance parameter `σ² := p.χ · p.D`.
 2. **`dkm_rate_function`** — the LDP rate function naturally associated
    with `p` at temperature β (the centered linear-response Gaussian
    with variance `p.χ · p.D`).
@@ -32,12 +24,8 @@ fluctuation-regime hypothesis lifted to Wave 2a graphene witness.
    substantive theorem: `dkm_rate_function β p` satisfies
    `IsLDPRateFunction β`. Discharged via the existing `Fact`-based
    instance in `LDPLinearResponse.lean` lifted to the DKM substrate.
-4. **`chhk_positivity_yields_LDP_rate_function`** — the substantive
-   cross-bridge claim at substrate level: F4 positivity (plus the
-   substrate-level DKM parameter data) is *sufficient* to produce an
-   `IsLDPRateFunction` witness. Direction one of the Wave 2a.1 DR §6
-   biconditional; the reverse direction (LDP rate function → F4
-   positivity) ships in Wave 2b.
+4. **`chhk_positivity_yields_LDP_rate_function`** — compatibility
+   interface retaining the historical forward declaration signature.
 
 References:
 - Wave 2a.1 DR §6: cross-bridge to IsLDPRateFunction (load-bearing
@@ -45,7 +33,7 @@ References:
 - Wave 1a.1 DR §3 (LB4): IsLDPRateFunction instantiation, ~60 LOC
 - `SKEFTHawking.CrooksAnalogHawking.LDPLinearResponse`:
   `IsLDPRateFunction`, `linearResponseRateFunctionCentered`
-- CHHK arXiv:2509.18255 eq. (15) ω→0 limit: Drude weight `D_w = π·χ·D`
+- CHHK arXiv:2509.18255v2 Eq. (5): effective conductivity limit
 -/
 import SKEFTHawking.DKMBootstrap.LinearFunctionals
 import SKEFTHawking.CrooksAnalogHawking.LDPLinearResponse
@@ -58,11 +46,9 @@ open SKEFTHawking.CrooksAnalogHawking
 
 Given a DKM parameter capsule `p` (with positive `χ, D` etc.) and an
 inverse temperature `β > 0`, we construct an `LDPLinearResponseData`
-witness with `σ² := p.χ · p.D`. This is the FDT-pinned Gaussian variance
-for the linear-response regime — substantively justified by the CHHK
-eq. (15) ω→0 limit, which gives the Drude weight `D_w = π·χ·D` and the
-fluctuation strength `σ² ∝ χ·D` (cf. Wave 2a.1 DR §6 condition 1
-"Gaussian fluctuation regime"). -/
+witness with the modeled variance parameter `σ² := p.χ · p.D`.
+Establishing a physical fluctuation-dissipation relation for a state
+requires evidence beyond the effective conductivity limit. -/
 
 /-- **DKM → LDP linear-response data construction.** Maps a DKM
 parameter capsule `p` and a positive inverse temperature `β` to an
@@ -110,9 +96,7 @@ theorem dkm_rate_function_satisfies_WFormGC
 /-! ## §3. The substantive `IsLDPRateFunction` instance. -/
 
 /-- **The DKM rate function is an `IsLDPRateFunction` witness at β.**
-Substantive substrate-level theorem: any DKM correlator's natural
-rate function (centered linear-response Gaussian with variance
-`p.χ · p.D`) carries the project's abstract LDP rate-function class.
+The constructed rate function carries the abstract LDP class.
 
 The two class fields:
 - `zero_at_zero` — `dkm_rate_function β p 0 = 0` (by construction).
@@ -124,24 +108,10 @@ theorem dkm_rate_function_is_LDPRateFunction
   zero_at_zero := dkm_rate_function_zero β p
   wForm_gc := dkm_rate_function_satisfies_WFormGC β p
 
-/-! ## §4. The substantive cross-bridge claim (Wave 2a.1 DR §6).
+/-! ## §4. Forward compatibility interface from Wave 2a.1 DR §6. -/
 
-The substrate-level statement of the Wave 2a.1 DR §6 cross-bridge: under
-the action-correlator link + CGL reflection-positivity (F4 input) + the
-DKM parameter data, the natural rate function on the substrate is an
-`IsLDPRateFunction` witness.
-
-This is the **CHHK positivity → LDP rate function** direction. The
-reverse direction (LDP rate function → CHHK positivity) ships in Wave
-2b (per the DR §6 "Wave 2b.2 task" comment). -/
-
-/-- **CHHK F4 positivity yields LDP rate function** (cross-bridge,
-direction one). At the substrate level: any correlator with the F4
-positivity content plus DKM parameter data and a positive inverse
-temperature yields a centered linear-response rate function that
-carries the `IsLDPRateFunction` class. The substantive content of the
-positivity hypothesis enters through the variance `p.χ · p.D` being
-strictly positive (which it is by construction). -/
+/-- The parameterized function is an `IsLDPRateFunction` witness.
+The supplied F4 premise and temperature sign are unused. -/
 theorem chhk_positivity_yields_LDP_rate_function
     {G : Correlator} (_h_pos : IsImGRetardedNonneg G)
     (β : ℝ) (_hβ : 0 < β) (p : DKMParameters) :
@@ -150,9 +120,8 @@ theorem chhk_positivity_yields_LDP_rate_function
 
 /-! ## §4.5. Reverse direction (Wave 2b.2 per DR §6).
 
-Phase 6q Wave 2b.2: substantive reverse-direction cross-bridge from
-LDP rate-function existence back to F4 positivity. Per Wave 2a.1 DR §6
-the original explicit task wording is:
+The original Wave 2a.1 DR §6 task proposed this implication for
+a specified correlator:
 
     `IsLDPRateFunction (dkm_rate_function β p) → IsImGRetardedNonneg G`
     *under action-correlator link.*
@@ -163,18 +132,8 @@ in `DKMParameters`. The substantive D1-paper SK-Green's-function link is
 **deferred** to the D1 lift-to-Lean wave (out of Phase 6q scope per Wave
 2a.1 DR §4 PARTIAL-VIABLE alignment-only verdict).
 
-At the Phase 6q substrate-predicate level we ship the **existence form**:
-LDP rate-function existence on any DKM substrate yields existence of an
-F4-compatible correlator. This is the substantively-correct substrate-
-level shape of the reverse direction; the D1-action-link form is the
-follow-on substantive lift.
-
-**Substrate-level finding:** the two existences (F4-compatible correlator
-on a DKM substrate; LDP rate function on the same substrate) are
-**equivalent** — both hold unconditionally on every DKM substrate via the
-zero-correlator witness, so the biconditional is structurally complete at
-substrate level. This closes the Wave 2a.1 DR §6 cross-bridge architecture
-at the predicate-substrate level. -/
+The implemented existence interface uses the zero correlator
+independently of the supplied rate-function witness. -/
 
 /-- **Reverse direction (substrate-level existence form).** Wave 2b.2 per
 Wave 2a.1 DR §6 — IsLDPRateFunction → ∃ F4-compatible correlator.
@@ -193,9 +152,7 @@ theorem LDP_rate_function_yields_F4_compatible_correlator_existence
     ∃ G : Correlator, IsImGRetardedNonneg G :=
   ⟨zeroCorrelator, zeroCorrelator_isImGRetardedNonneg⟩
 
-/-- **Substrate-level biconditional packaging** of the Wave 2a.1 DR §6
-cross-bridge. Phase 6q Wave 2b.2 substantive lift from forward-only to
-biconditional.
+/-- **Wave 2b.2 equivalence of independently available witnesses.**
 
 ⚠️ **SUBSTRATE LEVEL ONLY** — both sides of this biconditional hold
 unconditionally on every well-formed DKM substrate (the forward direction
@@ -221,37 +178,20 @@ theorem chhk_F4_existence_iff_LDP_rate_function_holds
   · intro h_ldp
     exact LDP_rate_function_yields_F4_compatible_correlator_existence β hβ p h_ldp
 
-/-! ## §5. End-to-end witness: zero correlator + CGL six-axiom skeleton
-+ DKM parameters yields LDP rate function.
+/-! ## §5. Zero-correlator control and parameter-only class witness. -/
 
-Confirms the cross-bridge is non-vacuously witnessed. -/
-
-/-- **End-to-end witness.** The zero correlator (which carries F4 by
-`zeroCorrelator_isImGRetardedNonneg`) combined with any DKM parameter
-capsule and positive β yields an `IsLDPRateFunction` witness for the
-DKM rate function. -/
+/-- Instantiate the compatibility interface at the zero correlator. -/
 theorem zero_correlator_yields_LDP_rate_function
     (β : ℝ) (hβ : 0 < β) (p : DKMParameters) :
     IsLDPRateFunction β (dkm_rate_function β p) :=
   chhk_positivity_yields_LDP_rate_function
     zeroCorrelator_isImGRetardedNonneg β hβ p
 
-/-- **End-to-end witness from CGL `SKEFTAxioms`** via the
-KMS-replaces-unitarity bridge (Wave 1b.2) — composes the four pieces of
-Phase 6q substrate:
-1. CGL `SKEFTAxioms zeroAction β` (existing in `GloriosoLiu.Axioms`).
-2. `IsDKMSpectralFunction zeroAction zeroCorrelator` via `trivialLink`.
-3. F4 positivity of the correlator (via `kms_replaces_unitarity_from_skeft_axioms`).
-4. `IsLDPRateFunction` instance for the DKM rate function. -/
+/-- The historical name refers to the proposed CGL connection. The
+proof uses the parameters and the existing rate-function witness. -/
 theorem skeft_axioms_yields_LDP_rate_function
     (β : ℝ) (_hβ : 0 < β) (p : DKMParameters) :
     IsLDPRateFunction β (dkm_rate_function β p) := by
-  -- Use any SKEFTAxioms witness — the zero-action one is sufficient.
-  -- The bridge chain: SKEFTAxioms → F4 (via kms_replaces_unitarity)
-  -- → IsLDPRateFunction (via chhk_positivity_yields_LDP_rate_function).
-  -- The witness output does not actually depend on the F4 input
-  -- structurally (the rate function is constructed from p alone); this
-  -- composes the chain at the substrate-level for downstream consumers.
   exact dkm_rate_function_is_LDPRateFunction β p
 
 /-! ## §6. Closure summary — Wave 1c.3 LDP cross-bridge.
@@ -259,26 +199,18 @@ theorem skeft_axioms_yields_LDP_rate_function
 This module ships:
 - **`DKMToLDPData`** — substantive construction of LDP linear-response
   data from DKM parameters + positive inverse temperature, with
-  `σ² := p.χ · p.D` (FDT-pinned variance, substantively justified by
-  the CHHK eq. (15) ω→0 limit Drude weight).
+  the modeled variance parameter `σ² := p.χ · p.D`.
 - **`dkm_rate_function`** — the centered linear-response Gaussian on
   the DKM substrate.
 - **`dkm_rate_function_is_LDPRateFunction`** — the load-bearing
   substantive theorem: DKM rate function is an `IsLDPRateFunction`
   witness at the corresponding β (Phase 6n abstract LDP class
   instantiated on Phase 6q DKM substrate).
-- **`chhk_positivity_yields_LDP_rate_function`** — the cross-bridge
-  claim (direction one): CHHK F4 + DKM parameters → IsLDPRateFunction.
-- **End-to-end witnesses** confirming the chain composes non-vacuously
-  on the zero substrate and via CGL `SKEFTAxioms`.
-
-**Phase 6q Track 1 (DKM substrate) substantive closure achieved.** The
-load-bearing cross-bridge of the phase is shipped at substrate level.
-Wave 2b.2 reverse-direction substantive lift (per Wave 2a.1 DR §6):
-`LDP_rate_function_yields_F4_compatible_correlator_existence` +
-`chhk_F4_existence_iff_LDP_rate_function_holds` biconditional packaging
-ship the reverse direction at substrate level (the substantive
-"under action-correlator link" form is D1-deferred per Wave 2a.1 DR §4).
+- **`chhk_positivity_yields_LDP_rate_function`** — compatibility
+  interface for the parameter-only class witness.
+- **Zero-correlator and existence controls** use independent witnesses.
+  The link to a specific action and its microscopic fluctuations remains
+  open.
 
 Track 2 (SK-EFT-Hawking specialization) opens next — Wave 2a.2
 `SKEFTSpecialization.lean` + Wave 2a.3 platform cross-bridge. -/

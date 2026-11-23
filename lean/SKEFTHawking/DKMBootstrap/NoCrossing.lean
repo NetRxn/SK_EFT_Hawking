@@ -1,7 +1,7 @@
 /-
 # Phase 6q Wave 1b.3 — DKM Transport Bootstrap: no-crossing structural finding
 
-**Phase 6o Wave 1c Obstruction (II) — fully resolved here.** The Phase 6o
+The Phase 6o Wave 1c Obstruction (II) discussion motivates the comparison. The Phase 6o
 NO-GO writeup (`temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`
 §2.2) identified the absence of a doubled-contour analog for s/t/u
 crossing as the second structural obstruction. The DR Wave 1a.1 §1 row
@@ -11,28 +11,14 @@ low-ω from the DKM functional form (CHHK arXiv:2509.18255v2 Eq. (4)),
 high-ω from the bounded-local nested-commutator estimate (Eq. (31)).
 The Stirling estimate (Eq. (32)) yields the spectral bound in Eq. (33).
 
-**Structural resolution of Obstruction (II):** the absence of crossing
-in the CHHK bootstrap is not a *gap* to be filled but a *design choice*
-that bypasses the obstruction entirely. CHHK uses (low-ω, high-ω)
-constraints in place of (s, t, u)-channel crossing constraints.
+CHHK's published derivation uses low- and high-frequency constraints
+without an s/t/u crossing input. The Lean record operations reflect the
+absence of a crossing field.
 
-**Substantive content shipped (Wave 1b.3):**
-1. **`IsVerticalBootstrap`** — the predicate capturing CHHK's
-   "low-ω / high-ω" axiom architecture: a bootstrap is *vertical* if
-   its substantive content is a pair of low-frequency (F1 + F2) and
-   high-frequency (F3 + Stirling) constraints with no s/t/u channel
-   identity.
-2. **`vertical_bootstrap_bypasses_crossing`** — the structural theorem:
-   any vertical bootstrap satisfies the F1-through-F6 axiom families
-   *without* invoking crossing. This is the substrate-level operationalization
-   of CHHK's design choice — it captures the structural fact that
-   bootstrap-style axiomatic content can be assembled without crossing.
-3. **`dkm_axiom_set_is_vertical`** — reverse direction: every `IsDKMAxiomSet`
-   witness gives a vertical-bootstrap witness for free, by projection.
-   This transfers supplied `IsDKMAxiomSet` witnesses by projection.
-   The normalized algebraic examples check the predicate interfaces.
-   Physical platform witnesses require matching the actual correlator
-   and microscopic hypotheses.
+The Lean declarations assemble and project the legacy fields without
+a crossing relation. Global F1 and pointwise F2 remain incompatible
+near the diffusion origin. A physical witness needs a finite-window
+match and the actual microscopic bounds.
 
 References:
 - Phase 6o Wave 1c NO-GO §2.2: no doubled-contour crossing
@@ -56,21 +42,17 @@ is partitioned into:
 - a high-ω section (F3 + Stirling): the nested-commutator operator-
   growth bound + the factorial-vs-power Stirling estimate.
 
-We capture "verticality" as the conjunctive structure: a vertical
-bootstrap satisfies F1 ∧ F2 at low ω together with F3 (operator growth)
-at high ω, without any constraint relating ω-channels (s/t/u-style). -/
+The Lean interface groups legacy global F1, pointwise F2 and
+standalone F3 for a supplied sequence. -/
 
-/-- **Vertical bootstrap predicate.** A correlator satisfies the
-"vertical" CHHK architecture if it has F1 (DKM functional form) and F2
-(f-sum rule) at low frequencies and F3 (operator-growth) at high
-frequencies, **without** any s/t/u-channel constraint relating
-different `(Ω, k)` channels. -/
+/-- Groups the three legacy predicates without a channel relation. The
+field names reflect the source's low- and high-frequency split. -/
 structure IsVerticalBootstrap
     (G : Correlator) (p : DKMParameters)
     (commutatorNorm : ℕ → ℝ) (n0Norm boundData : ℝ) : Prop where
-  /-- Low-ω F1: explicit DKM functional form. -/
+  /-- Legacy F1: global DKM functional form. -/
   low_omega_dkm_form : IsDKMTransportCorrelator G p
-  /-- Low-ω F2: integrated lattice f-sum rule. -/
+  /-- Legacy F2: uniform pointwise bound on the divided spectrum. -/
   low_omega_f_sum_rule : HasFSumRule G boundData
   /-- High-ω F3: nested-commutator operator-growth bound. -/
   high_omega_operator_growth :
@@ -78,19 +60,10 @@ structure IsVerticalBootstrap
 
 /-! ## §2. The structural theorem — verticality bypasses crossing.
 
-The substantive content is that CHHK's full F1–F6 axiom set is a
-*direct enlargement* of the vertical-bootstrap predicate by the three
-"trivially-obtainable" axioms F4 (positivity), F5 (UHP analyticity),
-F6 (P/T symmetry) — none of which require crossing. We capture this as
-a structural reduction theorem: given a vertical bootstrap plus the
-F4–F6 trio, we have the full CHHK axiom set, with **no crossing
-identity ever entering the proof**. -/
+The proof assembles a record from the supplied vertical fields and
+the supplied F4, legacy F5 and F6 witnesses. -/
 
-/-- **The structural theorem: verticality + F4 / F5 / F6 ⇒ full CHHK
-axiom set.** The CHHK bootstrap is `IsVerticalBootstrap` augmented by
-F4 (positivity), F5 (UHP analyticity), and F6 (P/T parity). The
-substantive structural content: this reduction requires NO crossing
-identity — only the conjunction of the per-axiom-family Props. -/
+/-- Assemble `IsDKMAxiomSet` from the six supplied legacy fields. -/
 theorem vertical_bootstrap_bypasses_crossing
     {G : Correlator} {p : DKMParameters}
     {commutatorNorm : ℕ → ℝ} {n0Norm boundData : ℝ}
@@ -106,14 +79,13 @@ theorem vertical_bootstrap_bypasses_crossing
   uhp_analytic := h5
   pt_symmetry := h6
 
-/-! ## §3. The reverse direction — every CHHK axiom set is vertical.
+/-! ## §3. The reverse direction for the legacy bundle.
 
 Confirms the architecture is **operationally equivalent** to the
 vertical decomposition: every `IsDKMAxiomSet` witness gives a
 vertical-bootstrap witness for free, by projection. -/
 
-/-- **Reverse direction.** Every CHHK axiom set is a vertical
-bootstrap — confirms the architectural identity. -/
+/-- Project the first three fields from the supplied legacy bundle. -/
 theorem dkm_axiom_set_is_vertical
     {G : Correlator} {p : DKMParameters}
     {commutatorNorm : ℕ → ℝ} {n0Norm boundData : ℝ}
@@ -125,10 +97,8 @@ theorem dkm_axiom_set_is_vertical
 
 /-! ## §4. Roundtrip and equivalence.
 
-The vertical-bootstrap predicate is *strictly weaker* than the full
-DKM axiom set — verticality captures only F1, F2, F3 (the "non-trivial"
-axioms from the bootstrap perspective). F4, F5, F6 are the *additional*
-content that completes the bootstrap. -/
+The equivalence adds the three supplied F4, legacy F5 and F6 fields
+to the vertical record. -/
 
 /-- **Equivalence at the bundled level.** The conjunction of
 `IsVerticalBootstrap` with the (F4, F5, F6) trio is equivalent to
@@ -154,17 +124,16 @@ This module ships:
   high-ω F3) architecture, explicitly without any s/t/u channel
   constraint.
 - **`vertical_bootstrap_bypasses_crossing`** — structural theorem:
-  vertical + F4 + F5 + F6 ⇒ full CHHK axiom set, proven *without
-  invoking crossing*.
+  vertical + F4 + legacy F5 + F6 assemble the legacy record without
+  invoking crossing.
 - **`dkm_axiom_set_is_vertical`** — reverse direction: every full
-  CHHK axiom set is a vertical-bootstrap structure.
+  legacy bundle supplies the vertical fields.
 - **`dkm_axiom_set_iff_vertical_plus_f4f5f6`** — equivalence at the
   bundled level (substantive structural identity).
 
-**Phase 6o Wave 1c Obstruction (II) is structurally resolved.** The
-absence of a doubled-contour crossing identity is not a *gap* in the
-CHHK bootstrap but a *design feature* — the bootstrap is vertical, not
-horizontal.
+The Phase 6o question motivates comparing the interfaces. The Lean
+proofs package and project supplied legacy fields without a
+doubled-contour crossing input.
 
 An `IsDKMAxiomSet` witness supplies a vertical-bootstrap witness by
 projection. The normalized examples do not establish the hypotheses for

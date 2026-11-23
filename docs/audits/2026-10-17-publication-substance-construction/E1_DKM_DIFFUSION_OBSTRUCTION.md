@@ -63,3 +63,33 @@ The conclusion pertains to exact equality with fixed transport and model coeffic
 Independent adversarial review accepted the derivation at this scope (SHA256 `9dd166a61776657e7180ac109d6a010606b202be06ae1007ee602396ee31512b`).
 
 Separate normalized synthetic controls compared 3,600 responses against the full three-component matrix, with maximum scaled residual 2.30e-14. All 2,583 certified perturbation cases met the response bound. The margin rule declined 1,017 cases. The controls included 1,200 approaches along the diffusion scaling. The exact open-band assertion follows from the polynomial argument.
+
+## A finite-band separation margin near the diffusion scaling
+
+The existing detuned pole-exclusion bound also gives a conditional error tolerance on a band of nonzero width. Fix a homogeneous B1/B2 branch with real Q_*≠0, positive a, g, n₀, m and ℏ, and α₀≥0 as in the source. Take laboratory frequencies ω=c|q|² and band limits 0<c₋<c₊, 0<q₋<q₊, with c∈[c₋,c₊] and |q|∈[q₋,q₊]. Here c has the units of diffusivity. Allow transport fits with χ≥χ₋>0, 0<D₋≤D≤D₊ and 0<τ≤τ₊.
+
+If τ₊c₊²q₊²≤D₋, throughout this band the DKM imaginary response has the uniform positive lower bound
+
+    Im R_DKM = χDc/[c²+(D−τc²|q|²)²]
+               ≥ L_DKM := χ₋D₋c₋/(c₊²+D₊²).
+
+Indeed 0≤D−τc²|q|²≤D₊ on the band. The lower bound still applies to varying fits whose coefficients stay within the specified ranges. No assumed pole continuation or high-frequency model is needed.
+
+For the fixed detuned B1/B2 branch, set ε₊=ℏ²q₊²/(2m), ω₊=c₊q₊², b₊=ω₊+|v|q₊ and
+
+    B₊ = 2ab₊+b₊²+ε₊(|E₀+S₀|+ε₊)/ℏ²
+         +(4α₀/ℏ²)(ε₊+|E₀|ω₊/g).
+
+If ω₊≤g/2 and B₊<|Q_*|, the existing bound and the reality of χ_nn(0,0) give |Im χ_nn|≤L_B, where
+
+    L_B = (2n₀/ℏ²) [ε₊+|E₀|B₊/|Q_*|]/(|Q_*|−B₊).
+
+The coefficients of the error majorants are nonnegative, so replacing |q|, |ζ| and |v·q| by their stated upper bounds is valid across the band and all included directions. If a real conversion from this calibrated density response to the DKM normalization has magnitude at most Λ, then at each point
+
+    |Im R_DKM − Im(λ χ_nn)| ≥ G := L_DKM−Λ L_B.
+
+For G>0 and an actual measurement Y with |Im Y − Im(λχ_nn)|≤ε_meas, the residual against every admitted DKM prediction is at least G−ε_meas. An absolute fitting tolerance ε_fit cannot explain such a datum when ε_meas+ε_fit<G. Additional errors in the adopted B1/B2 prediction or normalization must enter the same budget. A complex calibration with unknown phase is not covered by the detuned estimate: it can rotate the nonzero real static response into the imaginary channel. If a complex conversion is known to obey |λ|≤Λ and |Im λ|≤δ_phase, one can instead use |Im(λχ_nn)|≤Λ L_B+δ_phase|χ_nn(0,0)|. This follows by subtracting the real static response before applying the envelope. For compensation χ_nn(0,0)=0, the existing uniform bound on the full response also directly permits bounded complex calibration.
+
+For fixed positive rate and margin, B₊ and L_B tend to zero with q₊. Thus the certificate admits positive finite intervals q₋<q₊ in the fixed model, without taking a measurement at ω=0 or q=0. Actual applicability requires values and uncertainty budgets for the carrying branch, normalization, fitted parameter ranges and a usable frequency–wavevector band satisfying the inequalities. A rate uncertainty extending to zero supplies no common ω₊ by this formula. The condition does not classify an uncalibrated optical signal, actual inhomogeneous data, a different conserved channel, or approximation on an arbitrary band outside this low-momentum region.
+
+Independent adversarial review accepted this conditional bound at SHA256 `456198d7f75803aafaba5cb8ee7806c935756298bf528a39bf504f659d134b25`. A separate synthetic control used seed 61710 to evaluate 3,600 frequency–wavevector points in 120 coefficient boxes. It solved the original three-component source matrix with the potential forcing vector, evaluated the complex DKM formula independently, and applied bounded complex conversion and measurement error. The maximum scaled solve residual was 5.93e-16. Every sampled case met the separation margin.
