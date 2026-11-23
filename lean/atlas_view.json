@@ -24517,6 +24517,312 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.after_A",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.after_B",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.in_A",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 6
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.in_B",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 6
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.bracket_compression",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_fock_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_fock_commonDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_sector_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_sector_commonDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_wall_commonDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.coordinate_mem",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.diagonal_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.diagonal_injection",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.exists_compact_fock_nonzero_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.firstSectorCompletion_one",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_commonDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_coordinate_mem",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_mem_diagonal",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_mem_diagonal_iff",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_output",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.mem_diagonalDomain_iff",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.no_bounded_bracket_extension",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.no_bounded_completed_wall_extension",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.no_bounded_fock_wall_extension",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.no_bounded_wall_sector_extension",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sectorInjection_apply_ne",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sectorInjection_apply_self",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sectorInjection_norm",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sectorProjection_injection",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sectorProjection_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sector_inner",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.unitary_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.unitary_commonDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.D2_mul",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "atlas_kind": "TRUE",
@@ -24730,7 +25036,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_domain_bound",
@@ -25594,7 +25900,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.constant_mem_wallHamiltonian",
@@ -25954,7 +26260,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.neg_measurePreserving",
@@ -26665,7 +26971,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.wallHamiltonian_compact_apply",
@@ -230251,7 +230557,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24941,
+    "theorem_nodes": 24975,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -230262,7 +230568,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 402,
-      "TRUE:PROVED": 24539,
+      "TRUE:PROVED": 24573,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
