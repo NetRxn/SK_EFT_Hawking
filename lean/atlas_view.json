@@ -27133,7 +27133,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 8
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMParameters.a_pos",
@@ -27169,7 +27169,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMParameters.\u03c7_pos",
@@ -27178,7 +27178,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMToLDPData.\u03c3_sq_ne_zero",
@@ -27775,6 +27775,168 @@
       "frontier_impact": 3
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmGRetarded_differentiableAt",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmGRetarded_differentiableOn",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmGRetarded_im_real",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_div_frequency",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_even_k",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_hasParityTimeReversal",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_neg_one",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_nonneg",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_odd",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_one_pos",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_pos",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_source_regression",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_zero_k",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmRetardedDenom_im",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmRetardedDenom_ne_zero_real",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmRetardedDenom_ne_zero_uhp",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmRetardedDenom_normSq_real",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkmRetardedDenom_re",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.dkm_axiom_set_iff_vertical_plus_f4f5f6",
       "module": "SKEFTHawking.DKMBootstrap.NoCrossing",
       "atlas_kind": "TRUE",
@@ -27800,6 +27962,42 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_conductivity_limit",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_denom_ne_zero",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_denom_nonneg",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_denom_pos",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.dkm_positivity_from_reflection_positivity",
@@ -27858,6 +28056,15 @@
     {
       "fqn": "SKEFTHawking.DKMBootstrap.dkm_rate_function_zero",
       "module": "SKEFTHawking.DKMBootstrap.LDPBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_scaled_spectrum",
+      "module": "SKEFTHawking.DKMBootstrap.Predicates",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -230557,7 +230764,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24975,
+    "theorem_nodes": 24998,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -230568,7 +230775,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 402,
-      "TRUE:PROVED": 24573,
+      "TRUE:PROVED": 24596,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
