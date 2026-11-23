@@ -22561,7 +22561,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSelfAdjoint.surjective_sub_I_smul",
@@ -22570,7 +22570,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.add",
@@ -22597,7 +22597,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.isClosed_range_sub_I_smul_of_isClosed",
@@ -22615,7 +22615,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.mul_norm_le_norm_sub_I_smul",
@@ -23407,7 +23407,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DFT.katoRellich_map_surjective",
@@ -23767,7 +23767,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.momentumCLM_fiberSchwartz",
@@ -23830,7 +23830,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DFT.momentumSqOperator_hasDenseDomain",
@@ -23848,7 +23848,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.momentumSqOperator_isSymmetric",
@@ -28956,6 +28956,663 @@
     {
       "fqn": "SKEFTHawking.DKMBootstrap.LDP_rate_function_yields_F4_compatible_correlator_existence",
       "module": "SKEFTHawking.DKMBootstrap.LDPBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.inverseSymbol_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.mem_domain_iff",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.omega_ae",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.omega_dense_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.omega_nonnegative",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.omega_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.omega_shift_surjective",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.omega_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.real_smul_inner",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.shift_norm_lower",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.shiftedPreimage_ae",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.shiftedPreimage_mem_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.shiftedPreimage_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.weighted_inverseSymbol_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.Model.excitonPotential_real",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.Model.mExciton_pos",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.Model.mPhoton_pos",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.Model.photonPotential_real",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.angular_kinetic_coefficient",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.boundedOperator_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.boundedOperator_relBound",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.boundedPart_exciton",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.boundedPart_photon",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.boundedPart_port",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.boundedPart_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.diagonal_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.diagonal_dense",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.diagonal_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.diagonal_shift_surjective",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.diagonal_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.exchange_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.fiberComplete",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 14
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.freeBlock_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.free_dense",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.free_mem_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.free_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.free_shift_surjective",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.free_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_closed",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_dense",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_exciton",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_mem_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_photon",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_port",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.generator_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.injection_adjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.injection_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.injection_coordinate_ne",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.injection_coordinate_same",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.inner_injection_left",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.inner_injection_right",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.kineticCoefficient_pos",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.kinetic_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.kinetic_schwartz",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.kinetic_schwartz_laplacian",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.kinetic_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.liftBlock_inner_left",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.liftBlock_inner_right",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.multiplier_adjoint",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.multiplier_ae",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.multiplier_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.photon_compression",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.photon_exciton_gain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.photon_injection_mem_domain_iff",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.photon_not_invariant_of_port_gain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.photon_port_gain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.projection_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.projection_injection_ne",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.projection_injection_same",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.schwartz_mem_kinetic",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.spatialDiagonal_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -232431,7 +233088,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25181,
+    "theorem_nodes": 25254,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -232442,7 +233099,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 404,
-      "TRUE:PROVED": 24777,
+      "TRUE:PROVED": 24850,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
