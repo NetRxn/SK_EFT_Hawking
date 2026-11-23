@@ -24328,13 +24328,103 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.endpoint_data",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.eventually_zero_derivatives_of_not_mem",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.eventually_zero_of_not_mem",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_compact_real_interval_obstruction",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "OBSTRUCTION",
+      "atlas_status": "OBSTRUCTION",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_compact_real_profile",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_deriv_ne_zero_of_nonconstant",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_nondegenerate_packet",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_nondegenerate_packet_of_nonconstant",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_packet_at",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.memL2",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.modulate_interval_norm",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.modulate_norm",
@@ -24343,7 +24433,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.mulOp_apply",
@@ -24364,13 +24454,31 @@
       "frontier_impact": 0
     },
     {
-      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_domain_bound",
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_bounded_interval_extension_of_deriv_ne_zero",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_bounded_interval_extension_of_nonconstant",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_domain_bound",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_finite_packet_bound",
@@ -24382,13 +24490,49 @@
       "frontier_impact": 1
     },
     {
-      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.packet_lower_bound",
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_interval_bound",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_interval_bound_of_deriv_ne_zero",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.no_interval_bound_of_nonconstant",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.packet_interval_lower_bound",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.packet_lower_bound",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.phase_deriv",
@@ -24418,6 +24562,33 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.toIntervalL2_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.toIntervalL2_injective",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.toIntervalL2_norm",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.toL2_ae",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "atlas_kind": "TRUE",
@@ -24433,7 +24604,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.zero_of_not_mem",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.coe_domainMode",
@@ -225995,6 +226175,16 @@
       "false_statement": ""
     },
     {
+      "id": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_compact_real_interval_obstruction",
+      "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
+      "frontier_impact": 0,
+      "kernel_pure": true,
+      "registered": false,
+      "fork_id": null,
+      "nogo_kind": "",
+      "false_statement": ""
+    },
+    {
       "id": "SKEFTHawking.DarkEnergyObstructionPrinciple.kv_ansatz_non_viable_via_factor1",
       "module": "SKEFTHawking.DarkEnergyObstructionPrinciple",
       "frontier_impact": 0,
@@ -228323,18 +228513,18 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24729,
+    "theorem_nodes": 24749,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
     "apex_ids": [
       "hyp:H_PMNSAnglesFromExactSubstrate"
     ],
-    "obstruction_nodes": 424,
+    "obstruction_nodes": 425,
     "registered_obstructions": 45,
     "by_kind_status": {
-      "OBSTRUCTION:OBSTRUCTION": 400,
-      "TRUE:PROVED": 24329,
+      "OBSTRUCTION:OBSTRUCTION": 401,
+      "TRUE:PROVED": 24348,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
