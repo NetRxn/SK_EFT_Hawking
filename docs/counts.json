@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T19:21:19.676842",
+  "generated": "2026-11-22T19:34:41.279031",
   "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 44276,
-    "theorems_total": 24861,
-    "theorems_substantive": 24835,
+    "total_declarations": 44319,
+    "theorems_total": 24894,
+    "theorems_substantive": 24868,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24768,
+    "theorems_kernel_substantive": 24801,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -2147,7 +2147,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13632,
+    "definitions": 13638,
     "structures": 487,
     "instances": 980,
     "inductives": 104,

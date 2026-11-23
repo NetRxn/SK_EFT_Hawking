@@ -24334,7 +24334,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.eventually_zero_derivatives_of_not_mem",
@@ -24352,7 +24352,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_compact_real_interval_obstruction",
@@ -24568,7 +24568,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.toIntervalL2_injective",
@@ -24613,7 +24613,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.closure_bracket_core",
@@ -24649,7 +24649,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.coefficient_le_norm",
@@ -24919,7 +24919,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kinetic_polynomial_eq_neg_second_deriv",
@@ -24928,7 +24928,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kinetic_polynomial_toLp",
@@ -25153,7 +25153,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.trigPolynomial_toLp",
@@ -25180,7 +25180,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.coe_coreProjection",
@@ -25211,6 +25211,114 @@
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.coe_parityMode",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactL2_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactL2_mem_parity",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactLift_coe",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactLift_continuous",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactLift_eventually_eq",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactLift_parity",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactLift_real_smooth",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactLift_seam_eventually_zero",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactParity_mem_closure",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compact_adjoint_witness",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compact_mem_both_wall_domains",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compact_mem_halfKinetic",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -25297,6 +25405,24 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfKinetic_compact_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfKinetic_compact_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 1
     },
     {
@@ -25360,10 +25486,28 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfUnitary_compactParity",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfUnitary_symm_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfUnitary_symm_compact",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -25408,6 +25552,24 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.inner_eq_cell",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.kinetic_compact_weak",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.kinetic_coreProjection",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
@@ -25450,7 +25612,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.neg_measurePreserving",
@@ -25459,7 +25621,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.no_bounded_volume_bracket_extension",
@@ -25508,6 +25670,15 @@
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityClosure_apply_core",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityClosure_compact_apply",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -25579,6 +25750,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityPMap_adjoint_eq_closure",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityPMap_closure_hasCore",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
@@ -25594,7 +25774,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityPMap_dense",
@@ -25603,7 +25783,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityPMap_dense_shifted_range",
@@ -25621,7 +25801,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.paritySign_norm",
@@ -25648,7 +25828,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.paritySpaces_distinct",
@@ -25658,6 +25838,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parity_compact_weak",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parity_half_ae",
@@ -25759,13 +25948,112 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_deriv",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_deriv2",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_endpoints",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_eventually_zero",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_eventually_zero_derivatives",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_green",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_half",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_hasCompactSupport",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_parity",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_smooth",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflectedTest_tsupport",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflection_ae",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.reflection_involution",
@@ -25850,6 +26138,15 @@
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.shiftedKinetic_coreProjection",
+      "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.trigLift_smooth",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -25954,7 +26251,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 10
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.volume_bracket_map",
@@ -229521,7 +229818,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24861,
+    "theorem_nodes": 24894,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -229532,7 +229829,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 401,
-      "TRUE:PROVED": 24460,
+      "TRUE:PROVED": 24493,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
