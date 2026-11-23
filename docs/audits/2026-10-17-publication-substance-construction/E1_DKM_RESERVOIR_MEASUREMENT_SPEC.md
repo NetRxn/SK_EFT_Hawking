@@ -85,3 +85,36 @@ For ω>0 use the positive Re/Im interval rule in the existing reservoir measurem
 In the compensated case `E=0` with `f_s≠0`, the density component is `s=f_s/Z` and the fixed-input error becomes `|Z|² ε_u/|f_s|`. This optical source can still identify the rate on the admitted branch.
 
 An independent matrix solve reproduced the feedback and rate in 1,200 synthetic one-sideband cases, with 1,200 fixed-input error checks and 600 zero-overlap controls. The maximum scaled feedback and rate residuals were 1.44e-14 and 2.28e-13. A separate 7,776-case source-model comparison checked the full three-component adjugate, density-probe response and flowing poles. These calculations used controlled synthetic inputs.
+
+### Joint optical calibration and coefficient error
+
+Use the one-sideband inverse on the same homogeneous branch. Let a hat denote a nominal input or an output reconstructed from those nominal inputs. Bounds ε_Z, ε_E, ε_S, ε_u, ε_fs and ε_ft are absolute error radii for the respective complex quantities. They can enclose a correlated calibration set. The bounds below do not require those errors to be independent or to attain their extrema simultaneously.
+
+Write P=Z+E, m=2Zu−f_t and δX=X−X̂. Require the certified margin p=|P̂|−ε_Z−ε_E>0. From the exact numerator difference,
+
+    P(s−ŝ)=δf_s+2E δu+2û δE−ŝ δP,
+
+obtain the density-amplitude error radius and its positive lower margin
+
+    b_s=[ε_fs+2(|Ê|+ε_E)ε_u+2|û|ε_E+|ŝ|(ε_Z+ε_E)]/p,
+    s_min=|ŝ|−b_s>0.
+
+Then |m−m̂|≤b_m=2(|Ẑ|+ε_Z)ε_u+2|û|ε_Z+ε_ft. The exact feedback difference is
+
+    α−α̂=[(m−m̂)−(m̂/ŝ)(s−ŝ)]/(2s)−(δZ+δS)/2.
+
+Consequently the disk |α−α̂|≤b_α is certified by
+
+    b_α=[b_m+|m̂/ŝ| b_s]/(2 s_min)+(ε_Z+ε_S)/2.
+
+Both margin tests precede division, and b_α has energy units. The fixed-input formula above preserves cancellations that this general triangle bound can lose and should be used when its stronger premises hold.
+
+For exact positive laboratory angular frequency ω, let θ̂=arg α̂ lie strictly between 0 and π/2. If b_α<min(Re α̂, Im α̂), the full disk is in that quadrant and its extreme angles are θ̂±arcsin(b_α/|α̂|), attained at the two tangent rays (the zero-radius limit is a point). Put φ=arcsin(b_α/|α̂|). Since g=ω cot θ is decreasing there, the exact extrema for the enclosing disk are
+
+    ω cot(θ̂+φ) ≤ g ≤ ω cot(θ̂−φ).
+
+These enclose every rate consistent with the calibrated errors and stated forward model. They may be wider than an interval obtained from the actual correlated input set. If the quadrant margin fails, this rule cannot certify a positive finite interval. A tighter admissible uncertainty set or improved calibration can still supply one. Uncertain positive frequency can be included as a multiplicative interval only after its effects on Z, E, S and the optical forcing have also been covered in the feedback budget.
+
+The errors must refer to the calibrated complex intracavity u and forcing, including phase, direct background and transfer uncertainty on the chosen operating branch. If the two displayed homogeneous equations have bounded residuals r_s and r_t, defined by their left sides equalling f_s+r_s and f_t+r_t, add the corresponding absolute residual bounds to ε_fs and ε_ft before applying the certificate. A directly forced reservoir can only be handled this way after its effect on those residuals is derived and bounded. The literature values currently held supply neither this joint calibration set nor these model residual bounds for a flowing horizon. This is a measurement criterion for γ_R and leaves microscopic density/current transfer and the physical DKM test separate.
+
+Independent adversarial review accepted the joint error calculation at the same homogeneous-model scope (source SHA256 `ba8f8d6b40e4492ac8a8ac079e7050e5b9d1896eb938b9fc5a5876848734f1dc`). A separate synthetic three-component matrix solve exercised 3,600 joint perturbations. The certificate declined 217 at the first denominator margin and 756 at the density-amplitude margin. It bounded feedback error in all 2,627 surviving cases. After 953 quadrant refusals, all 1,674 certified intervals enclosed the generating rate. The 3,348 tangent contacts agreed with the disk radius to 3.85e-16 in these normalized controls.
