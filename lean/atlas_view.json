@@ -26629,7 +26629,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_dense",
@@ -26638,7 +26638,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_mem_domain",
@@ -26656,7 +26656,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallRepresentative_continuous",
@@ -26666,6 +26666,159 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.eq_zero_of_rectangle_integrals",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.familyProduct_dense",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.familyProduct_orthonormal",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.productRepresentative_memLp",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_ae_of_coordinate_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_inner",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_mem_family_span",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_norm",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_rectangle_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_span_dense",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_update_add",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.product_update_smul",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.rectangle_inner",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.wallProduct_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.wallProduct_dense",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECProductL2.wallProduct_orthonormal",
+      "module": "SKEFTHawking.DKMBootstrap.BECProductL2",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.ae_half_of_volume",
@@ -231701,7 +231854,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25101,
+    "theorem_nodes": 25118,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -231712,7 +231865,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 403,
-      "TRUE:PROVED": 24698,
+      "TRUE:PROVED": 24715,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,

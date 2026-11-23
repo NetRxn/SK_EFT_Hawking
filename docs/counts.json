@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T21:31:39.925100",
+  "generated": "2026-11-22T21:44:05.796451",
   "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 44629,
-    "theorems_total": 25101,
-    "theorems_substantive": 25075,
+    "total_declarations": 44656,
+    "theorems_total": 25118,
+    "theorems_substantive": 25092,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25008,
+    "theorems_kernel_substantive": 25025,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2135,
+    "modules": 2136,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -177,6 +177,7 @@
       "SKEFTHawking.DKMBootstrap.BECMicroscopicPotential",
       "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
       "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "SKEFTHawking.DKMBootstrap.BECProductL2",
       "SKEFTHawking.DKMBootstrap.BECWallParity",
       "SKEFTHawking.DKMBootstrap.CauchyReceiver",
       "SKEFTHawking.DKMBootstrap.E1E2CrossBridge",
@@ -2153,7 +2154,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13699,
+    "definitions": 13708,
     "structures": 488,
     "instances": 983,
     "inductives": 104,
