@@ -23371,7 +23371,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.isSymmetricPMap_comp_self",
@@ -24616,13 +24616,31 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.closure_bracket_core",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.coe_closureCore",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.coe_domainMode",
       "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.coe_trigEquiv",
@@ -24688,13 +24706,40 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.cosineMultiplier_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.cosineMultiplier_core",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.cosineMultiplier_core_mem_closure",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.cosineOp_ae",
       "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.cosineOp_domainMode",
@@ -24742,6 +24787,87 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_closure_apply_core",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_closure_constant_control",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_closure_eq_neg_second_deriv_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_closure_hasCore",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_closure_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_dense",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_dense_shifted_range",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kineticPMap_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kinetic_constant_control",
       "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
       "atlas_kind": "TRUE",
@@ -24757,7 +24883,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kinetic_eigenvalue",
@@ -24775,7 +24901,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kinetic_finite_sum",
@@ -24814,6 +24940,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.kinetic_shift_ne_zero",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.mode_derivative",
       "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
       "atlas_kind": "TRUE",
@@ -24838,7 +24973,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.no_bounded_closure_bracket_extension",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.no_bounded_extension",
@@ -24847,7 +24991,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.no_domain_bound",
@@ -24866,6 +25010,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.physical_no_bounded_closure_bracket_extension",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.physical_no_bounded_extension",
@@ -24901,7 +25054,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.shiftedKinetic_mode_preimage",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.synthesis_injective",
@@ -24919,10 +25081,19 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.trigDomain_eq_span",
+      "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.trigDomain_le_shiftedKinetic_range",
       "module": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -228513,7 +228684,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24749,
+    "theorem_nodes": 24768,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -228524,7 +228695,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 401,
-      "TRUE:PROVED": 24348,
+      "TRUE:PROVED": 24367,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
