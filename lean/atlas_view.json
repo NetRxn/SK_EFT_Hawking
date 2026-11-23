@@ -24256,6 +24256,267 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.bosonicSubspace_isClosed",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.bosonicSubspace_one_eq_top",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.configurationMeasure_eq_restrict",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.configurationMeasure_univ",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_coe",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_inner",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_left_inverse",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_norm",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_right_inverse",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_surjective",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_symm_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalBosonicUnitary_unit_norm_iff",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalConfigurationUnitary_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.intervalConfigurationUnitary_symm_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.mem_bosonicSubspace_iff",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.mem_bosonicSubspace_iff_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.oneParticleEvaluation_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.oneParticleEvaluation_measurePreserving",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 6
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.oneParticleEvaluation_symm_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.oneParticleExtension_measurePreserving",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.permutationUnitary_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.permutationUnitary_mul",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.permutationUnitary_one",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.pullbackUnitary_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.pullbackUnitary_symm_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.reindex_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.reindex_measurePreserving",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECBosonicSectors.reindex_mul",
+      "module": "SKEFTHawking.DKMBootstrap.BECBosonicSectors",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.D2_mul",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "atlas_kind": "TRUE",
@@ -229990,7 +230251,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24912,
+    "theorem_nodes": 24941,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -230001,7 +230262,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 402,
-      "TRUE:PROVED": 24510,
+      "TRUE:PROVED": 24539,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
