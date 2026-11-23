@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T22:55:05.673430",
+  "generated": "2026-11-22T23:12:05.856305",
   "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 44984,
-    "theorems_total": 25299,
-    "theorems_substantive": 25273,
+    "total_declarations": 45033,
+    "theorems_total": 25333,
+    "theorems_substantive": 25307,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25206,
+    "theorems_kernel_substantive": 25240,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2141,
+    "modules": 2142,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -183,6 +183,7 @@
       "SKEFTHawking.DKMBootstrap.BECWallParity",
       "SKEFTHawking.DKMBootstrap.CauchyReceiver",
       "SKEFTHawking.DKMBootstrap.E1E2CrossBridge",
+      "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
       "SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap",
       "SKEFTHawking.DKMBootstrap.KMSConsistency",
       "SKEFTHawking.DKMBootstrap.LDPBridge",
@@ -2159,9 +2160,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13806,
+    "definitions": 13814,
     "structures": 489,
-    "instances": 985,
+    "instances": 986,
     "inductives": 105,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {

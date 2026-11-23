@@ -28780,7 +28780,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMParameters.a_pos",
@@ -28816,7 +28816,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMParameters.\u03c7_pos",
@@ -28825,7 +28825,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.DKMToLDPData.\u03c3_sq_ne_zero",
@@ -28846,13 +28846,274 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.band_mass",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.band_mass_pos",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.band_thermal_bound",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.band_weighted_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.band_weighted_integral",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.band_weighted_integral_pos_finite",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.boltzmann_diagonal",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.density_hermitian",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.density_not_commuting",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.density_projection",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.density_second_moment",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.dispersion_denominators",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.dispersion_differentiableAt",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.dispersion_differentiableOn",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.dispersion_formula",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.dispersion_imaginary_frequency",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.dispersion_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.partition_formula",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.phase_decay",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.state_density",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.state_diagonal",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.thermalFactor_antitone",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.thermalFactor_integral",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.timeCommutator_formula",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.timeIntegrand_formula",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.timeIntegrand_integrable",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.timeResponse_eq_dispersion",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.weight_formula",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.FiniteThermal.weight_pos",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.IsDKMAxiomSet.dkm_form",
       "module": "SKEFTHawking.DKMBootstrap.Predicates",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.IsDKMAxiomSet.f_sum_rule",
@@ -28861,7 +29122,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.IsDKMAxiomSet.operator_growth",
@@ -30517,7 +30778,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.dkmImGRetarded_even_k",
@@ -30706,7 +30967,25 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_div_frequency_unbounded",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.dkm_not_hasFSumRule",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.dkm_positivity_from_reflection_positivity",
@@ -30932,6 +31211,33 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.legacy_F1_F2_false",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.legacy_axiomSet_false",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.legacy_real_F5_all",
+      "module": "SKEFTHawking.DKMBootstrap.FiniteThermalSpectralControl",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.mir_bound_anti_monotone",
@@ -134386,7 +134692,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.expCoeff_add",
@@ -134449,7 +134755,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.gibbs_energy_shift",
@@ -134494,7 +134800,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.heisenberg_add",
@@ -134737,7 +135043,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 28
+      "frontier_impact": 30
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.twoLevel_nontrivial",
@@ -233503,7 +233809,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25299,
+    "theorem_nodes": 25333,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -233514,7 +233820,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 405,
-      "TRUE:PROVED": 24894,
+      "TRUE:PROVED": 24928,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
