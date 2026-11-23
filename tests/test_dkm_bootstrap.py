@@ -1,18 +1,9 @@
-"""Tests for Phase 6q Wave 2b numerical companion — DKM transport bootstrap.
+"""Regression source for geometric arithmetic, precision and scalar comparisons.
 
-Validates:
-1. CHHK geometric prefactor ``β_d`` closed-form at d=2,3.
-2. CHHK MIR constant ``(d·β_d/(4π))^(1/(d+1))`` numerical reproducibility:
-   float vs. mpmath agreement to 10^{-15}.
-3. Substantive lift: graphene MIR constant ≈ 0.0756 < Lean substrate
-   placeholder 1/2 (Lean theorem is a safe upper bound).
-4. Crossno 2016 graphene Dirac fluid ℓ/a ≈ 325 satisfies the CHHK MIR
-   bound by a margin of ~4300× (confirms the bootstrap kinematic window).
-5. Unit-sphere surface ``V_{d-1}`` standard identities (sanity check).
-6. Cross-module consistency: src.dkm_bootstrap re-exports the
-   src.core.formulas canonical values.
-
-Reference: Phase 6q Wave 2a.1 DR §5 + §6 numerical-companion deliverable.
+Existing assertions, tolerances, populations and legacy names are retained.
+These tests do not verify physical CHHK premises or material uniqueness.
+Stored fitted lengths give S1/S2/S3 ratios about6098/2439/138 and scalar
+margins about8.1e4/3.2e4/1.8e3; none identifies a collective transport length.
 """
 
 import pytest
@@ -65,7 +56,7 @@ class TestUnitSphereSurface:
 
 
 class TestCHHKBetaD:
-    """β_d = (1/π)·(V_{d-1}/(2π)^d)·(1-π/4)/(d+2) — CHHK eq. (26)."""
+    """β_d = (1/π)·(V_{d-1}/(2π)^d)·(1-π/4)/(d+2) — CHHK arXiv:2509.18255v2 Eq. (9) [v1 Eq. (26)]."""
 
     def test_beta_d_positive(self):
         """β_d > 0 for physical dimensions d ∈ {2, 3}."""
@@ -92,7 +83,7 @@ class TestCHHKBetaD:
 
 
 class TestMIRConstant:
-    """``chhk_mir_constant(d) = (d·β_d/(4π))^(1/(d+1))`` — CHHK eq. (29)."""
+    """``chhk_mir_constant(d) = (d·β_d/(4π))^(1/(d+1))`` — CHHK arXiv:2509.18255v2 Eq. (12) [v1 Eq. (29)]."""
 
     def test_graphene_value(self):
         """d=2 graphene MIR constant ≈ 0.0756."""
@@ -130,38 +121,34 @@ class TestMIRConstant:
         assert c3 > c2  # ~0.113 > ~0.076
 
 
-# ──────────────────────────────────────────────────────────────────────
-# §4. Substantive lift: Lean substrate placeholder vs Python substantive.
-# ──────────────────────────────────────────────────────────────────────
+# Scalar ordering between a normalized Lean constant and adopted arithmetic.
 
 
 class TestLeanSubstrateLift:
-    """Lean ``horizon_transport_uniqueness_graphene_witness_one_half`` ships
-    at ``mirConst = 1/2``; the substantive value here is ≈ 0.0756."""
+    """Compare the adopted scalar with the normalized Lean constant.
+
+    Legacy class name retained; this is no physical model lift."""
 
     def test_lean_placeholder_is_safe_upper_bound(self):
-        """1/2 > substantive MIR constant — Lean theorem implies substantive bound."""
+        """Check scalar ordering; implication requires the very same ratio/parameter tuple."""
         lean_placeholder = 0.5
         substantive = graphene_mir_bound_constant()
-        # Lean's mirConst=1/2 is *larger* than the substantive 0.0756,
-        # so any system meeting ℓ/a ≥ 1/2 trivially meets ℓ/a ≥ 0.0756.
+        # Ordering concerns the same abstract ratio only, not physical parameters.
         assert lean_placeholder > substantive
 
     def test_lean_placeholder_within_one_order(self):
-        """Lean placeholder is within one order of magnitude of substantive."""
+        """Check the numerical ratio of two constants, not approximation accuracy."""
         lean_placeholder = 0.5
         substantive = graphene_mir_bound_constant()
         ratio = lean_placeholder / substantive
-        assert 1 < ratio < 10  # ~6.6× looser, well within reasonable substrate stand-in
+        assert 1 < ratio < 10  # Larger scalar lower bound, by about6.6; no material approximation claim
 
 
-# ──────────────────────────────────────────────────────────────────────
-# §5. Crossno 2016 graphene satisfies CHHK MIR bound.
-# ──────────────────────────────────────────────────────────────────────
+# Fitted-length scalar comparisons; physical model applicability stays separate.
 
 
 class TestCrossnoGrapheneSatisfiesBound:
-    """Confront Crossno 2016 graphene Dirac-fluid mean-free-path with CHHK bound."""
+    """Check stored fit-estimate arithmetic; legacy name implies no physical verification."""
 
     def test_graphene_lattice_spacing_is_castro_neto(self):
         """Lattice spacing a = 0.246 nm per Castro Neto et al. RMP 81, 109 (2009)."""
@@ -172,30 +159,30 @@ class TestCrossnoGrapheneSatisfiesBound:
         assert CROSSNO_GRAPHENE_MEAN_FREE_PATH_M == pytest.approx(1.5e-6, rel=1e-12)
 
     def test_crossno_sample_range_anchored_to_paper(self):
-        """Crossno reports three samples at 60 K: S3=0.034, S2=0.6, S1=1.5 μm."""
+        """Stored impurity-length fit estimates at60K: S3=.034,S2=.6,S1=1.5 micrometres."""
         s3, s2, s1 = CROSSNO_GRAPHENE_MEAN_FREE_PATH_RANGE_M
         assert s3 == pytest.approx(0.034e-6, rel=1e-12)
         assert s2 == pytest.approx(0.6e-6, rel=1e-12)
         assert s1 == pytest.approx(1.5e-6, rel=1e-12)
 
     def test_crossno_all_samples_satisfy_chhk_bound(self):
-        """All three Crossno samples satisfy CHHK MIR bound (margins ~1.8× to ~80000×)."""
+        """Compare supplied ratios with the scalar; margins about1.8e3 to8.1e4."""
         result = crossno_graphene_satisfies_chhk_bound()
         assert result["satisfies_bound_all_samples"]
-        # S1 (cleanest) is well above bound; S3 (dirtiest) is closer.
+        # S1 has the largest supplied ratio; this is arithmetic ordering.
         assert result["margin_per_sample"]["S1"] > 50000  # ~80000×
         assert result["margin_per_sample"]["S2"] > 20000  # ~32000×
-        assert result["margin_per_sample"]["S3"] > 1  # ~1.8×
+        assert result["margin_per_sample"]["S3"] > 1  # about1.8e3 scalar margin; the existing >1 assertion stays exact
 
     def test_crossno_representative_S1_margin(self):
-        """S1 (representative cleanest sample) ℓ/a ≈ 6100 ≫ MIR 0.0756."""
+        """S1 supplied-length ratio is about6098; no collective-length identification."""
         result = crossno_graphene_satisfies_chhk_bound()
         # S1 = 1.5 μm; a = 0.246 nm; ℓ/a ≈ 6098
         assert result["ell_over_a_representative"] > 5000
         assert result["margin_representative"] > 50000  # ~80000×
 
     def test_graphene_mir_constraint_function(self):
-        """`graphene_mir_constraint(ℓ, a)` correctly classifies Crossno S1 sample."""
+        """The legacy helper returns True for the S1 supplied-ratio arithmetic."""
         assert graphene_mir_constraint(1.5e-6, 0.246e-9) is True
 
     def test_graphene_mir_constraint_below_bound(self):

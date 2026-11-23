@@ -1,41 +1,26 @@
 /-
 # Phase 6q Wave 1c.1 — DKM Transport Bootstrap: SDP-bypass structural finding
 
-**Phase 6o Wave 1c Obstruction (III) — fully resolved here.** The Phase
+The Phase 6o Wave 1c Obstruction (III) motivates the comparison. The Phase
 6o NO-GO writeup (`temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`
 §2.3) identified the breakdown of SDP feasibility on the complex
 Schwinger–Keldysh contour as the third structural obstruction. The DR
-Wave 1a.1 §1 row (3) re-reads CHHK 2509.18255 and finds: **CHHK has no
-SDP anywhere.** All CHHK bounds are derived analytically via:
+Wave 1a.1 §1 row (3) notes that CHHK 2509.18255 derives its
+published transport bounds without solving an SDP. The derivation uses:
 - Lehmann (spectral) representation;
-- positivity of `Im G^R`;
-- the Abanin–De Roeck–Huveneers nested-commutator norm bound (CHHK eq. 12);
-- the Stirling-type estimate (CHHK eq. 13);
-- direct integration over the DKM Lorentzian spectral form (CHHK eq. 15);
-- the auxiliary lower bound on the integral `F_d` (CHHK eq. 22).
+- nonnegativity of `Im G^R` on nonnegative frequencies;
+- the Abanin–De Roeck–Huveneers nested-commutator norm bound (CHHK v2 Eq. (31));
+- the Stirling-type estimate (CHHK v2 Eq. (32));
+- direct integration over the DKM Lorentzian spectral form (CHHK v2 Eq. (4));
+- auxiliary estimates on the momentum integral.
 
-CHHK §6 (Discussion) mentions dual S-matrix-bootstrap SDP-style
-optimisation as a future strengthening direction only.
+CHHK §6 discusses dual S-matrix-bootstrap SDP-style optimisation as
+a possible future strengthening. The Phase 6o obstruction motivates
+recording the assumptions of the published analytic route.
 
-**Structural resolution of Obstruction (III):** the absence of SDP in
-the CHHK bootstrap is not a *gap* to be filled but a *design choice*
-that bypasses the obstruction entirely. CHHK uses *analytic* bounds
-instead of numerical SDP.
-
-**Substantive content shipped (Wave 1c.1):**
-1. **`IsAnalyticBootstrap`** — the predicate capturing CHHK's "no SDP,
-   purely analytic" architecture: a bootstrap is *analytic* if every
-   bound it produces is a closed-form inequality on the correlator,
-   not the output of a semidefinite-programming feasibility check.
-2. **`analytic_bootstrap_bypasses_sdp`** — the structural theorem:
-   any analytic bootstrap satisfies the F1–F6 axiom families WITHOUT
-   invoking SDP. Equivalent in shape to `vertical_bootstrap_bypasses_crossing`
-   from Wave 1b.3.
-3. **Forward-deferred SDP predicate `IsDKMFeasibleSDPCandidate`** —
-   a predicate-substrate scaffold for the future SDPB-style numerical
-   bootstrap; currently has no content beyond the well-typed Prop shape.
-   Reserved for the Phase 7+ research-frontier extension (per DR §7
-   "Discussion / future strengthening").
+The Lean interface aliases the legacy `IsDKMAxiomSet`, shows the
+equivalence with the vertical bundle plus three supplied fields, and
+reserves a universally true SDP scaffold for future work.
 
 References:
 - Phase 6o Wave 1c NO-GO §2.3: SDP feasibility breaks on complex contour
@@ -53,26 +38,16 @@ namespace SKEFTHawking.DKMBootstrap
 
 /-! ## §1. The analytic-bootstrap predicate.
 
-CHHK's bootstrap is *analytic* in the sense that every bound it
-produces is a closed-form inequality derivable from the F1–F6 axiom set
-plus standard mathematical analysis (Cauchy integral formula,
-factorial / Stirling estimates) — no convex-cone optimisation, no
-semidefinite-programming feasibility check, no numerical SDPB run. -/
+The source uses a microscopic thermal spectral bound, a DKM
+description on an effective window and actual nested-commutator
+estimates. The analytic-bootstrap name below labels the legacy Lean
+bundle. The microscopic evidence must be supplied separately. -/
 
-/-- **Analytic bootstrap predicate** (`abbrev` for `IsDKMAxiomSet`).
-A bootstrap is *analytic* on the correlator `G` if its content can be
-expressed entirely through the F1–F6 axiom families — i.e., it admits an
-`IsDKMAxiomSet` witness, which together suffice for the analytic Lehmann-
-representation + operator-growth-bound + Stirling-estimate chain that
-CHHK uses to derive all of eqs. (8), (14), (23), (26), (29).
-
-Shipped as a transparent `abbrev` rather than an opaque `def` (post-
-strengthening 2026-05-25): the substantive content is the *labelling*
-that identifies CHHK's approach as purely analytic; the predicate is
-defeq to `IsDKMAxiomSet` so consumers can use either name. Equivalently
-(per Wave 1b.3): an analytic bootstrap is a vertical bootstrap with
-F4 + F5 + F6 trio, where neither verticality nor F4/F5/F6 invoke
-crossing or SDP. -/
+/-- Transparent alias for the legacy `IsDKMAxiomSet`. The name reflects
+CHHK's analytic approach. The alias inherits the incompatible global
+F1 and pointwise F2 fields, and the legacy real-value F5 predicate.
+The source's Lehmann and spectral-bound arguments require separate
+microscopic evidence. -/
 abbrev IsAnalyticBootstrap
     (G : Correlator) (p : DKMParameters)
     (commutatorNorm : ℕ → ℝ) (n0Norm boundData : ℝ) : Prop :=
@@ -84,7 +59,7 @@ Post-strengthening 2026-05-25: the prior `analytic_bootstrap_bypasses_sdp`
 identity wrapper `h := h` was removed (its content is now `rfl` via the
 `abbrev` above). The substantive composition with verticality is kept. -/
 
-/-- **Analyticity + verticality + (F4, F5, F6) are mutually equivalent.**
+/-- **Legacy bundle equivalence with verticality plus F4, F5 and F6.**
 Combines the Wave 1b.3 vertical-bootstrap-iff-CHHK-axiom-set equivalence
 with the Wave 1c.1 labelling identification. -/
 theorem analytic_iff_vertical_plus_f4f5f6
@@ -135,23 +110,17 @@ def IsDKMFeasibleSDPCandidate
   True
 
 /-- **Trivial SDP-candidate witness.** Confirms the deferred-scaffold
-predicate is non-vacuous (every functional satisfies the trivial Prop
-shape). -/
+reduces to `True` for every functional and correlator. -/
 theorem trivial_sdp_candidate (F : Correlator → ℝ) (G : Correlator) :
     IsDKMFeasibleSDPCandidate F G := trivial
 
-/-! ## §4. Distinction theorem — analytic ≠ SDP.
+/-! ## §4. Pairing with the deferred SDP scaffold.
 
-The substantive structural finding: `IsAnalyticBootstrap` and the
-(future) full-SDP-feasibility content are *categorically distinct*
-approaches to the bootstrap. CHHK's approach is the former; future
-strengthening per CHHK §6 would be the latter. -/
+The theorem pairs the supplied bundle witness `h` with a proof of
+`True`. The proposed SDP-feasibility predicate remains future work. -/
 
-/-- **Analytic-bootstrap content does not depend on SDP feasibility.**
-The structural finding: the analytic-bootstrap predicate's truth value
-on `(G, p, commutatorNorm, n0Norm, boundData)` is independent of any
-SDP-feasibility predicate. Captured as: if `IsAnalyticBootstrap` holds,
-it holds whether or not any chosen `F` is an SDP-feasibility candidate. -/
+/-- Pair the supplied legacy bundle with the universally true
+SDP-candidate scaffold. Actual SDP feasibility remains deferred. -/
 theorem analytic_independent_of_sdp_candidate
     {G : Correlator} {p : DKMParameters}
     {commutatorNorm : ℕ → ℝ} {n0Norm boundData : ℝ}
@@ -173,14 +142,11 @@ This module ships:
   1b.3 vertical equivalence.
 - **`IsDKMFeasibleSDPCandidate`** — forward-deferred SDP scaffold for
   the Phase 7+ research-frontier extension.
-- **`analytic_independent_of_sdp_candidate`** — structural distinction
-  theorem.
+- **`analytic_independent_of_sdp_candidate`** — pairs the supplied
+  bundle witness with the `True` scaffold.
 
-**Phase 6o Wave 1c Obstruction (III) is structurally resolved.** All
-three Phase 6o NO-GO obstructions (I unitarity→KMS, II crossing, III
-SDP) are now bypassed at the predicate-substrate level in Wave 1b.2,
-Wave 1b.3, Wave 1c.1 respectively. The Wave 1c.2 (LinearFunctionals)
-and Wave 1c.3 (LDPBridge) modules layer additional substantive
-structural content on top. -/
+The declarations formalize relationships between the legacy
+predicates. A populated physical bundle and its spectral bounds
+remain separate obligations. -/
 
 end SKEFTHawking.DKMBootstrap

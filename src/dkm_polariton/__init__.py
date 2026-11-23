@@ -1,18 +1,7 @@
-"""
-Phase 6v Wave 6v.3: DKM F3 polariton occupancy bound.
+"""Legacy photon-equivalent arithmetic exports.
 
-Polariton-platform companion to the Phase 6q DKM transport bootstrap
-substrate. Computes the per-pulse photon count for ultrafast-polariton
-platforms (Penn TMD nanocavity Wang et al. 2026, Paris-LKB Falque 2025)
-and confirms it sits well below the n_threshold ≈ 10⁶ regime that
-breaks DKM F3 (operator-growth) on continuum-bosonic platforms via
-Yin-Lucas / Kuwahara-Saito Lieb-Robinson-for-bosons.
-
-This module's substantive output is the empirical resolution of the
-Phase 6q open question (left in `project_phase6q_complete_2026_05_23`
-memory): **polariton takes the POSITIVE-uniqueness branch of the
-Phase 6q bimodal outcome** under any device-operating pump-energy
-constraint matched to the experimental switching threshold.
+The scalar comparison proxy and API names are retained. These exports
+do not certify mode occupation, a hard cutoff, F3 or physical uniqueness.
 """
 
 from src.dkm_polariton.polariton_occupation_bound import (

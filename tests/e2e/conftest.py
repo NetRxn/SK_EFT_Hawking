@@ -15,6 +15,7 @@ from the default `uv run pytest` run; invoke them with `-m e2e`.
 """
 from __future__ import annotations
 
+import json
 import socket
 import subprocess
 import sys
@@ -41,9 +42,7 @@ def _free_port() -> int:
 
 def _wait_until_up(url: str, proc: "subprocess.Popen", log_path: Path,
                    timeout: float = 180.0) -> None:
-    """Poll ``url`` until it answers 200. The first GET blocks on the ~15-20s
-    graph build, so the per-request timeout is generous. Raises with the server
-    log tail if the process dies during boot."""
+    """Wait for HTTP service and the background graph prewarm before navigation."""
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if proc.poll() is not None:
@@ -55,12 +54,13 @@ def _wait_until_up(url: str, proc: "subprocess.Popen", log_path: Path,
                 f"--- server log tail ---\n{tail}"
             )
         try:
-            with urllib.request.urlopen(url, timeout=30) as resp:
-                if resp.status == 200:
+            with urllib.request.urlopen(url + "/api/graph/status", timeout=30) as resp:
+                if resp.status == 200 and json.load(resp)["ready"]:
                     return
         except Exception:
-            time.sleep(0.5)
-    raise TimeoutError(f"dashboard not up at {url} within {timeout}s")
+            pass
+        time.sleep(0.5)
+    raise TimeoutError(f"dashboard graph not ready at {url} within {timeout}s")
 
 
 @pytest.fixture(scope="session")
@@ -83,7 +83,7 @@ def dashboard_url():
     )
     url = f"http://127.0.0.1:{port}"
     try:
-        _wait_until_up(url + "/", proc, log_path)
+        _wait_until_up(url, proc, log_path)
         yield url
     finally:
         proc.terminate()

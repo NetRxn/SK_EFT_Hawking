@@ -1096,32 +1096,23 @@ def polariton_spatial_attenuation(Gamma_pol, L, v_g):
 
 
 def polariton_mode_occupation_per_pulse(pulse_energy_J, photon_energy_eV):
-    """
-    Per-cavity-mode photon count for an optical-switching pulse.
+    """Incident photon-equivalent arithmetic E/(hbar omega), dimensionless.
 
-    n_per_pulse = E_pulse / (ℏω_cav)
-
-    For the UPenn nanocavity-polariton platform (Wang et al. 2026) the
-    4 fJ switching threshold at 1.736 eV gives ≈ 1.44 × 10⁴ photons per
-    pulse per mode — well below the DKM-F3 breaking onset (≈ 10⁶) for
-    continuum-bosonic substrates via Yin-Lucas / Kuwahara-Saito
-    Lieb-Robinson-for-bosons. This places the polariton platform on the
-    POSITIVE-uniqueness branch of the Phase 6q `PlatformBimodalOutcome`
-    (resolves the Wave 6v.3 open question).
-
-    Lean: polariton_dkm_f3_holds_at_pump_below_threshold (Wave 6v.3,
-          lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean)
-    Aristotle: manual
-    Source: Wang et al., PRL 136, 146901 (2026) — switching threshold;
-            Yin-Lucas arXiv:2106.09726 + Kuwahara-Saito arXiv:2103.11592
-            — Lieb-Robinson-for-bosons F3-break onset.
+    Converts supplied pulse energy using the supplied photon-energy value.
+    Legacy name retained: this is neither an intracavity per-mode occupation
+    nor a hard Fock-support cutoff. The adopted 4 fJ and 1.736 eV inputs give
+    about 1.44e4 photon equivalents. Wang arXiv:2411.16635v1 describes a
+    bandwidth-matched switching-energy estimate; 1.736 eV is its bare cavity.
+    Mode coupling, pump state, reservoir/dephasing and physical F3/growth,
+    transport and uniqueness require their own construction and calibration.
 
     Args:
-        pulse_energy_J: total pulse energy [J]
-        photon_energy_eV: cavity / polariton resonance energy [eV]
-
+        pulse_energy_J: supplied incident-equivalent energy in joules.
+        photon_energy_eV: supplied reference photon energy in electronvolts.
     Returns:
-        n_per_pulse: per-mode photon count (dimensionless, ≥ 0)
+        Dimensionless photon-equivalent count, not a physical branch verdict.
+    Raises:
+        ValueError for negative energy or nonpositive photon energy.
     """
     if pulse_energy_J < 0:
         raise ValueError(
@@ -11067,69 +11058,31 @@ def torsion_residual(amplitude):
 
 
 # ============================================================================
-# PHASE 6Q WAVE 2B NUMERICAL COMPANION — DKM TRANSPORT BOOTSTRAP MIR CONSTANT
-# ============================================================================
-#
-# Substantive numerical lift of the Lean substrate-level placeholder
-# `horizon_transport_uniqueness_graphene_witness_one_half` (mirConst = 1/2)
-# to the substantive Chowdhury-Hartnoll-Hebbar-Khondaker (CHHK) closed-form
-# geometric constant `(d·β_d / (4π))^(1/(d+1))` at d=2 for graphene Dirac
-# fluid. Per Phase 6q Wave 2a.1 DR §5.
-#
-# References:
-#   CHHK arXiv:2509.18255 (2025) eq. (29) — super-Planckian MIR-style limit.
-#   Crossno et al. Science 351, 1058 (2016) — graphene WF violation / Dirac
-#     fluid mean-free-path anchor (~50-100 nm at T ~ 75 K).
-#   Castro Neto et al. RMP 81, 109 (2009) — graphene tight-binding a = 0.246 nm.
+# DKM geometric scalar arithmetic; physical applicability is a separate task.
+# The normalized Lean witness and these functions are not transport uniqueness.
+# CHHK arXiv:2509.18255v2 Eqs. (9), (12); Crossno fitted impurity lengths
+# belong to src/dkm_bootstrap/graphene_mir.py and need a separate identification
+# with the collective length sqrt(tau*D). No physical F3 or MIR closure follows.
 # ============================================================================
 
 
 def unit_sphere_surface(d):
-    """Surface area of the unit (d-1)-sphere V_{d-1} = 2·π^(d/2) / Γ(d/2).
+    """Surface area V_(d-1) = 2*pi^(d/2)/Gamma(d/2).
 
-    Standard physics convention: V_{d-1} is the (d-1)-volume of the unit
-    sphere bounding the d-ball. Examples: V_0 = 2 (two endpoints of [-1,1]);
-    V_1 = 2π (circle circumference); V_2 = 4π (unit-sphere surface area).
-
-    Args:
-        d: ambient dimension (sphere lives in d-dim space).
-
-    Returns:
-        float V_{d-1} = surface area of unit (d-1)-sphere.
-
-    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
-        (geometric prefactor consumed by the substantive `(2·β_2/(4π))^(1/3)`
-        graphene MIR constant that lifts the Lean substrate-level `mirConst = 1/2`.)
-    Aristotle: manual
-    Source: standard differential-geometry identity; see e.g. Lee 2012 ch. 1.
+    The convention gives V_0=2, V_1=2*pi and V_2=4*pi.
+    This geometric factor alone establishes no material transport bound.
+    Returns a float; no new Lean grounding or runtime validation is claimed.
     """
     from math import gamma, pi
     return 2.0 * pi**(d / 2.0) / gamma(d / 2.0)
 
 
 def chhk_beta_d(d):
-    """CHHK eq. (9) v2 [= eq. (26) v1] geometric prefactor β_d.
+    """Geometric prefactor beta_d in CHHK arXiv:2509.18255v2 Eq. (9).
 
-    Closed-form: β_d = (1/π) · (V_{d-1} / (2π)^d) · (1 - π/4) / (d+2)
-
-    Appears in the MIR-style master bound:
-        β_d / (1 - e^(-1/(T·τ))) ≤ (ℓ/a)^d · (τ/(χ·a^d)) · ⟨n₀²⟩_T
-    and in the super-Planckian limit eq. (29):
-        (d·β_d / (4π))^(1/(d+1)) ≤ ℓ/a.
-
-    Returned as a Python float (sufficient for everyday usage). For 10^{-30}
-    precision suitable for cross-checking Lean numeric literals, use
-    `graphene_mir_constant_mpmath()` instead.
-
-    Args:
-        d: spatial dimension (graphene Dirac fluid: d = 2).
-
-    Returns:
-        float β_d.
-
-    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
-    Aristotle: manual
-    Source: CHHK arXiv:2509.18255 eq. (26).
+    beta_d = (1/pi)*(V_(d-1)/(2*pi)^d)*(1-pi/4)/(d+2).
+    Computes the scalar only; the physical inequality needs its model,
+    state and validity-window hypotheses. Returns a float.
     """
     from math import pi
     V_dm1 = unit_sphere_surface(d)
@@ -11137,30 +11090,14 @@ def chhk_beta_d(d):
 
 
 def chhk_mir_constant(d):
-    """CHHK eq. (12) v2 [= eq. (29) v1] super-Planckian MIR-style constant `(d·β_d / (4π))^(1/(d+1))`.
+    """Scalar (d*beta_d/(4*pi))^(1/(d+1)); CHHK v2 Eq. (12).
 
-    The bound `(d·β_d / (4π))^(1/(d+1)) ≤ ℓ/a` states that any Drude-Kadanoff-
-    Martin transport correlator satisfying the six CHHK axiom families must
-    have collective mean free path `ℓ = √(τ·D)` at least this multiple of the
-    microscopic lattice scale `a`. Saturation occurs at the Planckian
-    bad-metal regime.
-
-    For d=2 graphene Dirac fluid:
-        (2·β_2 / (4π))^(1/3) = ((1 - π/4) / (16·π^3))^(1/3) ≈ 0.0757
-    in standard physics convention V_1 = 2π.
-
-    Args:
-        d: spatial dimension.
-
-    Returns:
-        float MIR constant.
-
-    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
-        (the Lean theorem ships at substrate-level `mirConst = 1/2`; this
-        Python function ships the substantive geometric constant that the
-        substrate-level placeholder is the next-up-from-zero stand-in for.)
-    Aristotle: manual
-    Source: CHHK arXiv:2509.18255 eq. (29).
+    That physical MIR specialization additionally uses the stated
+    super-Planckian regime and fermionic estimates, beyond the general
+    Eq. (9) assumptions. Its collective length is sqrt(tau*D).
+    Computing this scalar neither verifies those premises nor proves
+    transport uniqueness or Planckian saturation for a material.
+    Returns a float; d=2 uses the V_1=2*pi convention.
     """
     from math import pi
     beta_d = chhk_beta_d(d)
@@ -11168,51 +11105,22 @@ def chhk_mir_constant(d):
 
 
 def graphene_mir_constant():
-    """d=2 specialization of `chhk_mir_constant`. Phase 6q Wave 2b numerical companion.
+    """Return the adopted d=2 scalar chhk_mir_constant(2), about 0.0756.
 
-    Returns the graphene Dirac-fluid MIR constant `(2·β_2 / (4π))^(1/3)`
-    as a Python float (~10^{-15} double precision). Per Phase 6q Wave 2a.1
-    DR §5, this is the substantive lift of the Lean substrate-level
-    placeholder `horizon_transport_uniqueness_graphene_witness_one_half`
-    at `mirConst = 1/2`.
-
-    Computed value: ≈ 0.0757 (V_1 = 2π convention). The Lean
-    `mirConst = 1/2` substrate-level placeholder is therefore *strictly
-    larger than* the substantive bound — the Lean theorem already implies
-    the substantive bound, so the Python value here is the *physically
-    sharpened* constant the Lean stand-in approximates from above.
-
-    Returns:
-        float graphene MIR constant.
-
-    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
-    Aristotle: manual
-    Source: CHHK arXiv:2509.18255 eq. (29) at d=2.
+    The legacy graphene name is a specialization label, not a calibrated
+    material bound. The Lean all-one witness proves 1/2 <= 1; identifying
+    an actual material parameter tuple and its physical premises remains
+    required. A smaller scalar is a weaker lower bound on the same ratio.
     """
     return chhk_mir_constant(2)
 
 
 def graphene_mir_constant_mpmath(dps=30):
-    """High-precision graphene MIR constant via mpmath.
+    """Evaluate the adopted d=2 scalar with mpmath at requested dps.
 
-    Returns the d=2 graphene MIR constant `(2·β_2 / (4π))^(1/3)` to `dps`
-    decimal digits of precision. Default 30 dps is far beyond the
-    10^{-6} target stated in Wave 2a.1 DR §6 for committing Lean numeric
-    literals.
-
-    The closed-form-derived value is:
-        ((1 - π/4) / (16·π^3))^(1/3)
-    using V_1 = 2π (unit-circle circumference) convention.
-
-    Args:
-        dps: decimal places of precision (default 30).
-
-    Returns:
-        mpmath.mpf graphene MIR constant.
-
-    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
-    Aristotle: manual
-    Source: CHHK arXiv:2509.18255 eq. (29) at d=2.
+    Uses ((1-pi/4)/(16*pi**3))**(1/3) in the V_1=2*pi convention.
+    dps controls arithmetic precision, not physical uncertainty or validity.
+    The returned mpf supplies no material-state or transport certificate.
     """
     import mpmath
     with mpmath.workdps(dps):

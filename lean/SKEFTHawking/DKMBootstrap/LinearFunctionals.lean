@@ -1,48 +1,14 @@
 /-
-# Phase 6q Wave 1c.2 — DKM Transport Bootstrap: linear-functional convex cone
+# DKM positive-frequency functional cone
 
-The DKM-compatible linear functionals on the correlator space form a
-convex cone — this is the substantive content the Wave 2a SK-EFT
-specialization (and any future SDP-extension per CHHK §6) consumes.
+A compatible real functional is nonnegative on the F4 cone
+`∀ Ω k, 0 ≤ Ω → 0 ≤ G Ω k`. Nonnegative scaling and addition preserve
+compatibility. Point evaluations require nonnegative sampled frequencies.
+These closure statements do not assert linearity for an arbitrary `F`, a weighted
+microscopic upper bound, a physical correlator match, or causal analyticity.
 
-**Substantive structural finding:** the set of nonneg linear functionals
-on the correlator space that respect the F4 positivity content of the
-DKM axiom set forms a *convex cone* in the sense of nonneg-scalar
-+ nonneg-sum closure. This is the bootstrap-side analog of the
-positivity-of-test-functionals condition that powers the conformal
-bootstrap, formulated entirely at the analytic-CHHK level (no SDPB).
-
-**Wave 1c.2 deliverables:**
-1. **`IsDKMCompatibleFunctional`** — predicate: a functional
-   `F : Correlator → ℝ` is DKM-compatible if it is nonneg on every
-   F4-positive correlator.
-2. **Convex-cone closure theorems:**
-   - `nonneg_scaling_dkm_compatible`: scaling by `c ≥ 0` preserves
-     DKM-compatibility.
-   - `sum_dkm_compatible`: pointwise sum of DKM-compatible functionals is
-     DKM-compatible.
-   - `zero_dkm_compatible`: zero functional is DKM-compatible.
-3. **Substantive non-vacuity** — the linear functional
-   `F(G) := G Ω k` (evaluation at a kinematic point) is DKM-compatible
-   for any `(Ω, k)`.
-
-**Why this matters for the bootstrap:** the convex-cone structure
-gives the bootstrap "direction of attack" — bounds are derived by
-proving that *every* DKM-compatible functional satisfies a certain
-inequality. The convex-cone closure ensures the bound transports
-through scalar/sum operations, which is what allows the bootstrap
-machinery to assemble per-axiom-family content into the master
-inequalities (CHHK eqs. 8, 14, 26, 29). The substantive analytic
-content (CHHK eqs. 26 + 29 mean-free-path bounds) lives in Wave 2b.1
-`HorizonTransportBootstrap.lean`; here we ship the convex-cone substrate.
-
-References:
-- Wave 1a.1 DR §5: convex-cone structure of dual functionals
-- DR Wave 2a.1 §3: Option B predicate-substrate primary
-- Mathlib4 `Mathlib/Analysis/Convex/Cone/{Basic,Dual,Extension,InnerDual}.lean`:
-  `ConvexCone`, `PointedCone`, `ProperCone`, `ProperCone.hyperplane_separation`
-  — the substrate for any future SDPB-extension wave
-- CHHK arXiv:2509.18255: F4 positivity (eq. 5)
+Source: CHHK arXiv:2509.18255v2 §7.1, positivity after Eq. (24).
+The pointwise projection retained below is legacy F2, not Eq. (2)/(25)'s integral.
 -/
 import SKEFTHawking.DKMBootstrap.SDPStructure
 
@@ -97,87 +63,43 @@ theorem sum_dkm_compatible
 /-! ## §3. Substantive non-vacuity — point-evaluation functional. -/
 
 /-- **Point-evaluation functional `evalAt Ω k`.** For each `(Ω, k) ∈ ℝ × ℝ`,
-the functional `G ↦ G Ω k` is DKM-compatible (directly from F4
+at `0 ≤ Ω` the functional `G ↦ G Ω k` is DKM-compatible (directly from F4
 positivity at `(Ω, k)`). This is the substantive non-vacuity witness for
 the convex-cone of DKM-compatible functionals — it gives a *family* of
 DKM-compatible functionals parameterized by `(Ω, k)`. -/
 def evalAt (Ω k : ℝ) : Correlator → ℝ := fun G => G Ω k
 
-/-- **`evalAt Ω k` is DKM-compatible.** -/
-theorem evalAt_dkm_compatible (Ω k : ℝ) :
+/-- **`evalAt Ω k` is DKM-compatible at nonnegative frequency.** -/
+theorem evalAt_dkm_compatible (Ω k : ℝ) (hΩ : 0 ≤ Ω) :
     IsDKMCompatibleFunctional (evalAt Ω k) := by
   intro G hG
-  exact hG Ω k
+  exact hG Ω k hΩ
 
 /-- **Nonneg-weighted finite sum of point evaluations is DKM-compatible.**
-By combining the sum + scaling closures, any finite nonneg-weighted sum
-of `evalAt` functionals (a discrete approximation of an integrated
-spectral-weight functional like CHHK eq. 8) is DKM-compatible. The
-nontrivial-coefficient case is stated below. -/
+The sum and scaling closures apply at nonnegative sampled frequencies. This
+two-point statement supplies no convergence or quadrature-error estimate for an integral. -/
 theorem two_point_weighted_dkm_compatible
     (c₁ c₂ : ℝ) (Ω₁ k₁ Ω₂ k₂ : ℝ)
-    (hc₁ : 0 ≤ c₁) (hc₂ : 0 ≤ c₂) :
+    (hc₁ : 0 ≤ c₁) (hc₂ : 0 ≤ c₂) (hΩ₁ : 0 ≤ Ω₁) (hΩ₂ : 0 ≤ Ω₂) :
     IsDKMCompatibleFunctional (fun G => c₁ * G Ω₁ k₁ + c₂ * G Ω₂ k₂) := by
   exact sum_dkm_compatible
-    (nonneg_scaling_dkm_compatible (evalAt_dkm_compatible Ω₁ k₁) hc₁)
-    (nonneg_scaling_dkm_compatible (evalAt_dkm_compatible Ω₂ k₂) hc₂)
+    (nonneg_scaling_dkm_compatible (evalAt_dkm_compatible Ω₁ k₁ hΩ₁) hc₁)
+    (nonneg_scaling_dkm_compatible (evalAt_dkm_compatible Ω₂ k₂ hΩ₂) hc₂)
 
-/-! ## §4. Cross-bridge to the CHHK eq. (8) integrated bound.
+/-! ## §4. Legacy pointwise upper-bound projection.
 
-CHHK eq. (8) is an integrated spectral-weight inequality: the
-functional `G ↦ ∫_ω^Λ ∫_Σ Im G^R(Ω,k) / Ω dΩ dk` is bounded above by a
-microscopic-data quantity `boundData = ⟨n₀²⟩_T / (ω·n_B(ω)·ν²)`. The
-convex-cone structure shipped in §2 + §3 implies that *any* nonneg-
-weighted integrated functional of this shape inherits the F4-positivity
-direction: integrated functionals over F4-positive correlators have
-nonneg integrand pointwise, hence (under any reasonable integration
-theory) produce nonneg output.
+Positive-frequency cone closure proves nonnegativity of the displayed finite functionals.
+It does not prove the source's thermally weighted frequency/momentum integral bound.
+-/
 
-We capture this at predicate-substrate level via the
-`integrated_form_dkm_compatible` theorem on a *discrete-sum
-approximation* of the CHHK integrated functional. The full integral
-form lifts to Wave 2b.1 (substantive HorizonTransportBootstrap). -/
-
-/-- **`HasFSumRule` is a sufficient condition for an integrated DKM-
-compatible functional on the correlator's slice.** The structural
-content: if `G` satisfies the f-sum-rule with `boundData`, then for
-any nonneg integrand-discretisation `(c_i, Ω_i, k_i)` in the CHHK
-integration window, the partial-sum functional `∑ c_i · G(Ω_i, k_i)`
-is bounded above by `(∑ c_i) · Ω_i⁻¹ · boundData` (componentwise).
-
-For Wave 1c.2 we ship this as a single-point convexity statement; the
-full discrete-sum version lifts via repeated application of
-`sum_dkm_compatible` in Wave 2b.1. -/
+/-- Projection of the legacy pointwise F2 premise at one positive-frequency sample.
+This is not an integrated bound, nor a derivation of CHHK v2 Eq. (2)/(25).
+In particular, cone positivity supplies no microscopic upper bound. -/
 theorem integrated_form_dkm_compatible_point
     (G : Correlator) (boundData : ℝ) (h_fsum : HasFSumRule G boundData)
     (ω Λ Ω k : ℝ) (hω : 0 < ω) (hωΛ : ω ≤ Λ)
     (hωΩ : ω ≤ Ω) (hΩΛ : Ω ≤ Λ) (hΩpos : 0 < Ω) :
     G Ω k / Ω ≤ boundData :=
   h_fsum ω Λ hω hωΛ Ω k hωΩ hΩΛ hΩpos
-
-/-! ## §5. Closure summary — Wave 1c.2 linear-functional convex cone.
-
-This module ships:
-- **`IsDKMCompatibleFunctional`** predicate — DKM-compatibility of a
-  linear functional `Correlator → ℝ`.
-- **Convex-cone closure** — three theorems (`zero_dkm_compatible`,
-  `nonneg_scaling_dkm_compatible`, `sum_dkm_compatible`) confirming
-  the set of DKM-compatible functionals forms a convex cone.
-- **Substantive non-vacuity** — `evalAt Ω k` (point evaluation) is DKM-
-  compatible for each `(Ω, k)`; nonneg-weighted finite sums
-  (`two_point_weighted_dkm_compatible`) are also DKM-compatible.
-- **CHHK eq. (8) cross-bridge** — `integrated_form_dkm_compatible_point`
-  expressing the f-sum-rule predicate's content as a single-point
-  bound transferable through the convex-cone closure.
-
-Substantive integrated-functional content (full CHHK eqs. (8), (14),
-(26), (29) inequalities) lifts to Wave 2b.1 substrate-specific
-`HorizonTransportBootstrap` content.
-
-The Mathlib4 `ProperCone` substrate (`ProperCone.hyperplane_separation`,
-`InnerProductSpace.toDual`) is available if and when the project
-attempts a future SDPB-extension wave per CHHK §6 / DR §5; the convex-
-cone closure here is the bootstrap-side substrate that machinery
-would consume. -/
 
 end SKEFTHawking.DKMBootstrap

@@ -179,7 +179,7 @@ POLARITON_PLATFORMS = {
         'gamma_UP_meV': 2.3,      # upper-polariton linewidth (Wang et al. 2026)
         'gamma_cav_meV': 1.9,     # cavity linewidth (γ_rad ≈ 0.7 + γ_nonrad ≈ 1.2)
         'Q_factor': 914,          # E_cav (1.736 eV) / γ_cav (1.9 meV)
-        'switching_energy_fJ': 4.0,  # all-optical switching threshold (Wang et al. 2026)
+        'switching_energy_fJ': 4.0,  # bandwidth-matched switching-energy estimate (Wang arXiv:2411.16635v1), not a modal hard cutoff
         # Γ_pol computed from γ_LP_meV at post-dict step below (use canonical eV→s⁻¹
         # conversion to keep the source-of-truth purely in g/γ_LP/γ_UP/γ_cav in meV).
     },
@@ -1538,7 +1538,7 @@ REVIEW_CORPUS_DOC_FLOOR = 404
 #:
 #: A RATCHET: bundles hard-fail, legacy drafts are frozen and may only shrink. A NEW
 #: broken legacy draft FAILS; raising this needs a stated reason in the same commit.
-LEGACY_DRAFT_LATEX_BROKEN_CEILING = 14
+LEGACY_DRAFT_LATEX_BROKEN_CEILING = 13
 
 #: Legacy (non-bundle) drafts carrying a `\ref` whose `\label` exists nowhere in the
 #: draft's input closure — each renders as a literal `??` to a reader.

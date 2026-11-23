@@ -1,15 +1,14 @@
 /-
 # Phase 6q Wave 2a.2 — SK-EFT-Hawking specialization of CHHK DKM bootstrap
 
-The substantive specialization of the Track-1 DKM bootstrap substrate to
-the SK-EFT-Hawking horizon transport problem. Per Wave 2a.1 DR, this
-module ships the `IsCHHKBootstrapBound` integrated-form predicate, the
-`IsMIRBound` Mott-Ioffe-Regel-style master bound predicate (CHHK eq. 29),
-and the bridge between Phase 6q DKMParameters and the existing
+Wave 2a.1 DR motivates specializing transport to the SK-EFT-Hawking
+horizon. This module defines the `IsCHHKBootstrapBound` pointwise bound
+and the `IsMIRBound` inequality predicate (CHHK v2 Eq. (12)),
+and a coefficient positivity test for the existing
 SK-EFT-Hawking machinery (`SKEFTHawking.SKDoubling.FirstOrderCoeffs` /
 `CombinedDissipativeCoeffs`).
 
-**Per Wave 2a.1 DR §1 platform recommendation:** initial platform is
+**Historical Wave 2a.1 DR §1 recommendation:** the initial comparator is
 **graphene Dirac fluid** (E2 bundle) — the only project platform that is
 *natively lattice* with a microscopically conserved charge, the cleanest
 dynamical-KMS Z₂ structure, and experimental anchors at Crossno 2016
@@ -17,30 +16,19 @@ dynamical-KMS Z₂ structure, and experimental anchors at Crossno 2016
 Drude weight). BEC and polariton are PARTIAL-VIABLE secondary targets.
 
 **Wave 2a.2 deliverables:**
-1. **`IsCHHKBootstrapBound`** — predicate-substrate operationalization of
-   CHHK eq. (8) / (14) integrated spectral-weight inequality.
-2. **`IsMIRBound`** — predicate for the Mott-Ioffe-Regel master bound
-   (CHHK eq. 29): `(d·β_d / 4π)^(1/(d+1)) ≤ ℓ/a`.
-3. **Wilson-coefficient bridge** — substantive structural map between
-   DKMParameters `(τ, D, χ)` and the existing `FirstOrderCoeffs` `(r1,
-   …, r6, i1, i2, i3)` Wilson coefficients of `SKEFTHawking.SKDoubling`
-   (substantive cross-bridge per Wave 2a.1 DR §4).
-4. **Substantive non-vacuity** — the substrate-level theorem
-   `dkm_bootstrap_yields_mir_bound`: any analytic-bootstrap-compatible
-   correlator (per Wave 1c.1) with sufficiently large mean free path
-   satisfies the MIR bound.
-
-**Wave 2a.1 DR §6 cross-bridge note:** the substantive Gaussian-
-fluctuation-regime hypothesis required for the full
-`chhk_positivity_iff_LDP_rate_function` biconditional ships here as
-the `IsGaussianFluctuationRegime` predicate; the reverse direction
-(LDP rate function → F4 positivity) is shipped as a structural
-companion to Wave 1c.3's forward direction.
+1. **`IsCHHKBootstrapBound`** — pointwise bound with a frequency-window
+   threshold.
+2. **`IsMIRBound`** — predicate for the Mott-Ioffe-Regel inequality
+   (CHHK v2 Eq. (12)): `(d·β_d / 4π)^(1/(d+1)) ≤ ℓ/a`.
+3. **Wilson-coefficient positivity** — tests `0 < i1` and `0 < i2`.
+   Physical coefficient identification remains open.
+4. **Rate-function compatibility** — pairs supplied F4 with the
+   parameterized rate-function witness.
 
 References:
 - Wave 2a.1 DR: `Lit-Search/Phase-6q/Phase 6q Wave 2a.1 Return Dossier
   — SK-EFT-Hawking Specialization of the CHHK DKM Transport Bootstrap.md`
-- CHHK eq. (8): integrated spectral-weight inequality
+- CHHK v2 Eqs. (2), (25): thermal weighted spectral bound
 - CHHK eq. (9) v2 [= eq. (26) v1]: MIR-style master bound `β_d/(1−e^{−1/(Tτ)}) ≤
   (ℓ/a)^d · (τ/(χ·a^d))·⟨n₀²⟩_T`
 - CHHK eq. (12) v2 [= eq. (29) v1]: super-Planckian limit `(d·β_d/4π)^{1/(d+1)} ≤ ℓ/a`
@@ -54,20 +42,13 @@ namespace SKEFTHawking.DKMBootstrap
 
 open SKEFTHawking.SKDoubling SKEFTHawking.CrooksAnalogHawking
 
-/-! ## §1. Integrated-bootstrap-bound predicate (CHHK eq. 8 / 14).
+/-! ## §1. Legacy pointwise bootstrap bound.
 
-The integrated spectral-weight inequality CHHK derives from F2 + F4 +
-F5 + the Lehmann representation. At substrate level, we capture this as
-a predicate parameterized by the upper-bound functional `boundFunctional :
-ℝ → ℝ → ℝ` (in CHHK: `(ω, Λ) ↦ ⟨n₀²⟩_T / (ω·n_B(ω)·ν²)`). The
-substantive analytic content of the integral inequality is the Wave
-1c.2 + Wave 2b.1 content; here we ship the predicate-substrate form
-ready for the Wave 2b.1 substantive theorem. -/
+The source bounds a thermal integral over frequency and momentum. Here
+`boundFunctional ω Λ` sets a threshold for each point. -/
 
-/-- **CHHK eq. (8) / (14) integrated-bound predicate.** For all
-frequency windows `[ω, Λ]` with `0 < ω ≤ Λ` and kinematic points `(Ω, k)`
-in the window, the integrand `G(Ω, k) / Ω` is bounded above by
-`boundFunctional ω Λ`. -/
+/-- In every window `[ω, Λ]` with `0 < ω ≤ Λ`, bound `G(Ω, k) / Ω` at
+each included positive frequency and every momentum. -/
 def IsCHHKBootstrapBound
     (G : Correlator) (boundFunctional : ℝ → ℝ → ℝ) : Prop :=
   ∀ ω Λ : ℝ, 0 < ω → ω ≤ Λ →
@@ -82,7 +63,7 @@ def IsCHHKBootstrapBound
 -- constant-bound specialization of `IsCHHKBootstrapBound` is preserved
 -- in this docstring and by the predicate shapes themselves.
 
-/-! ## §2. The Mott-Ioffe-Regel master bound (CHHK eq. 29).
+/-! ## §2. Predicate for the MIR inequality (CHHK v2 Eq. (12)).
 
 The substrate-side super-Planckian limit `(d·β_d/4π)^{1/(d+1)} ≤ ℓ/a`,
 the canonical "bad metal" Planckian bound. We capture this at predicate-
@@ -107,9 +88,8 @@ theorem mir_bound_anti_monotone
   le_trans h_le h
 
 /-- **MIR bound holds at `mirConst = 0`** — the trivially-true bound.
-Substantive non-vacuity: the predicate is non-degenerate at the trivial
-constant, and the substantive content kicks in for `mirConst > 0`
-(graphene gives a specific O(0.1)–O(1) constant per Wave 2a.1 DR §5). -/
+This is the zero-constant control. Physical positive MIR lower bounds
+require separate evidence. -/
 theorem mir_bound_at_zero (p : DKMParameters) :
     IsMIRBound p 0 := by
   unfold IsMIRBound
@@ -124,37 +104,15 @@ lift of paper1/2/3 (D1 bundle's SK-EFT-Hawking analytic content) is
 PARTIAL-VIABLE per DR §4 — substantive proof obligations on the Wilson-
 coefficient relations are deferred to a future "D1 lift-to-Lean" wave.
 
-Here we ship the *predicate-substrate* form of the bridge: a predicate
-`IsDKMCompatibleSKEFT (p : DKMParameters) (c : FirstOrderCoeffs)` that
-captures the substantive structural map between the two coefficient
-families. -/
+The proposed identification motivates the positivity test below. -/
 
-/-- **DKM ↔ SK-EFT FirstOrderCoeffs compatibility.** The substrate-
-level structural map (DR §4: PARTIAL-VIABLE alignment): the DKM
-parameter `D` (charge diffusivity) is identified with the dissipative
-Wilson coefficient `i1` (the imaginary/dissipative part of
-FirstOrderCoeffs), and `τ⁻¹` is identified with the ratio `i2/r2`
-(schematic leading-order parametrization).
-
-The new substantive content of the predicate is the **positivity of the
-dissipative Wilson coefficients `i1, i2`** (the new content on
-FirstOrderCoeffs); DKMParameters' own positivity witnesses (`τ_pos`,
-`D_pos`, `χ_pos`) are already structurally guaranteed and need not be
-re-asserted in the bundle.
-
-Post-strengthening 2026-05-25 (A.6 conjunct cleanup): the 3 prior
-conjuncts `0 < p.τ ∧ 0 < p.D ∧ 0 < p.χ` were dropped — they were
-redundant with the built-in `DKMParameters` positivity witnesses.
-The cross-bridge docstring framing (DR §4: PARTIAL-VIABLE alignment-
-only) is preserved. -/
+/-- Tests positivity of `i1` and `i2`. The DKM parameter argument is
+unused. The proposed relations `D = i1` and `τ⁻¹ = i2/r2` remain separate
+obligations. -/
 def IsDKMCompatibleSKEFT (_p : DKMParameters) (c : FirstOrderCoeffs) : Prop :=
   0 < c.i1 ∧ 0 < c.i2
 
-/-- **Substantive non-vacuity of the SKEFT compatibility predicate.**
-The substrate level non-vacuously witnesses the predicate: given any
-DKM parameter capsule, there exists a FirstOrderCoeffs witness
-compatible with it (specifically, choose `i1 := p.D`, `i2 := 1`, all
-other coefficients = 0). -/
+/-- A witness for the positivity test, with `i1 := p.D` and `i2 := 1`. -/
 theorem dkm_compatible_skeft_exists (p : DKMParameters) :
     ∃ c : FirstOrderCoeffs, IsDKMCompatibleSKEFT p c := by
   refine ⟨⟨0, 0, 0, 0, 0, 0, p.D, 1, 0⟩, ?_, ?_⟩
@@ -167,17 +125,11 @@ theorem dkm_compatible_skeft_exists (p : DKMParameters) :
 
 Per Wave 2a.1 DR §6 the substantive `chhk_positivity_iff_LDP_rate_function`
 cross-bridge requires a Gaussian-fluctuation-regime hypothesis. We ship
-this as a predicate `IsGaussianFluctuationRegime p` that captures the
-substantive content (Lorentzian spectral form ↔ Gaussian rate function
-at quadratic order). -/
+an alias `IsGaussianFluctuationRegime p` for variance positivity. -/
 
 /-- **Gaussian-fluctuation-regime predicate** (`abbrev` for `0 < χ·D`).
-A DKM parameter capsule is in the Gaussian fluctuation regime if its
-variance `χ·D` is strictly positive (which it is structurally by
-`DKMParameters` positivity witnesses) — the substantive content is the
-DR §6 condition that the LDP rate function constructed from `(χ·D)` is
-non-degenerate. This is the substrate-level statement of the DR §6
-conditions (1) and (2).
+The alias is positive by the DKM parameter fields. A Gaussian
+fluctuation law for a state requires separate evidence.
 
 Post-strengthening 2026-05-25 (A.7): demoted from `def` to `abbrev`
 since the substantive Gaussian-regime content (rate function being a
@@ -190,16 +142,13 @@ theorem was removed (auto-derivable as `mul_pos p.χ_pos p.D_pos`). -/
 abbrev IsGaussianFluctuationRegime (p : DKMParameters) : Prop :=
   0 < p.χ * p.D
 
-/-! ## §5. The substantive Wave 2a.2 cross-bridge — forward direction.
+/-! ## §5. Pairing F4 with the constructed rate-function witness.
 
-The Wave 2a.1 DR §6 substantive biconditional `chhk_positivity_iff_
-LDP_rate_function` is explicitly marked in the DR as having its reverse
-direction shipped as a "Wave 2b.2 task" (the DR's recommended Lean
-module form has `sorry` on the reverse direction). At Wave 2a.2 we
-ship the forward direction substantively, plus the bundled `IsLDPCompatibleCorrelator`
-predicate that the Wave 2b.2 biconditional consumes. -/
+The Wave 2a.1 DR §6 biconditional motivates this interface. The theorem
+below preserves the F4 input and pairs it with the parameterized
+rate-function witness. -/
 
-/-- **`IsLDPCompatibleCorrelator G β p`** — substantive substrate
+/-- **`IsLDPCompatibleCorrelator G β p`** — compatibility
 predicate: a correlator `G` is LDP-compatible at `(β, p)` if it has
 the F4 positivity input AND the constructed DKM rate function is an
 `IsLDPRateFunction` witness at β. This is the bundled predicate the
@@ -237,8 +186,7 @@ theorem chhk_positivity_yields_LDP_compatible
     IsLDPCompatibleCorrelator G β p :=
   ⟨h_pos, chhk_positivity_yields_LDP_rate_function h_pos β hβ p⟩
 
-/-- **Substantive non-vacuity**: the zero correlator is LDP-compatible
-at any `(β, p)` with `β > 0`. -/
+/-- Zero-correlator control for the compatibility pair at `β > 0`. -/
 theorem zero_correlator_isLDPCompatible
     (β : ℝ) (hβ : 0 < β) (p : DKMParameters) :
     IsLDPCompatibleCorrelator zeroCorrelator β p :=
@@ -254,12 +202,10 @@ theorem zero_correlator_isLDPCompatible
 /-! ## §7. Closure summary — Wave 2a.2 SK-EFT-Hawking specialization.
 
 This module ships:
-- **`IsCHHKBootstrapBound`** — predicate operationalization of CHHK
-  eq. (8) / (14) integrated-bound inequality.
-- **`IsMIRBound`** — predicate for the MIR master bound (CHHK eq. 29);
+- **`IsCHHKBootstrapBound`** — pointwise bound on `G(Ω,k) / Ω`.
+- **`IsMIRBound`** — predicate for the MIR inequality (CHHK v2 Eq. (12));
   `mir_bound_anti_monotone` + `mir_bound_at_zero` substrate lemmas.
-- **`IsDKMCompatibleSKEFT`** — predicate-substrate Wilson-coefficient
-  bridge between DKMParameters and `FirstOrderCoeffs`.
+- **`IsDKMCompatibleSKEFT`** — Wilson-coefficient positivity test.
 - **`IsGaussianFluctuationRegime`** — `abbrev` for `0 < p.χ · p.D`,
   labelling the DR §6 condition. Post-strengthening 2026-05-25 (A.7):
   demoted from `def` and the trivial discharge theorem removed (the
@@ -267,16 +213,13 @@ This module ships:
   the future D1 lift-to-Lean wave; at Phase 6q scope this is a labelling
   convenience only).
 - **`IsLDPCompatibleCorrelator`** + **`chhk_positivity_yields_LDP_compatible`**
-  — substantive forward direction of the DR §6 cross-bridge.
-- **`zero_correlator_isLDPCompatible`** — substantive non-vacuity witness.
+  — package F4 and the parameter-only rate-function witness.
+- **`zero_correlator_isLDPCompatible`** — zero-correlator control.
 - (`dkm_satisfies_trivial_mir_bound` was removed in the 2026-05-25 A.5
   strengthening pass; use `mir_bound_at_zero` from §2 directly.)
 
-The reverse direction of the DR §6 biconditional is the Wave 2b.2
-task (the full bicondtional `IsImGRetardedNonneg ↔ IsLDPRateFunction`
-on arbitrary correlators requires the action-correlator-link
-substrate physics that ships in Wave 2b). Graphene-witness substantive
-Wave 2b.1 ship + per-platform Wilson-coefficient bridge ship in
-Wave 2a.3 (E1E2CrossBridge). -/
+The thermal weighted bound, physical MIR inference, Wilson-coefficient
+identification and microscopic LDP connection remain separate
+obligations. -/
 
 end SKEFTHawking.DKMBootstrap

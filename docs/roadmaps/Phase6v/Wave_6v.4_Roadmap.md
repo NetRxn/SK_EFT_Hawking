@@ -59,6 +59,8 @@ Z. Wang, B. Kim, B. Zhen, L. He, "Strongly nonlinear nanocavity exciton-polarito
 
 ## Cross-wave dependencies
 
+- **Physical applicability follow-through:** [Wave 6v.10](Wave_6v.10_Roadmap.md) uses these Penn inputs as a separate device comparison and carries the E1/D5 growth and transport work.
+
 - **Predecessors:** none — Wave 6v.4 is the warmup; no Phase-6v wave dependency.
 - **Successors:** Wave 6v.3 (DKM F3 polariton occupancy bound) benefits from this wave's parameter pass — the Penn TMD record is one of the platforms the DKM F3 axiom will be evaluated against.
 - **Bundle absorption:** E1 §2 absorbs additively (Branch D.2 of the absorption protocol is not needed — E1 is currently GREEN with one minor advisory; this is a pure additive scope-paragraph lift).

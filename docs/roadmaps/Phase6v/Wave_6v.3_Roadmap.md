@@ -2,38 +2,36 @@
 
 **Bundle targets:** D5 §"substrate constraints by platform" + E1 §"polariton platform regime structure" (additive scope paragraphs).
 
-**Status:** ✅ SHIPPED 2026-05-26.
+**Status:** ✅ SHIPPED 2026-05-26 at conditional theorem and normalized-witness scope. The physical platform claim remains open in [Wave 6v.10](Wave_6v.10_Roadmap.md).
 
-**Wave goal.** Resolve the Phase 6q open question: where does the polariton platform fall on the DKM positive-uniqueness ↔ sharpened-NO-GO bimodal outcome? Phase 6q's `PlatformBimodalOutcome` is a disjunction; graphene is the positive-uniqueness witness, BEC Bogoliubov is the sharpened-NO-GO witness. Wave 6v.3 ships the polariton resolution: **polariton, under a finite-pump-energy operating constraint, takes the POSITIVE branch — inheriting the graphene uniqueness result via a finite per-mode occupation bound that keeps the commutator-norm sequence factorially bounded (not super-factorial unbounded).**
+**Shipped result.** The existing Lean theorem takes a factorial-times-power bound on a supplied real sequence and rules out the superfactorial predicate for that sequence. The normalized MIR examples compare the algebraic witnesses. Physical growth and transport require the actual microscopic observable and generator, as tracked in Wave 6v.10.
 
-## Physical anchor — per-mode occupation under sub-nW pump
+## Incident photon-equivalent anchor
 
 The UPenn nanocavity-polariton platform (Wang et al. 2026, Wave 6v.4) demonstrates all-optical switching at pulse energies as low as 4 fJ on picosecond timescales. The photon count per switching pulse is
 
 ```
 n_per_pulse = E_pulse / (ℏω)
             = (4 × 10⁻¹⁵ J) / (1.736 eV × 1.602176634×10⁻¹⁹ J/eV)
-            ≈ 1.44 × 10⁴ photons per mode per pulse.
+            ≈ 1.44 × 10⁴ incident photon equivalents per pulse.
 ```
 
-This is the *device-operating* mode occupation. For the DKM F3 (operator-growth) axiom to break on a bosonic substrate via Yin-Lucas / Kuwahara-Saito Lieb-Robinson-for-bosons, the mode occupation needs to grow super-factorially (per `IsSuperFactorialUnbounded` in `DKMBootstrap/HorizonTransportBootstrap.lean`). At `n ≈ 1.5×10⁴`, the polariton operator growth is bounded by a factorial-power product with a finite ε proportional to `√(n_max)·g/ℏ`, NOT super-factorial — so F3 holds.
+The quotient converts incident pulse energy at the stated resonance. Inferring an intracavity population requires the coupling, temporal profile, modal distribution and losses. Inferring an all-order bound requires the actual nested commutators. The helper retains $10^6$ as an illustrative comparison threshold.
 
-The cleanest formulation: **polariton occupation below `n_threshold = 10⁶` implies bounded operator growth**, which puts polariton on the same positive-uniqueness branch as graphene (whose commutator norm is identically zero in the substrate witness — the strongest possible bound).
-
-This **resolves the explicit open question** left in Phase 6q's `project_phase6q_complete_2026_05_23.md` memory.
-
-## Key parameters (LLM-verified against Wang et al. 2026 / Falque 2025)
+## Key parameters and comparison inputs
 
 | Symbol | Value | Unit | Source | Use |
 |---|---:|---|---|---|
 | ℏω_cav (Penn resonance energy) | 1.736 | eV | Wang et al. 2026 | Photon count derivation. |
-| E_pulse (Penn switching threshold) | 4 | fJ | Wang et al. 2026 | Per-pulse mode occupation. |
-| n_per_pulse | ≈ 1.44 × 10⁴ | photons/mode | derived | Device-operating occupation. |
+| E_pulse (Penn switching threshold) | 4 | fJ | Wang et al. 2026 | Incident photon-equivalent estimate. |
+| n_per_pulse | ≈ 1.44 × 10⁴ | photon equivalents/pulse | derived | Incident energy divided by the photon energy. |
 | τ_LP (Penn polariton lifetime) | ≈ 366 | fs | Wang et al. 2026 (= ℏ/γ_LP) | Per-mode steady-state setting. |
 | ℏω_LP (Paris-LKB polariton energy) | ≈ 1.485 | eV | Falque 2025 (working point) | Cross-check on Paris-LKB. |
-| n_threshold (F3-break onset) | 10⁶ | photons/mode | DR Wave 2a.1 §1 BEC row | Polariton stays well below. |
+| n_threshold | 10⁶ | dimensionless count | Historical helper default | Illustrative comparison only. |
 
-## Deliverables (14-stage pipeline)
+## Historical delivery record (14-stage pipeline)
+
+The rows record the original delivery. Wave 6v.10 tracks the current physical applicability, and the active manuscripts and apex records carry their current narrower scope.
 
 | Stage | Action | Status |
 |---:|---|:---:|
@@ -65,9 +63,9 @@ Wave 6v.3 added the bibkeys `YinLucas2022LiebRobinsonBosons` and `KuwaharaSaito2
 ## Cross-wave dependencies
 
 - **Predecessors:** Wave 6v.4 (Penn TMD parameter pass already in place; this wave consumes the Wang et al. 2026 4 fJ + 1.736 eV anchor).
-- **Successors:** none in Phase 6v — this is the second of the polariton pair.
-- **Phase 6q bridge:** closes the open question in `project_phase6q_complete_2026_05_23.md` memory.
+- **Successor:** [Wave 6v.10](Wave_6v.10_Roadmap.md) owns the physical pump-to-growth, BEC and transport follow-through. This wave shipped the conditional result and normalized witnesses.
+- **Phase 6q bridge:** the conditional F3 implication and normalized algebraic witnesses reuse the Phase 6q predicates.
 
 ## No-axiom discipline
 
-Zero new project-local axioms; zero tracked Props. The polariton-bounded-commutator-norm proof is a contrapositive of the existing `sharpened_no_go_super_factorial`: by the existing predicate's negation, polariton's finite-n mode occupation gives a finite super-factorial bound, putting it OUTSIDE `IsSuperFactorialUnbounded` — and hence on the LEFT (positive-uniqueness) branch of `PlatformBimodalOutcome`.
+The conditional proof adds zero project-local axioms and zero tracked Props. It uses `sharpened_no_go_super_factorial` with the supplied growth bound. The physical theorem name remains an API identifier and its hypotheses determine the proved scope.

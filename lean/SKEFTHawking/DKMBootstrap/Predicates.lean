@@ -1,61 +1,21 @@
 /-
-# Phase 6q Wave 1a.2 — DKM Transport Bootstrap: predicate substrate
+# DKM modeled response and legacy predicate interfaces
 
-Substrate-only predicate scaffolding for the Phase 6q DKM transport
-bootstrap. Phase 6q is the **positive-result response** to the Phase 6o
-Wave 1c NO-GO: the Chowdhury–Hartnoll–Hebbar–Khondaker (CHHK) transport
-bootstrap (arXiv:2509.18255, 22 Sep 2025) is purely analytic — no SDP,
-no crossing equation, no doubled contour — so it side-steps the three
-Phase 6o obstructions (unitarity→KMS, crossing, complex-contour SDP) by
-design.
+The signed modeled spectrum below is CHHK arXiv:2509.18255v2 §3 Eq. (4).
+Its positivity input is restricted to nonnegative frequency (§7.1 after Eq. (24)).
+The algebraic model is defined globally, but identifying it with a microscopic response
+requires a finite effective frequency/momentum window (§3). Model sign, symmetry and
+holomorphy do not establish the weighted thermal microscopic bounds, a physical transport
+realization, or uniqueness. The F1/F2/F5 interfaces retained here have the limitations
+specified on their definitions. Standalone F3 and its APIs are independent of those repairs.
 
-**CHHK = Chowdhury–Hartnoll–Hebbar–Khondaker.** Naming flagged per Wave
-2a.1 dossier — the dispatch's "Christ-Hartman-Hartman-Kologlu" was an
-author-name error; the cite is Subham Dutta Chowdhury (ICTP Trieste),
-Sean A. Hartnoll (DAMTP Cambridge), Aditya Hebbar (ICTP Trieste), Ruby
-Khondaker (DAMTP Cambridge / Rudolf Peierls CTP Oxford), "Bootstrapping
-transport in the Drude–Kadanoff–Martin model," arXiv:2509.18255 (2025).
-
-**Wave 1a.2 deliverable.** Six axiom-family Props bundled into
-`IsDKMAxiomSet`, plus the `DKMParameters` 5-real positivity capsule, plus
-a substantive non-vacuity witness on the closed-form Drude metal Im
-spectral function. The substantive content of each Prop (analytic
-inequalities, FDT relations, microscopic bounds) is shipped in
-downstream Wave 1b–1c modules; here we lock down the API.
-
-**Six axiom families (per CHHK §2, reconstructed from the paper's
-content, not labelled in the paper itself):**
-
-| Family | CHHK reference | Closest CGL field |
-|---|---|---|
-| F1 DKM transport-correlator structure | eq. (15) Im G^R/Ω form | `hasLocalEquilibrium` (strictly stronger) |
-| F2 Static-limit lattice f-sum rule | eq. (8) integrated bound | `hasLocalEquilibrium` (orthogonal microscopic data) |
-| F3 High-frequency operator-growth bound | eq. (12) nested-commutator | `hasLargestTime` (orthogonal microscopic) |
-| F4 Positivity of Im G^R | eq. (5) Im G^R ≥ 0 | `hasReflectionPositivity` (cleanly equivalent) |
-| F5 Kramers–Kronig analyticity (UHP) | implicit; eq. (34) | `hasLargestTime` + `hasHermiticity` (weaker) |
-| F6 Parity / time-reversal symmetry | Im G^R(Ω,k) = -Im G^R(-Ω,k) | `hasHermiticity` (cleanly equivalent) |
-
-**Phase 6o NO-GO bypass (per Wave 1a.1 DR §1):**
-
-| Obstruction | Bypass |
-|---|---|
-| (I) Unitarity → KMS breaks EFT-positivity | CHHK uses single positivity input 0 ≤ Im G^R; no convex-cone optimisation |
-| (II) Crossing has no doubled-contour analog | CHHK is "vertical" (low ω vs high ω); never invokes crossing |
-| (III) SDP feasibility breaks on complex contour | CHHK has no SDP; bounds derived analytically via Lehmann |
-
-References (read directly per CLAUDE.md depth-reading rule):
-- CHHK: arXiv:2509.18255 (2025-09-22) — primary source, purely analytic
-- CGL I: arXiv:1511.03646 (CGL SK-EFT axioms)
-- Glorioso–Liu II: arXiv:1701.07817 (dynamical KMS)
-- Akyuz–Penco: arXiv:2508.18346 (SK EFT charge transport)
-- Hartman–Hartnoll–Mahajan: arXiv:1706.00019 (upper bound on diffusivity, CHHK ref [23])
-- Wave 1a.1 DR: `Lit-Search/Phase-6q/DKM Transport Bootstrap Axiom-Replacement Substrate for SK-EFT-Hawking.md`
-- Wave 2a.1 DR: `Lit-Search/Phase-6q/Phase 6q Wave 2a.1 Return Dossier — SK-EFT-Hawking Specialization of the CHHK DKM Transport Bootstrap.md`
-- Phase 6o Wave 1c NO-GO: `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`
+Source: held canonical `Lit-Search/Phase-1-and-Background/primary-sources/
+CHHK2025DKMTransport.pdf`, v2 dated 14 May 2026, Eqs. (4), (5), (14), (22)-(25).
 -/
 import SKEFTHawking.GloriosoLiu.Axioms
 import SKEFTHawking.SKDoubling
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
@@ -124,94 +84,245 @@ theorem collectiveMeanFreePath_pos (p : DKMParameters) :
 
 end DKMParameters
 
-/-! ## §2. The retarded Green's-function abstraction.
+/-! ## §2. Signed effective DKM spectrum (CHHK v2 Eq. (4)).
 
-CHHK eq. (15) gives the explicit DKM functional form
-  Im G^R(Ω,k) / Ω = χ · D · k² / (Ω²·(1 − τ·Ω²)² + (D·k²)²)
-which is the structural anchor of the bootstrap. Here we abstract
-`Correlator` as an `ℝ → ℝ → ℝ` (`Ω → k → Im G^R(Ω,k)`) and define the
-explicit DKM form. The bound machinery in Wave 1b–1c works against this
-abstraction; the Wave 2a Graphene witness instantiates with the explicit
-form. -/
+`Correlator` stores Im G^R itself, without division by frequency.
+Lean division is total: its value at the origin is zero. This is not a statement about
+static compressibility, which involves a different order of limits.
+-/
 
-/-- **Abstract correlator.** Represents `Im G^R(Ω, k)` as a real-valued
-function on `(Ω, k) ∈ ℝ × ℝ`. The CHHK bootstrap operates on the
-imaginary part of the retarded Green's function divided by `Ω` (eq. 8,
-14), so callers should pre-divide if working with `G^R` directly. -/
+/-- Signed real-frequency imaginary response, as a function of frequency and momentum. -/
 abbrev Correlator : Type := ℝ → ℝ → ℝ
 
-/-- **Explicit DKM retarded Green's function imaginary part (CHHK eq.
-15).** The closed-form Lorentzian-like spectral function
-`Im G^R(Ω,k) = χ·D·k²·Ω / (Ω²·(1 − τ·Ω²)² + (D·k²)²)`. -/
+/-- CHHK v2 Eq. (4), multiplied by Ω. The denominator is
+`Ω² + (D k² - τ Ω²)²`, including the mixed diffusion/relaxation term. -/
 noncomputable def dkmImGRetarded (p : DKMParameters) : Correlator :=
-  fun Ω k =>
-    let denom := Ω^2 * (1 - p.τ * Ω^2)^2 + (p.D * k^2)^2
-    p.χ * p.D * k^2 * Ω / denom
+  fun Ω k ↦ p.χ * p.D * k^2 * Ω / (Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2)
+
+/-- The source denominator is nonnegative everywhere. -/
+theorem dkm_denom_nonneg (p : DKMParameters) (Ω k : ℝ) :
+    0 ≤ Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2 :=
+  add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+/-- The source denominator is strictly positive away from the origin. -/
+theorem dkm_denom_pos (p : DKMParameters) (Ω k : ℝ) (h : Ω ≠ 0 ∨ k ≠ 0) :
+    0 < Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2 := by
+  by_cases hΩ : Ω = 0
+  · subst Ω
+    have hk : k ≠ 0 := h.resolve_left (by simp)
+    simpa using sq_pos_of_pos (mul_pos p.D_pos (sq_pos_of_ne_zero hk))
+  · exact add_pos_of_pos_of_nonneg (sq_pos_of_ne_zero hΩ) (sq_nonneg _)
+
+/-- No real pole except the excluded origin of the displayed source quotient. -/
+theorem dkm_denom_ne_zero (p : DKMParameters) (Ω k : ℝ) (h : Ω ≠ 0 ∨ k ≠ 0) :
+    Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2 ≠ 0 :=
+  ne_of_gt (dkm_denom_pos p Ω k h)
+
+/-- Signed oddness in frequency of the model; physical responses need their own symmetry. -/
+theorem dkmImGRetarded_odd (p : DKMParameters) (Ω k : ℝ) :
+    dkmImGRetarded p (-Ω) k = -dkmImGRetarded p Ω k := by
+  simp [dkmImGRetarded, neg_div]
+
+/-- Evenness in momentum of this isotropic model. -/
+theorem dkmImGRetarded_even_k (p : DKMParameters) (Ω k : ℝ) :
+    dkmImGRetarded p Ω (-k) = dkmImGRetarded p Ω k := by
+  simp [dkmImGRetarded]
+
+/-- Conservation gives zero spectral response on the whole k=0 slice, including the origin
+under Lean's total division convention. This does not evaluate the static limit. -/
+theorem dkmImGRetarded_zero_k (p : DKMParameters) (Ω : ℝ) :
+    dkmImGRetarded p Ω 0 = 0 := by
+  simp [dkmImGRetarded]
+
+/-- Strict positive-frequency response at every nonzero momentum. -/
+theorem dkmImGRetarded_pos (p : DKMParameters) (Ω k : ℝ) (hΩ : 0 < Ω) (hk : k ≠ 0) :
+    0 < dkmImGRetarded p Ω k := by
+  exact div_pos (mul_pos (mul_pos (mul_pos p.χ_pos p.D_pos)
+    (sq_pos_of_ne_zero hk)) hΩ) (dkm_denom_pos p Ω k (Or.inl (ne_of_gt hΩ)))
+
+/-- A genuinely nonzero slice, for every allowed parameter tuple. -/
+theorem dkmImGRetarded_one_pos (p : DKMParameters) : 0 < dkmImGRetarded p 1 1 :=
+  dkmImGRetarded_pos p 1 1 zero_lt_one one_ne_zero
+
+/-- The negative-frequency control rules out the obsolete global positivity requirement. -/
+theorem dkmImGRetarded_neg_one (p : DKMParameters) : dkmImGRetarded p (-1) 1 < 0 := by
+  rw [dkmImGRetarded_odd]
+  exact neg_neg_of_pos (dkmImGRetarded_one_pos p)
+
+/-- Source regression: τ=χ=1, D=2 gives 1, whereas the old denominator gives 1/2. -/
+theorem dkmImGRetarded_source_regression :
+    let p : DKMParameters := ⟨1, 2, 1, 1, 1, by norm_num, by norm_num,
+      by norm_num, by norm_num, by norm_num⟩
+    dkmImGRetarded p 1 1 = 1 ∧
+      (p.χ * p.D * (1 : ℝ)^2 * 1 /
+        ((1 : ℝ)^2 * (1 - p.τ * (1 : ℝ)^2)^2 + (p.D * (1 : ℝ)^2)^2)) = 1 / 2 := by
+  norm_num [dkmImGRetarded]
+
+/-- The displayed Eq. (4) ratio is recovered at nonzero frequency. -/
+theorem dkmImGRetarded_div_frequency (p : DKMParameters) (Ω k : ℝ) (hΩ : Ω ≠ 0) :
+    dkmImGRetarded p Ω k / Ω =
+      p.χ * p.D * k^2 / (Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2) := by
+  unfold dkmImGRetarded
+  field_simp
+
+/-! ### Conductivity limit (CHHK v2 Eq. (5)). -/
+
+/-- Cancelling k² is valid only at nonzero momentum; the original quotient is zero at k=0. -/
+theorem dkm_scaled_spectrum (p : DKMParameters) (Ω k : ℝ) (hk : k ≠ 0) :
+    Ω * dkmImGRetarded p Ω k / k^2 =
+      p.χ * p.D * Ω^2 / (Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2) := by
+  unfold dkmImGRetarded
+  field_simp
+
+/-- Actual punctured k→0 limit of the scaled signed spectrum at fixed Ω≠0.
+This is Eq. (5); it does not assign this value to the k=0 total quotient. -/
+theorem dkm_conductivity_limit (p : DKMParameters) (Ω : ℝ) (hΩ : Ω ≠ 0) :
+    Filter.Tendsto (fun k : ℝ ↦ Ω * dkmImGRetarded p Ω k / k^2)
+      (nhdsWithin 0 {0}ᶜ) (nhds (p.χ * p.D / (1 + p.τ^2 * Ω^2))) := by
+  have hd : (0 : ℝ) < Ω^2 + (p.D * 0^2 - p.τ * Ω^2)^2 :=
+    dkm_denom_pos p Ω 0 (Or.inl hΩ)
+  have hc : ContinuousAt
+      (fun k : ℝ ↦ p.χ * p.D * Ω^2 / (Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2)) 0 := by
+    apply ContinuousAt.div
+    · fun_prop
+    · fun_prop
+    · exact ne_of_gt hd
+  have hv : p.χ * p.D * Ω^2 / (Ω^2 + (p.D * 0^2 - p.τ * Ω^2)^2) =
+      p.χ * p.D / (1 + p.τ^2 * Ω^2) := by
+    have hp : 0 < 1 + p.τ^2 * Ω^2 := by positivity
+    field_simp
+    ring
+  have ht := hc.tendsto
+  rw [hv] at ht
+  apply ht.mono_left nhdsWithin_le_nhds |>.congr'
+  filter_upwards [self_mem_nhdsWithin] with k hk
+  exact (dkm_scaled_spectrum p Ω k (by simpa using hk)).symm
+
+/-! ### An actual complex effective model, separate from legacy F5. -/
+
+/-- Denominator of `χDk²/(Dk²-τz²-iz)`. -/
+noncomputable def dkmRetardedDenom (p : DKMParameters) (z : ℂ) (k : ℝ) : ℂ :=
+  (p.D : ℂ) * (k : ℂ)^2 - (p.τ : ℂ) * z^2 - Complex.I * z
+
+/-- Complex retarded effective model, with the same total-division convention. -/
+noncomputable def dkmGRetarded (p : DKMParameters) (z : ℂ) (k : ℝ) : ℂ :=
+  ((p.χ * p.D * k^2 : ℝ) : ℂ) / dkmRetardedDenom p z k
+
+/-- Explicit imaginary part of the denominator in the upper half-plane. -/
+theorem dkmRetardedDenom_im (p : DKMParameters) (z : ℂ) (k : ℝ) :
+    (dkmRetardedDenom p z k).im = -z.re * (2 * p.τ * z.im + 1) := by
+  simp [dkmRetardedDenom, Complex.mul_im, Complex.mul_re, pow_two]
+  ring
+
+/-- Real part of the same denominator. -/
+theorem dkmRetardedDenom_re (p : DKMParameters) (z : ℂ) (k : ℝ) :
+    (dkmRetardedDenom p z k).re =
+      p.D * k^2 - p.τ * (z.re^2 - z.im^2) + z.im := by
+  simp [dkmRetardedDenom, Complex.mul_re, Complex.mul_im, pow_two]
+
+/-- No poles on Im z>0: the imaginary equation forces Re z=0, where the real part is positive. -/
+theorem dkmRetardedDenom_ne_zero_uhp (p : DKMParameters) (z : ℂ) (k : ℝ)
+    (hz : 0 < z.im) : dkmRetardedDenom p z k ≠ 0 := by
+  intro h
+  have hi := congrArg Complex.im h
+  rw [dkmRetardedDenom_im] at hi
+  have hfactor : 0 < 2 * p.τ * z.im + 1 :=
+    add_pos (mul_pos (mul_pos (by norm_num) p.τ_pos) hz) zero_lt_one
+  have hx : z.re = 0 := by
+    have hm : -z.re = 0 := (mul_eq_zero.mp hi).resolve_right (ne_of_gt hfactor)
+    linarith
+  have hr := congrArg Complex.re h
+  rw [dkmRetardedDenom_re, hx] at hr
+  have hD : 0 ≤ p.D * k^2 := mul_nonneg p.D_pos.le (sq_nonneg k)
+  have ht : 0 ≤ p.τ * z.im^2 := mul_nonneg p.τ_pos.le (sq_nonneg z.im)
+  simp only [Complex.zero_re, sq, zero_mul, zero_sub, mul_neg, sub_neg_eq_add] at hr
+  nlinarith
+
+/-- Complex differentiability of the actual model at every upper-half-plane point. -/
+theorem dkmGRetarded_differentiableAt (p : DKMParameters) (z : ℂ) (k : ℝ)
+    (hz : 0 < z.im) : DifferentiableAt ℂ (fun w ↦ dkmGRetarded p w k) z := by
+  apply DifferentiableAt.div
+  · exact differentiableAt_const _
+  · unfold dkmRetardedDenom
+    fun_prop
+  · exact dkmRetardedDenom_ne_zero_uhp p z k hz
+
+/-- Holomorphy of the modeled response on the open upper half-plane. This provides
+no microscopic spectral representation or contour identity for a physical response. -/
+theorem dkmGRetarded_differentiableOn (p : DKMParameters) (k : ℝ) :
+    DifferentiableOn ℂ (fun z ↦ dkmGRetarded p z k) {z : ℂ | 0 < z.im} := by
+  intro z hz
+  exact (dkmGRetarded_differentiableAt p z k hz).differentiableWithinAt
+
+/-- The real-axis denominator has precisely the source denominator as squared modulus. -/
+theorem dkmRetardedDenom_normSq_real (p : DKMParameters) (Ω k : ℝ) :
+    Complex.normSq (dkmRetardedDenom p (Ω : ℂ) k) =
+      Ω^2 + (p.D * k^2 - p.τ * Ω^2)^2 := by
+  rw [Complex.normSq_apply, dkmRetardedDenom_re, dkmRetardedDenom_im]
+  simp
+  ring
+
+/-- Real-axis poles are excluded away from the origin. -/
+theorem dkmRetardedDenom_ne_zero_real (p : DKMParameters) (Ω k : ℝ)
+    (h : Ω ≠ 0 ∨ k ≠ 0) : dkmRetardedDenom p (Ω : ℂ) k ≠ 0 := by
+  apply Complex.normSq_pos.mp
+  rw [dkmRetardedDenom_normSq_real]
+  exact dkm_denom_pos p Ω k h
+
+/-- The complex model's signed imaginary part agrees with Eq. (4).
+The identity even holds at the origin under total division; the nonzero real-axis domain
+is qualified separately by `dkmRetardedDenom_ne_zero_real`. -/
+theorem dkmGRetarded_im_real (p : DKMParameters) (Ω k : ℝ) :
+    (dkmGRetarded p (Ω : ℂ) k).im = dkmImGRetarded p Ω k := by
+  unfold dkmGRetarded
+  rw [Complex.div_im, dkmRetardedDenom_normSq_real, dkmRetardedDenom_im]
+  simp only [Complex.ofReal_re, Complex.ofReal_im, mul_zero, zero_add, mul_one,
+    zero_mul, zero_div, zero_sub, mul_neg, neg_div, neg_neg, dkmImGRetarded]
 
 /-! ## §3. The six DKM axiom-family predicates.
 
-Each Prop is parameterized over a `Correlator` and (where relevant) the
-substrate's `DKMParameters` or microscopic data. The substantive content
-(analytic inequalities, FDT relations, microscopic bounds) is shipped in
-downstream Wave 1b–1c modules. -/
+Each Prop carries only its displayed type. In particular, the legacy F1/F2/F5
+interfaces below do not encode the full source contract. -/
 
-/-- **F1 — DKM transport-correlator structure (CHHK eq. 15).** The
-correlator agrees with the explicit DKM Lorentzian form on its domain
-of validity. The substantive content is a *functional equation* between
-`G` and `dkmImGRetarded p`. -/
+/-- **Legacy global F1 model identity.** This equates the response to Eq. (4) on all
+real frequencies and momenta. CHHK assumes this form only on an effective finite window.
+This interface is not microscopic applicability; in particular it must not be combined
+with pointwise F2 as a claimed physical witness. -/
 def IsDKMTransportCorrelator (G : Correlator) (p : DKMParameters) : Prop :=
   ∀ Ω k, G Ω k = dkmImGRetarded p Ω k
 
-/-- **F2 — Static-limit lattice f-sum rule (CHHK eq. 8).** The
-integrated spectral weight over a UV-cut window is bounded by a
-microscopic-data quantity `boundData : ℝ` (in CHHK: `⟨n₀²⟩_T / (ω · n_B(ω) · ν²)`).
-
-Substantive content: an integral inequality on `G(Ω, k) / Ω`. For
-Wave 1a.2 we capture the predicate shape via a representative
-upper-bound functional; the substantive integral inequality is shipped
-in Wave 1b.3 (`SpectralWeightBound.lean`). -/
+/-- **Legacy pointwise F2.** This is one uniform pointwise bound for every window,
+not CHHK v2 Eq. (2)/(25)'s weighted frequency/momentum integral in a thermal state.
+Global F1 with this predicate remains incompatible with diffusion scaling near the origin:
+`G(D k²,k)/(D k²)` diverges as k→0. Correcting F4 does not populate the full bundle.
+This module supplies no weighted microscopic spectral inequality. The previously
+promised `SpectralWeightBound.lean` module is absent. -/
 def HasFSumRule (G : Correlator) (boundData : ℝ) : Prop :=
   ∀ ω Λ : ℝ, 0 < ω → ω ≤ Λ →
     ∀ Ω k : ℝ, ω ≤ Ω → Ω ≤ Λ → 0 < Ω →
       G Ω k / Ω ≤ boundData
 
-/-- **F3 — High-frequency operator-growth bound (CHHK eq. 12).** The
-`κ`-fold nested commutator `[H, [H, …, [H, n₀]]]_κ` has operator norm at
-most `κ! · ε^κ · ‖n₀‖`. Substantive content: an Abanin–De Roeck–
-Huveneers-type inequality with the CHHK improvement of factor `e` in the
-constant. (See `Lit-Search/Phase-6q/.../wave_1a_*.md` §F3 + CHHK refs
-to Abanin–De Roeck–Huveneers PRL 115, 256803 and Parker et al. PRX 9,
-041017 for the universal operator-growth hypothesis.)
-
-For Wave 1a.2 we capture the predicate shape — the bound itself
-operates on an abstract `commutatorNorm κ` sequence representing
-`‖[H,…,n₀]_κ‖`. The substantive analytic content (the bound
-`commutatorNorm κ ≤ κ! · ε^κ · n0Norm` together with the Stirling
-estimate `⌊x⌋!/x^⌊x⌋ ≤ √x·e^(1−x)`) ships in Wave 1b.2
-(`OperatorGrowthBound.lean`). -/
+/-- **F3 — High-frequency operator-growth bound.** This predicate encodes
+the factorial-times-exponential bound from CHHK arXiv:2509.18255v2 Eq. (31)
+for a supplied real sequence. In CHHK, bounded local Hamiltonian terms and
+a local observable yield that estimate; Eq. (32) then optimizes the
+spectral bound in Eq. (33). The factor of e concerns the exponential
+falloff of the spectral bound relative to the earlier heating estimate.
+A physical use of this predicate must identify and bound the actual
+nested commutator norms on its chosen carrier. -/
 def HasOperatorGrowthBound
     (commutatorNorm : ℕ → ℝ) (ε n0Norm : ℝ) : Prop :=
   ∀ κ : ℕ, commutatorNorm κ ≤ (Nat.factorial κ : ℝ) * ε^κ * n0Norm
 
-/-- **F4 — Positivity (CHHK eq. 5).** `0 ≤ Im G^R(Ω, k)` for all `Ω, k`.
-This is the *single* positivity input CHHK consumes (cf. partial-wave
-unitarity in S-matrix bootstrap). At the SK-EFT level, this follows
-from `hasReflectionPositivity ∧ hasDynamicalKMS_algebraic` (one-line
-lemma, shipped in `KMSConsistency.lean`). -/
+/-- **F4: positive-frequency cone.** CHHK v2 §7.1 after Eq. (24) requires
+`0 ≤ Im G^R(Ω,k)` for `0 ≤ Ω`. Negative frequencies retain their signed response. -/
 def IsImGRetardedNonneg (G : Correlator) : Prop :=
-  ∀ Ω k, 0 ≤ G Ω k
+  ∀ Ω k, 0 ≤ Ω → 0 ≤ G Ω k
 
-/-- **F5 — Kramers–Kronig analyticity (upper-half-plane).** `G^R` is
-analytic in the upper-half complex `ω` plane. CHHK uses this only via
-contour rotation (eq. 34) to give the imaginary-axis representation
-`G^R(iα, k) = χ·D·k² / (α + τ·α² + D·k²)`.
-
-We capture this at predicate-substrate level as the *axiom*: the
-correlator admits an extension to upper-half-plane that satisfies a
-contour-rotation identity at every imaginary axis point. The
-substantive Cauchy-integral substrate is in Mathlib4
-(`Mathlib/Analysis/Complex/CauchyIntegral.lean`); the SK-EFT-side
-discharge is in Wave 1b.2 (`KMSConsistency.lean`). -/
+/-- **Legacy real F5.** The existential is satisfied by choosing `G α k` itself.
+It asserts neither a complex extension nor holomorphy, a contour identity, decay, or
+causality. Consumers projecting this field inherit only that real-valued tautology.
+The actual complex model proved above is separate from microscopic causal matching. -/
 def IsUpperHalfPlaneAnalytic (G : Correlator) : Prop :=
   ∀ α : ℝ, 0 < α → ∀ k : ℝ, ∃ value : ℝ, G α k = value
 
@@ -221,51 +332,57 @@ project's `SKEFTAxiomsExt_yields_parity_alternation`). -/
 def HasParityTimeReversal (G : Correlator) : Prop :=
   ∀ Ω k, G Ω k = -(G (-Ω) k)
 
+/-- The corrected model belongs to the positive-frequency cone. -/
+theorem dkmImGRetarded_nonneg (p : DKMParameters) :
+    IsImGRetardedNonneg (dkmImGRetarded p) := by
+  intro Ω k hΩ
+  exact div_nonneg (mul_nonneg (mul_nonneg (mul_nonneg p.χ_pos.le p.D_pos.le)
+    (sq_nonneg k)) hΩ) (dkm_denom_nonneg p Ω k)
+
+/-- The modeled signed response satisfies F6 by algebra; identifying a physical response
+with it requires an independently justified symmetry and effective window. -/
+theorem dkmImGRetarded_hasParityTimeReversal (p : DKMParameters) :
+    HasParityTimeReversal (dkmImGRetarded p) := by
+  intro Ω k
+  rw [dkmImGRetarded_odd, neg_neg]
+
 /-! ## §4. The bundled `IsDKMAxiomSet` predicate.
 
-All six axiom families simultaneously satisfied. The `commutatorNorm`,
-`ε`, `n0Norm`, and `boundData` fields enter as parameters that
-downstream consumers supply per substrate (Wave 2a graphene witness
-supplies them via tight-binding microscopic data; abstract proofs in
-Wave 1c.2 use them as hypothesis parameters). -/
+Legacy bundle of six interfaces, without a claim that they are jointly inhabited.
+The `commutatorNorm`, `ε`, `n0Norm`, and `boundData` fields enter as parameters that
+downstream consumers supply as hypothesis parameters. No parameter choice here
+establishes a microscopic realization of this legacy bundle. -/
 
-/-- **The CHHK six-axiom bundle on a transport correlator.** A
+/-- **Legacy six-interface bundle on a transport correlator.** A
 correlator `G` satisfies the DKM axiom set if it (F1) matches the
-explicit DKM form, (F2) has a microscopic f-sum-rule bound, (F3) the
+explicit DKM form globally, (F2) has the legacy uniform pointwise bound, (F3) the
 underlying nested-commutator norms have the κ!·ε^κ growth bound, (F4) is
-nonneg, (F5) is upper-half-plane analytic, and (F6) is P/T-odd. -/
+nonnegative at nonnegative frequency, (F5) has the trivial real existential, and (F6) is
+P/T-odd. This does not certify the weighted microscopic or causal CHHK contract. -/
 structure IsDKMAxiomSet
     (G : Correlator) (p : DKMParameters)
     (commutatorNorm : ℕ → ℝ) (n0Norm boundData : ℝ) : Prop where
   /-- F1 — `G = dkmImGRetarded p`. -/
   dkm_form : IsDKMTransportCorrelator G p
-  /-- F2 — microscopic f-sum-rule bound. -/
+  /-- F2 — legacy uniform pointwise bound, not a weighted integral. -/
   f_sum_rule : HasFSumRule G boundData
   /-- F3 — nested-commutator operator-growth bound at scale `p.ε`. -/
   operator_growth : HasOperatorGrowthBound commutatorNorm p.ε n0Norm
   /-- F4 — positivity. -/
   positivity : IsImGRetardedNonneg G
-  /-- F5 — upper-half-plane analyticity. -/
+  /-- F5 — legacy real existential, not complex analyticity. -/
   uhp_analytic : IsUpperHalfPlaneAnalytic G
   /-- F6 — parity / time-reversal. -/
   pt_symmetry : HasParityTimeReversal G
 
-/-! ## §5. Substantive non-vacuity witness — Drude metal (CHHK §4).
+/-! ## §5. Drude diffusion benchmark and individual API witnesses.
 
-The Drude metal closed form is the textbook example CHHK §4 (eq. 23)
-benchmarks against — `τ → 0⁺` reduces CHHK eq. (15) to
-`Im G^R(Ω, k) = χ·D·k²·Ω / (Ω² + (D·k²)²)` (pure Lorentzian). This
-satisfies F1 trivially (by construction), F4 (manifest from the
-algebraic form — numerator and denominator both nonneg for k ≠ 0 and
-nonzero), F5 (rational function analytic on UHP), and F6 (odd in Ω at
-the numerator).
+The τ=0 algebraic benchmark below is separate from the strictly positive-τ parameter
+capsule. Its zero-momentum theorem alone is not a nonzero F4 witness; the actual modeled
+positive-frequency nonzero witness is `dkmImGRetarded_one_pos` above.
+-/
 
-We ship the substantive F4 (positivity) witness; F1 is by definition
-(`rfl`); F6 is by the structural odd-numerator/even-denominator
-factorization; the F5 stub returns the value at the imaginary axis. -/
-
-/-- **Drude metal correlator** as the CHHK τ→0 limit of `dkmImGRetarded`.
-This is the textbook benchmark in CHHK §4. -/
+/-- The pure-diffusion (τ=0) benchmark spectrum. -/
 noncomputable def drudeCorrelator (p : DKMParameters) : Correlator :=
   fun Ω k =>
     let denom := Ω^2 + (p.D * k^2)^2
@@ -279,46 +396,32 @@ theorem drude_denom_nonneg (p : DKMParameters) (Ω k : ℝ) :
   have h2 : 0 ≤ (p.D * k^2)^2 := sq_nonneg _
   linarith
 
-/-- **The Drude correlator satisfies the F4 positivity axiom for k=0.**
-For k = 0 the spectral function vanishes identically (no diffusion);
-the harder case k ≠ 0 needs sign agreement of `Ω` with the numerator,
-which holds because both numerator and `Ω`-component of the
-denominator are linear in `Ω` and the rest is even — see
-`drude_positivity_full` below.
-
-This is a substantive non-vacuity check: the Drude correlator is not
-literally zero (`p.D > 0`, `p.χ > 0`) yet satisfies the positivity Prop
-in the k = 0 slice trivially. -/
+/-- The zero-momentum Drude slice vanishes and is therefore nonnegative. -/
 theorem drude_positivity_at_zero_k (p : DKMParameters) :
     ∀ Ω, 0 ≤ drudeCorrelator p Ω 0 := by
   intro Ω
   unfold drudeCorrelator
   simp
 
-/-! **Substrate-API non-vacuity witnesses: zero correlator.**
+/-! **Individual substrate-API witnesses.**
 
-The constantly-zero correlator `G ≡ 0` satisfies F4 (positivity), F5
-(trivially), F6 (parity), F2 (f-sum rule with nonneg bound) for any
-`DKMParameters`; the zero commutator-norm sequence satisfies F3
-(operator-growth bound) for any positive `(ε, n0Norm)`. These are the
-*zero witnesses* (analog of `zeroAction` in `GloriosoLiu/Axioms.lean`)
-— substrate-API checks that the predicates compose and have non-
-degenerate type structure.
+The zero correlator supplies individual F4, legacy F5, F6, and nonnegative-bound
+pointwise F2 witnesses, and the zero commutator sequence supplies F3. They do not
+satisfy global F1 for positive parameters and cannot populate `IsDKMAxiomSet`.
+CGL/KMS link projections and LDP consumers of these predicates inherit exactly their
+stated premises; a projection or a zero witness does not upgrade F2 to a weighted
+microscopic integral or F5 to a complex causal response. Standalone F3 growth and BEC
+obstruction theorems retain their separate hypotheses.
 
-**Post-strengthening 2026-05-25 (A.4 audit):** these are **substrate-
-API non-vacuity witnesses, not substantive physics theorems**. They
-are LOAD-BEARING (consumed across 3 downstream DKMBootstrap modules
-— AxiomSet.lean, LDPBridge.lean, SKEFTSpecialization.lean — at 10+
-sites total). The substantive physics witnesses live in:
-- `drudeCorrelator` (§5 above) — closed-form Drude metal correlator,
-  the textbook CHHK §4 benchmark (non-trivial spectral function).
-- `becBogoliubovCommutatorNorm` (`BECBogoliubovBosonicGrowth.lean`) —
-  concrete (2κ)! sequence, the Wave 2b.4 sharpened-NO-GO witness.
-- `grapheneDKMParameters` (`E1E2CrossBridge.lean`) + the substantive
-  `(2·β_2/(4π))^(1/3) ≈ 0.0756` from `src/dkm_bootstrap/graphene_mir.py`.
-
-A partial F4/F5/F6 bundle `trivial_link_witness` (AxiomSet.lean) ties
-these into the CGL six-axiom skeleton via the spectral-function link. -/
+- `becBogoliubovCommutatorNorm` (`BECBogoliubovBosonicGrowth.lean`) is the
+  prescribed sequence (2κ)!, used to test the abstract sharpened no-go.
+  It does not compute a commutator norm of a BEC Hamiltonian.
+- `grapheneDKMParameters` (`E1E2CrossBridge.lean`) gives a normalized
+  parameter record. The calculation in `src/dkm_bootstrap/graphene_mir.py`
+  separately evaluates the scalar (2·β_2/(4π))^(1/3) ≈ 0.0756. Neither
+  identifies an actual graphene transport tuple or establishes DKM
+  applicability for a measured sample.
+-/
 
 /-- **The constantly-zero correlator.** -/
 def zeroCorrelator : Correlator := fun _ _ => 0
@@ -326,11 +429,10 @@ def zeroCorrelator : Correlator := fun _ _ => 0
 /-- The zero correlator is nonneg. -/
 theorem zeroCorrelator_isImGRetardedNonneg :
     IsImGRetardedNonneg zeroCorrelator := by
-  intro _ _
+  intro _ _ _
   exact le_refl 0
 
-/-- The zero correlator satisfies the upper-half-plane analyticity
-predicate (vacuously, with `value = 0`). -/
+/-- The zero correlator satisfies the legacy real F5 existential with `value = 0`. -/
 theorem zeroCorrelator_isUpperHalfPlaneAnalytic :
     IsUpperHalfPlaneAnalytic zeroCorrelator := by
   intro α _ k
@@ -361,40 +463,15 @@ theorem zeroCommutatorNorm_hasOperatorGrowthBound
     · exact pow_nonneg hε.le κ
   · exact h0
 
-/-! ## §6. Cross-bridge stub to `GloriosoLiu.SKEFTAxioms`.
+/-! ## §6. Scope of downstream bridges.
 
-The substantive translation `IsDKMAxiomSet → SKEFTAxioms` (CHHK ↔ CGL
-six-axiom mapping per Wave 1a.1 DR §2) ships in Wave 1b.1
-(`AxiomSet.lean`). Here we record only the predicate signature — the
-existence of a `SKEFTAxioms` witness consumes data from the `IsDKMAxiomSet`
-witness plus an `SKAction` substrate, hence cannot be stated as a
-free-standing one-line corollary at the Wave 1a.2 substrate level.
-
-The substantive bridge will be:
-```
-theorem dkm_to_skeft_axioms
-    (G : Correlator) (p : DKMParameters)
-    (h : IsDKMAxiomSet G p commutatorNorm n0Norm boundData)
-    (action : SKAction) (β : ℝ)
-    (h_link : -- substantive: G is the action's spectral function -- ) :
-    SKEFTAxioms action β
-```
-The link hypothesis encodes the substrate-physics statement that the
-correlator `G` is the imaginary part of the retarded Green's function
-of the SK-EFT effective action — a Wave 1b.1 task. -/
-
-/-! ## §7. Closure summary — Wave 1a.2 predicate substrate.
-
-This module ships:
-- `DKMParameters` (5-real positivity capsule).
-- `Correlator` abbrev + `dkmImGRetarded` explicit CHHK eq. (15) form.
-- 6 axiom-family Props (F1–F6) + bundled `IsDKMAxiomSet`.
-- `drudeCorrelator` τ→0 textbook form (CHHK §4).
-- Zero witness for all 4 testable axiom families (positivity, UHP
-  analyticity, P/T symmetry, f-sum rule with nonneg bound) — verifies
-  the type structure is non-degenerate.
-
-Cross-bridge to `SKEFTAxioms`, substantive operator-growth bound, MIR-
-style master bound, LDP rate-function bridge: Wave 1b–1c modules. -/
+`AxiomSet.lean` and `KMSConsistency.lean` consume spectral-link hypotheses; their
+projections preserve the corrected positive-frequency F4 premise. `NoCrossing.lean`
+and `SDPStructure.lean` rearrange assumed bundle fields. `LDPBridge.lean` and
+`SKEFTSpecialization.lean` retain their stated direction and hypotheses. None of these
+uses by itself supplies a microscopic F1 window, weighted thermal F2, causal F5,
+transport realization, or uniqueness. The nonzero modeled response and its holomorphy
+proved here are independent of those unfulfilled physical matching obligations.
+-/
 
 end SKEFTHawking.DKMBootstrap
