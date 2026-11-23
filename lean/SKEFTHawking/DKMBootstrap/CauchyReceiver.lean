@@ -1,6 +1,7 @@
 import SKEFTHawking.DKMBootstrap.ReceiverKernel
 import SKEFTHawking.DKMBootstrap.ReceiverIntegral
 import SKEFTHawking.DKMBootstrap.ReceiverCommutator
+import SKEFTHawking.DKMBootstrap.Predicates
 
 /-!
 # Cauchy receiver on a unitary group with an identified forward derivative
@@ -14,9 +15,12 @@ domain is an explicit premise. The weak-to-strong bridge derives domain preserva
 it is not assumed. The bounded maps `T_j = i^j B_j` then satisfy the genuine ordinary
 bracket recurrence and `‖T_j‖ ≤ ‖A‖ j! / τ^j`.
 
-The prefactor is the input norm `‖A‖`, not the smoothed norm `‖B_0‖`. No output-normalized
-DKM rate or physical calibration of `τ` is asserted. Physical group and detector identification,
-spatial localization, and finite-acquisition transfer remain separate obligations.
+For nonzero `B_0`, the actual bracket norms satisfy `HasOperatorGrowthBound` with prefactor
+`‖B_0‖` and positive rate `max(1, ‖A‖ / ‖B_0‖) / τ`. When `B_0 = 0`, the actual bracket
+recurrence and density of the self-adjoint domain force every `T_j` to vanish, giving a
+positive rate in that case too. This is an ideal bilateral receiver result. Physical group
+and detector identification, spatial locality, microscopic state/density hypotheses,
+calibration, finite-acquisition transfer, and physical transport remain separate obligations.
 -/
 
 noncomputable section
@@ -174,5 +178,82 @@ theorem commutatorOrder_domain_recurrence (j : ℕ) (v : K.domain) :
   change (Complex.I ^ j) • K ⟨_, hv⟩ - _ = _
   rw [hact, smul_add, add_sub_cancel_left, ← mul_smul, ← pow_succ]
   rfl
+
+/-- For nonzero output, absorb the input/output norm ratio into an explicit rate.
+Order zero uses the actual identity `T₀ = B₀`; positive orders use the input-norm estimate. -/
+theorem commutatorOrder_hasOperatorGrowthBound_of_norm_pos
+    (hB : 0 < ‖receiverOrder V hV A τ hτ 0‖) :
+    HasOperatorGrowthBound (fun j ↦ ‖commutatorOrder V hV A τ hτ j‖)
+      (max 1 (‖A‖ / ‖receiverOrder V hV A τ hτ 0‖) / (τ : ℝ))
+      ‖receiverOrder V hV A τ hτ 0‖ := by
+  let b := ‖receiverOrder V hV A τ hτ 0‖
+  let r := max 1 (‖A‖ / b)
+  have hr : 1 ≤ r := le_max_left _ _
+  have hr0 : 0 ≤ r := le_trans zero_le_one hr
+  have hA : ‖A‖ ≤ r * b := (div_le_iff₀ hB).mp (le_max_right _ _)
+  intro j
+  cases j with
+  | zero => simp
+  | succ k =>
+    have hrpow : r ≤ r ^ (k + 1) := by
+      calc
+        r = 1 * r := (one_mul r).symm
+        _ ≤ r ^ k * r := mul_le_mul_of_nonneg_right
+          (one_le_pow₀ hr) hr0
+        _ = r ^ (k + 1) := (pow_succ r k).symm
+    have hApow : ‖A‖ ≤ r ^ (k + 1) * b :=
+      hA.trans (mul_le_mul_of_nonneg_right hrpow (norm_nonneg _))
+    calc
+      ‖commutatorOrder V hV A τ hτ (k + 1)‖ ≤
+          ‖A‖ * (((k + 1).factorial : ℝ) / (τ : ℝ) ^ (k + 1)) :=
+        commutatorOrder_norm_le V hV A τ hτ (k + 1)
+      _ ≤ (r ^ (k + 1) * b) *
+          (((k + 1).factorial : ℝ) / (τ : ℝ) ^ (k + 1)) :=
+        mul_le_mul_of_nonneg_right hApow (by positivity)
+      _ = ((k + 1).factorial : ℝ) * (r / (τ : ℝ)) ^ (k + 1) * b := by
+        rw [div_pow]
+        ring
+
+include hgroup hK hgen in
+/-- Zero smoothed output forces the actual brackets to vanish: the recurrence gives
+zero on `K.domain` at each successor, and continuity extends it from that dense domain. -/
+theorem commutatorOrder_eq_zero_of_receiverOrder_zero
+    (hB : receiverOrder V hV A τ hτ 0 = 0) (j : ℕ) :
+    commutatorOrder V hV A τ hτ j = 0 := by
+  induction j with
+  | zero => simpa using hB
+  | succ j ih =>
+    have hon (x : H) (hx : x ∈ K.domain) :
+        commutatorOrder V hV A τ hτ (j + 1) x = 0 := by
+      obtain ⟨hv, hrec⟩ :=
+        commutatorOrder_domain_recurrence V hV A τ hτ hgroup K hK hgen j ⟨x, hx⟩
+      have hz : (⟨commutatorOrder V hV A τ hτ j x, hv⟩ : K.domain) = 0 := by
+        apply Subtype.ext
+        simp [ih]
+      rw [hz, K.map_zero, ih] at hrec
+      simpa using hrec.symm
+    have heq := (commutatorOrder V hV A τ hτ (j + 1)).continuous.ext_on
+      hK.dense_domain continuous_const hon
+    ext x
+    exact congrFun heq x
+
+include hgroup hK hgen in
+/-- The actual ideal receiver brackets satisfy the existing output-normalized F3 predicate
+at a positive rate, including zero output without division by its norm. -/
+theorem commutatorOrder_hasOperatorGrowthBound :
+    ∃ ε : ℝ, 0 < ε ∧
+      HasOperatorGrowthBound (fun j ↦ ‖commutatorOrder V hV A τ hτ j‖) ε
+        ‖receiverOrder V hV A τ hτ 0‖ := by
+  have hτR : 0 < (τ : ℝ) := by exact_mod_cast hτ
+  by_cases hB : receiverOrder V hV A τ hτ 0 = 0
+  · refine ⟨1 / (τ : ℝ), div_pos zero_lt_one hτR, ?_⟩
+    intro j
+    dsimp only
+    rw [commutatorOrder_eq_zero_of_receiverOrder_zero V hV A τ hτ hgroup K hK hgen hB j,
+      hB, norm_zero, mul_zero]
+  · have hBpos : 0 < ‖receiverOrder V hV A τ hτ 0‖ := norm_pos_iff.mpr hB
+    refine ⟨max 1 (‖A‖ / ‖receiverOrder V hV A τ hτ 0‖) / (τ : ℝ),
+      div_pos (lt_of_lt_of_le zero_lt_one (le_max_left _ _)) hτR, ?_⟩
+    exact commutatorOrder_hasOperatorGrowthBound_of_norm_pos V hV A τ hτ hBpos
 
 end SKEFTHawking.DKMBootstrap.CauchyReceiver
