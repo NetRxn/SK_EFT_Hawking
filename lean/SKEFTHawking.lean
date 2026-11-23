@@ -3923,6 +3923,7 @@ import SKEFTHawking.DKMBootstrap.BECFockMicroscopic
 import SKEFTHawking.DKMBootstrap.BECPhysicalWallModes
 import SKEFTHawking.DKMBootstrap.BECProductL2
 import SKEFTHawking.DKMBootstrap.BECProductWallKinetic
+import SKEFTHawking.DKMBootstrap.BECInteractingWallFock
 -- Phase 6v Wave 6v.1 (2026-05-26): Williamson-Yoder gauging-QEC overhead
 -- bound (arXiv:2410.02213). Substrate-level encoding of the "qubit overhead
 -- linear in the weight of the operator being measured up to a polylogarithmic
