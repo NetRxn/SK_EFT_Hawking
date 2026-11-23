@@ -11094,8 +11094,18 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CHHK2025DKMTransport.pdf',
-        'used_in': ['src/core/formulas.py', 'src/dkm_bootstrap/graphene_mir.py'],
-        'provides': ['Conditional DKM spectral-weight bound v2 Eq. (9), geometric beta_d and super-Planckian specialization Eq. (12); v1 numbering differs.'],
+        'used_in': [
+            'src/core/formulas.py',
+            'src/dkm_bootstrap/graphene_mir.py',
+            'lean/SKEFTHawking/DKMBootstrap/Predicates.lean',
+            'lean/SKEFTHawking/DKMBootstrap/LinearFunctionals.lean',
+        ],
+        'provides': [
+            'Effective signed DKM spectrum and conductivity, v2 Eqs. (4)–(5), '
+            'and positive-frequency spectral sign, §7.1.',
+            'Conditional DKM spectral-weight bound v2 Eq. (9), geometric beta_d '
+            'and super-Planckian specialization Eq. (12); v1 numbering differs.',
+        ],
         'notes': 'arXiv:2509.18255v2 assumes a DKM peak and diffusion inside the effective frequency/momentum window. Collective ell=sqrt(D tau); the Eq. (12) specialization uses additional fermionic/super-Planckian estimates. Computing its scalar does not establish a material realization, uniqueness or automatic applicability from a measured Wiedemann-Franz ratio.',
     },
 

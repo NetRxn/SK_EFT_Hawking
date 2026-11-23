@@ -464,7 +464,7 @@ Single follow-up session shipping the §A 20-item strengthening pass (10 sub-tas
 
 **B.3 — Substantive BEC Bogoliubov unbounded-norm proof (~2-3 sessions, SHIPPED in single session)**:
 
-**Physical follow-through:** [Wave 6v.10](Phase6v/Wave_6v.10_Roadmap.md) carries the Hamiltonian-to-growth question and the platform applicability check. The factorial witness below remains the shipped result.
+**Physical follow-through:** [Wave 6v.10](Phase6v/Wave_6v.10_Roadmap.md) carries the Hamiltonian-to-growth question and the platform applicability check. The factorial witness below remains the shipped result. Its independently reviewed [CHHK interface audit](../audits/2026-10-17-publication-substance-construction/DKM_EQ4_APPLICABILITY.md) records the corrected modeled spectrum and positive-frequency convention, as well as the outstanding microscopic window, weighted thermal and causal obligations.
 
 - New module `lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean` (~250 LoC).
 - Concrete substrate-level sequence `becBogoliubovCommutatorNorm κ := (2·κ)!`.
