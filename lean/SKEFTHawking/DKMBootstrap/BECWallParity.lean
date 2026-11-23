@@ -1,4 +1,5 @@
 import SKEFTHawking.DKMBootstrap.BECPeriodicCommutator
+import Physlib.QuantumMechanics.Operators.SpectralTheory.SelfAdjoint
 
 /-!
 # Spatial reflection and periodic parity kinetic cores
@@ -399,5 +400,333 @@ theorem parityClosure_eq_neg_second_deriv_ae (a : ℝ) (σ : ℂ) (u : parityCor
         -(a : ℂ) * deriv (deriv (representativeLift L (coreInclusion L σ u))) x := by
   rw [parityClosure_apply_core]
   exact kinetic_eq_neg_second_deriv_ae L a (coreInclusion L σ u)
+
+section PhysicalVolume
+
+variable (T : ℝ) [Fact (0 < T)]
+
+/-- Physical periodic Lebesgue L², with period `T` (not the wall interval length). -/
+abbrev VolumeSpace := Lp ℂ 2 (volume : Measure (AddCircle T))
+
+/-- The scalar relating physical volume to normalized Haar is strictly positive. -/
+theorem volumeScalar_pos : 0 < ENNReal.ofReal T := by
+  exact ENNReal.ofReal_pos.mpr (Fact.out : 0 < T)
+
+/-- The actual circle volume, without replacing it by a normalized surrogate. -/
+theorem volume_eq_period_smul_haar :
+    (volume : Measure (AddCircle T)) = ENNReal.ofReal T • AddCircle.haarAddCircle :=
+  AddCircle.volume_eq_smul_haarAddCircle
+
+/-- Nonzero rescaling preserves precisely the null sets used by both L² quotients. -/
+theorem volume_ae_eq_haar :
+    ae (volume : Measure (AddCircle T)) = ae AddCircle.haarAddCircle := by
+  rw [volume_eq_period_smul_haar,
+    Measure.ae_ennreal_smul_measure_eq (ne_of_gt (volumeScalar_pos T))]
+
+/-- Retain representatives while changing to actual physical volume. Norms scale by `√T`. -/
+def retainVolume : ModeSpace T →ₗ[ℂ] VolumeSpace T where
+  toFun u := (Lp.memLp u).of_haarAddCircle.toLp u
+  map_add' u v := by
+    apply Lp.ext
+    have h := Lp.coeFn_add u v
+    rw [← volume_ae_eq_haar T] at h
+    filter_upwards [(Lp.memLp (u + v)).of_haarAddCircle.coeFn_toLp,
+      (Lp.memLp u).of_haarAddCircle.coeFn_toLp,
+      (Lp.memLp v).of_haarAddCircle.coeFn_toLp, h,
+      Lp.coeFn_add ((Lp.memLp u).of_haarAddCircle.toLp u)
+        ((Lp.memLp v).of_haarAddCircle.toLp v)] with x huv hu hv ha hb
+    simp only [Pi.add_apply] at ha hb
+    rw [huv, ha, hb, hu, hv]
+  map_smul' b u := by
+    apply Lp.ext
+    have h := Lp.coeFn_smul b u
+    rw [← volume_ae_eq_haar T] at h
+    filter_upwards [(Lp.memLp (b • u)).of_haarAddCircle.coeFn_toLp,
+      (Lp.memLp u).of_haarAddCircle.coeFn_toLp, h,
+      Lp.coeFn_smul b ((Lp.memLp u).of_haarAddCircle.toLp u)] with x hbu hu ha hb
+    simp only [Pi.smul_apply, RingHom.id_apply] at ha hb ⊢
+    rw [hbu, ha, hb, hu]
+
+theorem retainVolume_ae (u : ModeSpace T) :
+    (retainVolume T u : AddCircle T → ℂ) =ᵐ[volume] u :=
+  (Lp.memLp u).of_haarAddCircle.coeFn_toLp
+
+/-- The reverse change of measure also retains the actual representative. -/
+def retainHaar (u : VolumeSpace T) : ModeSpace T :=
+  (Lp.memLp u).haarAddCircle.toLp u
+
+theorem retainHaar_ae (u : VolumeSpace T) :
+    (retainHaar T u : AddCircle T → ℂ) =ᵐ[AddCircle.haarAddCircle] u :=
+  (Lp.memLp u).haarAddCircle.coeFn_toLp
+
+@[simp] theorem retainHaar_retainVolume (u : ModeSpace T) :
+    retainHaar T (retainVolume T u) = u := by
+  apply Lp.ext
+  have h := retainVolume_ae T u
+  rw [volume_ae_eq_haar T] at h
+  exact (retainHaar_ae T _).trans h
+
+@[simp] theorem retainVolume_retainHaar (u : VolumeSpace T) :
+    retainVolume T (retainHaar T u) = u := by
+  apply Lp.ext
+  have h := retainHaar_ae T u
+  rw [← volume_ae_eq_haar T] at h
+  exact (retainVolume_ae T _).trans h
+
+/-- The unnormalized change of measure is an actual complex linear equivalence. -/
+def retainVolumeEquiv : ModeSpace T ≃ₗ[ℂ] VolumeSpace T :=
+  { retainVolume T with
+    invFun := retainHaar T
+    left_inv := retainHaar_retainVolume T
+    right_inv := retainVolume_retainHaar T }
+
+/-- Retaining a representative multiplies its norm by the square root of physical period. -/
+theorem retainVolume_norm (u : ModeSpace T) :
+    ‖retainVolume T u‖ = Real.sqrt T * ‖u‖ := by
+  rw [Lp.norm_def, eLpNorm_congr_ae (retainVolume_ae T u), volume_eq_period_smul_haar,
+    eLpNorm_smul_measure_of_ne_zero (ne_of_gt (volumeScalar_pos T))]
+  simp only [smul_eq_mul, ENNReal.toReal_mul, ← ENNReal.toReal_rpow,
+    ENNReal.toReal_ofReal (le_of_lt (Fact.out : 0 < T)), ← Lp.norm_def]
+  norm_num [Real.sqrt_eq_rpow]
+
+/-- Haar-to-volume isometry: the retained representative is multiplied by `T⁻¹/²`. -/
+def volumeIsometry : ModeSpace T →ₗᵢ[ℂ] VolumeSpace T where
+  toLinearMap := ((Real.sqrt T)⁻¹ : ℂ) • retainVolume T
+  norm_map' u := by
+    simp only [LinearMap.smul_apply, norm_smul, retainVolume_norm, norm_inv,
+      Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg T)]
+    rw [← mul_assoc, inv_mul_cancel₀ (ne_of_gt (Real.sqrt_pos.mpr (Fact.out : 0 < T))),
+      one_mul]
+
+theorem volumeIsometry_surjective : Function.Surjective (volumeIsometry T) := by
+  intro u
+  refine ⟨retainHaar T ((Real.sqrt T : ℂ) • u), ?_⟩
+  change ((Real.sqrt T)⁻¹ : ℂ) • retainVolume T _ = u
+  rw [retainVolume_retainHaar, smul_smul]
+  simp [Real.sqrt_ne_zero'.mpr (Fact.out : 0 < T)]
+
+/-- Surjective complex linear isometry between actual Haar and physical Lebesgue L². -/
+def volumeUnitary : ModeSpace T ≃ₗᵢ[ℂ] VolumeSpace T :=
+  LinearIsometryEquiv.ofSurjective (volumeIsometry T) (volumeIsometry_surjective T)
+
+theorem volumeUnitary_ae (u : ModeSpace T) :
+    (volumeUnitary T u : AddCircle T → ℂ) =ᵐ[volume]
+      (fun x ↦ ((Real.sqrt T)⁻¹ : ℂ) * u x) := by
+  change (((Real.sqrt T)⁻¹ : ℂ) • retainVolume T u : VolumeSpace T) =ᵐ[volume] _
+  filter_upwards [Lp.coeFn_smul ((Real.sqrt T)⁻¹ : ℂ) (retainVolume T u),
+    retainVolume_ae T u] with x hs hu
+  simpa only [Pi.smul_apply, smul_eq_mul, hu] using hs
+
+/-- The unscaled Fourier character in actual physical volume L². -/
+def volumeCharacter (n : ℤ) : VolumeSpace T :=
+  ContinuousMap.toLp 2 volume ℂ (fourier n)
+
+/-- Fourier normalization is `1/√T` on the actual period-`T` volume carrier. -/
+theorem volumeUnitary_mode (n : ℤ) :
+    volumeUnitary T (mode T n) = ((Real.sqrt T)⁻¹ : ℂ) • volumeCharacter T n := by
+  apply Lp.ext
+  have hn := coeFn_fourierLp (T := T) 2 n
+  rw [← volume_ae_eq_haar T] at hn
+  filter_upwards [volumeUnitary_ae T (mode T n), hn,
+    Lp.coeFn_smul ((Real.sqrt T)⁻¹ : ℂ) (volumeCharacter T n),
+    ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℂ) volume (fourier n)] with x hu hn hs hc
+  change (volumeCharacter T n : AddCircle T → ℂ) x = fourier n x at hc
+  simp only [Pi.smul_apply, smul_eq_mul] at hs
+  rw [hu, hn, hs, hc]
+
+theorem normalized_volumeCharacters :
+    Orthonormal ℂ (fun n : ℤ ↦ ((Real.sqrt T)⁻¹ : ℂ) • volumeCharacter T n) := by
+  rw [orthonormal_iff_ite]
+  intro i j
+  rw [← volumeUnitary_mode, ← volumeUnitary_mode, (volumeUnitary T).inner_map_map]
+  exact orthonormal_iff_ite.mp (modes_orthonormal T) i j
+
+/-- Actual periodic self-adjoint kinetic, carried into physical Lebesgue volume L². -/
+def volumeKinetic (c : ℝ) : VolumeSpace T →ₗ.[ℂ] VolumeSpace T :=
+  (kineticPMap T c).closure.unitaryConj (volumeUnitary T)
+
+theorem volumeKinetic_selfAdjoint (c : ℝ) : IsSelfAdjoint (volumeKinetic T c) :=
+  LinearPMap.unitaryConj_isSelfAdjoint (volumeUnitary T)
+    (kineticPMap_closure_selfAdjoint T c)
+
+/-- Exact carrying map on the full accepted periodic closure domain. -/
+def volumeKineticDomain (c : ℝ) (u : (kineticPMap T c).closure.domain) :
+    (volumeKinetic T c).domain :=
+  ⟨volumeUnitary T (u : ModeSpace T),
+    LinearPMap.map_mem_unitaryConj_domain (volumeUnitary T) _ u⟩
+
+theorem volumeKinetic_apply (c : ℝ) (u : (kineticPMap T c).closure.domain) :
+    volumeKinetic T c (volumeKineticDomain T c u) =
+      volumeUnitary T ((kineticPMap T c).closure u) :=
+  LinearPMap.unitaryConj_apply_map (volumeUnitary T) _ u
+
+/-- The carried kinetic retains the actual minus-second-derivative action on the core. -/
+theorem volumeKinetic_core_ae (a : ℝ) (u : trigDomain T) :
+    ∀ᵐ z : AddCircle T ∂volume, ∀ x : ℝ, (x : AddCircle T) = z →
+      (volumeKinetic T (scale T a)
+        (volumeKineticDomain T (scale T a) (closureCore T (scale T a) u))
+          : AddCircle T → ℂ) z =
+        ((Real.sqrt T)⁻¹ : ℂ) *
+          (-(a : ℂ) * deriv (deriv (representativeLift T u)) x) := by
+  rw [volumeKinetic_apply]
+  have h := kineticPMap_closure_eq_neg_second_deriv_ae T a u
+  rw [← volume_ae_eq_haar T] at h
+  filter_upwards [volumeUnitary_ae T ((kineticPMap T (scale T a)).closure
+    (closureCore T (scale T a) u)), h] with z hu hz
+  intro x hx
+  rw [hu, hz x hx]
+
+/-- Bounded cosine multiplication transported by the actual volume unitary. -/
+def volumeCosineMultiplier : VolumeSpace T →L[ℂ] VolumeSpace T :=
+  (volumeUnitary T).toContinuousLinearEquiv.toContinuousLinearMap.comp
+    ((cosineMultiplier T).comp
+      (volumeUnitary T).symm.toContinuousLinearEquiv.toContinuousLinearMap)
+
+@[simp] theorem volumeCosineMultiplier_map (u : ModeSpace T) :
+    volumeCosineMultiplier T (volumeUnitary T u) =
+      volumeUnitary T (cosineMultiplier T u) := by
+  simp [volumeCosineMultiplier]
+
+/-- The transported bounded operator is actual multiplication by the same cosine. -/
+theorem volumeCosineMultiplier_ae (u : VolumeSpace T) :
+    (volumeCosineMultiplier T u : AddCircle T → ℂ) =ᵐ[volume]
+      (fun x ↦ cosine T x * u x) := by
+  obtain ⟨v, rfl⟩ := (volumeUnitary T).surjective u
+  rw [volumeCosineMultiplier_map]
+  have h := cosineMultiplier_ae T v
+  rw [← volume_ae_eq_haar T] at h
+  filter_upwards [volumeUnitary_ae T (cosineMultiplier T v),
+    volumeUnitary_ae T v, h] with x hc hv hm
+  rw [hc, hv, hm]
+  ring
+
+/-- The entire actual common domain of the periodic bracket carries to physical volume. -/
+theorem volumeCosineMultiplier_mem (c : ℝ) (u : (kineticPMap T c).closure.domain)
+    (hu : cosineMultiplier T (u : ModeSpace T) ∈ (kineticPMap T c).closure.domain) :
+    volumeCosineMultiplier T (volumeKineticDomain T c u : VolumeSpace T) ∈
+      (volumeKinetic T c).domain := by
+  change volumeCosineMultiplier T (volumeUnitary T (u : ModeSpace T)) ∈ _
+  rw [volumeCosineMultiplier_map]
+  exact LinearPMap.map_mem_unitaryConj_domain (volumeUnitary T) _ ⟨_, hu⟩
+
+/-- Exact transport of the accepted closure bracket, on its full common domain. -/
+theorem volume_bracket_map (c : ℝ) (u : (kineticPMap T c).closure.domain)
+    (hu : cosineMultiplier T (u : ModeSpace T) ∈ (kineticPMap T c).closure.domain) :
+    volumeKinetic T c
+        ⟨volumeCosineMultiplier T (volumeKineticDomain T c u : VolumeSpace T),
+          volumeCosineMultiplier_mem T c u hu⟩ -
+      volumeCosineMultiplier T (volumeKinetic T c (volumeKineticDomain T c u)) =
+        volumeUnitary T ((kineticPMap T c).closure ⟨cosineMultiplier T u, hu⟩ -
+          cosineMultiplier T ((kineticPMap T c).closure u)) := by
+  have he : (⟨volumeCosineMultiplier T (volumeKineticDomain T c u : VolumeSpace T),
+      volumeCosineMultiplier_mem T c u hu⟩ : (volumeKinetic T c).domain) =
+      volumeKineticDomain T c ⟨cosineMultiplier T u, hu⟩ := by
+    apply Subtype.ext
+    exact volumeCosineMultiplier_map T u
+  rw [he, volumeKinetic_apply, volumeKinetic_apply, volumeCosineMultiplier_map, map_sub]
+
+/-- Physical-volume normalization cannot create a bounded extension of the closure bracket. -/
+theorem no_bounded_volume_bracket_extension {c : ℝ} (hc : 0 < c) :
+    ¬ ∃ B : VolumeSpace T →L[ℂ] VolumeSpace T,
+      ∀ v : (volumeKinetic T c).domain,
+      ∀ hv : volumeCosineMultiplier T (v : VolumeSpace T) ∈ (volumeKinetic T c).domain,
+        B (v : VolumeSpace T) = volumeKinetic T c
+          ⟨volumeCosineMultiplier T (v : VolumeSpace T), hv⟩ -
+            volumeCosineMultiplier T (volumeKinetic T c v) := by
+  rintro ⟨B, hB⟩
+  apply no_bounded_closure_bracket_extension T hc
+  refine ⟨(volumeUnitary T).symm.toContinuousLinearEquiv.toContinuousLinearMap.comp
+    (B.comp (volumeUnitary T).toContinuousLinearEquiv.toContinuousLinearMap), ?_⟩
+  intro u hu
+  have h := hB (volumeKineticDomain T c u) (volumeCosineMultiplier_mem T c u hu)
+  rw [volume_bracket_map T c u hu] at h
+  exact congrArg (volumeUnitary T).symm h |>.trans ((volumeUnitary T).symm_apply_apply _)
+
+end PhysicalVolume
+
+section HalfInterval
+
+variable (T : ℝ) [Fact (0 < T)]
+
+/-- The physical wall interval has length `L = T/2`; the periodic carrier has period `T`. -/
+abbrev HalfSpace := Lp ℂ 2 (volume.restrict (Set.Ioo 0 (T / 2)))
+
+theorem halfInterval_measure_le_cell :
+    volume.restrict (Set.Ioo 0 (T / 2)) ≤
+      volume.restrict (Set.Ioc 0 (0 + T)) := by
+  apply Measure.restrict_mono_set
+  intro x hx
+  exact ⟨hx.1, by linarith [hx.2, (Fact.out : 0 < T)]⟩
+
+/-- Pulling back volume-null sets to the actual positive half-period is legitimate. -/
+theorem ae_half_of_volume {P : AddCircle T → Prop} (h : ∀ᵐ z ∂volume, P z) :
+    ∀ᵐ x : ℝ ∂volume.restrict (Set.Ioo 0 (T / 2)), P (x : AddCircle T) :=
+  (AddCircle.measurePreserving_mk T 0).quasiMeasurePreserving.ae h |>.filter_mono
+    (ae_mono (halfInterval_measure_le_cell T))
+
+/-- Actual restriction of a periodic volume L² representative is square integrable. -/
+theorem half_memLp (u : VolumeSpace T) :
+    MemLp (fun x : ℝ ↦ u (x : AddCircle T)) 2
+      (volume.restrict (Set.Ioo 0 (T / 2))) :=
+  ((Lp.memLp u).comp_measurePreserving (AddCircle.measurePreserving_mk T 0)).mono_measure
+    (halfInterval_measure_le_cell T)
+
+/-- Restriction to `(0,L)`, `L=T/2`, on actual Lebesgue L² quotients. No wall domain asserted. -/
+def halfRestriction : VolumeSpace T →ₗ[ℂ] HalfSpace T where
+  toFun u := (half_memLp T u).toLp (fun x : ℝ ↦ u (x : AddCircle T))
+  map_add' u v := by
+    apply Lp.ext
+    have h := ae_half_of_volume T (Lp.coeFn_add u v)
+    filter_upwards [(half_memLp T (u + v)).coeFn_toLp,
+      (half_memLp T u).coeFn_toLp, (half_memLp T v).coeFn_toLp, h,
+      Lp.coeFn_add ((half_memLp T u).toLp _) ((half_memLp T v).toLp _)]
+      with x huv hu hv ha hb
+    simp only [Pi.add_apply] at ha hb
+    rw [huv, ha, hb, hu, hv]
+  map_smul' b u := by
+    apply Lp.ext
+    have h := ae_half_of_volume T (Lp.coeFn_smul b u)
+    filter_upwards [(half_memLp T (b • u)).coeFn_toLp, (half_memLp T u).coeFn_toLp,
+      h, Lp.coeFn_smul b ((half_memLp T u).toLp _)] with x hbu hu ha hb
+    simp only [Pi.smul_apply, RingHom.id_apply] at ha hb ⊢
+    rw [hbu, ha, hb, hu]
+
+theorem halfRestriction_ae (u : VolumeSpace T) :
+    (halfRestriction T u : ℝ → ℂ) =ᵐ[volume.restrict (Set.Ioo 0 (T / 2))]
+      (fun x ↦ u (x : AddCircle T)) :=
+  (half_memLp T u).coeFn_toLp
+
+/-- The accepted Haar parity equality becomes the actual odd/even relation on the half cell. -/
+theorem parity_half_ae (σ : ℂ) (u : paritySpace T σ) :
+    ∀ᵐ x : ℝ ∂volume.restrict (Set.Ioo 0 (T / 2)),
+      u.1 ((-x : ℝ) : AddCircle T) = σ * u.1 (x : AddCircle T) := by
+  have h := reflection_ae T (u : ModeSpace T)
+  rw [(mem_paritySpace T σ u).mp u.2] at h
+  have hs := Lp.coeFn_smul σ (u : ModeSpace T)
+  have hp : ∀ᵐ z ∂AddCircle.haarAddCircle, u.1 (-z) = σ * u.1 z := by
+    filter_upwards [h, hs] with z hz hsz
+    exact hz.symm.trans hsz
+  rw [← volume_ae_eq_haar T] at hp
+  simpa only [AddCircle.coe_neg] using ae_half_of_volume T hp
+
+/-- Beginning of the Haar parity-to-interval map, with the required `L⁻¹/²` scale.
+Its isometry and surjective odd/even extension remain separate obligations. -/
+def parityHalfRestriction (σ : ℂ) : paritySpace T σ →ₗ[ℂ] HalfSpace T :=
+  ((Real.sqrt (T / 2))⁻¹ : ℂ) •
+    ((halfRestriction T).comp ((retainVolume T).comp (paritySpace T σ).subtype))
+
+theorem parityHalfRestriction_ae (σ : ℂ) (u : paritySpace T σ) :
+    (parityHalfRestriction T σ u : ℝ → ℂ) =ᵐ[volume.restrict (Set.Ioo 0 (T / 2))]
+      (fun x ↦ ((Real.sqrt (T / 2))⁻¹ : ℂ) * u.1 (x : AddCircle T)) := by
+  have h := ae_half_of_volume T (retainVolume_ae T (u : ModeSpace T))
+  filter_upwards [h, halfRestriction_ae T (retainVolume T (u : ModeSpace T)),
+    Lp.coeFn_smul ((Real.sqrt (T / 2))⁻¹ : ℂ)
+      (halfRestriction T (retainVolume T (u : ModeSpace T)))] with x hu hr hs
+  change (((Real.sqrt (T / 2))⁻¹ : ℂ) •
+    halfRestriction T (retainVolume T (u : ModeSpace T)) : HalfSpace T) x = _
+  simp only [Pi.smul_apply, smul_eq_mul] at hs
+  rw [hs, hr, hu]
+
+end HalfInterval
 
 end SKEFTHawking.DKMBootstrap.BECWallParity
