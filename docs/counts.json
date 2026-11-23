@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T18:23:54.072917",
+  "generated": "2026-11-22T18:31:08.338002",
   "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 44145,
-    "theorems_total": 24768,
-    "theorems_substantive": 24742,
+    "total_declarations": 44149,
+    "theorems_total": 24771,
+    "theorems_substantive": 24745,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24675,
+    "theorems_kernel_substantive": 24678,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,

@@ -25180,7 +25180,34 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_eq_zero_of_receiverOrder_zero",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_hasOperatorGrowthBound",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_hasOperatorGrowthBound_of_norm_pos",
+      "module": "SKEFTHawking.DKMBootstrap.CauchyReceiver",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_norm_le",
@@ -25189,7 +25216,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.commutatorOrder_zero",
@@ -25198,7 +25225,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.CauchyReceiver.receiverOrder_apply",
@@ -228684,7 +228711,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 24768,
+    "theorem_nodes": 24771,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -228695,7 +228722,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 401,
-      "TRUE:PROVED": 24367,
+      "TRUE:PROVED": 24370,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
