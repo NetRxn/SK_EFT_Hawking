@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T18:31:08.338002",
+  "generated": "2026-11-22T18:46:04.914201",
   "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 44149,
-    "theorems_total": 24771,
-    "theorems_substantive": 24745,
+    "total_declarations": 44210,
+    "theorems_total": 24816,
+    "theorems_substantive": 24790,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 24678,
+    "theorems_kernel_substantive": 24723,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2128,
+    "modules": 2129,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -171,6 +171,7 @@
       "SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth",
       "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator",
+      "SKEFTHawking.DKMBootstrap.BECWallParity",
       "SKEFTHawking.DKMBootstrap.CauchyReceiver",
       "SKEFTHawking.DKMBootstrap.E1E2CrossBridge",
       "SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap",
@@ -2146,7 +2147,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13599,
+    "definitions": 13612,
     "structures": 487,
     "instances": 980,
     "inductives": 104,
