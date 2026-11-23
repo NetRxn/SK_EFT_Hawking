@@ -28963,6 +28963,411 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.D2_mul",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.D_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.D_mul",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.angularCoefficient_pos",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.bracket_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.bracket_constant_control",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.bracket_modulate",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.compressed_norm_le",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.coupledBracket_compression",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.coupledBracket_compression_ae",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.coupledBracket_eq_commutator",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.density_injection",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.density_photon",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.density_test_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.density_test_mem_domain",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.deriv_smooth",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 7
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.derivative_product_norm_pos",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.exists_compact_real_profile",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.exists_deriv_ne_zero",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.exists_packet_at",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.exists_real_coupled_obstruction",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "OBSTRUCTION",
+      "atlas_status": "OBSTRUCTION",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.kinetic_on_test",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.memL2",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.modulate_norm",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.mulOp_apply",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.multiplier_on_test",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.multipliers_commute",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.no_bounded_coupled_extension",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.no_bounded_coupled_extension_of_nonconstant",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.no_coupled_domain_bound",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.no_domain_bound",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.no_domain_bound_of_nonconstant",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.no_finite_packet_bound",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.packet_lower_bound",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.phase_deriv",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.phase_norm",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.phase_smooth",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.photonTest_norm",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.profile_ae",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.spatialDiagonal_commute",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.toL2_ae",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.toL2_eq_schwartz",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.toL2_injective",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.toL2_mem_kinetic",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.toSchwartz_D",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonPortBath.inverseSymbol_norm_le",
       "module": "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
       "atlas_kind": "TRUE",
@@ -29113,7 +29518,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.Model.photonPotential_real",
@@ -29473,7 +29878,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.kinetic_selfAdjoint",
@@ -29518,7 +29923,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.multiplier_symmetric",
@@ -29536,7 +29941,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.photon_exciton_gain",
@@ -29599,7 +30004,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.schwartz_mem_kinetic",
@@ -29608,7 +30013,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator.spatialDiagonal_symmetric",
@@ -230760,6 +231165,16 @@
       "false_statement": ""
     },
     {
+      "id": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator.exists_real_coupled_obstruction",
+      "module": "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
+      "frontier_impact": 0,
+      "kernel_pure": true,
+      "registered": false,
+      "fork_id": null,
+      "nogo_kind": "",
+      "false_statement": ""
+    },
+    {
       "id": "SKEFTHawking.DarkEnergyObstructionPrinciple.kv_ansatz_non_viable_via_factor1",
       "module": "SKEFTHawking.DarkEnergyObstructionPrinciple",
       "frontier_impact": 0,
@@ -233088,18 +233503,18 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25254,
+    "theorem_nodes": 25299,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
     "apex_ids": [
       "hyp:H_PMNSAnglesFromExactSubstrate"
     ],
-    "obstruction_nodes": 428,
+    "obstruction_nodes": 429,
     "registered_obstructions": 45,
     "by_kind_status": {
-      "OBSTRUCTION:OBSTRUCTION": 404,
-      "TRUE:PROVED": 24850,
+      "OBSTRUCTION:OBSTRUCTION": 405,
+      "TRUE:PROVED": 24894,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,

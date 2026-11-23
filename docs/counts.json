@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-22T22:38:52.625563",
+  "generated": "2026-11-22T22:55:05.673430",
   "lean_deps_source": "/private/tmp/skeft-e2-readahead.eWbz8F/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 44915,
-    "theorems_total": 25254,
-    "theorems_substantive": 25228,
+    "total_declarations": 44984,
+    "theorems_total": 25299,
+    "theorems_substantive": 25273,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25161,
+    "theorems_kernel_substantive": 25206,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2140,
+    "modules": 2141,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -188,6 +188,7 @@
       "SKEFTHawking.DKMBootstrap.LDPBridge",
       "SKEFTHawking.DKMBootstrap.LinearFunctionals",
       "SKEFTHawking.DKMBootstrap.NoCrossing",
+      "SKEFTHawking.DKMBootstrap.PolaritonDensityCommutator",
       "SKEFTHawking.DKMBootstrap.PolaritonF3Bound",
       "SKEFTHawking.DKMBootstrap.PolaritonPortBath",
       "SKEFTHawking.DKMBootstrap.PolaritonSpatialGenerator",
@@ -2158,7 +2159,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13791,
+    "definitions": 13806,
     "structures": 489,
     "instances": 985,
     "inductives": 105,
