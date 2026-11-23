@@ -646,6 +646,8 @@ end PhysicalVolume
 
 section HalfInterval
 
+open scoped ENNReal
+
 variable (T : ℝ) [Fact (0 < T)]
 
 /-- The physical wall interval has length `L = T/2`; the periodic carrier has period `T`. -/
@@ -709,8 +711,8 @@ theorem parity_half_ae (σ : ℂ) (u : paritySpace T σ) :
   rw [← volume_ae_eq_haar T] at hp
   simpa only [AddCircle.coe_neg] using ae_half_of_volume T hp
 
-/-- Beginning of the Haar parity-to-interval map, with the required `L⁻¹/²` scale.
-Its isometry and surjective odd/even extension remain separate obligations. -/
+/-- Haar parity restriction at the physical `L⁻¹/²` scale.
+The norm identity and explicit odd/even inverse are proved below. -/
 def parityHalfRestriction (σ : ℂ) : paritySpace T σ →ₗ[ℂ] HalfSpace T :=
   ((Real.sqrt (T / 2))⁻¹ : ℂ) •
     ((halfRestriction T).comp ((retainVolume T).comp (paritySpace T σ).subtype))
@@ -726,6 +728,256 @@ theorem parityHalfRestriction_ae (σ : ℂ) (u : paritySpace T σ) :
     halfRestriction T (retainVolume T (u : ModeSpace T)) : HalfSpace T) x = _
   simp only [Pi.smul_apply, smul_eq_mul] at hs
   rw [hs, hr, hu]
+
+/-- The two open half-cells exhaust a physical period up to null endpoints. -/
+theorem volume_lintegral_halves (F : AddCircle T → ℝ≥0∞) :
+    (∫⁻ z, F z) =
+      (∫⁻ x in Set.Ioo (-(T / 2)) 0, F (x : AddCircle T)) +
+      ∫⁻ x in Set.Ioo 0 (T / 2), F (x : AddCircle T) := by
+  have hT : 0 < T := Fact.out
+  have hc : -(T / 2) + T = T / 2 := by ring
+  rw [← AddCircle.lintegral_preimage T (-(T / 2)) F, hc,
+    ← Set.Ioc_union_Ioc_eq_Ioc (by linarith : -(T / 2) ≤ 0) (by linarith : 0 ≤ T / 2),
+    lintegral_union measurableSet_Ioc (Set.Ioc_disjoint_Ioc_of_le le_rfl)]
+  rw [← Measure.restrict_congr_set (Ioo_ae_eq_Ioc (a := -(T / 2)) (b := 0)),
+    ← Measure.restrict_congr_set (Ioo_ae_eq_Ioc (a := 0) (b := T / 2))]
+
+omit [Fact (0 < T)] in
+/-- Lebesgue reflection exchanges the actual open half-cells, including their measures. -/
+theorem half_lintegral_neg (f : ℝ → ℝ≥0∞) :
+    (∫⁻ x in Set.Ioo (-(T / 2)) 0, f x) =
+      ∫⁻ x in Set.Ioo 0 (T / 2), f (-x) := by
+  have hp : (Neg.neg : ℝ → ℝ) ⁻¹' Set.Ioo (-(T / 2)) 0 = Set.Ioo 0 (T / 2) := by
+    ext x
+    simp only [Set.mem_preimage, Set.mem_Ioo]
+    constructor <;> intro h <;> constructor <;> linarith [h.1, h.2]
+  have h := (Measure.measurePreserving_neg (volume : Measure ℝ)).restrict_preimage
+    (measurableSet_Ioo (a := -(T / 2)) (b := 0))
+  rw [hp] at h
+  exact (h.lintegral_comp_emb (Homeomorph.neg ℝ).measurableEmbedding f).symm
+
+/-- A sign with square one has unit complex norm. -/
+theorem paritySign_norm (σ : ℂ) (hσ : σ ^ 2 = 1) : ‖σ‖ = 1 := by
+  have h : ‖σ‖ ^ 2 = 1 := by rw [← norm_pow, hσ, norm_one]
+  nlinarith [norm_nonneg σ]
+
+/-- Physical full-period mass is twice the positive-half mass, by actual parity. -/
+theorem parity_volume_mass (σ : ℂ) (hσ : σ ^ 2 = 1) (u : paritySpace T σ) :
+    (∫⁻ z : AddCircle T, ‖u.1 z‖ₑ ^ 2) =
+      2 * ∫⁻ x in Set.Ioo 0 (T / 2), ‖u.1 (x : AddCircle T)‖ₑ ^ 2 := by
+  rw [volume_lintegral_halves T, half_lintegral_neg T]
+  have hh : (∫⁻ x in Set.Ioo 0 (T / 2), ‖u.1 ((-x : ℝ) : AddCircle T)‖ₑ ^ 2) =
+      ∫⁻ x in Set.Ioo 0 (T / 2), ‖u.1 (x : AddCircle T)‖ₑ ^ 2 := by
+    apply lintegral_congr_ae
+    filter_upwards [parity_half_ae T σ u] with x hx
+    rw [hx, enorm_mul, ← ofReal_norm σ, paritySign_norm σ hσ]
+    simp
+  rw [hh, two_mul]
+
+/-- Squared L² norm as physical square mass; this applies to both actual measures. -/
+theorem lp_norm_sq_mass {α : Type*} [MeasurableSpace α] {μ : Measure α} (u : Lp ℂ 2 μ) :
+    ‖u‖ ^ 2 = (∫⁻ x, ‖u x‖ₑ ^ 2 ∂μ).toReal := by
+  have h := congrArg (RCLike.re : ℂ → ℝ) (L2.integral_inner_eq_sq_eLpNorm (𝕜 := ℂ) u)
+  change RCLike.re (inner ℂ u u) = _ at h
+  simpa only [inner_self_eq_norm_sq_to_K, ← RCLike.ofReal_pow, RCLike.ofReal_re,
+    ENNReal.rpow_two, enorm_eq_nnnorm] using h
+
+/-- The unscaled restriction has exactly `T/2` times the Haar squared norm. -/
+theorem halfRestriction_parity_norm_sq (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (u : paritySpace T σ) :
+    ‖halfRestriction T (retainVolume T (u : ModeSpace T))‖ ^ 2 =
+      (T / 2) * ‖u‖ ^ 2 := by
+  have hf : ‖retainVolume T (u : ModeSpace T)‖ ^ 2 =
+      (∫⁻ z : AddCircle T, ‖u.1 z‖ₑ ^ 2).toReal := by
+    rw [lp_norm_sq_mass]
+    congr 1
+    exact lintegral_congr_ae ((retainVolume_ae T (u : ModeSpace T)).fun_comp
+      (fun z : ℂ ↦ ‖z‖ₑ ^ 2))
+  have hh : ‖halfRestriction T (retainVolume T (u : ModeSpace T))‖ ^ 2 =
+      (∫⁻ x in Set.Ioo 0 (T / 2), ‖u.1 (x : AddCircle T)‖ₑ ^ 2).toReal := by
+    rw [lp_norm_sq_mass]
+    congr 1
+    apply lintegral_congr_ae
+    filter_upwards [halfRestriction_ae T (retainVolume T (u : ModeSpace T)),
+      ae_half_of_volume T (retainVolume_ae T (u : ModeSpace T))] with x hx hu
+    rw [hx, hu]
+  rw [parity_volume_mass T σ hσ u, ENNReal.toReal_mul] at hf
+  norm_num only [ENNReal.toReal_ofNat] at hf
+  rw [retainVolume_norm, mul_pow, Real.sq_sqrt (le_of_lt (Fact.out : 0 < T))] at hf
+  change _ = (T / 2) * ‖(u : ModeSpace T)‖ ^ 2
+  linarith
+
+/-- The physical half-interval restriction preserves the actual Haar parity norm. -/
+theorem parityHalfRestriction_norm (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (u : paritySpace T σ) : ‖parityHalfRestriction T σ u‖ = ‖u‖ := by
+  have hn := halfRestriction_parity_norm_sq T σ hσ u
+  have hs : 0 < Real.sqrt (T / 2) := Real.sqrt_pos.mpr (by linarith [(Fact.out : 0 < T)])
+  have he : ‖halfRestriction T (retainVolume T (u : ModeSpace T))‖ =
+      Real.sqrt (T / 2) * ‖u‖ := by
+    have hsq := Real.sq_sqrt (le_of_lt (show 0 < T / 2 by linarith [(Fact.out : 0 < T)]))
+    apply (sq_eq_sq₀ (norm_nonneg _) (mul_nonneg hs.le (norm_nonneg u))).mp
+    rw [mul_pow, hsq]
+    exact hn
+  change ‖((Real.sqrt (T / 2))⁻¹ : ℂ) •
+    halfRestriction T (retainVolume T (u : ModeSpace T))‖ = _
+  rw [norm_smul, he]
+  simp only [norm_inv, Complex.norm_real, Real.norm_eq_abs,
+    abs_of_nonneg (Real.sqrt_nonneg _)]
+  rw [← mul_assoc, inv_mul_cancel₀ (ne_of_gt hs), one_mul]
+
+/-- Isometric physical realization of the closed even or odd parity carrier. -/
+def halfIsometry (σ : ℂ) (hσ : σ ^ 2 = 1) : paritySpace T σ →ₗᵢ[ℂ] HalfSpace T where
+  toLinearMap := parityHalfRestriction T σ
+  norm_map' := parityHalfRestriction_norm T σ hσ
+
+/-- Zero extension on the physical cell, followed by the actual periodic lift. -/
+def halfZeroLift (g : HalfSpace T) : VolumeSpace T :=
+  (((memLp_indicator_iff_restrict measurableSet_Ioo).mpr (Lp.memLp g)).restrict
+    (Set.Ioc (-(T / 2)) (-(T / 2) + T))).memLp_liftIoc.toLp
+      (AddCircle.liftIoc T (-(T / 2)) ((Set.Ioo 0 (T / 2)).indicator g))
+
+/-- The zero lift changes measure by retaining its representative, without rescaling. -/
+def halfZeroHaar (g : HalfSpace T) : ModeSpace T := retainHaar T (halfZeroLift T g)
+
+theorem halfZeroHaar_ae (g : HalfSpace T) :
+    (halfZeroHaar T g : AddCircle T → ℂ) =ᵐ[volume]
+      AddCircle.liftIoc T (-(T / 2)) ((Set.Ioo 0 (T / 2)).indicator g) := by
+  have hh := retainHaar_ae T (halfZeroLift T g)
+  rw [← volume_ae_eq_haar T] at hh
+  exact hh.trans (MemLp.coeFn_toLp _)
+
+/-- The lifted zero extension is the input on the positive half and zero on its reflection. -/
+theorem halfZeroHaar_half_ae (g : HalfSpace T) :
+    ∀ᵐ x : ℝ ∂volume.restrict (Set.Ioo 0 (T / 2)),
+      halfZeroHaar T g (x : AddCircle T) = g x ∧
+        halfZeroHaar T g ((-x : ℝ) : AddCircle T) = 0 := by
+  have hn := (Measure.measurePreserving_neg
+    (volume : Measure (AddCircle T))).quasiMeasurePreserving.ae_eq
+    (halfZeroHaar_ae T g)
+  filter_upwards [ae_half_of_volume T (halfZeroHaar_ae T g),
+    ae_half_of_volume T hn, ae_restrict_mem measurableSet_Ioo] with x hx hnx hmem
+  have hT : 0 < T := Fact.out
+  have hc : x ∈ Set.Ioc (-(T / 2)) (-(T / 2) + T) :=
+    ⟨by linarith [hmem.1], by linarith [hmem.2]⟩
+  have hnc : -x ∈ Set.Ioc (-(T / 2)) (-(T / 2) + T) :=
+    ⟨by linarith [hmem.2], by linarith [hmem.1]⟩
+  have hnm : -x ∉ Set.Ioo 0 (T / 2) := by
+    intro h
+    linarith [h.1, hmem.1]
+  constructor
+  · rw [hx, AddCircle.liftIoc_coe_apply hc, Set.indicator_of_mem hmem]
+  · simpa only [Function.comp_apply, ← AddCircle.coe_neg, AddCircle.liftIoc_coe_apply hnc,
+      Set.indicator_of_notMem hnm] using hnx
+
+/-- The actual spatial projection acts on representatives by `(v(x) + σ v(-x))/2`. -/
+theorem projection_ae (σ : ℂ) (v : ModeSpace T) :
+    (projection T σ v : AddCircle T → ℂ) =ᵐ[AddCircle.haarAddCircle]
+      (fun z ↦ (1 / 2 : ℂ) * (v z + σ * v (-z))) := by
+  change (((1 / 2 : ℂ) • (v + σ • reflection T v) : ModeSpace T) :
+    AddCircle T → ℂ) =ᵐ[AddCircle.haarAddCircle] _
+  filter_upwards [Lp.coeFn_smul (1 / 2 : ℂ) (v + σ • reflection T v),
+    Lp.coeFn_add v (σ • reflection T v), Lp.coeFn_smul σ (reflection T v),
+    reflection_ae T v] with z hs ha ht hr
+  simp only [Pi.smul_apply, smul_eq_mul, Pi.add_apply] at hs ha ht
+  rw [hs, ha, ht, hr]
+
+/-- Projecting the zero lift recovers precisely half of the input on the physical half-cell. -/
+theorem halfRestriction_projection_zeroLift (σ : ℂ) (g : HalfSpace T) :
+    halfRestriction T (retainVolume T (projection T σ (halfZeroHaar T g))) =
+      (1 / 2 : ℂ) • g := by
+  apply Lp.ext
+  have hp := projection_ae T σ (halfZeroHaar T g)
+  rw [← volume_ae_eq_haar T] at hp
+  filter_upwards [halfRestriction_ae T (retainVolume T (projection T σ (halfZeroHaar T g))),
+    ae_half_of_volume T (retainVolume_ae T (projection T σ (halfZeroHaar T g))),
+    ae_half_of_volume T hp, halfZeroHaar_half_ae T g,
+    Lp.coeFn_smul (1 / 2 : ℂ) g] with x hh hv hp hz hs
+  simp only [Pi.smul_apply, smul_eq_mul] at hs
+  rw [hh, hv, hp, ← AddCircle.coe_neg, hz.1, hz.2, mul_zero, add_zero, hs]
+
+/-- A concrete onto witness: scale the parity projection of the actual zero extension. -/
+def halfExtension (σ : ℂ) (hσ : σ ^ 2 = 1) (g : HalfSpace T) : paritySpace T σ :=
+  (2 * (Real.sqrt (T / 2) : ℂ)) •
+    ⟨projection T σ (halfZeroHaar T g), projection_mem T σ hσ _⟩
+
+@[simp] theorem halfIsometry_halfExtension (σ : ℂ) (hσ : σ ^ 2 = 1) (g : HalfSpace T) :
+    halfIsometry T σ hσ (halfExtension T σ hσ g) = g := by
+  change parityHalfRestriction T σ ((2 * (Real.sqrt (T / 2) : ℂ)) •
+    ⟨projection T σ (halfZeroHaar T g), projection_mem T σ hσ _⟩) = g
+  rw [map_smul]
+  change (2 * (Real.sqrt (T / 2) : ℂ)) • (((Real.sqrt (T / 2))⁻¹ : ℂ) •
+    halfRestriction T (retainVolume T (projection T σ (halfZeroHaar T g)))) = g
+  rw [halfRestriction_projection_zeroLift, smul_smul, smul_smul]
+  have hs : (Real.sqrt (T / 2) : ℂ) ≠ 0 := by
+    exact_mod_cast ne_of_gt (Real.sqrt_pos.mpr
+      (show 0 < T / 2 by linarith [(Fact.out : 0 < T)]))
+  have hc : 2 * (Real.sqrt (T / 2) : ℂ) * (Real.sqrt (T / 2) : ℂ)⁻¹ * (1 / 2) = 1 := by
+    field_simp
+  rw [hc, one_smul]
+
+theorem halfIsometry_surjective (σ : ℂ) (hσ : σ ^ 2 = 1) :
+    Function.Surjective (halfIsometry T σ hσ) :=
+  fun g ↦ ⟨halfExtension T σ hσ g, halfIsometry_halfExtension T σ hσ g⟩
+
+/-- The genuine parity-to-physical-interval unitary, with explicit projected extension. -/
+def halfUnitary (σ : ℂ) (hσ : σ ^ 2 = 1) : paritySpace T σ ≃ₗᵢ[ℂ] HalfSpace T :=
+  LinearIsometryEquiv.ofSurjective (halfIsometry T σ hσ) (halfIsometry_surjective T σ hσ)
+
+/-- The inverse unitary is the explicit scaled projected zero extension. -/
+theorem halfUnitary_symm_apply (σ : ℂ) (hσ : σ ^ 2 = 1) (g : HalfSpace T) :
+    (halfUnitary T σ hσ).symm g = halfExtension T σ hσ g := by
+  apply (halfUnitary T σ hσ).injective
+  rw [(halfUnitary T σ hσ).apply_symm_apply]
+  exact (halfIsometry_halfExtension T σ hσ g).symm
+
+theorem halfUnitary_ae (σ : ℂ) (hσ : σ ^ 2 = 1) (u : paritySpace T σ) :
+    (halfUnitary T σ hσ u : ℝ → ℂ) =ᵐ[volume.restrict (Set.Ioo 0 (T / 2))]
+      (fun x ↦ ((Real.sqrt (T / 2))⁻¹ : ℂ) * u.1 (x : AddCircle T)) :=
+  parityHalfRestriction_ae T σ u
+
+/-- The self-adjoint parity closure transported to the actual physical interval L². -/
+def halfKinetic (c : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1) : HalfSpace T →ₗ.[ℂ] HalfSpace T :=
+  (parityPMap T c σ).closure.unitaryConj (halfUnitary T σ hσ)
+
+theorem halfKinetic_selfAdjoint (c : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1) :
+    IsSelfAdjoint (halfKinetic T c σ hσ) :=
+  LinearPMap.unitaryConj_isSelfAdjoint (halfUnitary T σ hσ)
+    (parityPMap_closure_selfAdjoint T c σ hσ)
+
+/-- Canonical transport of the entire accepted parity closure domain. -/
+def halfKineticDomain (c : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (u : (parityPMap T c σ).closure.domain) : (halfKinetic T c σ hσ).domain :=
+  ⟨halfUnitary T σ hσ (u : paritySpace T σ),
+    LinearPMap.map_mem_unitaryConj_domain (halfUnitary T σ hσ) _ u⟩
+
+theorem halfKinetic_apply (c : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (u : (parityPMap T c σ).closure.domain) :
+    halfKinetic T c σ hσ (halfKineticDomain T c σ hσ u) =
+      halfUnitary T σ hσ ((parityPMap T c σ).closure u) :=
+  LinearPMap.unitaryConj_apply_map (halfUnitary T σ hσ) _ u
+
+/-- Physical interval action on the transported finite Fourier parity core. -/
+theorem halfKinetic_core_ae (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (u : parityCore T σ) :
+    ∀ᵐ x : ℝ ∂volume.restrict (Set.Ioo 0 (T / 2)),
+      (halfKinetic T (scale T a) σ hσ
+        (halfKineticDomain T (scale T a) σ hσ (parityClosureCore T (scale T a) σ u))
+          : ℝ → ℂ) x =
+        ((Real.sqrt (T / 2))⁻¹ : ℂ) *
+          (-(a : ℂ) * deriv (deriv (representativeLift T (coreInclusion T σ u))) x) := by
+  rw [halfKinetic_apply]
+  have hd := parityClosure_eq_neg_second_deriv_ae T a σ u
+  rw [← volume_ae_eq_haar T] at hd
+  filter_upwards [halfUnitary_ae T σ hσ ((parityPMap T (scale T a) σ).closure
+    (parityClosureCore T (scale T a) σ u)), ae_half_of_volume T hd] with x hu hd
+  rw [hu, hd x rfl]
+
+omit [Fact (0 < T)] in
+/-- The doubled period gives the physical interval kinetic scale `a(π/L)²`, `L=T/2`. -/
+theorem halfKinetic_scale (a : ℝ) : scale T a = a * (Real.pi / (T / 2)) ^ 2 := by
+  unfold scale
+  congr 2
+  ring
 
 end HalfInterval
 
