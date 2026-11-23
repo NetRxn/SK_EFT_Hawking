@@ -416,12 +416,15 @@ CITATION_REGISTRY = {
         'volume': 135,
         'page': '023401',
         'year': 2025,
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'arxiv': '2311.01392',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Falque2025.pdf',
-        'used_in': ['src/core/constants.py', 'papers/paper12_polariton', 'papers/D1/paper_draft.tex'],
+        'used_in': ['src/core/constants.py',
+                    'papers/D1/paper_draft.tex', 'papers/E1/paper_draft.tex',
+                    'papers/E2/paper_draft.tex', 'papers/paper12_polariton/paper_draft.tex',
+                    'papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [
             'POLARITON_MASS',
             'Paris_long.c_s', 'Paris_long.xi', 'Paris_long.kappa',
@@ -434,7 +437,8 @@ CITATION_REGISTRY = {
                  'three measured κ values (0.07, 0.08, 0.11 ps⁻¹) across smooth '
                  'and steep horizon configurations; c_s = 0.40 μm/ps; '
                  'ξ ≈ 3.4 μm upstream, 4.0 μm downstream. LLM-re-verified '
-                 'against full text 2026-04-13 (Phase 5u Wave 3).',
+                 'against full text 2026-04-13 (Phase 5u Wave 3). Publisher DOI '
+                 'verified with APS and Crossref. The held PDF is arXiv v2.',
     },
     'Giacobino2025': {
         'authors': 'Giacobino, E., Jacquet, M. J.',
