@@ -23407,7 +23407,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DFT.katoRellich_map_surjective",
@@ -24517,13 +24517,211 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.compact_interacting_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.compact_interacting_commonDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.constant_bracket_zero",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.constant_density_unbounded",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.densityFamily_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.densityFamily_const",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.densityFamily_domain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.densityFamily_one",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.exists_interacting_nonzero_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.exists_real_compact_interacting_obstruction",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "OBSTRUCTION",
+      "atlas_status": "OBSTRUCTION",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.exists_supported_unit_density",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.exists_unit_sector",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.fockDensity_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.fockDensity_const_apply",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.interactingFamily_domain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.interactingFamily_one",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.interactingFamily_selfAdjoint",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.mem_fockDensity_domain",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.no_bounded_interacting_bracket",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.potentialFamily_one",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.potentialFamily_relBounded",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.potentialFamily_symmetric",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.after_A",
       "module": "SKEFTHawking.DKMBootstrap.BECFockOperators",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.after_B",
@@ -24532,7 +24730,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.in_A",
@@ -24541,7 +24739,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.CommonDomain.in_B",
@@ -24550,7 +24748,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.bracket_compression",
@@ -24568,7 +24766,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_fock_commonDomain",
@@ -24577,7 +24775,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.compact_sector_bracket",
@@ -24613,7 +24811,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.diagonal_apply",
@@ -24631,7 +24829,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.exists_compact_fock_nonzero_bracket",
@@ -24640,7 +24838,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.firstSectorCompletion_one",
@@ -24685,7 +24883,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.injection_mem_diagonal_iff",
@@ -24712,7 +24910,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.no_bounded_bracket_extension",
@@ -24739,7 +24937,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.no_bounded_wall_sector_extension",
@@ -24775,7 +24973,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECFockOperators.sectorProjection_injection",
@@ -24937,7 +25135,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_deriv_ne_zero_of_nonconstant",
@@ -25315,7 +25513,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECMicroscopicDensity.sectorDensity_norm_le",
@@ -25342,7 +25540,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECMicroscopicDensity.sectorDensity_one_symm",
@@ -25414,7 +25612,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECMicroscopicPotential.gaussianInteraction_bound",
@@ -25612,7 +25810,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECMicroscopicPotential.sectorPotential_ae",
@@ -25657,7 +25855,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECMicroscopicPotential.sectorPotential_one_intervalUnitary",
@@ -25693,7 +25891,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECMicroscopicPotential.sectorPotential_two_constant_pair",
@@ -26089,7 +26287,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.no_bounded_closure_bracket_extension",
@@ -26206,7 +26404,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECPeriodicCommutator.trigDomain_le_shiftedKinetic_range",
@@ -26290,13 +26488,193 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.circlePair_toLp",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.closure_coreMode_action",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.coe_coreMode",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.coe_modeDomain",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.coe_wallBasis",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.coreMode_dense",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.coreMode_inner",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.coreMode_span",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.normalization_ne_zero",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.parityCore_eq_span",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.parityMode_mem_span",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.parityMode_nat_mem_span",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.parityMode_neg",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.sign_sq",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 19
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_action",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_ae",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_dense",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_mem_domain",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallMode_orthonormal",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes.wallRepresentative_continuous",
+      "module": "SKEFTHawking.DKMBootstrap.BECPhysicalWallModes",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.ae_half_of_volume",
       "module": "SKEFTHawking.DKMBootstrap.BECWallParity",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 8
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.coe_coreProjection",
@@ -26332,7 +26710,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.compactL2_ae",
@@ -26548,7 +26926,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfKinetic_compact_ae",
@@ -26584,7 +26962,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfKinetic_selfAdjoint",
@@ -26629,7 +27007,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.halfUnitary_compactParity",
@@ -26908,7 +27286,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityCore_eq_projected",
@@ -26917,7 +27295,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityHalfRestriction_ae",
@@ -26944,7 +27322,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.parityMode_ne_zero",
@@ -27484,7 +27862,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.DKMBootstrap.BECWallParity.volume_bracket_map",
@@ -228965,6 +229343,16 @@
       "false_statement": ""
     },
     {
+      "id": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic.exists_real_compact_interacting_obstruction",
+      "module": "SKEFTHawking.DKMBootstrap.BECFockMicroscopic",
+      "frontier_impact": 0,
+      "kernel_pure": true,
+      "registered": false,
+      "fork_id": null,
+      "nogo_kind": "",
+      "false_statement": ""
+    },
+    {
       "id": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator.exists_compact_real_interval_obstruction",
       "module": "SKEFTHawking.DKMBootstrap.BECInteriorCommutator",
       "frontier_impact": 0,
@@ -231313,18 +231701,18 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25059,
+    "theorem_nodes": 25101,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
     "apex_ids": [
       "hyp:H_PMNSAnglesFromExactSubstrate"
     ],
-    "obstruction_nodes": 426,
+    "obstruction_nodes": 427,
     "registered_obstructions": 45,
     "by_kind_status": {
-      "OBSTRUCTION:OBSTRUCTION": 402,
-      "TRUE:PROVED": 24657,
+      "OBSTRUCTION:OBSTRUCTION": 403,
+      "TRUE:PROVED": 24698,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
