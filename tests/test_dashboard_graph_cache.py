@@ -26,6 +26,7 @@ fingerprint that nothing consumes.
 from __future__ import annotations
 
 import sys
+from contextlib import contextmanager
 from importlib.util import cache_from_source
 from pathlib import Path
 
@@ -162,6 +163,28 @@ class TestTheFailSafeDirection:
             assert a is not None and b is not None
         finally:
             pd._READ_SET["paths"], pd._READ_SET["dirs"] = saved
+
+
+def test_waiting_request_uses_the_fingerprint_published_by_prewarm(monkeypatch):
+    import build_graph
+
+    graph = {"nodes": []}
+    warmed_key = ("warm",)
+    cache = {"graph": None, "fingerprint": None}
+
+    @contextmanager
+    def acquire_after_prewarm():
+        cache.update(graph=graph, fingerprint=warmed_key)
+        yield
+
+    def unexpected_rebuild(**kwargs):
+        pytest.fail("the request rebuilt the graph just published by prewarm")
+
+    monkeypatch.setattr(pd, "_GRAPH_CACHE_LOCK", acquire_after_prewarm())
+    monkeypatch.setattr(pd, "_GRAPH_CACHE", cache)
+    monkeypatch.setattr(pd, "_graph_fingerprint", lambda: cache["fingerprint"] or ("cold",))
+    monkeypatch.setattr(build_graph, "build_graph_json", unexpected_rebuild)
+    assert pd.get_cached_graph(sync_pg=False) is graph
 
 
 class TestTheSeam:

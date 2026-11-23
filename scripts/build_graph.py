@@ -4623,9 +4623,11 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
                 # non-Lean edges before and after, bit-identical — which is why
                 # no ReadinessGate:ComputationCorrectness verdict can move.
                 lean_id = None
+                if raw.split('.', 1)[0] in module_aliases:
+                    continue
                 if f'lean:{raw}' in node_ids:
                     lean_id = f'lean:{raw}'
-                elif '.' not in raw and raw not in module_aliases:
+                elif '.' not in raw:
                     # (returns None if ambiguous/missing)
                     lean_id = _resolve_lean_short(raw, node_ids)
                 if lean_id is not None:

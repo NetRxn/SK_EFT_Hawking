@@ -165,6 +165,15 @@ class TestModuleAliasRefsDoNotResolve:
         assert [e["target"] for e in edges] == [
             "lean:SKEFTHawking.ScalarRungInterpretation.EWMassMatrixInputs.v"]
 
+    def test_exact_lean_names_cannot_override_a_python_module_alias(self, monkeypatch):
+        edges = _run(
+            monkeypatch,
+            tests=[_test_node("test_parked_items", "test_x", ["pi", "pi.parse"])],
+            lean_full=("pi", "pi.parse"),
+            aliases={"test_parked_items": {"pi"}},
+        )
+        assert edges == []
+
 
 class TestDottedRefsDoNotTailResolve:
     LEAN = ("SKEFTHawking.NeutrinoMixing.get",

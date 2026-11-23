@@ -38,6 +38,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 
 # Datastar SDK glue (Phase 5v Wave 9h). See docs/references/Datastar_Dashboard_Reference.md
 from datastar_helpers import SSE, is_datastar_request, read_signals, sse_response, esc
+from dashboard_flow import flow_board as build_flow_board
 
 app = Flask(__name__, template_folder=str(Path(__file__).parent / "templates"))
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -514,8 +515,9 @@ def get_cached_graph(*, force_rebuild: bool = False, sync_pg: bool | None = None
     if sync_pg is None:
         sync_pg = app.config.get('PG_SYNC_ENABLED', True)
 
-    fp = _graph_fingerprint()
     with _GRAPH_CACHE_LOCK:
+        # A request queued behind prewarm must use the read set it published.
+        fp = _graph_fingerprint()
         if (
             not force_rebuild
             and _GRAPH_CACHE['graph'] is not None
@@ -1392,9 +1394,7 @@ def index():
                 'error': 'failed to load bundle summary (see server log)',
             }
 
-    # ADR-012 P9b/P9c — the three operator panes. Lazy per tab, like bundles above:
-    # each builds the whole graph, so loading them on every request would tax the six
-    # tabs that do not use them.
+    # ADR-012 P9b/P9c — load operator panes only on their own tabs.
     #
     # ⚠️ ON FAILURE THESE RENDER AN ERROR, NEVER AN EMPTY PANE. `flow_board()` itself
     # raises rather than returning a board with no rows, because an empty board is
@@ -1406,14 +1406,22 @@ def index():
     # five feeds are five stores with five different label keys. Passing the resolver keeps
     # that vocabulary next to the code that mints the sources.
     from dashboard_attention import label_of as _label_of
-    _panes = {'flow': ('dashboard_flow', 'flow_board'),
-              'attention': ('dashboard_attention', 'attention'),
+    _panes = {'attention': ('dashboard_attention', 'attention'),
               'loops': ('dashboard_loops', 'loops_panel')}
-    if tab in _panes:
-        _modname, _fn = _panes[tab]
+    if tab == 'flow' or tab in _panes:
         try:
-            import importlib
-            _built = getattr(importlib.import_module(_modname), _fn)()
+            if tab == 'flow':
+                # Use the prewarmed, freshness-checked graph instead of starting
+                # a second graph build alongside it on this request.
+                gate_nodes = [
+                    node for node in get_cached_graph(sync_pg=False)['nodes']
+                    if node['type'] == 'ReadinessGate'
+                ]
+                _built = build_flow_board(gate_nodes=gate_nodes)
+            else:
+                import importlib
+                _modname, _fn = _panes[tab]
+                _built = getattr(importlib.import_module(_modname), _fn)()
         except Exception:
             import traceback
             traceback.print_exc()
