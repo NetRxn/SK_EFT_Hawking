@@ -1,5 +1,8 @@
 import SKEFTHawking.DKMBootstrap.BECPeriodicCommutator
+import SKEFTHawking.DKMBootstrap.BECInteriorCommutator
 import Physlib.QuantumMechanics.Operators.SpectralTheory.SelfAdjoint
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+import Mathlib.Analysis.Calculus.Deriv.Star
 
 /-!
 # Spatial reflection and periodic parity kinetic cores
@@ -8,9 +11,12 @@ Reflection is complex-linear pullback by negation on the circle with normalized 
 measure. The finite Fourier domain and kinetic action below are the actual domain and
 action of `BECPeriodicCommutator`. Both closed parity Hilbert spaces have dense projected
 Fourier cores on which the kinetic is essentially self-adjoint. Parity refers to this
-periodic Hilbert space.
-Identifying it with physical interval Lebesgue L², proving compact-interior domain
-membership, and constructing wall or interacting Fock Hamiltonians require further work.
+periodic Hilbert space. The physical half-interval unitary transports these closures to
+self-adjoint wall kinetics on interval Lebesgue L². Actual compact interior tests enter
+both wall domains, with action minus a times the ordinary second derivative, through
+smooth reflected lifts and an adjoint argument. The operator cores used here are the
+finite Fourier parity cores. Bounded potentials and interacting Fock Hamiltonians remain
+separate constructions.
 -/
 
 noncomputable section
@@ -980,5 +986,484 @@ theorem halfKinetic_scale (a : ℝ) : scale T a = a * (Real.pi / (T / 2)) ^ 2 :=
   ring
 
 end HalfInterval
+
+section CompactInterior
+
+open BECInteriorCommutator
+open scoped ContDiff ComplexConjugate
+
+variable (T : ℝ) [Fact (0 < T)]
+
+/-- Smooth reflection of an actual compact interior test; there is no piecewise join. -/
+def reflectedTest (σ : ℂ) (ψ : Domain 0 (T / 2)) (x : ℝ) : ℂ :=
+  ψ x + σ * ψ (-x)
+
+omit [Fact (0 < T)] in
+theorem reflectedTest_smooth (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    ContDiff ℝ ∞ (reflectedTest T σ ψ) :=
+  ψ.contDiff.add (contDiff_const.mul (ψ.contDiff.comp contDiff_neg))
+
+omit [Fact (0 < T)] in
+/-- Reflection preserves compact support of the actual full-line test. -/
+theorem reflectedTest_hasCompactSupport (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    HasCompactSupport (reflectedTest T σ ψ) := by
+  have hn : HasCompactSupport (fun x : ℝ ↦ ψ (-x)) :=
+    ψ.hasCompactSupport.comp_homeomorph (Homeomorph.neg ℝ)
+  have hs : HasCompactSupport (fun x : ℝ ↦ σ * ψ (-x)) :=
+    hn.comp_left (mul_zero σ)
+  unfold reflectedTest
+  simpa only [Pi.add_def] using ψ.hasCompactSupport.add hs
+
+omit [Fact (0 < T)] in
+/-- Reflection reverses the first real derivative. -/
+theorem reflectedTest_deriv (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    deriv (reflectedTest T σ ψ) = reflectedTest T (-σ) (D ψ) := by
+  funext x
+  have h := (ψ.contDiff.differentiable (by simp)).differentiableAt (x := x)
+  have hn := (ψ.contDiff.differentiable (by simp)).differentiableAt (x := -x)
+  change deriv (fun y ↦ ψ y + σ * ψ (-y)) x = deriv ψ x + (-σ) * deriv ψ (-x)
+  simpa only [Pi.add_def, Function.comp_def, neg_smul, one_smul, mul_neg, neg_mul] using
+    ((h.hasDerivAt).add ((hn.hasDerivAt.scomp x (hasDerivAt_neg x)).const_mul σ)).deriv
+
+omit [Fact (0 < T)] in
+/-- Twice differentiating restores the same parity, on the actual derivative test. -/
+theorem reflectedTest_deriv2 (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    deriv (deriv (reflectedTest T σ ψ)) = reflectedTest T σ (D (D ψ)) := by
+  rw [reflectedTest_deriv, reflectedTest_deriv, neg_neg]
+
+omit [Fact (0 < T)] in
+theorem reflectedTest_parity (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) (x : ℝ) :
+    reflectedTest T σ ψ (-x) = σ * reflectedTest T σ ψ x := by
+  simp only [reflectedTest, neg_neg]
+  have hs : σ * σ = 1 := by simpa [pow_two] using hσ
+  calc
+    ψ (-x) + σ * ψ x = σ * ψ x + (σ * σ) * ψ (-x) := by rw [hs]; ring
+    _ = σ * (ψ x + σ * ψ (-x)) := by ring
+
+omit [Fact (0 < T)] in
+/-- On the positive half the reflected summand vanishes by the actual support condition. -/
+theorem reflectedTest_half (σ : ℂ) (ψ : Domain 0 (T / 2)) {x : ℝ} (hx : 0 ≤ x) :
+    reflectedTest T σ ψ x = ψ x := by
+  have hn : ψ (-x) = 0 := zero_of_not_mem ψ (by intro h; linarith [h.1])
+  simp only [reflectedTest, hn, mul_zero, add_zero]
+
+/-- Both endpoints of the centered cell are outside the reflected compact support. -/
+theorem reflectedTest_endpoints (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    reflectedTest T σ ψ (-(T / 2)) = 0 ∧ reflectedTest T σ ψ (T / 2) = 0 := by
+  have hp : 0 < T := Fact.out
+  have hn : ψ (-(T / 2)) = 0 := zero_of_not_mem ψ (by intro h; linarith [h.1])
+  have he : ψ (T / 2) = 0 := (endpoint_data ψ).2.1
+  simp [reflectedTest, hn, he]
+
+omit [Fact (0 < T)] in
+/-- All the reflected jets vanish near the seam, inherited from compact interior support. -/
+theorem reflectedTest_eventually_zero (σ : ℂ) (ψ : Domain 0 (T / 2)) {x : ℝ}
+    (hx : x ∉ Set.Ioo 0 (T / 2)) (hnx : -x ∉ Set.Ioo 0 (T / 2)) :
+    reflectedTest T σ ψ =ᶠ[nhds x] 0 := by
+  have hn := (eventually_zero_of_not_mem ψ hnx).comp_tendsto
+    (continuous_neg.continuousAt (x := x))
+  filter_upwards [eventually_zero_of_not_mem ψ hx, hn] with y hy hny
+  change ψ (-y) = 0 at hny
+  simp [reflectedTest, hy, hny]
+
+/-- The reflected support lies strictly inside the centered period cell. -/
+theorem reflectedTest_tsupport (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    tsupport (reflectedTest T σ ψ) ⊆ Set.Ioo (-(T / 2)) (T / 2) := by
+  intro x hx
+  by_contra hn
+  have hp : 0 < T := Fact.out
+  have h0 : x ∉ Set.Ioo 0 (T / 2) := by
+    intro h
+    exact hn ⟨by linarith [h.1], h.2⟩
+  have h1 : -x ∉ Set.Ioo 0 (T / 2) := by
+    intro h
+    exact hn ⟨by linarith [h.2], by linarith [h.1]⟩
+  exact (notMem_tsupport_iff_eventuallyEq.mpr
+    (reflectedTest_eventually_zero T σ ψ h0 h1)) hx
+
+omit [Fact (0 < T)] in
+/-- The test and its first two genuine reflected derivatives vanish near either seam. -/
+theorem reflectedTest_eventually_zero_derivatives (σ : ℂ) (ψ : Domain 0 (T / 2)) {x : ℝ}
+    (hx : x ∉ Set.Ioo 0 (T / 2)) (hnx : -x ∉ Set.Ioo 0 (T / 2)) :
+    ∀ᶠ y in nhds x, reflectedTest T σ ψ y = 0 ∧
+      deriv (reflectedTest T σ ψ) y = 0 ∧ deriv (deriv (reflectedTest T σ ψ)) y = 0 := by
+  filter_upwards [reflectedTest_eventually_zero T σ ψ hx hnx,
+    reflectedTest_eventually_zero T (-σ) (D ψ) hx hnx,
+    reflectedTest_eventually_zero T σ (D (D ψ)) hx hnx] with y h0 h1 h2
+  exact ⟨h0, by simpa only [reflectedTest_deriv, Pi.zero_apply] using h1,
+    by simpa only [reflectedTest_deriv2, Pi.zero_apply] using h2⟩
+
+/-- Actual periodic circle representative, with the physical √L normalization. -/
+def compactLift (σ : ℂ) (ψ : Domain 0 (T / 2)) : AddCircle T → ℂ :=
+  fun z ↦ (Real.sqrt (T / 2) : ℂ) *
+    AddCircle.liftIoc T (-(T / 2)) (reflectedTest T σ ψ) z
+
+theorem compactLift_continuous (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    Continuous (compactLift T σ ψ) := by
+  apply continuous_const.mul
+  apply AddCircle.liftIoc_continuous
+  · convert (reflectedTest_endpoints T σ ψ).1.trans
+      (reflectedTest_endpoints T σ ψ).2.symm using 1
+    congr 1
+    ring
+  · exact (reflectedTest_smooth T σ ψ).continuous.continuousOn
+
+/-- The representative agrees on the closed cell, including the identified zero endpoints. -/
+theorem compactLift_coe (σ : ℂ) (ψ : Domain 0 (T / 2)) {x : ℝ}
+    (hx : x ∈ Set.Icc (-(T / 2)) (T / 2)) :
+    compactLift T σ ψ (x : AddCircle T) =
+      (Real.sqrt (T / 2) : ℂ) * reflectedTest T σ ψ x := by
+  unfold compactLift
+  congr 1
+  by_cases he : x = -(T / 2)
+  · subst x
+    rw [← AddCircle.coe_add_period T (-(T / 2))]
+    rw [AddCircle.liftIoc_coe_apply (by
+      constructor <;> linarith [(Fact.out : 0 < T)])]
+    have h : -(T / 2) + T = T / 2 := by ring
+    rw [h, (reflectedTest_endpoints T σ ψ).1, (reflectedTest_endpoints T σ ψ).2]
+  · exact AddCircle.liftIoc_coe_apply ⟨lt_of_le_of_ne hx.1 (Ne.symm he), by linarith [hx.2]⟩
+
+/-- Around every point strictly inside the cell the lift is the smooth reflected function. -/
+theorem compactLift_eventually_eq (σ : ℂ) (ψ : Domain 0 (T / 2)) {x : ℝ}
+    (hx : x ∈ Set.Ioo (-(T / 2)) (T / 2)) :
+    (fun y : ℝ ↦ compactLift T σ ψ (y : AddCircle T)) =ᶠ[nhds x]
+      (fun y ↦ (Real.sqrt (T / 2) : ℂ) * reflectedTest T σ ψ y) := by
+  filter_upwards [isOpen_Ioo.mem_nhds hx] with y hy
+  exact compactLift_coe T σ ψ ⟨hy.1.le, hy.2.le⟩
+
+/-- The periodic representative is zero on a full real neighborhood of its seam. -/
+theorem compactLift_seam_eventually_zero (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    (fun y : ℝ ↦ compactLift T σ ψ (y : AddCircle T)) =ᶠ[nhds (T / 2)] 0 := by
+  have hp : 0 < T := Fact.out
+  have hz := eventually_zero_of_not_mem ψ (x := T / 2) (by simp)
+  have hr : (fun y : ℝ ↦ ψ (T - y)) =ᶠ[nhds (T / 2)] 0 := by
+    have ht : Filter.Tendsto (fun y : ℝ ↦ T - y) (nhds (T / 2)) (nhds (T / 2)) := by
+      have ht := (show Continuous (fun y : ℝ ↦ T - y) from
+        continuous_const.sub continuous_id).continuousAt (x := T / 2)
+      simpa only [ContinuousAt, show T - T / 2 = T / 2 by ring] using ht
+    exact hz.comp_tendsto ht
+  filter_upwards [hz, hr, isOpen_Ioo.mem_nhds
+    (show T / 2 ∈ Set.Ioo 0 T by constructor <;> linarith)] with y hy hry hb
+  change ψ y = 0 at hy
+  change ψ (T - y) = 0 at hry
+  change compactLift T σ ψ (y : AddCircle T) = 0
+  by_cases he : y ≤ T / 2
+  · rw [compactLift_coe T σ ψ ⟨by linarith [hb.1], he⟩,
+      reflectedTest_half T σ ψ hb.1.le, hy, mul_zero]
+  · have hc : ((y - T : ℝ) : AddCircle T) = (y : AddCircle T) := by
+      simp only [AddCircle.coe_sub, AddCircle.coe_period, sub_zero]
+    rw [← hc, compactLift_coe T σ ψ ⟨by linarith, by linarith [hb.2]⟩]
+    have hn : ψ (y - T) = 0 := zero_of_not_mem ψ (by intro h; linarith [h.1, hb.2])
+    simp only [reflectedTest, hn, neg_sub, hry, mul_zero, add_zero]
+
+/-- The actual real pullback of the circle lift is globally smooth, including the seam. -/
+theorem compactLift_real_smooth (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    ContDiff ℝ ∞ (fun x : ℝ ↦ compactLift T σ ψ (x : AddCircle T)) := by
+  apply contDiff_iff_contDiffAt.mpr
+  intro x
+  let y := AddCircle.equivIoc T (-(T / 2)) (x : AddCircle T)
+  have hy : (y : ℝ) ∈ Set.Ioc (-(T / 2)) (T / 2) :=
+    ⟨y.prop.1, by linarith [y.prop.2]⟩
+  have hs : ContDiffAt ℝ ∞ (fun t : ℝ ↦ compactLift T σ ψ (t : AddCircle T)) y := by
+    by_cases he : (y : ℝ) = T / 2
+    · rw [he]
+      exact contDiffAt_const.congr_of_eventuallyEq (compactLift_seam_eventually_zero T σ ψ)
+    · exact (contDiff_const.mul (reflectedTest_smooth T σ ψ)).contDiffAt.congr_of_eventuallyEq
+        (compactLift_eventually_eq T σ ψ ⟨hy.1, lt_of_le_of_ne hy.2 he⟩)
+  have ht : ContDiffAt ℝ ∞ (fun t : ℝ ↦ t + ((y : ℝ) - x)) x :=
+    (contDiff_id.add contDiff_const).contDiffAt
+  have he : x + ((y : ℝ) - x) = y := by ring
+  rw [← he] at hs
+  have h := hs.comp x ht
+  convert h using 1
+  funext t
+  have hc : ((y : ℝ) : AddCircle T) = (x : AddCircle T) := AddCircle.coe_equivIoc
+  simp only [Function.comp_def, AddCircle.coe_add, AddCircle.coe_sub, hc, sub_self, add_zero]
+
+theorem compactLift_parity (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) (z : AddCircle T) :
+    compactLift T σ ψ (-z) = σ * compactLift T σ ψ z := by
+  let x := AddCircle.equivIoc T (-(T / 2)) z
+  have hx : (x : ℝ) ∈ Set.Icc (-(T / 2)) (T / 2) :=
+    ⟨x.prop.1.le, by linarith [x.prop.2]⟩
+  have hn : -(x : ℝ) ∈ Set.Icc (-(T / 2)) (T / 2) := by
+    constructor <;> linarith [hx.1, hx.2]
+  have hz : ((x : ℝ) : AddCircle T) = z := AddCircle.coe_equivIoc
+  rw [← hz, ← AddCircle.coe_neg, compactLift_coe T σ ψ hn,
+    compactLift_coe T σ ψ hx, reflectedTest_parity T σ hσ]
+  ring
+
+/-- The continuous reflected compact representative as an actual Haar L² vector. -/
+def compactL2 (σ : ℂ) (ψ : Domain 0 (T / 2)) : ModeSpace T :=
+  ContinuousMap.toLp 2 AddCircle.haarAddCircle ℂ
+    ⟨compactLift T σ ψ, compactLift_continuous T σ ψ⟩
+
+theorem compactL2_ae (σ : ℂ) (ψ : Domain 0 (T / 2)) :
+    (compactL2 T σ ψ : AddCircle T → ℂ) =ᵐ[AddCircle.haarAddCircle] compactLift T σ ψ :=
+  ContinuousMap.coeFn_toLp _ _
+
+/-- Pointwise parity descends to the true closed parity Hilbert subspace. -/
+theorem compactL2_mem_parity (σ : ℂ) (hσ : σ ^ 2 = 1) (ψ : Domain 0 (T / 2)) :
+    compactL2 T σ ψ ∈ paritySpace T σ := by
+  rw [mem_paritySpace]
+  apply Lp.ext
+  have hn := (neg_measurePreserving T).quasiMeasurePreserving.ae_eq (compactL2_ae T σ ψ)
+  filter_upwards [reflection_ae T (compactL2 T σ ψ), hn,
+    compactL2_ae T σ ψ, Lp.coeFn_smul σ (compactL2 T σ ψ)] with z hr hn hz hs
+  simp only [Pi.smul_apply, smul_eq_mul] at hs
+  dsimp only [Function.comp_def] at hn
+  rw [hr, hn, hs, hz]
+  exact compactLift_parity T σ hσ ψ z
+
+/-- The actual reflected compact vector in the closed parity space, without a core claim. -/
+def compactParity (σ : ℂ) (hσ : σ ^ 2 = 1) (ψ : Domain 0 (T / 2)) : paritySpace T σ :=
+  ⟨compactL2 T σ ψ, compactL2_mem_parity T σ hσ ψ⟩
+
+/-- The established half-unitary sends this smooth lift to the original interval test. -/
+theorem halfUnitary_compactParity (σ : ℂ) (hσ : σ ^ 2 = 1) (ψ : Domain 0 (T / 2)) :
+    halfUnitary T σ hσ (compactParity T σ hσ ψ) = toIntervalL2 ψ := by
+  apply Lp.ext
+  have ha := compactL2_ae T σ ψ
+  rw [← volume_ae_eq_haar T] at ha
+  filter_upwards [halfUnitary_ae T σ hσ (compactParity T σ hσ ψ),
+    ae_half_of_volume T ha, toIntervalL2_ae ψ,
+    ae_restrict_mem (μ := (volume : Measure ℝ)) measurableSet_Ioo] with x hu hx hψ hm
+  rw [hu]
+  change ((Real.sqrt (T / 2))⁻¹ : ℂ) * (compactL2 T σ ψ) (x : AddCircle T) = _
+  rw [hx, compactLift_coe T σ ψ ⟨by linarith [hm.1, (Fact.out : 0 < T)], hm.2.le⟩,
+    reflectedTest_half T σ ψ hm.1.le, hψ]
+  have hs : (Real.sqrt (T / 2) : ℂ) ≠ 0 := by
+    exact_mod_cast ne_of_gt (Real.sqrt_pos.mpr
+      (show 0 < T / 2 by linarith [(Fact.out : 0 < T)]))
+  simp only [← mul_assoc, inv_mul_cancel₀ hs, one_mul]
+
+/-- Explicit identification with the accepted inverse, on actual interval L² classes. -/
+theorem halfUnitary_symm_compact (σ : ℂ) (hσ : σ ^ 2 = 1) (ψ : Domain 0 (T / 2)) :
+    (halfUnitary T σ hσ).symm (toIntervalL2 ψ) = compactParity T σ hσ ψ := by
+  apply (halfUnitary T σ hσ).injective
+  rw [(halfUnitary T σ hσ).apply_symm_apply, halfUnitary_compactParity]
+
+omit [Fact (0 < T)] in
+/-- Finite Fourier representatives are smooth in the actual real coordinate. -/
+theorem trigLift_smooth (v : ℤ →₀ ℂ) : ContDiff ℝ ∞ (trigLift T v) := by
+  unfold trigLift trigPolynomial
+  simp only [Finsupp.sum, ContinuousMap.coe_sum, ContinuousMap.coe_smul,
+    Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+  apply ContDiff.sum
+  intro n hn
+  simp only [fourier_coe_apply]
+  have hor : ContDiff ℝ ∞ (fun x : ℝ ↦ (x : ℂ)) := Complex.ofRealCLM.contDiff
+  exact contDiff_const.mul (((contDiff_const.mul hor).div_const _).cexp)
+
+/-- Two genuine integrations by parts; only the compact test and its derivative
+vanish at the endpoints. The Fourier test has no imposed zero boundary data. -/
+theorem reflectedTest_green (σ : ℂ) (ψ : Domain 0 (T / 2))
+    {f : ℝ → ℂ} (hf : ContDiff ℝ ∞ f) :
+    (∫ x in -(T / 2)..T / 2,
+      conj (deriv (deriv f) x) * reflectedTest T σ ψ x) =
+    ∫ x in -(T / 2)..T / 2,
+      conj (f x) * reflectedTest T σ (D (D ψ)) x := by
+  let g := reflectedTest T σ ψ
+  have hg : ContDiff ℝ ∞ g := reflectedTest_smooth T σ ψ
+  have hf1 : ContDiff ℝ ∞ (deriv f) := hf.deriv'
+  have hf2 : ContDiff ℝ ∞ (deriv (deriv f)) := hf1.deriv'
+  have hg1 : ContDiff ℝ ∞ (deriv g) := hg.deriv'
+  have hg2 : ContDiff ℝ ∞ (deriv (deriv g)) := hg1.deriv'
+  have hd (x : ℝ) : HasDerivAt (fun y ↦ conj (f y)) (conj (deriv f x)) x :=
+    ((hf.differentiable (by simp)).differentiableAt.hasDerivAt).star
+  have hdd (x : ℝ) : HasDerivAt (fun y ↦ conj (deriv f y))
+      (conj (deriv (deriv f) x)) x :=
+    ((hf1.differentiable (by simp)).differentiableAt.hasDerivAt).star
+  have h0 := reflectedTest_endpoints T σ ψ
+  have h1 : deriv g (-(T / 2)) = 0 ∧ deriv g (T / 2) = 0 := by
+    simpa only [g, reflectedTest_deriv] using reflectedTest_endpoints T (-σ) (D ψ)
+  have hi₁ := intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
+    (a := -(T / 2)) (b := T / 2)
+    (u := fun x ↦ conj (deriv f x)) (v := g)
+    (u' := fun x ↦ conj (deriv (deriv f) x)) (v' := deriv g)
+    (Complex.continuous_conj.comp hf1.continuous).continuousOn hg.continuous.continuousOn
+    (fun x _ ↦ hdd x) (fun x _ ↦ (hg.differentiable (by simp)).differentiableAt.hasDerivAt)
+    ((Complex.continuous_conj.comp hf2.continuous).intervalIntegrable _ _)
+    (hg1.continuous.intervalIntegrable _ _)
+  have hi₂ := intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
+    (a := -(T / 2)) (b := T / 2)
+    (u := fun x ↦ conj (f x)) (v := deriv g)
+    (u' := fun x ↦ conj (deriv f x)) (v' := deriv (deriv g))
+    (Complex.continuous_conj.comp hf.continuous).continuousOn
+    hg1.continuous.continuousOn (fun x _ ↦ hd x)
+    (fun x _ ↦ (hg1.differentiable (by simp)).differentiableAt.hasDerivAt)
+    ((Complex.continuous_conj.comp hf1.continuous).intervalIntegrable _ _)
+    (hg2.continuous.intervalIntegrable _ _)
+  change g (-(T / 2)) = 0 ∧ g (T / 2) = 0 at h0
+  simp only [h0.1, h0.2, h1.1, h1.2, mul_zero, sub_zero, zero_sub] at hi₁ hi₂
+  rw [hi₁, neg_neg] at hi₂
+  simpa only [g, reflectedTest_deriv2] using hi₂.symm
+
+/-- Actual L² inner products are normalized physical cell integrals of representatives. -/
+theorem inner_eq_cell (u v : ModeSpace T) (f g : AddCircle T → ℂ)
+    (hu : (u : AddCircle T → ℂ) =ᵐ[AddCircle.haarAddCircle] f)
+    (hv : (v : AddCircle T → ℂ) =ᵐ[AddCircle.haarAddCircle] g) :
+    inner ℂ u v = (T⁻¹ : ℂ) *
+      ∫ x in -(T / 2)..T / 2, conj (f (x : AddCircle T)) * g (x : AddCircle T) := by
+  rw [L2.inner_def]
+  have he : (fun z ↦ inner ℂ (u z) (v z)) =ᵐ[AddCircle.haarAddCircle]
+      (fun z ↦ conj (f z) * g z) := by
+    filter_upwards [hu, hv] with z hz hw
+    simp only [hz, hw, RCLike.inner_apply, mul_comm]
+  rw [integral_congr_ae he, AddCircle.integral_haarAddCircle,
+    ← AddCircle.intervalIntegral_preimage T (-(T / 2))]
+  rw [show -(T / 2) + T = T / 2 by ring]
+  simp only [Complex.real_smul, Complex.ofReal_inv]
+
+/-- The actual spectral kinetic satisfies the weak second-derivative identity against
+any compact interior test, before restricting to either parity sector. -/
+theorem kinetic_compact_weak (a : ℝ) (σ : ℂ) (ψ : Domain 0 (T / 2))
+    (u : trigDomain T) :
+    inner ℂ (BECPeriodicCommutator.kinetic T (scale T a) u : ModeSpace T)
+        (compactL2 T σ ψ) =
+      inner ℂ (u : ModeSpace T) (-(a : ℂ) • compactL2 T σ (D (D ψ))) := by
+  obtain ⟨v, rfl⟩ := (trigEquiv T).surjective u
+  let k : C(AddCircle T, ℂ) :=
+    v.sum (fun n b ↦ b • (((scale T a : ℂ) * (n : ℂ)^2) • fourier n))
+  rw [inner_smul_right]
+  rw [inner_eq_cell T _ _ k (compactLift T σ ψ)
+    (kinetic_polynomial_ae T (scale T a) v) (compactL2_ae T σ ψ)]
+  rw [coe_trigEquiv]
+  rw [inner_eq_cell T _ _ (trigPolynomial T v) (compactLift T σ (D (D ψ)))
+    (trigPolynomial_ae T v) (compactL2_ae T σ (D (D ψ)))]
+  have hp : -(T / 2) ≤ T / 2 := by linarith [(Fact.out : 0 < T)]
+  have hleft :
+      (∫ x in -(T / 2)..T / 2,
+        conj (k (x : AddCircle T)) * compactLift T σ ψ (x : AddCircle T)) =
+      (-(a : ℂ) * (Real.sqrt (T / 2) : ℂ)) *
+        ∫ x in -(T / 2)..T / 2,
+          conj (deriv (deriv (trigLift T v)) x) * reflectedTest T σ ψ x := by
+    rw [← intervalIntegral.integral_const_mul]
+    apply intervalIntegral.integral_congr
+    intro x hx
+    rw [Set.uIcc_of_le hp] at hx
+    dsimp only
+    rw [compactLift_coe T σ ψ hx, show k (x : AddCircle T) =
+      -(a : ℂ) * deriv (deriv (trigLift T v)) x from
+        kinetic_polynomial_eq_neg_second_deriv T a v x]
+    simp only [map_mul, map_neg, Complex.conj_ofReal]
+    ring
+  have hright :
+      (∫ x in -(T / 2)..T / 2,
+        conj (trigPolynomial T v (x : AddCircle T)) *
+          compactLift T σ (D (D ψ)) (x : AddCircle T)) =
+      (Real.sqrt (T / 2) : ℂ) *
+        ∫ x in -(T / 2)..T / 2,
+          conj (trigLift T v x) * reflectedTest T σ (D (D ψ)) x := by
+    rw [← intervalIntegral.integral_const_mul]
+    apply intervalIntegral.integral_congr
+    intro x hx
+    rw [Set.uIcc_of_le hp] at hx
+    dsimp only
+    rw [compactLift_coe T σ (D (D ψ)) hx]
+    unfold trigLift
+    ring
+  rw [hleft, hright, reflectedTest_green T σ ψ (trigLift_smooth T v)]
+  ring
+
+/-- The weak identity in the actual parity Hilbert space uses the accepted finite
+Fourier operator domain, with the compact lift as the adjoint-domain candidate. -/
+theorem parity_compact_weak (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) (u : parityCore T σ) :
+    inner ℂ (parityPMap T (scale T a) σ u) (compactParity T σ hσ ψ) =
+      inner ℂ (u : paritySpace T σ) (-(a : ℂ) • compactParity T σ hσ (D (D ψ))) :=
+  kinetic_compact_weak T a σ ψ (coreInclusion T σ u)
+
+/-- Essential self-adjointness identifies the adjoint of the actual finite parity
+operator with the already constructed self-adjoint closure. -/
+theorem parityPMap_adjoint_eq_closure (c : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1) :
+    (parityPMap T c σ).adjoint = (parityPMap T c σ).closure := by
+  have hu : (parityPMap T c σ).IsUnbounded :=
+    LinearPMap.isUnbounded_of_dense_of_isSymmetric (parityPMap_dense T c σ hσ)
+      (parityPMap_symmetric T c σ)
+  exact hu.adjoint_closure_eq_adjoint.symm.trans
+    (LinearPMap.isSelfAdjoint_def.mp (parityPMap_closure_selfAdjoint T c σ hσ))
+
+/-- The conjugate-first Hilbert convention supplies the actual adjoint witness. -/
+theorem compact_adjoint_witness (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) (u : (parityPMap T (scale T a) σ).domain) :
+    inner ℂ (-(a : ℂ) • compactParity T σ hσ (D (D ψ))) (u : paritySpace T σ) =
+      inner ℂ (compactParity T σ hσ ψ) (parityPMap T (scale T a) σ u) := by
+  simpa only [inner_conj_symm] using
+    congrArg (starRingEnd ℂ) (parity_compact_weak T a σ hσ ψ u).symm
+
+/-- Every actual compact interior test belongs to the true parity closure domain. -/
+theorem compactParity_mem_closure (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) :
+    compactParity T σ hσ ψ ∈ (parityPMap T (scale T a) σ).closure.domain := by
+  rw [← parityPMap_adjoint_eq_closure T (scale T a) σ hσ]
+  exact LinearPMap.mem_adjoint_domain_of_exists _
+    ⟨-(a : ℂ) • compactParity T σ hσ (D (D ψ)), compact_adjoint_witness T a σ hσ ψ⟩
+
+/-- Compact tests as elements of the actual closure domain; no assertion that they are a core. -/
+def compactParityDomain (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1) (ψ : Domain 0 (T / 2)) :
+    (parityPMap T (scale T a) σ).closure.domain :=
+  ⟨compactParity T σ hσ ψ, compactParity_mem_closure T a σ hσ ψ⟩
+
+/-- Adjoint uniqueness computes the actual self-adjoint closure action on compact tests. -/
+theorem parityClosure_compact_apply (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) :
+    (parityPMap T (scale T a) σ).closure (compactParityDomain T a σ hσ ψ) =
+      -(a : ℂ) • compactParity T σ hσ (D (D ψ)) := by
+  have he := parityPMap_adjoint_eq_closure T (scale T a) σ hσ
+  have hw := LinearPMap.adjoint_apply_eq (parityPMap_dense T (scale T a) σ hσ)
+    (⟨compactParity T σ hσ ψ,
+      he.symm ▸ compactParity_mem_closure T a σ hσ ψ⟩ :
+        (parityPMap T (scale T a) σ).adjoint.domain)
+    (compact_adjoint_witness T a σ hσ ψ)
+  exact (he.le.2 (x := ⟨compactParity T σ hσ ψ,
+    he.symm ▸ compactParity_mem_closure T a σ hσ ψ⟩)
+    (y := compactParityDomain T a σ hσ ψ) rfl).symm.trans hw
+
+/-- Actual physical interval compact tests enter both transported self-adjoint wall domains. -/
+theorem compact_mem_halfKinetic (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) :
+    toIntervalL2 ψ ∈ (halfKinetic T (scale T a) σ hσ).domain := by
+  rw [← halfUnitary_compactParity T σ hσ ψ]
+  exact LinearPMap.map_mem_unitaryConj_domain (halfUnitary T σ hσ) _
+    (compactParityDomain T a σ hσ ψ)
+
+/-- The original interval test with its proved membership in the actual wall domain. -/
+def compactWallDomain (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1) (ψ : Domain 0 (T / 2)) :
+    (halfKinetic T (scale T a) σ hσ).domain :=
+  ⟨toIntervalL2 ψ, compact_mem_halfKinetic T a σ hσ ψ⟩
+
+/-- The self-adjoint wall kinetic acts as minus a times the genuine second derivative
+on the original compact test, in actual interval Lebesgue L². -/
+theorem halfKinetic_compact_apply (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) :
+    halfKinetic T (scale T a) σ hσ (compactWallDomain T a σ hσ ψ) =
+      toIntervalL2 (-(a : ℂ) • D (D ψ)) := by
+  have he : compactWallDomain T a σ hσ ψ =
+      halfKineticDomain T (scale T a) σ hσ (compactParityDomain T a σ hσ ψ) := by
+    apply Subtype.ext
+    exact (halfUnitary_compactParity T σ hσ ψ).symm
+  rw [he, halfKinetic_apply, parityClosure_compact_apply, map_smul,
+    halfUnitary_compactParity, map_smul]
+
+/-- The same action stated on actual representatives almost everywhere. -/
+theorem halfKinetic_compact_ae (a : ℝ) (σ : ℂ) (hσ : σ ^ 2 = 1)
+    (ψ : Domain 0 (T / 2)) :
+    ∀ᵐ x : ℝ ∂volume.restrict (Set.Ioo 0 (T / 2)),
+      (halfKinetic T (scale T a) σ hσ (compactWallDomain T a σ hσ ψ) : ℝ → ℂ) x =
+        -(a : ℂ) * deriv (deriv ψ) x := by
+  rw [halfKinetic_compact_apply]
+  exact toIntervalL2_ae (-(a : ℂ) • D (D ψ))
+
+/-- Both genuine wall realizations contain each original compact interior test. -/
+theorem compact_mem_both_wall_domains (a : ℝ) (ψ : Domain 0 (T / 2)) :
+    toIntervalL2 ψ ∈ (halfKinetic T (scale T a) 1 (by norm_num)).domain ∧
+      toIntervalL2 ψ ∈ (halfKinetic T (scale T a) (-1) (by norm_num)).domain :=
+  ⟨compact_mem_halfKinetic T a 1 (by norm_num) ψ,
+    compact_mem_halfKinetic T a (-1) (by norm_num) ψ⟩
+
+end CompactInterior
 
 end SKEFTHawking.DKMBootstrap.BECWallParity
