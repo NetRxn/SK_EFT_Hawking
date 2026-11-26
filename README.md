@@ -16,15 +16,15 @@ manuscript review have their own evidence requirements.
 
 | Area | Where to look |
 | :--- | :--- |
-| Analog horizons and transport | [E1](papers/E1/), [E2](papers/E2/), and the [Wave 6v.10 transport study](docs/roadmaps/Phase6v/Wave_6v.10_Roadmap.md) cover analog-horizon predictions, detector and receiver models, and limits on applying transport bounds. |
-| Emergent gravity and field theory | [Research status by claim chain](docs/RESEARCH_STATUS_OVERVIEW.md) and the [predictive scope](docs/ARCHITECTURE_SCOPE.md) trace the proposed mechanisms, conditional results, and obstructions. |
+| Analog horizons and transport | [E1](papers/E1/) and [E2](papers/E2/) cover analog-horizon predictions and detector models. The [transport study](docs/roadmaps/Phase6v/Wave_6v.10_Roadmap.md#scope-of-the-operator-and-transport-results) is a worked example of checking where an effective model applies. |
+| Emergent gravity and field theory | [Research map by claim chain](docs/RESEARCH_STATUS_OVERVIEW.md#how-to-read-this-document) and the [predictive scope](docs/ARCHITECTURE_SCOPE.md) trace the proposed mechanisms, conditional results, and obstructions. |
 | Topological phases and quantum computation | [D4](papers/D4/), [D6](papers/D6/), [D7](papers/D7/), and [D8](papers/D8/) cover related work on topological quantum computation, fault tolerance, classical simulability, and gate synthesis. |
 | Formal methods and reproducibility | The [Lean library](lean/SKEFTHawking/), [tracked hypotheses](docs/PERMANENT_TRACKED_HYPOTHESES.md), and [provenance graph](docs/KNOWLEDGE_GRAPH.md) connect formal statements, code, sources, and draft claims. |
 
 For a nontechnical introduction, start with the
 [Educational Companion Guide](docs/stakeholder/companion_guide.md).
 For the full paper roster and scope of each bundle, see the
-[publication strategy](docs/PAPER_STRATEGY.md).
+[bundle summary](docs/PAPER_STRATEGY.md#6-summary-table).
 
 ## Publication readiness
 
@@ -62,7 +62,7 @@ Snapshot evaluated on 2026-11-26 from [`9b5556b7`](https://github.com/NetRxn/SK_
 | [E2](papers/E2/) | 🟢 | 🟢 | 🟡 | 🟡 | 🟢 | 🟢 | 🟢 | 🟢 | 🟡 ↻ | 🟢 | 🟡 ↻ |
 
 The table is a commit-pinned snapshot. For current gate evidence and blockers,
-run the [provenance dashboard](docs/architecture/DASHBOARD.md) and open
+run the [provenance dashboard](docs/architecture/DASHBOARD.md#quick-start) and open
 [Readiness](http://localhost:8050/?tab=readiness) on your local instance.
 The [Stage 13 review heatmap](docs/BUNDLE_READINESS_HEATMAP.md) tracks
 review findings. The [gate topology](docs/architecture/VALIDATION_GATE_TOPOLOGY.md)
@@ -72,7 +72,7 @@ explains what the readiness checks measure.
 <summary>Regenerate the snapshot from a clean checkout</summary>
 
 Set up the repository and its source corpus as described in the
-[dashboard guide](docs/architecture/DASHBOARD.md). The commands below print a
+[dashboard guide](docs/architecture/DASHBOARD.md#quick-start). The commands below print a
 replacement snapshot using the current bundle roster and gate evaluator.
 A stale Lean declaration map stops the refresh.
 
@@ -127,6 +127,9 @@ PYTHON
 </details>
 
 ## Work with the repository
+
+The [contributor guide](CONTRIBUTING.md) shows how to inspect a checked theorem
+and find work in the proof atlas, numerics, or manuscripts.
 
 Use Python 3.14 or later with `uv`, and install the Lean toolchain pinned
 in [`lean/lean-toolchain`](lean/lean-toolchain).
