@@ -9601,7 +9601,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.AcousticMetric.acousticMetric_inv_correct",
@@ -9610,7 +9610,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.AcousticMetric.acousticMetric_symmetric",
@@ -104957,6 +104957,285 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.connection",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.generatorNonzero",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.normal",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.nullNormal",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.raisedNormal",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.tangent",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.LocalHorizon.timeTranslation",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.analytic_nozzle_horizon",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.analytic_transonic_nozzle",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.christoffelTT_eq_stationary",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.lift_component_analytic",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.lift_cut_form",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.lift_det",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.lift_inverse",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.lift_lorentzian_form",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.local_horizon",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.normalized_nonaffinity",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.quadratic_throat_slope",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.sonicCut_iff",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.sonic_normal",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.stationaryMetric_timeNorm",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.stationary_nonaffinity",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.stationary_time_translation",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.throat_identities",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.timeVector_ne_zero",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.time_partial_metric",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.time_tangent_to_surface",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.transverse_control",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.transverse_control_distinct",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.transverse_control_horizon",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.L3StationaryNozzle.transverse_control_not_constant",
+      "module": "SKEFTHawking.L3StationaryNozzle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.LDP.LDPCompatibleSKEFT.contractionCompatible",
@@ -233809,7 +234088,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25333,
+    "theorem_nodes": 25364,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -233820,7 +234099,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 405,
-      "TRUE:PROVED": 24928,
+      "TRUE:PROVED": 24959,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
