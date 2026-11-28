@@ -116,3 +116,14 @@ every complex input matrix, including trace-zero inputs. Zero doses and
 identical targets are allowed.
 
 [Channel reachability and three-slice synthesis](../../lean/SKEFTHawking/FiniteGibbsResetScheduleReachability.lean)
+
+For one fixed trace-one input and a real linear detector, the
+split-dependent response is the trailing first-bath attenuation times
+the dose factor of the second bath and the difference in the two target
+responses. A positive second dose and distinct target responses give
+a uniform sensitivity floor over all admissible splits. Two same-dose
+schedules fitting one datum have effective splits within the sum of the
+two observation allowances divided by that floor. For the two-level
+occupation example at two log-two doses, the floor is one eighth.
+
+[Effective-split calibration](../../lean/SKEFTHawking/FiniteGibbsResetScheduleReadoutCalibration.lean)
