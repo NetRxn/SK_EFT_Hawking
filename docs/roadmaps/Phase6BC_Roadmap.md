@@ -74,3 +74,16 @@ complement to the scalar projection decays by the exponential factor.
 For a diagonal Hamiltonian, the normalized Boltzmann weights give the
 actual finite Gibbs density. The three-level example witnesses population
 transfer and strict decay at positive rate and time.
+
+Finite schedules allow each slice to use a different Gibbs target. The
+difference between equal-trace inputs under a common schedule decays
+with the total dose, the sum of each slice's rate times duration. An
+adjacent swap changes the final state by the difference of the two
+targets times their reset fractions and the attenuation of the
+remaining schedule. In the two-level instrument example, both slices
+retain one half of their input, and reversing them changes the
+level-zero outcome probability by one eighth for any common density input.
+
+[Schedule](../../lean/SKEFTHawking/FiniteGibbsResetSchedule.lean) ·
+[Adjacent exchange](../../lean/SKEFTHawking/FiniteGibbsResetScheduleExchange.lean) ·
+[Instrument readout](../../lean/SKEFTHawking/FiniteGibbsResetScheduleReadout.lean)
