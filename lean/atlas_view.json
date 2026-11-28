@@ -65338,7 +65338,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.normalized_kraus",
@@ -65347,7 +65347,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.rate_nonneg",
@@ -65662,7 +65662,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_append",
@@ -139564,6 +139564,24 @@
       "frontier_impact": 5
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.diamondDist_of_equalDose_resetSchedules",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDiamond",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.diamondDist_of_trace_replacement",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDiamond",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.diamondDist_pauliKraus_eq",
       "module": "SKEFTHawking.QuantumNetwork.PauliChannel",
       "atlas_kind": "TRUE",
@@ -140014,6 +140032,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.equalDose_resetSchedules_exact_diamond",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDiamond",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.erasureBound_le_one",
       "module": "SKEFTHawking.QuantumNetwork.ErasureRateBound",
       "atlas_kind": "TRUE",
@@ -140142,6 +140169,15 @@
     {
       "fqn": "SKEFTHawking.QuantumNetwork.exists_proj_trace_eq",
       "module": "SKEFTHawking.QuantumNetwork.SpectralMajorization",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.exists_resetSchedule_kraus",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDiamond",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -141010,7 +141046,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 8
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.isDensityOperator_maximallyMixed",
@@ -141118,7 +141154,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.isKrausChannel_dephasingKraus",
@@ -141163,7 +141199,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 18
+      "frontier_impact": 19
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.isKrausChannel_kronOne",
@@ -141316,7 +141352,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_eq_of_kraus",
@@ -141334,7 +141370,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_isDensityOperator",
@@ -141397,7 +141433,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_tensorKraus_conj_kron_one",
@@ -141550,7 +141586,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 10
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.lidskii_of_frame",
@@ -143251,7 +143287,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.ptrace2_add",
@@ -144775,6 +144811,24 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.tensorKraus_sub_of_trace_replacement",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDiamond",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.tensorKraus_traceDist_of_trace_replacement",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDiamond",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.tensor_imagPart",
       "module": "SKEFTHawking.QuantumNetwork.GaussianComplexMoment",
       "atlas_kind": "TRUE",
@@ -145177,7 +145231,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_dephasingChoiBase",
@@ -145348,7 +145402,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_le_card_mul_l2opNorm",
@@ -145420,7 +145474,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_one_fin_one",
@@ -145843,7 +145897,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.trace_ptrace2",
@@ -234619,7 +234673,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25423,
+    "theorem_nodes": 25429,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -234630,7 +234684,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 405,
-      "TRUE:PROVED": 25018,
+      "TRUE:PROVED": 25024,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,

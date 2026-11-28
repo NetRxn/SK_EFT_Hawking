@@ -1,0 +1,601 @@
+{
+  "analytic_evidence_seal_sha256": "64514fb091fc57c54f402d58261ac86f714da6e07a0cf6bbeff3918c564e5678",
+  "analytic_evidence_file_sha256": {
+    "Protocol.md": "80decc7c36a03e9eed812fc6d05555b699be2eab69e9e137f43f0b4689785d69",
+    "Derivation.md": "fc705dbfc0c5b15cd88984f96ba17e3156c60c134d7d10c1a04860f04bc41f9b",
+    "CheckBounds.py": "1d87271e4f552223ab085e71f4bbfb5cb3549e720b34bd3941c62513576fe0be",
+    "Exact.json": "ee2057c9c7c51e98da586984a4f7b22aa0a27fed130aa496225c347ddaf90b32"
+  },
+  "public_source_sha256": {
+    "lean/SKEFTHawking/FiniteGibbsResetSchedule.lean": "51d5ffe86e9715747c5d26afe925a64f61c58a1ee7cff60eb3140019cf8d0649",
+    "lean/SKEFTHawking/FiniteGibbsResetScheduleChannelReadout.lean": "9616e7516aae4629476f9b1a44de65bf9448013dd649376ef9d835d65d8001d5",
+    "lean/SKEFTHawking/FiniteGibbsResetScheduleReachability.lean": "e5eea0c17523f4164cd31b638c49f9a34de6f7dcb90579cc48bdebc7903c4a9b",
+    "lean/SKEFTHawking/QuantumNetwork/DiamondNormSup.lean": "09f55e9eb890c22f8b779cd71fbb535b679a440130b5f0217084fac0f4bc1543"
+  },
+  "absolute_floating_point_tolerance": 1e-10,
+  "equal_dose_interior": {
+    "block_orders": [
+      "ABC",
+      "BCA",
+      "CAB"
+    ],
+    "mixture": [
+      "1/3",
+      "1/3",
+      "1/3"
+    ],
+    "exact_order_weights": [
+      [
+        "1/8",
+        "1/4",
+        "1/2"
+      ],
+      [
+        "1/2",
+        "1/8",
+        "1/4"
+      ],
+      [
+        "1/4",
+        "1/2",
+        "1/8"
+      ]
+    ],
+    "exact_mixed_weights": [
+      "7/24",
+      "7/24",
+      "7/24"
+    ],
+    "exact_total_attenuation": "1/8",
+    "subset_constraints": [
+      {
+        "subset": "",
+        "weight": "0",
+        "upper": "0"
+      },
+      {
+        "subset": "A",
+        "weight": "7/24",
+        "upper": "1/2"
+      },
+      {
+        "subset": "B",
+        "weight": "7/24",
+        "upper": "1/2"
+      },
+      {
+        "subset": "C",
+        "weight": "7/24",
+        "upper": "1/2"
+      },
+      {
+        "subset": "AB",
+        "weight": "7/12",
+        "upper": "3/4"
+      },
+      {
+        "subset": "AC",
+        "weight": "7/12",
+        "upper": "3/4"
+      },
+      {
+        "subset": "BC",
+        "weight": "7/12",
+        "upper": "3/4"
+      },
+      {
+        "subset": "ABC",
+        "weight": "7/8",
+        "upper": "7/8"
+      }
+    ],
+    "common_cell_count": 3,
+    "maximum_slice_count": 35,
+    "chronological_slices": [
+      {
+        "bath": "C",
+        "dose": 0.1265823612220549,
+        "attenuation": 0.8811015779522994
+      },
+      {
+        "bath": "B",
+        "dose": 0.12218269843921936,
+        "attenuation": 0.8849866680488842
+      },
+      {
+        "bath": "A",
+        "dose": 0.23104906018664817,
+        "attenuation": 0.7937005259840999
+      },
+      {
+        "bath": "B",
+        "dose": 0.10886636174742925,
+        "attenuation": 0.8968502629920497
+      },
+      {
+        "bath": "C",
+        "dose": 0.10446669896459349,
+        "attenuation": 0.9008047946397716
+      },
+      {
+        "bath": "C",
+        "dose": 0.12658236122205513,
+        "attenuation": 0.8811015779522992
+      },
+      {
+        "bath": "B",
+        "dose": 0.12218269843921936,
+        "attenuation": 0.8849866680488842
+      },
+      {
+        "bath": "A",
+        "dose": 0.2310490601866484,
+        "attenuation": 0.7937005259840998
+      },
+      {
+        "bath": "B",
+        "dose": 0.10886636174742903,
+        "attenuation": 0.89685026299205
+      },
+      {
+        "bath": "C",
+        "dose": 0.10446669896459337,
+        "attenuation": 0.9008047946397717
+      },
+      {
+        "bath": "C",
+        "dose": 0.12658236122205524,
+        "attenuation": 0.8811015779522992
+      },
+      {
+        "bath": "B",
+        "dose": 0.12218269843921925,
+        "attenuation": 0.8849866680488843
+      },
+      {
+        "bath": "A",
+        "dose": 0.23104906018664845,
+        "attenuation": 0.7937005259840997
+      },
+      {
+        "bath": "B",
+        "dose": 0.10886636174742914,
+        "attenuation": 0.8968502629920498
+      },
+      {
+        "bath": "C",
+        "dose": 0.10446669896459321,
+        "attenuation": 0.9008047946397718
+      }
+    ],
+    "dose_residuals": [
+      3.3306690738754696e-16,
+      1.1102230246251565e-16,
+      1.1102230246251565e-16
+    ],
+    "weight_residuals": [
+      5.551115123125783e-17,
+      0.0,
+      0.0
+    ],
+    "total_attenuation_residual": 1.3877787807814457e-17,
+    "input_checks": {
+      "mixed_system_product_spectator": {
+        "closed_action_trace_norm_residual": 1.1102230246251565e-16,
+        "retained_spectator_trace_norm_residual": 1.1102230246251565e-16,
+        "input_trace_abs": 0.9999999999999998,
+        "output_trace_abs": 0.9999999999999997
+      },
+      "bell_like": {
+        "closed_action_trace_norm_residual": 2.498001805406602e-16,
+        "retained_spectator_trace_norm_residual": 2.220446049250313e-16,
+        "input_trace_abs": 0.9999999999999998,
+        "output_trace_abs": 0.9999999999999996
+      },
+      "nonmaximally_entangled": {
+        "closed_action_trace_norm_residual": 1.3992643891206106e-16,
+        "retained_spectator_trace_norm_residual": 5.551115123125783e-17,
+        "input_trace_abs": 1.0,
+        "output_trace_abs": 1.0
+      },
+      "trace_zero_complex": {
+        "closed_action_trace_norm_residual": 4.771073153014743e-16,
+        "retained_spectator_trace_norm_residual": 2.6037037858103345e-16,
+        "input_trace_abs": 0.0,
+        "output_trace_abs": 1.1443916996305594e-16
+      }
+    },
+    "two_readout_coefficient_fit": {
+      "level_A": 0.33333333333333315,
+      "level_B": 0.33333333333333326,
+      "recovered_weights": [
+        0.29166666666666585,
+        0.2916666666666663,
+        0.29166666666666785
+      ],
+      "residual": 1.1657341758564144e-15
+    }
+  },
+  "held_out_interior": {
+    "block_orders": [
+      "ACB",
+      "BAC",
+      "CBA"
+    ],
+    "mixture": [
+      "1/4",
+      "1/3",
+      "5/12"
+    ],
+    "exact_order_weights": [
+      [
+        "1/30",
+        "2/3",
+        "4/15"
+      ],
+      [
+        "1/10",
+        "1/15",
+        "4/5"
+      ],
+      [
+        "1/2",
+        "1/3",
+        "2/15"
+      ]
+    ],
+    "exact_mixed_weights": [
+      "1/4",
+      "59/180",
+      "7/18"
+    ],
+    "exact_total_attenuation": "1/30",
+    "subset_constraints": [
+      {
+        "subset": "",
+        "weight": "0",
+        "upper": "0"
+      },
+      {
+        "subset": "A",
+        "weight": "1/4",
+        "upper": "1/2"
+      },
+      {
+        "subset": "B",
+        "weight": "59/180",
+        "upper": "2/3"
+      },
+      {
+        "subset": "C",
+        "weight": "7/18",
+        "upper": "4/5"
+      },
+      {
+        "subset": "AB",
+        "weight": "26/45",
+        "upper": "5/6"
+      },
+      {
+        "subset": "AC",
+        "weight": "23/36",
+        "upper": "9/10"
+      },
+      {
+        "subset": "BC",
+        "weight": "43/60",
+        "upper": "14/15"
+      },
+      {
+        "subset": "ABC",
+        "weight": "29/30",
+        "upper": "29/30"
+      }
+    ],
+    "common_cell_count": 7,
+    "maximum_slice_count": 35,
+    "chronological_slices": [
+      {
+        "bath": "C",
+        "dose": 0.15754227102263796,
+        "attenuation": 0.8542407032171693
+      },
+      {
+        "bath": "B",
+        "dose": 0.12107638520628061,
+        "attenuation": 0.8859662822909057
+      },
+      {
+        "bath": "A",
+        "dose": 0.1732867951399868,
+        "attenuation": 0.8408964152537142
+      },
+      {
+        "bath": "B",
+        "dose": 0.10997267498036756,
+        "attenuation": 0.895858614316306
+      },
+      {
+        "bath": "C",
+        "dose": 0.13126905421067248,
+        "attenuation": 0.8769817870032907
+      },
+      {
+        "bath": "C",
+        "dose": 0.1412347528101887,
+        "attenuation": 0.868285455319993
+      },
+      {
+        "bath": "B",
+        "dose": 0.13515503603605517,
+        "attenuation": 0.8735804647362986
+      },
+      {
+        "bath": "C",
+        "dose": 0.12907531926192073,
+        "attenuation": 0.8789077643683939
+      },
+      {
+        "bath": "C",
+        "dose": 0.17991650317328167,
+        "attenuation": 0.8353399567350933
+      },
+      {
+        "bath": "A",
+        "dose": 0.17027520792199669,
+        "attenuation": 0.8434326653017494
+      },
+      {
+        "bath": "C",
+        "dose": 0.16063391267071214,
+        "attenuation": 0.8516037753999215
+      },
+      {
+        "bath": "C",
+        "dose": 0.02339589095491812,
+        "attenuation": 0.9768756709682679
+      },
+      {
+        "bath": "B",
+        "dose": 0.03860873628326722,
+        "attenuation": 0.9621270809289075
+      },
+      {
+        "bath": "A",
+        "dose": 0.060773852264651484,
+        "attenuation": 0.9410360288810286
+      },
+      {
+        "bath": "B",
+        "dose": 0.03735857904754747,
+        "attenuation": 0.9633306432251161
+      },
+      {
+        "bath": "C",
+        "dose": 0.022184498243570383,
+        "attenuation": 0.9780597680944834
+      },
+      {
+        "bath": "C",
+        "dose": 0.15795298394325363,
+        "attenuation": 0.85388992756202
+      },
+      {
+        "bath": "B",
+        "dose": 0.2128440099024962,
+        "attenuation": 0.8082822114040379
+      },
+      {
+        "bath": "C",
+        "dose": 0.14002862992024068,
+        "attenuation": 0.8693333460981568
+      },
+      {
+        "bath": "C",
+        "dose": 0.07137561011961924,
+        "attenuation": 0.9311120913133447
+      },
+      {
+        "bath": "B",
+        "dose": 0.27031007207210966,
+        "attenuation": 0.7631428283688878
+      },
+      {
+        "bath": "C",
+        "dose": 0.0637794259164356,
+        "attenuation": 0.9382119219439017
+      },
+      {
+        "bath": "C",
+        "dose": 0.12658236122205524,
+        "attenuation": 0.8811015779522992
+      },
+      {
+        "bath": "B",
+        "dose": 0.09205181013576164,
+        "attenuation": 0.9120578944776199
+      },
+      {
+        "bath": "A",
+        "dose": 0.28881132523331055,
+        "attenuation": 0.7491535384383408
+      },
+      {
+        "bath": "B",
+        "dose": 0.08123498500422466,
+        "attenuation": 0.9219770152149575
+      },
+      {
+        "bath": "C",
+        "dose": 0.10446669896459321,
+        "attenuation": 0.9008047946397718
+      }
+    ],
+    "dose_residuals": [
+      2.220446049250313e-16,
+      4.440892098500626e-16,
+      4.440892098500626e-16
+    ],
+    "weight_residuals": [
+      0.0,
+      1.1102230246251565e-16,
+      1.6653345369377348e-16
+    ],
+    "total_attenuation_residual": 6.938893903907228e-18,
+    "input_checks": {
+      "mixed_system_product_spectator": {
+        "closed_action_trace_norm_residual": 6.106226635438361e-16,
+        "retained_spectator_trace_norm_residual": 4.440892098500626e-16,
+        "input_trace_abs": 0.9999999999999998,
+        "output_trace_abs": 0.9999999999999993
+      },
+      "bell_like": {
+        "closed_action_trace_norm_residual": 3.885780586188048e-16,
+        "retained_spectator_trace_norm_residual": 2.220446049250313e-16,
+        "input_trace_abs": 0.9999999999999998,
+        "output_trace_abs": 0.9999999999999994
+      },
+      "nonmaximally_entangled": {
+        "closed_action_trace_norm_residual": 6.125951915699057e-17,
+        "retained_spectator_trace_norm_residual": 0.0,
+        "input_trace_abs": 1.0,
+        "output_trace_abs": 0.9999999999999998
+      },
+      "trace_zero_complex": {
+        "closed_action_trace_norm_residual": 4.1819585880088047e-16,
+        "retained_spectator_trace_norm_residual": 2.6037037858103345e-16,
+        "input_trace_abs": 0.0,
+        "output_trace_abs": 1.716587549445839e-16
+      }
+    },
+    "two_readout_coefficient_fit": {
+      "level_A": 0.31527777777777755,
+      "level_B": 0.334722222222222,
+      "recovered_weights": [
+        0.249999999999999,
+        0.3277777777777767,
+        0.38888888888889095
+      ],
+      "residual": 2.0539125955565396e-15
+    }
+  },
+  "one_detector_ambiguity": {
+    "same_dose_chronological_orders": [
+      "BCA",
+      "CBA"
+    ],
+    "exact_weights": [
+      [
+        "1/2",
+        "1/8",
+        "1/4"
+      ],
+      [
+        "1/2",
+        "1/4",
+        "1/8"
+      ]
+    ],
+    "exact_A_detector": "37/96",
+    "exact_B_detector_increase": "1/32",
+    "exact_density_trace_distance": "1/32",
+    "coefficient_fits": [
+      {
+        "level_A": 0.38541666666666663,
+        "level_B": 0.29166666666666663,
+        "recovered_weights": [
+          0.4999999999999998,
+          0.12499999999999989,
+          0.25000000000000033
+        ],
+        "residual": 3.3306690738754696e-16
+      },
+      {
+        "level_A": 0.3854166666666666,
+        "level_B": 0.32291666666666663,
+        "recovered_weights": [
+          0.49999999999999956,
+          0.24999999999999978,
+          0.12500000000000067
+        ],
+        "residual": 6.661338147750939e-16
+      }
+    ],
+    "retained_input_checks": {
+      "mixed_system_product_spectator": {
+        "tensor_difference_residual": 6.938893903907228e-17,
+        "retained_output_trace_distance": 0.03125000000000003,
+        "spectator_marginal_trace_norm": 0.9999999999999999,
+        "tensor_trace_norm_formula_residual": 3.122502256758253e-17,
+        "induced_bound_for_input": 0.031249999999999986,
+        "bound_excess": 4.163336342344337e-17,
+        "exact_density_distance_residual": 2.7755575615628914e-17
+      },
+      "bell_like": {
+        "tensor_difference_residual": 1.3877787807814457e-17,
+        "retained_output_trace_distance": 0.03125,
+        "spectator_marginal_trace_norm": 0.9999999999999998,
+        "tensor_trace_norm_formula_residual": 6.938893903907228e-18,
+        "induced_bound_for_input": 0.03125,
+        "bound_excess": 0.0,
+        "exact_density_distance_residual": 0.0
+      },
+      "nonmaximally_entangled": {
+        "tensor_difference_residual": 1.249000902703301e-16,
+        "retained_output_trace_distance": 0.031250000000000035,
+        "spectator_marginal_trace_norm": 1.0,
+        "tensor_trace_norm_formula_residual": 3.469446951953614e-17,
+        "induced_bound_for_input": 0.031249999999999993,
+        "bound_excess": 4.163336342344337e-17,
+        "exact_density_distance_residual": 3.469446951953614e-17
+      },
+      "trace_zero_complex": {
+        "tensor_difference_residual": 1.868354362588068e-17,
+        "retained_output_trace_distance": 0.06629126073623884,
+        "spectator_marginal_trace_norm": 2.121320343559643,
+        "tensor_trace_norm_formula_residual": 0.0,
+        "induced_bound_for_input": 0.09076347872098209,
+        "bound_excess": 0.0,
+        "trace_zero_output_difference_residual": 0.0
+      }
+    }
+  },
+  "two_bath_minimax": {
+    "compatible_weights": [
+      "1/4",
+      "3/8"
+    ],
+    "nominal_projected_weight": "1/4",
+    "compatible_midpoint_weight": "5/16",
+    "compatible_diamond_diameter": "1/16",
+    "nominal_projection_worst_error": "1/16",
+    "midpoint_worst_error": "1/32",
+    "global_minimax_radius": "1/16",
+    "realization_chronological_attenuations": [
+      "4/5",
+      "1/2",
+      "5/8"
+    ],
+    "reachable_weights": [
+      "1/4",
+      "1/2"
+    ],
+    "datum": "11/16",
+    "detector_error_allowance": "1/16",
+    "detector_offset": "13/16",
+    "detector_weight_slope": "-1/2",
+    "raw_inferred_weight": "1/4",
+    "compatibility_weight_radius": "1/8",
+    "endpoint_errors_of_projected_nominal": [
+      "0",
+      "1/16"
+    ],
+    "endpoint_errors_of_compatible_midpoint": [
+      "1/32",
+      "1/32"
+    ],
+    "midpoint_schedule_order": "ABA",
+    "midpoint_schedule_trace_norm_residual": 0.0,
+    "midpoint_detector_residual": 0.0
+  }
+}
