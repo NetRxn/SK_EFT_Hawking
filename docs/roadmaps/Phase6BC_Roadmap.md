@@ -154,9 +154,10 @@ The three-bath held-out unequal-dose case uses 27 slices.
 Lean proves the exact operational diamond distance between
 equal-total-dose schedules as half the trace norm of their
 accumulated-target difference. Stabilized output trace distance
-takes that exact value on every density input. The analytic
-readout rank is the affine dimension of the bath targets after
-deleting zero-dose labels. A three-level control has identical
+takes that exact value on every density input. If a positive dose
+remains, the analytic readout rank is the affine dimension of the
+remaining bath targets. If all doses are zero, no detector is needed.
+A three-level control has identical
 one-detector readings and diamond distance $1/32$. For two baths,
 the midpoint of the data-compatible interval is minimax under
 bounded readout error. In the replayed control it reduces the
