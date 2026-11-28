@@ -99,3 +99,11 @@ projected final state for every permutation and common input.
 [Fixed-dose ordering](../../lean/SKEFTHawking/FiniteGibbsResetScheduleOrdering.lean) ·
 [Repeated blocks](../../lean/SKEFTHawking/FiniteGibbsResetScheduleBlocks.lean) ·
 [Projection invariance](../../lean/SKEFTHawking/FiniteGibbsResetScheduleProjection.lean)
+
+When slices share one Gibbs target, their combined action depends only
+on the total dose. For two baths, repartitioning either exposure at fixed
+dose preserves both ordered endpoint matrices. Those endpoints bound
+the terminal readout over every interleaving of each partition for a
+common trace-one input.
+
+[Dose partitioning](../../lean/SKEFTHawking/FiniteGibbsResetScheduleDosePartition.lean)
