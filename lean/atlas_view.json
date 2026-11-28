@@ -65320,7 +65320,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.evolve_affine",
@@ -65329,7 +65329,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.evolve_eq_kraus",
@@ -65356,7 +65356,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.trace_evolve",
@@ -65365,7 +65365,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 8
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.trace_target",
@@ -65383,7 +65383,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.weights_normalized",
@@ -65392,7 +65392,25 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 7
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.withUnitRateDose_dose",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.withUnitRateDose_target",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.block_after_scalarProjection",
@@ -65638,6 +65656,15 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_eq_twoBathCoefficients",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_equal_trace_difference",
       "module": "SKEFTHawking.FiniteGibbsResetSchedule",
       "atlas_kind": "TRUE",
@@ -65699,6 +65726,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.exists_equivalent_threeSlice_schedule",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.exists_extremal_resetSchedule_readouts",
@@ -65870,6 +65906,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.resetBathDose_nonnegative",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.resetScheduleAttenuation_cons",
@@ -66135,6 +66180,33 @@
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.time_stationary",
       "module": "SKEFTHawking.FiniteGibbsReset",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.twoBathCoefficients_attenuation",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.twoBathCoefficients_bounds",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.twoBath_channel_reachable_iff",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleReachability",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -234412,7 +234484,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25400,
+    "theorem_nodes": 25408,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -234423,7 +234495,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 405,
-      "TRUE:PROVED": 24995,
+      "TRUE:PROVED": 25003,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
