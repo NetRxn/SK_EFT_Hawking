@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-27T23:01:44.118733",
+  "generated": "2026-11-27T23:55:57.007238",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 45212,
-    "theorems_total": 25414,
-    "theorems_substantive": 25388,
+    "total_declarations": 45226,
+    "theorems_total": 25423,
+    "theorems_substantive": 25397,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25321,
+    "theorems_kernel_substantive": 25330,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2152,
+    "modules": 2153,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -677,6 +677,7 @@
       "SKEFTHawking.FiniteGibbsReset",
       "SKEFTHawking.FiniteGibbsResetSchedule",
       "SKEFTHawking.FiniteGibbsResetScheduleBlocks",
+      "SKEFTHawking.FiniteGibbsResetScheduleChannelReadout",
       "SKEFTHawking.FiniteGibbsResetScheduleDosePartition",
       "SKEFTHawking.FiniteGibbsResetScheduleExchange",
       "SKEFTHawking.FiniteGibbsResetScheduleOrdering",
@@ -2170,7 +2171,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13865,
+    "definitions": 13867,
     "structures": 491,
     "instances": 988,
     "inductives": 105,

@@ -127,3 +127,18 @@ two observation allowances divided by that floor. For the two-level
 occupation example at two log-two doses, the floor is one eighth.
 
 [Effective-split calibration](../../lean/SKEFTHawking/FiniteGibbsResetScheduleReadoutCalibration.lean)
+
+A single scalar response determines the complete reset action when the
+initial calibration input is known and has trace one, the target matrices
+and total bath doses are known, and the detector distinguishes the targets.
+For a noisy datum, clip its inferred bath weight to the closed reachable
+interval. The clipped action has a same-dose three-slice realization and
+weakly reduces absolute error for any real-linear detector at any complex
+input matrix. An error allowance in the original reading transfers by
+the absolute sensitivity ratio between the two detectors.
+
+A two-level control yields a negative second-level occupation before
+clipping. The clipped prediction is the reachable diagonal matrix with
+occupations 11/16 and 5/16.
+
+[Clipped channel reconstruction](../../lean/SKEFTHawking/FiniteGibbsResetScheduleChannelReadout.lean)
