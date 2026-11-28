@@ -142,3 +142,24 @@ clipping. The clipped prediction is the reachable diagonal matrix with
 occupations 11/16 and 5/16.
 
 [Clipped channel reconstruction](../../lean/SKEFTHawking/FiniteGibbsResetScheduleChannelReadout.lean)
+
+**Fixed-dose multibath reachability and spectator error.**
+For any positive number of bath labels, the reachable accumulated
+weights form the convex hull of the contiguous block orders. An
+analytic construction realizes each feasible set of weights by a
+deterministic finite schedule. With $n$ labels its slice count is
+at most $(n(n-1)+1)(2n-1)$. The upper bound includes zero doses.
+The three-bath held-out unequal-dose case uses 27 slices.
+
+Lean proves the exact operational diamond distance between
+equal-total-dose schedules as half the trace norm of their
+accumulated-target difference. Stabilized output trace distance
+takes that exact value on every density input. The analytic
+readout rank is the affine dimension of the bath targets after
+deleting zero-dose labels. A three-level control has identical
+one-detector readings and diamond distance $1/32$. For two baths,
+the midpoint of the data-compatible interval is minimax under
+bounded readout error. In the replayed control it reduces the
+per-datum error from $1/16$ to $1/32$.
+[Lean distance proof](../../lean/SKEFTHawking/FiniteGibbsResetScheduleDiamond.lean) ·
+[Analytic reachability and replay](phase6bc_multibath/README.md)
