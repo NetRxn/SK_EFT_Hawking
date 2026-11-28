@@ -65329,7 +65329,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.evolve_eq_kraus",
@@ -65365,7 +65365,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.ResetSlice.trace_target",
@@ -65608,6 +65608,33 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_block_reversal_of_common_targets",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDosePartition",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_common_target_eq_of_dose_eq",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDosePartition",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_eq_of_common_target",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDosePartition",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 2
     },
     {
@@ -65653,7 +65680,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.evolveResetSchedule_two_slice_order_iff",
@@ -65851,7 +65878,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.resetScheduleDose_eq_of_perm",
@@ -66013,7 +66040,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.stateReset_idempotent",
@@ -66115,8 +66142,26 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.twoBath_extremal_blocks_eq_of_doses_eq",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDosePartition",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.twoBath_fixedDose_readout_spread",
       "module": "SKEFTHawking.FiniteGibbsResetScheduleBlocks",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsReset.twoBath_readout_spread_by_dose",
+      "module": "SKEFTHawking.FiniteGibbsResetScheduleDosePartition",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -234367,7 +234412,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25395,
+    "theorem_nodes": 25400,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -234378,7 +234423,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 405,
-      "TRUE:PROVED": 24990,
+      "TRUE:PROVED": 24995,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
