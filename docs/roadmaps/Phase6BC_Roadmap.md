@@ -107,3 +107,12 @@ the terminal readout over every interleaving of each partition for a
 common trace-one input.
 
 [Dose partitioning](../../lean/SKEFTHawking/FiniteGibbsResetScheduleDosePartition.lean)
+
+At fixed per-bath doses, all finite two-bath schedules give exactly the
+closed affine segment of matrix actions between the opposite block
+orders. Every intermediate action can be implemented by splitting just
+the first bath around one slice of the second. The chosen split works on
+every complex input matrix, including trace-zero inputs. Zero doses and
+identical targets are allowed.
+
+[Channel reachability and three-slice synthesis](../../lean/SKEFTHawking/FiniteGibbsResetScheduleReachability.lean)
