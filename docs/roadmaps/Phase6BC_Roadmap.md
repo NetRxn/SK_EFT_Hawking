@@ -87,3 +87,15 @@ level-zero outcome probability by one eighth for any common density input.
 [Schedule](../../lean/SKEFTHawking/FiniteGibbsResetSchedule.lean) ·
 [Adjacent exchange](../../lean/SKEFTHawking/FiniteGibbsResetScheduleExchange.lean) ·
 [Instrument readout](../../lean/SKEFTHawking/FiniteGibbsResetScheduleReadout.lean)
+
+For a fixed list of slices, sorting by increasing or decreasing target
+readout gives the maximum or minimum terminal readout for every common
+trace-one input. Both orders preserve total dose. For two repeated
+baths, the difference between the block orders is the difference
+in their target readouts times the two block reset fractions. A
+complex-linear projection that agrees on every target yields the same
+projected final state for every permutation and common input.
+
+[Fixed-dose ordering](../../lean/SKEFTHawking/FiniteGibbsResetScheduleOrdering.lean) ·
+[Repeated blocks](../../lean/SKEFTHawking/FiniteGibbsResetScheduleBlocks.lean) ·
+[Projection invariance](../../lean/SKEFTHawking/FiniteGibbsResetScheduleProjection.lean)
